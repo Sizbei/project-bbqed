@@ -20,7 +20,15 @@ connection.once('open', () => {
 //Adds routes for express to use
 //Example route: http://localhost:5000/example/add
 const exampleRouter = require('./routes/example');
+const loginRouter = require('./routes/login');
 app.use('/example', exampleRouter);
+app.use('/login', loginRouter);
+
+const profileRouter = require('./routes/profile');
+app.use('/profile', profileRouter);
+
+const signupRouter = require('./routes/signup');
+app.use('/signup', signupRouter);
 
 //App is now listening for calls
 app.listen(port, () => {
