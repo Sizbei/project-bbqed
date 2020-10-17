@@ -23,7 +23,11 @@ function ErrorMessage(props) {
 export default function Popup() {
   const [formState, setFormState] = useState("button");
   const { register, handleSubmit, watch, errors } = useForm();
+  const [usernameExists, setUsernameExists] = useState(false)
   const [emailExists, setEmailExists] = useState(false)
+  const [maleRadio, setMaleRadio] = useState()
+  const [femaleRadio, setFemaleRadio] = useState()
+  const [otherRadio, setOtherRadio] = useState()
   let history = useHistory();
 
   const RedirectToSignIn = () => {
@@ -35,6 +39,21 @@ export default function Popup() {
   const onSubmit = async data => {
     console.log(data);
   };
+
+  const checkUsernameExists = async (username) => {
+    const send = {
+      params: {
+        username: username
+      }
+    }
+    
+    const returnValue = await axios.get('http://localhost:5000/signup/existingUsername', send);
+    return returnValue.data.exists;
+  }
+
+  const handleUsernameChange = async (username) => {    
+    setUsernameExists(await checkUsernameExists(username.target.value));
+  }
 
   const checkEmailExists = async (email) => {
     const send = {
@@ -64,8 +83,8 @@ export default function Popup() {
       <div>
         <button className="SignUpBtn" onClick={() => {}}> Sign up </button>
       
-        <div className='popup' onClick={console.log("click")}>
-          <div className='popup_inner'>
+        <div className='popup' onClick={() => setFormState("button")}>
+          <div className='popup_inner' onClick = {(e) => { e.stopPropagation(); }}>
             <div className="signup-logo-container">
               <img src={logo} className="signup-logo" alt="SportCred" href="the_zone"/>
               <span className="slogan">Start Building Your ACS Score</span>
@@ -84,6 +103,13 @@ export default function Popup() {
                 </div>
               </div>
 
+              <input name="username" className="input-field" placeholder="Username" ref={register({ required: true })} onInput={handleUsernameChange} />
+              <ErrorMessage flag={usernameExists} text="This username already exists." />
+              {errors.username && <span className="error-message">This field is required.</span>}
+
+              <input type="password" className="input-field" placeholder="Password" name="password" ref={ register({ required: true }) } />
+              {errors.password && <span className="error-message">This field is required.</span>}
+
               <input name="email" className="input-field" placeholder="Email" ref={register({ required: true,
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -95,7 +121,7 @@ export default function Popup() {
 
               <input name="phoneNumber" className="input-field" placeholder="Phone Number (optional)" ref={register} />
 
-              <label>Birthday:</label>
+              <label className="form-label">Birthday:</label>
               <div className="birthdate-container">
                 <select name="month" ref={register} className="select-month" >
                   <option value="January">Jan</option>
@@ -127,6 +153,21 @@ export default function Popup() {
                 </select>
               </div>
 
+              <label className="form-label">Gender:</label>
+              <div className="gender-container">
+                  <span className="radio-container" onClick={ e => maleRadio.click() }> 
+                    <label className="radio-text">male</label>
+                    <input type="radio" name="gender" className="gender-radio" ref={ i => setMaleRadio(i) }></input>
+                  </span>
+                  <span className="radio-container" onClick={ e => femaleRadio.click() }> 
+                    <label className="radio-text">female</label>
+                    <input type="radio" name="gender" className="gender-radio" ref={ i => setFemaleRadio(i) }></input>
+                  </span>
+                  <span className="radio-container" onClick={ e => otherRadio.click() }> 
+                    <label className="radio-text">other</label>
+                    <input type="radio" name="gender" className="gender-radio" ref={ i => setOtherRadio(i) }></input>
+                  </span>
+              </div>
 
               <input type="submit" className="submit" value="Continue" /> 
             </form>
