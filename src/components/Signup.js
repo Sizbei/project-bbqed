@@ -32,12 +32,13 @@ export default function Popup() {
 
   const RedirectToSignIn = () => {
     setFormState("button");
-    history.push("/registration");
+    history.push("/profile");
   } 
 
   
   const onSubmit = async data => {
     console.log(data);
+    RedirectToSignIn();
   };
 
   const checkUsernameExists = async (username) => {
@@ -77,7 +78,6 @@ export default function Popup() {
   if (formState === "button") {
     console.log(formState);
     return <button className="SignUpBtn" onClick={() => {setFormState("form-0")}}> Sign up </button>;
-    // return <div> some text.</div>
   } else if (formState === "form-0") {
     return (
       <div>

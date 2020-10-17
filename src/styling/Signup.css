@@ -30,7 +30,8 @@
   text-align: left;
 }
 
-.SignUpBtn {
+/* Example css for .SignUpBtn */
+/* .SignUpBtn {
   padding-left: 2em;
   padding-right: 2em;
 
@@ -46,7 +47,7 @@
   display: inline-block;
   font-size: 18px;
   font-weight: 650;
-}
+} */
 
 .div-name {
   display: flex;
