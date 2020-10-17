@@ -51,6 +51,10 @@ export default function Popup() {
     setEmailExists(await checkEmailExists(email.target.value));
   }
 
+  const year = (new Date()).getFullYear();
+  const years = Array.from(new Array(120),( val, index) => -index + year);
+  console.log(years);
+
   if (formState === "button") {
     console.log(formState);
     return <button className="SignUpBtn" onClick={() => {setFormState("form-0")}}> Sign up </button>;
@@ -90,6 +94,39 @@ export default function Popup() {
               {errors.email && errors.email.type === "pattern" && <span className="error-message">Invalid email address.</span>}
 
               <input name="phoneNumber" className="input-field" placeholder="Phone Number (optional)" ref={register} />
+
+              <label>Birthday:</label>
+              <div className="birthdate-container">
+                <select name="month" ref={register} className="select-month" >
+                  <option value="January">Jan</option>
+                  <option value="February">Feb</option>
+                  <option value="March">Mar</option>
+                  <option value="April">Apr</option>
+                  <option value="May">May</option>
+                  <option value="June">Jun</option>
+                  <option value="July">Jul</option>
+                  <option value="August">Aug</option>
+                  <option value="September">Sep</option>
+                  <option value="October">Oct</option>
+                  <option value="November">Nov</option>
+                  <option value="December">Dec</option>
+                </select>
+
+                <select name="day" ref={register} className="select-day" >
+                  {
+                    Array(31).fill(1).map((el, i) => <option value={i}>{i + 1}</option>) 
+                  }
+                </select>
+
+                <select name="year" ref={register} className="select-year" >
+                  {
+                    years.map((year, index) => {
+                      return <option key={year} value={year}>{year}</option>
+                    })
+                  }
+                </select>
+              </div>
+
 
               <input type="submit" className="submit" value="Continue" /> 
             </form>
