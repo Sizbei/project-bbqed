@@ -8,16 +8,14 @@ function Tile(props) {
   console.log(props.path === "../res/images/76ers.png");
   const key = props.key;
   const path = props.path;
-  // const img = require("../res/images/76ers.png");
-  // const img = require(props.path);
-
+  
   const [selected, setSelected] = useState(false);
 
   const name = "76ers.png";
 
   return (
   <td className="imageselect-tile" onClick={() => console.log("clicked") }>
-    <img className="imageselect-image" src={process.env.PUBLIC_URL + '/76ers.png'} ></img>
+    <img className="imageselect-image" src={process.env.PUBLIC_URL + path} ></img>
   </td> 
   )
 }
