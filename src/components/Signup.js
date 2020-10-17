@@ -22,6 +22,7 @@ function ErrorMessage(props) {
 
 export default function Popup() {
   const [formState, setFormState] = useState("button");
+  const [formData, setFormData] = useState();
   const { register, handleSubmit, watch, errors } = useForm();
   const [usernameExists, setUsernameExists] = useState(false)
   const [emailExists, setEmailExists] = useState(false)
@@ -38,7 +39,13 @@ export default function Popup() {
   
   const onSubmit = async data => {
     console.log(data);
-    RedirectToSignIn();
+    console.log(formState);
+
+    if (formState == "form-0") {
+      setFormState("form-1");
+    } else {
+      RedirectToSignIn();
+    }
   };
 
   const checkUsernameExists = async (username) => {
@@ -176,6 +183,23 @@ export default function Popup() {
       </div>
     )
   } else {
-    return <h1>form-1</h1>
+    return (
+      <div>
+      <button className="SignUpBtn" onClick={() => {}}> Sign up </button>
+    
+      <div className='popup' onClick={() => setFormState("button")}>
+        <div className='popup_inner' onClick = {(e) => { e.stopPropagation(); }}>
+          <div className="signup-logo-container">
+            <img src={logo} className="signup-logo" alt="SportCred" href="the_zone"/>
+            <span className="slogan">Start Building Your ACS Score</span>
+          </div>
+
+          <form className="form" onSubmit={handleSubmit(onSubmit)}>
+            <input type="submit" className="submit" value="Continue" /> 
+          </form>
+        </div>
+      </div>
+    </div>
+    )
   }
 }
