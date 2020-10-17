@@ -10,10 +10,9 @@
 }
 
 .login {
-    position: relative;
-    left:50%;
+    position: center;
     margin-top:7%;
-    width: 45%;
+    width: 100%;
     height: auto;
     display: flex;
     flex-direction: column;
@@ -22,12 +21,11 @@
 }
 
 .logo {
-    min-width: 100%;
+    min-width: 35%;
 }
 
 .slogan {
     color: white;
-    position: center;
     font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -35,7 +33,7 @@
 }
 
 .identifier {
-    width: 70%;
+    width: 25%;
     margin-top: 20px;
 }
 
@@ -48,7 +46,6 @@
     color:white;
     font-weight: 600;
     font-size:20px;
-    float:right;
 }
 
 .input {
@@ -56,12 +53,16 @@
     height:30px;
 }
 
+.input:focus {
+    outline:none;
+}
+
 .loginBtn {
     background-color: #FF7e1F;
     border: none;
     border-radius: 50px;
     height: 65px;
-    width: 30%;
+    width: 15%;
     color: white;
     font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -71,6 +72,10 @@
     font-size: 24px;
     font-weight: 650;
     margin: 20px;
+}
+
+.loginBtn:focus {
+    outline:none;
 }
 
 .passwordlink {
@@ -99,7 +104,6 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-    float: right;
     font-weight: 700;
     text-decoration: none;
     
@@ -111,7 +115,6 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-    float:right;
     font-weight: 700;
     text-decoration: none;
 }
@@ -121,7 +124,8 @@
 }
 
 .signup {
-    width:70%;
+    width:10%;
+    position:center;
 }
 
 @font-face {
