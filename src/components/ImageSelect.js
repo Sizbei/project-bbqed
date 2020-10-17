@@ -5,17 +5,17 @@ import logo from "../res/images/76ers.png"
 import "../styling/ImageSelect.css"
 
 function Tile(props) {
-  console.log(props.path === "../res/images/76ers.png");
-  const key = props.key;
+  console.log(props.imgKey);
+  const imgKey = props.imgKey;
   const path = props.path;
-  
+
   const [selected, setSelected] = useState(false);
-
-  const name = "76ers.png";
-
+  
   return (
-  <td className="imageselect-tile" onClick={() => console.log("clicked") }>
-    <img className="imageselect-image" src={process.env.PUBLIC_URL + path} ></img>
+  <td className="imageselect-tile" onClick={() => console.log("clicked " + imgKey) }>
+    <div className="image-tile">
+      <img className="imageselect-image" src={process.env.PUBLIC_URL + path} ></img>
+    </div>
   </td> 
   )
 }
@@ -26,23 +26,17 @@ export default function ImageSelect(props) {
       <table className="imageselect-table">
         <tbody>
           <tr>
-            {/* <td className="imageselect-tile" onClick={() => console.log("clicked") }>
-              <img className="imageselect-image" src={logo}></img>
-            </td> */}
-            <Tile key="" path="../res/images/76ers.png" />
-
-            <td className="imageselect-tile">
-              <img className="imageselect-image" src={logo}></img>
-            </td>
-            <td className="imageselect-tile">Jill</td>
+            <Tile imgKey="76ers" path="../res/images/76ers.png" />
+            <Tile imgKey="TorontoRaptors" path="../res/images/TorontoRaptors.png" />
+            <Tile imgKey="DenverNuggets" path="../res/images/DenverNuggets.png" />
           </tr>
           <tr>
-            <td className="imageselect-tile">Jill</td>
-            <td className="imageselect-tile">Jill</td>
-            <td className="imageselect-tile">Jill</td>
+            <Tile imgKey="76ers" path="../res/images/76ers.png" />
+            <Tile imgKey="TorontoRaptors" path="../res/images/TorontoRaptors.png" />
+            <Tile imgKey="DenverNuggets" path="../res/images/DenverNuggets.png" />
           </tr>
         </tbody>
       </table>
-    </div>
+    </div>  
   )
 }

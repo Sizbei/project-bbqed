@@ -1,8 +1,25 @@
-/* .imageselect-tile {
-  width: 100px;
-  height: 100px;
-} */
+.imageselect-table {
+  border-spacing: 0;
+}
+
+.imageselect-tile {
+  display: table-cell;
+}
+
+.image-tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 120px;
+  height: 120px;
+
+  border-radius: 10%;
+  border: 1px solid black;
+
+  background-color: lightskyblue;
+}
 
 .imageselect-image {
-  width: 100px;
+  height: 100px;
 }
