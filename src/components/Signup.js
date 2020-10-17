@@ -60,19 +60,24 @@ export default function Popup() {
       <div>
         <button className="SignUpBtn" onClick={() => {}}> Sign up </button>
       
-        <div className='popup'>
+        <div className='popup' onClick={console.log("click")}>
           <div className='popup_inner'>
-          <img src={logo} className="signup-logo" alt="SportCred" href="the_zone"/>
+            <div className="signup-logo-container">
+              <img src={logo} className="signup-logo" alt="SportCred" href="the_zone"/>
+              <span className="slogan">Start Building Your ACS Score</span>
+            </div>
 
             <form className="form" onSubmit={handleSubmit(onSubmit)}>
               <div className="div-name">
-                {/* <label>First Name:</label> */}
-                <input name="firstName" className="input-firstname" placeholder="First name" ref={register({ required: true })} />
-                {errors.firstName && <span className="error-message">This field is required.</span>}
+                <div className="div-firstname">
+                  <input name="firstName" className="input-firstname" placeholder="First name" ref={register({ required: true })} />
+                  {errors.firstName && <span className="error-message">This field is required.</span>}
+                </div>
 
-                {/* <label>Last Name:</label> */}
-                <input name="lastName" className="input-lastname" placeholder="Last name" ref={register({ required: true })} />
-                {errors.lastName && <span className="error-message">This field is required.</span>}
+                <div className="div-lastname">
+                  <input name="lastName" className="input-lastname" placeholder="Last name" ref={register({ required: true })} />
+                  {errors.lastName && <span className="error-message">This field is required.</span>}
+                </div>
               </div>
 
               <input name="email" className="input-field" placeholder="Email" ref={register({ required: true,
@@ -85,7 +90,7 @@ export default function Popup() {
               {errors.email && errors.email.type === "pattern" && <span className="error-message">Invalid email address.</span>}
 
               <input name="phoneNumber" className="input-field" placeholder="Phone Number (optional)" ref={register} />
-              
+
               <input type="submit" className="submit" value="Continue" /> 
             </form>
           </div>
