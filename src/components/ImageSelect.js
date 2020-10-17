@@ -11,9 +11,14 @@ function Tile(props) {
 
   const [selected, setSelected] = useState(false);
   
+  const handleClick = () => {
+    console.log("Status " + imgKey + ": " + selected);
+    setSelected(!selected);
+  }
+
   return (
-  <td className="imageselect-tile" onClick={() => console.log("clicked " + imgKey) }>
-    <div className="image-tile">
+  <td className="imageselect-tile">
+    <div className={selected ? "image-tile-selected" : "image-tile-unselected"} onClick={handleClick}>
       <img className="imageselect-image" src={process.env.PUBLIC_URL + path} ></img>
     </div>
   </td> 
@@ -25,6 +30,11 @@ export default function ImageSelect(props) {
     <div className="imageselect-container">
       <table className="imageselect-table">
         <tbody>
+          <tr>
+            <Tile imgKey="76ers" path="../res/images/76ers.png" />
+            <Tile imgKey="TorontoRaptors" path="../res/images/TorontoRaptors.png" />
+            <Tile imgKey="DenverNuggets" path="../res/images/DenverNuggets.png" />
+          </tr>
           <tr>
             <Tile imgKey="76ers" path="../res/images/76ers.png" />
             <Tile imgKey="TorontoRaptors" path="../res/images/TorontoRaptors.png" />
