@@ -19,9 +19,8 @@ function ErrorMessage(props) {
   }
 } 
 
-
 export default function Popup() {
-  const [formState, setFormState] = useState("button");
+  const [formState, setFormState] = useState("form-1");
   const [formData, setFormData] = useState();
   const { register, handleSubmit, watch, errors } = useForm();
   const [usernameExists, setUsernameExists] = useState(false)
@@ -195,6 +194,10 @@ export default function Popup() {
           </div>
 
           <form className="form" onSubmit={handleSubmit(onSubmit)}>
+            <label className="form-question">Favorite sport?</label>
+            <input name="favoriteSport" className="input-field" ref={register({ required: true })} />
+            {errors.favoriteSport && <span className="error-message">This field is required.</span>}
+
             <input type="submit" className="submit" value="Continue" /> 
           </form>
         </div>

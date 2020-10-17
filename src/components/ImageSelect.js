@@ -17,7 +17,7 @@ function Tile(props) {
 
   return (
   <td className="imageselect-tile" onClick={() => console.log("clicked") }>
-    <img className="imageselect-image" src={require("../res/images/${name}")} ></img>
+    <img className="imageselect-image" src={process.env.PUBLIC_URL + '/76ers.png'} ></img>
   </td> 
   )
 }
