@@ -21,8 +21,8 @@ function ErrorMessage(props) {
 } 
 
 export default function Popup() {
-  const [formState, setFormState] = useState("button");
-  const [formData, setFormData] = useState();
+  const [formState, setFormState] = useState("form-0");
+  const [formData, setFormData] = useState({});
   const { register, handleSubmit, watch, errors } = useForm();
   const [usernameExists, setUsernameExists] = useState(false)
   const [emailExists, setEmailExists] = useState(false)
@@ -36,10 +36,10 @@ export default function Popup() {
     history.push("/profile");
   } 
 
-  
   const onSubmit = data => {
-    console.log(data);
-    console.log(formState);
+    console.log("data", data);
+    console.log("formState",  formState);
+    console.log("formData", formData);
 
     if (formState === "form-0") {
       setFormState("form-1");
@@ -96,7 +96,7 @@ export default function Popup() {
         setImageSelect(<ImageSelect btntext="Finish!" data={e.data} width={6} onSubmit={handleImageSelectData} />)
       }
     ); 
-  }, [])
+  }, [maleRadio])
 
   if (formState === "button") {
     console.log(formState);
@@ -180,15 +180,15 @@ export default function Popup() {
               <div className="gender-container">
                   <span className="radio-container" onClick={ e => maleRadio.click() }> 
                     <label className="radio-text">male</label>
-                    <input type="radio" name="gender" className="gender-radio" ref={ i => setMaleRadio(i) }></input>
+                    <input type="radio" name="gender-male" className="gender-radio" ref={ i => setMaleRadio(i)} checked="checked"></input>
                   </span>
                   <span className="radio-container" onClick={ e => femaleRadio.click() }> 
                     <label className="radio-text">female</label>
-                    <input type="radio" name="gender" className="gender-radio" ref={ i => setFemaleRadio(i) }></input>
+                    <input type="radio" name="gender-female" className="gender-radio" ref={ i => setFemaleRadio(i) }></input>
                   </span>
                   <span className="radio-container" onClick={ e => otherRadio.click() }> 
                     <label className="radio-text">other</label>
-                    <input type="radio" name="gender" className="gender-radio" ref={ i => setOtherRadio(i) }></input>
+                    <input type="radio" name="gender-other" className="gender-radio" ref={ i => setOtherRadio(i) }></input>
                   </span>
               </div>
 
@@ -213,6 +213,14 @@ export default function Popup() {
           <form className="form" onSubmit={handleSubmit(onSubmit)}>
             <label className="form-question">Favorite sport?</label>
             <input name="favoriteSport" className="input-field" ref={register({ required: true })} />
+            {errors.favoriteSport && <span className="error-message">This field is required.</span>}
+
+            <label className="form-question">What sport would you like to know more about?</label>
+            <input name="sportInterest" className="input-field" ref={register({ required: true })} />
+            {errors.favoriteSport && <span className="error-message">Tell us!</span>}
+
+            <label className="form-question">What is your highest level of play in any sport?</label>
+            <input name="highestLevelOfPlay" className="input-field" ref={register({ required: true })} />
             {errors.favoriteSport && <span className="error-message">This field is required.</span>}
 
             <input type="submit" className="submit" value="Continue" /> 
