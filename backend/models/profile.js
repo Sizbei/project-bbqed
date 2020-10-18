@@ -14,31 +14,31 @@ const profileSchema = new Schema({
   about: {
     type: String,
     required: false,
-    unique: true,
+    unique: false,
     trim: true,
   },
   interest: {
     type: String,
     required: false,
-    unique: true,
+    unique: false,
     trim: true,
   },
   status: {
     type: String,
     required: false,
-    unique: true,
+    unique: false,
     trim: true,
   },
   image: {
     type: String,
     required: false,
-    unique: true,
+    unique: false,
     trim: true,
   },
   acs: {
     type: Number,
-    required: false,
-    unique: true,
+    required: true,
+    unique: false,
     trim: true,
   },
 }, {
