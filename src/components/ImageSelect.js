@@ -29,34 +29,32 @@ function ImageSelect(props) {
   const width = props.width;
   const data = props.data;
 
-  console.log(data); 
-  for (const [index, value] of data.entries()) {
-    console.log(index, value);
-  } 
+  const tiles = data.map((e) => <Tile name={e["name"]} image={e["image"]} key={e["name"]} />)
 
-  const tiles = data.map((e) => <Tile name={e["name"]} image={e["image"]} />)
-  
+  let buffer = []
+
+  for (var row = 0; row < Math.ceil(data.length / width); row++) {
+    let tr_contents = []
+
+    for (var col = 0; col < width; col++) {
+      const index = row * width + col;
+      if (index < tiles.length) {
+        tr_contents.push(tiles[index])
+      }
+    }
+
+    buffer.push(
+      <tr key={row}>
+        {tr_contents}
+      </tr>
+    )
+  }
 
   return (
     <div className="imageselect-container">
       <table className="imageselect-table">
         <tbody>
-          <tr>
-            {tiles}
-            <Tile name="76ers" image="../res/images/76ers.png" />
-            <Tile name="TorontoRaptors" image="../res/images/TorontoRaptors.png" />
-            <Tile name="DenverNuggets" image="../res/images/DenverNuggets.png" />
-          </tr>
-          <tr>
-            <Tile name="76ers" image="../res/images/76ers.png" />
-            <Tile name="TorontoRaptors" image="../res/images/TorontoRaptors.png" />
-            <Tile name="DenverNuggets" image="../res/images/DenverNuggets.png" />
-          </tr>
-          <tr>
-            <Tile name="76ers" image="../res/images/76ers.png" />
-            <Tile name="TorontoRaptors" image="../res/images/TorontoRaptors.png" />
-            <Tile name="DenverNuggets" image="../res/images/DenverNuggets.png" />
-          </tr>
+          {buffer}
         </tbody>
       </table>
     </div>  
