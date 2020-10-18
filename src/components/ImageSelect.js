@@ -62,63 +62,18 @@ function ImageSelect(props) {
 }
 
 export default function ImageTest(props) {
-
-  // const [data, setData] = new useState([]);
-
+  
   const [imageSelect, setImageSelect] = useState(null);
 
-  const getData = () => {
-    axios.get('http://localhost:5000/teams/', "").then(
-      (e) => {
-        // console.log(e.data);
-        setImageSelect(<ImageSelect data={e.data} width={6} />)
-      }
-    );
-  }
+  axios.get('http://localhost:5000/teams/', "").then(
+    (e) => {
+      setImageSelect(<ImageSelect data={e.data} width={6} />)
+    }
+  );
 
   return (
-    // <ImageSelect data={getData()} width={6} height={3} />
     <div>
-      <button onClick={getData}>click!</button>
       {imageSelect}
     </div>
-
-    // axios.get('http://localhost:5000/teams/', "").then(
-    //   (e) => {
-    //     console.log(e.data);
-    //     <ImageSelect />
-    //   }
-    // );
   )
 }
-
-// function ImageSelect(props) {
-//   // const width = props.width;
-//   // const height = props.height;
-
-//   const [data, setData] = new useState([]);
-
-//   return (
-//     <div className="imageselect-container">
-//       <table className="imageselect-table">
-//         <tbody>
-//           <tr>
-//             <Tile name="76ers" image="../res/images/76ers.png" />
-//             <Tile name="TorontoRaptors" image="../res/images/TorontoRaptors.png" />
-//             <Tile name="DenverNuggets" image="../res/images/DenverNuggets.png" />
-//           </tr>
-//           <tr>
-//             <Tile name="76ers" image="../res/images/76ers.png" />
-//             <Tile name="TorontoRaptors" image="../res/images/TorontoRaptors.png" />
-//             <Tile name="DenverNuggets" image="../res/images/DenverNuggets.png" />
-//           </tr>
-//           <tr>
-//             <Tile name="76ers" image="../res/images/76ers.png" />
-//             <Tile name="TorontoRaptors" image="../res/images/TorontoRaptors.png" />
-//             <Tile name="DenverNuggets" image="../res/images/DenverNuggets.png" />
-//           </tr>
-//         </tbody>
-//       </table>
-//     </div>  
-//   )
-// }
