@@ -21,14 +21,13 @@ function ErrorMessage(props) {
 } 
 
 export default function Popup() {
-  const [formState, setFormState] = useState("form-0");
+  const [formState, setFormState] = useState("form-2");
   const [formData, setFormData] = useState({});
   const { register, handleSubmit, watch, errors } = useForm();
   const [usernameExists, setUsernameExists] = useState(false)
   const [emailExists, setEmailExists] = useState(false)
-  const [maleRadio, setMaleRadio] = useState()
-  const [femaleRadio, setFemaleRadio] = useState()
-  const [otherRadio, setOtherRadio] = useState()
+  const [genderState, setGenderState] = useState("male");
+
   let history = useHistory();
 
   const RedirectToSignIn = () => {
@@ -36,19 +35,55 @@ export default function Popup() {
     history.push("/profile");
   } 
 
-  const onSubmit = data => {
+  const submitData = (data) => {
+    console.log("To submit", data);
+    axios.post('http://localhost:5000/signup/add', data).then(processResponse);
+  }
+
+  const processResponse = res => {
+    console.log("Got:");
+    console.log(res.data);
+    console.log(res.status)
+  }
+
+  const submitForm0 = data => {
+    if (usernameExists || emailExists) {
+      return;
+    }
     console.log("data", data);
     console.log("formState",  formState);
     console.log("formData", formData);
 
-    if (formState === "form-0") {
-      setFormState("form-1");
-    } else if (formState === "form-1") {
-      setFormState("form-2");
-    } else {
-      RedirectToSignIn();
-    }
-  };
+    Object.keys(data).forEach((name, val) => {
+      formData[name] = data[name];
+    }) 
+
+    setFormState("form-1");
+  }
+
+  const submitForm1 = data => {
+    console.log("data", data);
+    console.log("formState",  formState);
+    console.log("formData", formData);
+
+    Object.keys(data).forEach((name, val) => {
+      formData[name] = data[name];
+    }) 
+
+    setFormState("form-2");
+  }
+
+  const submitForm2 = data => {
+    console.log("data", data);
+    console.log("formState",  formState);
+    console.log("formData", formData);
+
+    formData["favoriteTeam"] = data;
+
+    console.log("finalFormData", formData);
+    submitData(formData);
+  }
+
 
   const checkUsernameExists = async (username) => {
     const send = {
@@ -87,7 +122,7 @@ export default function Popup() {
 
   const handleImageSelectData = (result) => {
     console.log(result);
-    onSubmit();
+    submitForm2(result);
   }
 
   useEffect(() => {
@@ -96,10 +131,9 @@ export default function Popup() {
         setImageSelect(<ImageSelect btntext="Finish!" data={e.data} width={6} onSubmit={handleImageSelectData} />)
       }
     ); 
-  }, [maleRadio])
+  }, [])
 
   if (formState === "button") {
-    console.log(formState);
     return <button className="SignUpBtn" onClick={() => {setFormState("form-0")}}> Sign up </button>;
   } else if (formState === "form-0") {
     return (
@@ -113,7 +147,7 @@ export default function Popup() {
               <span className="slogan">Start Building Your ACS Score</span>
             </div>
 
-            <form className="form" onSubmit={handleSubmit(onSubmit)}>
+            <form className="form" onSubmit={handleSubmit(submitForm0)}>
               <div className="div-name">
                 <div className="div-firstname">
                   <input name="firstName" className="input-firstname" placeholder="First name" ref={register({ required: true })} />
@@ -163,7 +197,7 @@ export default function Popup() {
 
                 <select name="day" ref={register} className="select-day" >
                   {
-                    Array(31).fill(1).map((el, i) => <option value={i}>{i + 1}</option>) 
+                    Array(31).fill(1).map((el, i) => <option value={i+1} key={i+1}>{i + 1}</option>) 
                   }
                 </select>
 
@@ -178,17 +212,17 @@ export default function Popup() {
 
               <label className="form-label">Gender:</label>
               <div className="gender-container">
-                  <span className="radio-container" onClick={ e => maleRadio.click() }> 
+                  <span className="radio-container" onClick={ () => setGenderState("male") }> 
                     <label className="radio-text">male</label>
-                    <input type="radio" name="gender-male" className="gender-radio" ref={ i => setMaleRadio(i)} checked="checked"></input>
+                    <input type="radio" name="gender-male" className="gender-radio" checked={genderState === "male"} readOnly></input>
                   </span>
-                  <span className="radio-container" onClick={ e => femaleRadio.click() }> 
+                  <span className="radio-container" onClick={ () => setGenderState("female") }> 
                     <label className="radio-text">female</label>
-                    <input type="radio" name="gender-female" className="gender-radio" ref={ i => setFemaleRadio(i) }></input>
+                    <input type="radio" name="gender-female" className="gender-radio" checked={genderState === "female"} readOnly></input>
                   </span>
-                  <span className="radio-container" onClick={ e => otherRadio.click() }> 
+                  <span className="radio-container" onClick={ () => setGenderState("other") }> 
                     <label className="radio-text">other</label>
-                    <input type="radio" name="gender-other" className="gender-radio" ref={ i => setOtherRadio(i) }></input>
+                    <input type="radio" name="gender-other" className="gender-radio" checked={genderState === "other"} readOnly></input>
                   </span>
               </div>
 
@@ -210,7 +244,7 @@ export default function Popup() {
             <span className="slogan">Start Building Your ACS Score</span>
           </div>
 
-          <form className="form" onSubmit={handleSubmit(onSubmit)}>
+          <form className="form" onSubmit={handleSubmit(submitForm1)}>
             <label className="form-question">Favorite sport?</label>
             <input name="favoriteSport" className="input-field" ref={register({ required: true })} />
             {errors.favoriteSport && <span className="error-message">This field is required.</span>}
