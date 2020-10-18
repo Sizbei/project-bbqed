@@ -1,15 +1,20 @@
 .imageselect-table {
   border-spacing: 0;
   border: 1;
-  /* border-collapse: collapse; */
+  border-collapse: collapse;
 }
 
 .imageselect-tile {
   display: table-cell;
-  /* border: 1px solid black; */
+  padding: 0;
+  padding-left: 1px;
+  padding-top: 1px;
+  padding-right: 0px;
+  padding-bottom: 0px;
 }
 
 .image-tile-unselected {
+  padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,13 +22,14 @@
   width: 80px;
   height: 80px;
 
-  border-radius: 10%;
+  border-radius: 7%;
   border: 1px solid black;
 
   background-color: white;
 }
 
 .image-tile-selected {
+  padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -31,7 +37,7 @@
   width: 80px;
   height: 80px;
 
-  border-radius: 10%;
+  border-radius: 7%;
   border: 1px solid black;
 
   background-color: lightskyblue;
