@@ -9,6 +9,7 @@ import Analysis from "./components/Analysis";
 import PicksAndPredictions from "./components/PicksAndPredictions";
 import Profile from "./components/Profile";
 import Registration from "./components/Registration"
+import Settings from "./components/Settings"
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
       <Route path="/PicksAndPredictions" component={PicksAndPredictions} />
       <Route path="/Profile" component={Profile} />
       <Route path="/Registration" component={Registration} />
+      <Route path="/Settings" component={Settings} />
       </div>
     </Router>
   );
