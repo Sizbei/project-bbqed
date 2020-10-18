@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { number } = require('yargs');
 
 const Schema = mongoose.Schema;
 const userSchema = new Schema({
@@ -32,7 +31,7 @@ const userSchema = new Schema({
         required: true
     },
     favoriteTeam:{
-        type: String,
+        type: [String],
         required: true
     },
     sportInterest:{

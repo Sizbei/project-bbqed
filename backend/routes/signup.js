@@ -40,7 +40,49 @@ router.route('/add').post((req, res) =>{
     const username = req.body.username;
     const password = req.body.password;
 
-    const age = req.body.age;
+    switch(req.body.month) {
+        case "January":
+            const month = 1;
+            break;
+        case "February":
+            const month = 2;
+            break;
+        case "March":
+            const month = 3;
+            break;
+        case "April":
+            const month = 4;
+            break;
+        case "May":
+            const month = 5;
+            break;
+        case "June":
+            const month = 6;
+            break;
+        case "July":
+            const month = 7;
+            break;
+        case "August":
+            const month = 8;
+            break;
+        case "September":
+            const month = 9;
+            break;
+        case "October":
+            const month = 10;
+            break;
+        case "November":
+            const month = 11;
+            break;
+        case "December":
+            const month = 12;
+            break;
+        default:
+            const month = 1
+    }
+    const year = req.body.year;
+    const day = req.body.day;
+
     const favoriteSport = req.body.favoriteSport;
     const highestLevelOfPlay = req.body.highestLevelOfPlay;
     const favoriteTeam = req.body.favoriteTeam;
@@ -55,7 +97,7 @@ router.route('/add').post((req, res) =>{
         email: email,
         username: username,
         password: password,
-        age: age,
+        dateOfBirth: year + "-" + month + "-" + day,
         favoriteSport: favoriteSport,
         highestLevelOfPlay: highestLevelOfPlay,
         favoriteTeam: favoriteTeam,
