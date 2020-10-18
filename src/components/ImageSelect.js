@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, useHistory} from "react-router-dom";
 import logo from "../res/images/76ers.png"
 import axios from 'axios';
@@ -28,6 +28,7 @@ function Tile(props) {
 function ImageSelect(props) {
   const width = props.width;
   const data = props.data;
+  const onSubmitHandler = props.onSubmit
 
   const tiles = data.map((e) => <Tile name={e["name"]} image={e["image"]} key={e["name"]} />)
 
@@ -50,6 +51,10 @@ function ImageSelect(props) {
     )
   }
 
+  const getData = () => {
+    onSubmitHandler(1);
+  }
+
   return (
     <div className="imageselect-container">
       <table className="imageselect-table">
@@ -57,22 +62,36 @@ function ImageSelect(props) {
           {buffer}
         </tbody>
       </table>
+
+      <button onClick={getData}>Submit!</button>
     </div>  
   )
 }
 
 export default function ImageTest(props) {
 
+  const [initialized, setInitialized] = useState(false);
   const [imageSelect, setImageSelect] = useState(null);
 
-  axios.get('http://localhost:5000/teams/', "").then(
-    (e) => {
-      setImageSelect(<ImageSelect data={e.data} width={6} />)
-    }
-  );
+  const handleImageSelectData = (result) => {
+    console.log(result);
+  }
+
+  // Use useEffect or componentDidMount to do get requests only once
+  // https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects  
+  useEffect(() => {
+    console.log("using effect...");
+    axios.get('http://localhost:5000/teams/', "").then(
+      (e) => {
+        console.log("Got");
+        setImageSelect(<ImageSelect data={e.data} width={6} onSubmit={handleImageSelectData} />)
+      }
+    ); 
+  }, [])
 
   return (
     <div className="div-test">
+      <span>Text.</span>
       {imageSelect}
     </div>
   )
