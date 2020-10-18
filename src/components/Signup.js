@@ -25,8 +25,10 @@ export default function Popup() {
   const [formData, setFormData] = useState({});
   const { register, handleSubmit, watch, errors } = useForm();
   const [usernameExists, setUsernameExists] = useState(false)
+  const [usernameIllegal, setUsernameIllegal] = useState(false)
   const [emailExists, setEmailExists] = useState(false)
   const [genderState, setGenderState] = useState("male");
+  const bannedUsernames = ["profile"];
 
   let history = useHistory();
 
@@ -61,7 +63,7 @@ export default function Popup() {
   }
 
   const submitForm0 = data => {
-    if (usernameExists || emailExists) {
+    if (usernameExists || usernameIllegal || emailExists) {
       return;
     }
     console.log("data", data);
@@ -110,8 +112,15 @@ export default function Popup() {
     return returnValue.data.exists;
   }
 
-  const handleUsernameChange = async (username) => {    
-    setUsernameExists(await checkUsernameExists(username.target.value));
+  const handleUsernameChange = async (e) => {    
+    const username = e.target.value;
+    setUsernameExists(await checkUsernameExists(username));
+
+    if (bannedUsernames.some(v => {console.log(v); return v === username.toLowerCase()})) {
+      setUsernameIllegal(true);
+    } else {
+      setUsernameIllegal(false);
+    }
   }
 
   const checkEmailExists = async (email) => {
@@ -176,6 +185,7 @@ export default function Popup() {
 
               <input name="username" className="input-field" placeholder="Username" ref={register({ required: true })} onInput={handleUsernameChange} />
               <ErrorMessage flag={usernameExists} text="This username already exists." />
+              <ErrorMessage flag={usernameIllegal} text='Illegal username.' />
               {errors.username && <span className="error-message">This field is required.</span>}
 
               <input type="password" className="input-field" placeholder="Password" name="password" ref={ register({ required: true }) } />
