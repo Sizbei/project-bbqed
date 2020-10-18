@@ -30,20 +30,34 @@ export default function Popup() {
 
   let history = useHistory();
 
-  const RedirectToSignIn = () => {
+  // Reset state
+  const close = () => {
     setFormState("button");
-    history.push("/profile");
-  } 
+    setFormData({});
+    setUsernameExists(false);
+    setEmailExists(false);
+    setGenderState("male");
+  }
 
   const submitData = (data) => {
     console.log("To submit", data);
-    axios.post('http://localhost:5000/signup/add', data).then(processResponse);
+    axios.post('http://localhost:5000/signup/add', data).then(processResponse).catch(processError);
   }
 
   const processResponse = res => {
     console.log("Got:");
     console.log(res.data);
     console.log(res.status)
+    if (res.status == 200) {
+      console.log("New user has been added!");
+      history.push("/profile/" + formData["username"]);
+      close();
+    }
+  }
+
+  const processError = () => {
+    console.log("Error! Is a field missing?");
+    close();
   }
 
   const submitForm0 = data => {
