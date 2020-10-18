@@ -62,7 +62,7 @@ function ImageSelect(props) {
 }
 
 export default function ImageTest(props) {
-  
+
   const [imageSelect, setImageSelect] = useState(null);
 
   axios.get('http://localhost:5000/teams/', "").then(
@@ -72,7 +72,7 @@ export default function ImageTest(props) {
   );
 
   return (
-    <div>
+    <div className="div-test">
       {imageSelect}
     </div>
   )
