@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { number } = require('yargs');
 
 const Schema = mongoose.Schema;
 const userSchema = new Schema({
@@ -18,9 +19,9 @@ const userSchema = new Schema({
         required: true,
         trim: true
     },
-    age:{
-        type: Number,
-        required: true,
+    dateOfBirth:{
+        type: Date,
+        required: true
     },
     favoriteSport:{
         type: String,
