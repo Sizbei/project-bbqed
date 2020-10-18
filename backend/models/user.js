@@ -63,11 +63,6 @@ const userSchema = new Schema({
         required: true,
         default: "User"
     },
-    imageURL:{
-        type: String,
-        required: false,
-        default: ""
-    }
 },{
     timestamps:true
 });

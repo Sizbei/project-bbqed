@@ -39,46 +39,46 @@ router.route('/add').post((req, res) =>{
     const email = req.body.email;
     const username = req.body.username;
     const password = req.body.password;
-
+    var month;
     switch(req.body.month) {
         case "January":
-            const month = 1;
+            month = "1";
             break;
         case "February":
-            const month = 2;
+            month = "2";
             break;
         case "March":
-            const month = 3;
+            month = "3";
             break;
         case "April":
-            const month = 4;
+            month = "4";
             break;
         case "May":
-            const month = 5;
+            month = "5";
             break;
         case "June":
-            const month = 6;
+            month = "6";
             break;
         case "July":
-            const month = 7;
+            month = "7";
             break;
         case "August":
-            const month = 8;
+            month = "8";
             break;
         case "September":
-            const month = 9;
+            month = "9";
             break;
         case "October":
-            const month = 10;
+            month = "10";
             break;
         case "November":
-            const month = 11;
+            month = "11";
             break;
         case "December":
-            const month = 12;
+            month = "12";
             break;
         default:
-            const month = 1
+            month = "1"
     }
     const year = req.body.year;
     const day = req.body.day;
@@ -91,7 +91,6 @@ router.route('/add').post((req, res) =>{
     const gender = req.body.gender;
     const lastName = req.body.lastName;
     const firstName = req.body.firstName;
-    const imageURL = req.body.url;
     
     const newUser = new user({
         email: email,
@@ -105,7 +104,6 @@ router.route('/add').post((req, res) =>{
         gender: gender,
         lastName: lastName,
         firstName: firstName,
-        imageURL: imageURL
     })
     newUser.save()
         .then(() => res.json('Added User'))
