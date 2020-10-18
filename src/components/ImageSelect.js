@@ -29,37 +29,41 @@ function ImageSelect(props) {
   const width = props.width;
   const data = props.data;
   const onSubmitHandler = props.onSubmit
+  const [tableContents, setTableContents] = useState(null);
 
   const tiles = data.map((e) => <Tile name={e["name"]} image={e["image"]} key={e["name"]} />)
-
-  let buffer = []
-
-  for (var row = 0; row < Math.ceil(data.length / width); row++) {
-    let tr_contents = []
-
-    for (var col = 0; col < width; col++) {
-      const index = row * width + col;
-      if (index < tiles.length) {
-        tr_contents.push(tiles[index])
-      }
-    }
-
-    buffer.push(
-      <tr key={row}>
-        {tr_contents}
-      </tr>
-    )
-  }
 
   const getData = () => {
     onSubmitHandler(1);
   }
+  
+  useEffect(() => {
+    let buffer = []
+    for (var row = 0; row < Math.ceil(data.length / width); row++) {
+      let tr_contents = []
+  
+      for (var col = 0; col < width; col++) {
+        const index = row * width + col;
+        if (index < tiles.length) {
+          tr_contents.push(tiles[index])
+        }
+      }
+  
+      buffer.push(
+        <tr key={row}>
+          {tr_contents}
+        </tr>
+      )
+    }
+
+    setTableContents(buffer);
+  }, [])
 
   return (
     <div className="imageselect-container">
       <table className="imageselect-table">
         <tbody>
-          {buffer}
+          {tableContents}
         </tbody>
       </table>
 
@@ -77,13 +81,9 @@ export default function ImageTest(props) {
     console.log(result);
   }
 
-  // Use useEffect or componentDidMount to do get requests only once
-  // https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects  
   useEffect(() => {
-    console.log("using effect...");
     axios.get('http://localhost:5000/teams/', "").then(
       (e) => {
-        console.log("Got");
         setImageSelect(<ImageSelect data={e.data} width={6} onSubmit={handleImageSelectData} />)
       }
     ); 
@@ -91,7 +91,6 @@ export default function ImageTest(props) {
 
   return (
     <div className="div-test">
-      <span>Text.</span>
       {imageSelect}
     </div>
   )
