@@ -9,37 +9,37 @@ const profileSchema = new Schema({
     required: true,
     unique: true,
     trim: true,
-    minlength: 3
   },
   about: {
     type: String,
     required: false,
-    unique: true,
+    unique: false,
     trim: true,
   },
   interest: {
     type: String,
     required: false,
-    unique: true,
+    unique: false,
     trim: true,
   },
   status: {
     type: String,
     required: false,
-    unique: true,
+    unique: false,
     trim: true,
   },
   image: {
     type: String,
     required: false,
-    unique: true,
+    unique: false,
     trim: true,
   },
   acs: {
     type: Number,
-    required: false,
-    unique: true,
-    trim: true,
+    required: true,
+    unique: false,
+    default: 0,
+    trim: true
   },
 }, {
   timestamps: true,
