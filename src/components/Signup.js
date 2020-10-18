@@ -1,9 +1,10 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, useHistory} from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from 'axios';
 import Header from './Header';
 import Registration from './Registration'
+import ImageSelect from './ImageSelect'
 import logo from '../res/SportCredLogo.png';
 
 import '../styling/Signup.css';
@@ -20,7 +21,7 @@ function ErrorMessage(props) {
 } 
 
 export default function Popup() {
-  const [formState, setFormState] = useState("form-1");
+  const [formState, setFormState] = useState("button");
   const [formData, setFormData] = useState();
   const { register, handleSubmit, watch, errors } = useForm();
   const [usernameExists, setUsernameExists] = useState(false)
@@ -36,12 +37,14 @@ export default function Popup() {
   } 
 
   
-  const onSubmit = async data => {
+  const onSubmit = data => {
     console.log(data);
     console.log(formState);
 
-    if (formState == "form-0") {
+    if (formState === "form-0") {
       setFormState("form-1");
+    } else if (formState === "form-1") {
+      setFormState("form-2");
     } else {
       RedirectToSignIn();
     }
@@ -79,7 +82,21 @@ export default function Popup() {
 
   const year = (new Date()).getFullYear();
   const years = Array.from(new Array(120),( val, index) => -index + year);
-  console.log(years);
+
+  const [imageSelect, setImageSelect] = useState(null);
+
+  const handleImageSelectData = (result) => {
+    console.log(result);
+    onSubmit();
+  }
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/teams/', "").then(
+      (e) => {
+        setImageSelect(<ImageSelect btntext="Finish!" data={e.data} width={6} onSubmit={handleImageSelectData} />)
+      }
+    ); 
+  }, [])
 
   if (formState === "button") {
     console.log(formState);
@@ -181,7 +198,7 @@ export default function Popup() {
         </div>
       </div>
     )
-  } else {
+  } else if (formState === "form-1") {
     return (
       <div>
       <button className="SignUpBtn" onClick={() => {}}> Sign up </button>
@@ -200,6 +217,24 @@ export default function Popup() {
 
             <input type="submit" className="submit" value="Continue" /> 
           </form>
+        </div>
+      </div>
+    </div>
+    )
+  } else if (formState === "form-2") {
+    return (
+      <div>
+        <button className="SignUpBtn" onClick={() => {}}> Sign up </button>
+
+        <div className='popup' onClick={() => setFormState("button")}>
+        <div className='popup_inner' onClick = {(e) => { e.stopPropagation(); }}>
+          <div className="signup-logo-container">
+            <img src={logo} className="signup-logo" alt="SportCred" href="the_zone"/>
+            <span className="slogan">Start Building Your ACS Score</span>
+          </div>
+
+          <label className="form-question">What are your favorite teams?</label>
+          {imageSelect}
         </div>
       </div>
     </div>

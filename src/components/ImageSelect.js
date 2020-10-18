@@ -25,7 +25,8 @@ function Tile(props) {
   )
 }
 
-function ImageSelect(props) {
+export default function ImageSelect(props) {
+  const btntext = props.btntext;
   const width = props.width;
   const data = props.data;
   const onSubmitHandler = props.onSubmit
@@ -102,14 +103,16 @@ function ImageSelect(props) {
         </tbody>
       </table>
 
-      <button onClick={getData}>Submit!</button>
+      <div className="imageselect-btn-container">
+        <button className="imageselect-btn" onClick={getData}>{btntext}</button>
+      </div>
     </div>  
   )
 }
 
-export default function ImageTest(props) {
+// A minimal example for ImageSelect
+function ImageTest(props) {
 
-  const [initialized, setInitialized] = useState(false);
   const [imageSelect, setImageSelect] = useState(null);
 
   const handleImageSelectData = (result) => {
@@ -119,7 +122,7 @@ export default function ImageTest(props) {
   useEffect(() => {
     axios.get('http://localhost:5000/teams/', "").then(
       (e) => {
-        setImageSelect(<ImageSelect data={e.data} width={6} onSubmit={handleImageSelectData} />)
+        setImageSelect(<ImageSelect btntext="Submit!" data={e.data} width={6} onSubmit={handleImageSelectData} />)
       }
     ); 
   }, [])
