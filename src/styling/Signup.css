@@ -66,7 +66,7 @@
 
 .form-label {
   display: block;
-  color: white;
+  color:  #FF7e1F;
   margin-top: 8px;
   font-size: 14px;
 }
@@ -112,6 +112,11 @@
   width: 180px;
   font-size: 15px;
   border: none;
+}
+
+.form-question {
+  color:  #FF7e1F;
+  margin-bottom: -4px;
 }
 
 .input-field {
@@ -171,7 +176,16 @@
   margin-right: 8px;
 }
 
-.submit {
+.imageselect-container {
+  margin-top: 7px;
+}
+
+.imageselect-btn-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.submit, .imageselect-btn {
   margin-left: auto;
   margin-right: auto;
   margin-top: 1.5em;

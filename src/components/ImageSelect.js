@@ -1,7 +1,4 @@
-import Axios from 'axios';
-import React, { Component, useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, useHistory} from "react-router-dom";
-import logo from "../res/images/76ers.png"
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import "../styling/ImageSelect.css"
@@ -9,89 +6,129 @@ import "../styling/ImageSelect.css"
 function Tile(props) {
   const name = props.name;
   const image = props.image;
+  const notifyTable = props.notifyTable
 
   const [selected, setSelected] = useState(false);
   
-  const handleClick = (e) => {
-    setSelected(!selected);
+  const handleClick = () => {
+    let newSelected = !selected;
+    setSelected(newSelected);
+    notifyTable(name, newSelected);
   }
 
   return (
   <td className="imageselect-tile">
     <div className={selected ? "image-tile-selected" : "image-tile-unselected"} onClick={handleClick}>
-      <img className="imageselect-image" src={process.env.PUBLIC_URL + image} ></img>
+      <img className="imageselect-image" src={process.env.PUBLIC_URL + image} alt={name} ></img>
     </div>
   </td> 
   )
 }
 
-function ImageSelect(props) {
+export default function ImageSelect(props) {
+  const btntext = props.btntext;
   const width = props.width;
   const data = props.data;
   const onSubmitHandler = props.onSubmit
+  const [tableContents, setTableContents] = useState(null);
 
-  const tiles = data.map((e) => <Tile name={e["name"]} image={e["image"]} key={e["name"]} />)
+  const handleToggle = (name, selected) => {
+    let newTileState = tileState.map( o => {
+      if (o["pair_name"] !== name) {
+        return o;
+      } else {
+        const obj = {
+          pair_name: o["pair_name"],
+          pair_bool: selected
+        }
 
-  let buffer = []
-
-  for (var row = 0; row < Math.ceil(data.length / width); row++) {
-    let tr_contents = []
-
-    for (var col = 0; col < width; col++) {
-      const index = row * width + col;
-      if (index < tiles.length) {
-        tr_contents.push(tiles[index])
+        return obj;
       }
+    })
+    setTileState(newTileState)
+  }
+
+  const tiles = data.map((e) => <Tile name={e["name"]} image={e["image"]} key={e["name"]} notifyTable={handleToggle} />)
+
+  const pairs = data.map((t) => {
+    const obj = {
+      pair_name: t["name"],
+      pair_bool: false
     }
 
-    buffer.push(
-      <tr key={row}>
-        {tr_contents}
-      </tr>
-    )
-  }
+    return obj;
+  })
+
+  const [tileState, setTileState] = useState(pairs);
 
   const getData = () => {
-    onSubmitHandler(1);
+    let buffer = []
+    tileState.forEach(element => {
+      if (element["pair_bool"]) {
+        buffer.push(element["pair_name"]);
+      }
+    });
+
+    onSubmitHandler(buffer);
   }
+
+  
+  useEffect(() => {
+    let buffer = []
+    for (var row = 0; row < Math.ceil(data.length / width); row++) {
+      let tr_contents = []
+  
+      for (var col = 0; col < width; col++) {
+        const index = row * width + col;
+        if (index < tiles.length) {
+          tr_contents.push(tiles[index])
+        }
+      }
+  
+      buffer.push(
+        <tr key={row}>
+          {tr_contents}
+        </tr>
+      )
+    }
+
+    setTableContents(buffer);
+  }, [tileState]) // aka refresh on tileState change, otherwise setTileState() does nothing
 
   return (
     <div className="imageselect-container">
       <table className="imageselect-table">
         <tbody>
-          {buffer}
+          {tableContents}
         </tbody>
       </table>
 
-      <button onClick={getData}>Submit!</button>
+      <div className="imageselect-btn-container">
+        <button className="imageselect-btn" onClick={getData}>{btntext}</button>
+      </div>
     </div>  
   )
 }
 
-export default function ImageTest(props) {
+// A minimal example for ImageSelect
+function ImageTest(props) {
 
-  const [initialized, setInitialized] = useState(false);
   const [imageSelect, setImageSelect] = useState(null);
 
   const handleImageSelectData = (result) => {
     console.log(result);
   }
 
-  // Use useEffect or componentDidMount to do get requests only once
-  // https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects  
   useEffect(() => {
-    console.log("using effect...");
     axios.get('http://localhost:5000/teams/', "").then(
       (e) => {
-        console.log("Got");
-        setImageSelect(<ImageSelect data={e.data} width={6} onSubmit={handleImageSelectData} />)
+        setImageSelect(<ImageSelect btntext="Submit!" data={e.data} width={6} onSubmit={handleImageSelectData} />)
       }
     ); 
   }, [])
 
   return (
     <div className="div-test">
-      <span>Text.</span>
       {imageSelect}
     </div>
   )

@@ -1,9 +1,10 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, useHistory} from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from 'axios';
 import Header from './Header';
 import Registration from './Registration'
+import ImageSelect from './ImageSelect'
 import logo from '../res/SportCredLogo.png';
 
 import '../styling/Signup.css';
@@ -20,32 +21,85 @@ function ErrorMessage(props) {
 } 
 
 export default function Popup() {
-  const [formState, setFormState] = useState("form-1");
-  const [formData, setFormData] = useState();
+  const [formState, setFormState] = useState("button");
+  const [formData, setFormData] = useState({});
   const { register, handleSubmit, watch, errors } = useForm();
   const [usernameExists, setUsernameExists] = useState(false)
+  const [usernameIllegal, setUsernameIllegal] = useState(false)
   const [emailExists, setEmailExists] = useState(false)
-  const [maleRadio, setMaleRadio] = useState()
-  const [femaleRadio, setFemaleRadio] = useState()
-  const [otherRadio, setOtherRadio] = useState()
+  const [genderState, setGenderState] = useState("male");
+  const bannedUsernames = ["profile"];
+
   let history = useHistory();
 
-  const RedirectToSignIn = () => {
+  // Reset state
+  const close = () => {
     setFormState("button");
-    history.push("/profile");
-  } 
+    setFormData({});
+    setUsernameExists(false);
+    setEmailExists(false);
+    setGenderState("male");
+  }
 
-  
-  const onSubmit = async data => {
-    console.log(data);
-    console.log(formState);
+  const submitData = (data) => {
+    console.log("To submit", data);
+    axios.post('http://localhost:5000/signup/add', data).then(processResponse).catch(processError);
+  }
 
-    if (formState == "form-0") {
-      setFormState("form-1");
-    } else {
-      RedirectToSignIn();
+  const processResponse = res => {
+    console.log("Got:");
+    console.log(res.data);
+    console.log(res.status)
+    if (res.status == 200) {
+      console.log("New user has been added!");
+      history.push("/profile/" + formData["username"]);
+      close();
     }
-  };
+  }
+
+  const processError = () => {
+    console.log("Error! Is a field missing?");
+    close();
+  }
+
+  const submitForm0 = data => {
+    if (usernameExists || usernameIllegal || emailExists) {
+      return;
+    }
+    console.log("data", data);
+    console.log("formState",  formState);
+    console.log("formData", formData);
+
+    Object.keys(data).forEach((name, val) => {
+      formData[name] = data[name];
+    }) 
+
+    setFormState("form-1");
+  }
+
+  const submitForm1 = data => {
+    console.log("data", data);
+    console.log("formState",  formState);
+    console.log("formData", formData);
+
+    Object.keys(data).forEach((name, val) => {
+      formData[name] = data[name];
+    }) 
+
+    setFormState("form-2");
+  }
+
+  const submitForm2 = data => {
+    console.log("data", data);
+    console.log("formState",  formState);
+    console.log("formData", formData);
+
+    formData["favoriteTeam"] = data;
+
+    console.log("finalFormData", formData);
+    submitData(formData);
+  }
+
 
   const checkUsernameExists = async (username) => {
     const send = {
@@ -58,8 +112,15 @@ export default function Popup() {
     return returnValue.data.exists;
   }
 
-  const handleUsernameChange = async (username) => {    
-    setUsernameExists(await checkUsernameExists(username.target.value));
+  const handleUsernameChange = async (e) => {    
+    const username = e.target.value;
+    setUsernameExists(await checkUsernameExists(username));
+
+    if (bannedUsernames.some(v => {console.log(v); return v === username.toLowerCase()})) {
+      setUsernameIllegal(true);
+    } else {
+      setUsernameIllegal(false);
+    }
   }
 
   const checkEmailExists = async (email) => {
@@ -79,10 +140,23 @@ export default function Popup() {
 
   const year = (new Date()).getFullYear();
   const years = Array.from(new Array(120),( val, index) => -index + year);
-  console.log(years);
+
+  const [imageSelect, setImageSelect] = useState(null);
+
+  const handleImageSelectData = (result) => {
+    console.log(result);
+    submitForm2(result);
+  }
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/teams/', "").then(
+      (e) => {
+        setImageSelect(<ImageSelect btntext="Finish!" data={e.data} width={6} onSubmit={handleImageSelectData} />)
+      }
+    ); 
+  }, [])
 
   if (formState === "button") {
-    console.log(formState);
     return <button className="SignUpBtn" onClick={() => {setFormState("form-0")}}> Sign up </button>;
   } else if (formState === "form-0") {
     return (
@@ -96,7 +170,7 @@ export default function Popup() {
               <span className="slogan">Start Building Your ACS Score</span>
             </div>
 
-            <form className="form" onSubmit={handleSubmit(onSubmit)}>
+            <form className="form" onSubmit={handleSubmit(submitForm0)}>
               <div className="div-name">
                 <div className="div-firstname">
                   <input name="firstName" className="input-firstname" placeholder="First name" ref={register({ required: true })} />
@@ -111,6 +185,7 @@ export default function Popup() {
 
               <input name="username" className="input-field" placeholder="Username" ref={register({ required: true })} onInput={handleUsernameChange} />
               <ErrorMessage flag={usernameExists} text="This username already exists." />
+              <ErrorMessage flag={usernameIllegal} text='Illegal username.' />
               {errors.username && <span className="error-message">This field is required.</span>}
 
               <input type="password" className="input-field" placeholder="Password" name="password" ref={ register({ required: true }) } />
@@ -146,7 +221,7 @@ export default function Popup() {
 
                 <select name="day" ref={register} className="select-day" >
                   {
-                    Array(31).fill(1).map((el, i) => <option value={i}>{i + 1}</option>) 
+                    Array(31).fill(1).map((el, i) => <option value={i+1} key={i+1}>{i + 1}</option>) 
                   }
                 </select>
 
@@ -161,17 +236,17 @@ export default function Popup() {
 
               <label className="form-label">Gender:</label>
               <div className="gender-container">
-                  <span className="radio-container" onClick={ e => maleRadio.click() }> 
+                  <span className="radio-container" onClick={ () => setGenderState("male") }> 
                     <label className="radio-text">male</label>
-                    <input type="radio" name="gender" className="gender-radio" ref={ i => setMaleRadio(i) }></input>
+                    <input type="radio" name="gender-male" className="gender-radio" checked={genderState === "male"} readOnly></input>
                   </span>
-                  <span className="radio-container" onClick={ e => femaleRadio.click() }> 
+                  <span className="radio-container" onClick={ () => setGenderState("female") }> 
                     <label className="radio-text">female</label>
-                    <input type="radio" name="gender" className="gender-radio" ref={ i => setFemaleRadio(i) }></input>
+                    <input type="radio" name="gender-female" className="gender-radio" checked={genderState === "female"} readOnly></input>
                   </span>
-                  <span className="radio-container" onClick={ e => otherRadio.click() }> 
+                  <span className="radio-container" onClick={ () => setGenderState("other") }> 
                     <label className="radio-text">other</label>
-                    <input type="radio" name="gender" className="gender-radio" ref={ i => setOtherRadio(i) }></input>
+                    <input type="radio" name="gender-other" className="gender-radio" checked={genderState === "other"} readOnly></input>
                   </span>
               </div>
 
@@ -181,7 +256,7 @@ export default function Popup() {
         </div>
       </div>
     )
-  } else {
+  } else if (formState === "form-1") {
     return (
       <div>
       <button className="SignUpBtn" onClick={() => {}}> Sign up </button>
@@ -193,13 +268,39 @@ export default function Popup() {
             <span className="slogan">Start Building Your ACS Score</span>
           </div>
 
-          <form className="form" onSubmit={handleSubmit(onSubmit)}>
+          <form className="form" onSubmit={handleSubmit(submitForm1)}>
             <label className="form-question">Favorite sport?</label>
             <input name="favoriteSport" className="input-field" ref={register({ required: true })} />
             {errors.favoriteSport && <span className="error-message">This field is required.</span>}
 
+            <label className="form-question">What sport would you like to know more about?</label>
+            <input name="sportInterest" className="input-field" ref={register({ required: true })} />
+            {errors.favoriteSport && <span className="error-message">Tell us!</span>}
+
+            <label className="form-question">What is your highest level of play in any sport?</label>
+            <input name="highestLevelOfPlay" className="input-field" ref={register({ required: true })} />
+            {errors.favoriteSport && <span className="error-message">This field is required.</span>}
+
             <input type="submit" className="submit" value="Continue" /> 
           </form>
+        </div>
+      </div>
+    </div>
+    )
+  } else if (formState === "form-2") {
+    return (
+      <div>
+        <button className="SignUpBtn" onClick={() => {}}> Sign up </button>
+
+        <div className='popup' onClick={() => setFormState("button")}>
+        <div className='popup_inner' onClick = {(e) => { e.stopPropagation(); }}>
+          <div className="signup-logo-container">
+            <img src={logo} className="signup-logo" alt="SportCred" href="the_zone"/>
+            <span className="slogan">Start Building Your ACS Score</span>
+          </div>
+
+          <label className="form-question">What are your favorite teams?</label>
+          {imageSelect}
         </div>
       </div>
     </div>
