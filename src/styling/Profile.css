@@ -1,80 +1,157 @@
 /**************************** STYLING FOR OVERALL PROFILE PAGE ***********************************/
-.container-top-section , .container-middle-section { 
-    display: flex;  
-    background: #222629 ;
-    padding: 10px; 
+.background { 
+  background-image: url('../res/images/background.png'); 
+  background-size: cover; 
 }
-
+.container-middle-section, .container-profile, .container-top-section{ 
+  color: white;
+  display: flex; 
+}
 .container-middle-section { 
-    position: relative; 
-    flex-direction: column; 
-    color: white; 
+  position: relative; 
+  padding: 0% 10%;
+  background-color: black;
+  align-items: flex-start;
+  justify-content: center;
+
 }
 
 .container-middle-section h1{ 
-    padding-left: 20%;
+  padding-left: 45%; 
+
 }
 .container-top-section {
-    position: relative;
-    justify-content: center;
-    padding-right: 5%; 
+  background-color: black;
+  position: relative;
+  flex-direction: column;
+  align-items:center; 
+
+
+}
+.container-profile {
+  padding-top: 10px;  
+  background-image: linear-gradient(transparent, black);
+  position: relative;
+  justify-content: center;
+
 }
 
 /**************************** STYLING FOR PROFILE + PIE CHART SECTION  ***********************************/
 .profile-photo {
-    height: 230px;
-    width: 230px;
-    display: block;
-    background-image: url('../res/ACSBorder.png');
-    background-size: contain;
-  }
-  
-  .profile-user-given-photo {
-    margin-left: 33px;
-    margin-top: 40px;
-  
-    display: block;
-    height: 150px;
-    width: 150px;
-    border-radius: 50%;
-  }
+  height: 230px;
+  width: 230px;
+  display: block;
+  background-image: url('../res/ACSBorder.png');
+  background-size: contain;
+}
+
+.profile-user-given-photo {
+  margin-left: 37px;
+  margin-top: 45px;
+
+  display: block;
+  height: 140px;
+  width: 140px;
+  border-radius: 50%;
+}
 
 .profile-badge {
-    margin-top: -120px ; 
-    margin-left: 160px;
-    padding: 44px; 
-    border-radius: 50%; 
-    position: absolute;
-    background-color: black; 
-    
+  margin-top: -120px ; 
+  margin-left: 160px;
+  padding: 44px; 
+  border-radius: 50%; 
+  position: absolute;
+  background-color: black; 
+  
 
 }
 .profile-user-score{ 
-    margin-top: -85px ; 
-    margin-left: 190px;
-    position: absolute;
+  margin-top: -85px ; 
+  margin-left: 190px;
+  position: absolute;
 }
 .piechart {
-    padding-left: 10%; 
-    padding-top: 2%; 
-    height: 170px;
-    width: 170px;
-  }
+  padding-left: 10%; 
+  padding-top: 1%; 
+  height: 170px;
+  width: 170px;
+}
 
 /**************************** STYLING FOR USER INFORMATION ***********************************/
-  .information {
-    position: relative; 
-    padding-left: 20%;
-    padding-right: 20%;
-    word-break:break-all;
-  }
+.information {
+  position: relative; 
+  padding-left: 20%;
+  padding-right: 20%;
+  word-break:break-all;
+}
+ 
+.content , .interest-content { 
+  border-color: #747474;
+  border-style: solid; 
+  background-color: #747474;
+  padding-top: 10px;
+  padding-bottom: 40px; 
+  padding-left: 10px; 
+  padding-right: 10px;      
+}
 
-  .content { 
-    border-color: #747474;
-    border-style: solid; 
-    background-color: #747474;
-    padding-top: 10px;
-    padding-bottom: 50px; 
-    padding-left: 10px; 
-    padding-right: 10px;      
-  }
+.interest img{
+  height: auto;
+  width: 5%;  
+
+}
+.asc-content {
+  background-color: #747474;
+}
+.asc-content td {
+  padding: 10px; 
+}
+.score-content[answer="pos"] { 
+  color:#61b305;
+} 
+.score-content[answer="neg"] { 
+  color: #B33838;
+} 
+
+/******************************STYLES FOR FEATURE POSITIONING **********************************/
+.left-content{
+  order: 1; 
+  flex-grow: 2;
+  padding: 10px; 
+}
+
+.middle-content{ 
+  order: 2; 
+  flex-grow: 4; 
+}
+
+.right-content {
+  order: 3;
+  flex-grow: 2; 
+}
+
+
+@font-face {
+
+  font-family: 'Anton';
+  font-family: 'Commissioner';
+  font-family: 'Roboto Condensed';
+  font-family: 'Open Sans';
+  font-family: 'Tahoma';
+  font-family: 'Oxygen';
+  font-family: 'Helveticaneue';
+  font-family: 'Uni Sans';
+
+  src: local('Anton'), url(../res/fonts/Anton/Anton-Regular.ttf) format('truetype');
+  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-VariableFont_wght.ttf) format('truetype');
+  src: local('Roboto Condensed'), local('RobotoCondensed'), url(../res/fonts/Roboto_Condensed/RobotoCondensed-Regular.ttf) format('truetype');
+  src: local('Open Sans'), local('OpenSans'),
+       url(../res/fonts/Open_Sans/OpenSans-Regular.ttf) format('truetype');
+
+  src: local('Oxygen'), url(../res/fonts/Oxygen/Oxygen-Regular.ttf) format('truetype');
+  src: local('Tahoma'), url(../res/fonts/Tahoma/Tahoma-Regular.ttf) format('truetype');
+  src: local('Helveticaneue'), url(../res/fonts/Helveticaneue/HelveticaNeue.ttf) format('truetype');
+  /* src: local('Uni Sans'), url(../res/fonts/Uni-Sans/Uni-Sans-Thin.ttf) format('truetype'); */
+
+}
+
