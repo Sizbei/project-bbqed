@@ -70,7 +70,7 @@ export default class Example extends Component {
         
       return (
         
-        <div className="container">
+        <div className="editprofile-container">
           <Header />
           
           <div className="container-middle-section"> 

@@ -1,11 +1,20 @@
 /**************************** STYLING FOR OVERALL PROFILE PAGE ***********************************/
-.cointainer {
-  background: #222629 ;
+.editprofile-container {
+  display: flex; 
+  flex-direction: column;
+
+  /* cover the remaining of the page... https://stackoverflow.com/a/23908106 */
+  height: 100%;
+  width: 100%;
+
+  height: 100vh;
+  width: 100vw;
+
+  background-color: #222629;
 }
 
 .container-middle-section { 
-  display: flex;  
-  background: #222629 ;
+  display: flex;
   padding: 10px; 
 }
 
