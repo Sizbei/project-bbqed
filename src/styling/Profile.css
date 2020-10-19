@@ -21,10 +21,8 @@
 
 }
 .container-top-section {
-  background-color: black;
   position: relative;
   flex-direction: column;
-  align-items:center; 
 
 
 }
@@ -32,11 +30,27 @@
   padding-top: 10px;  
   background-image: linear-gradient(transparent, black);
   position: relative;
-  justify-content: center;
+  padding-left: 10%;
 
 }
 
-/**************************** STYLING FOR PROFILE + PIE CHART SECTION  ***********************************/
+/******************************STYLES FOR FEATURE POSITIONING **********************************/
+.left-content{
+  order: 1; 
+  flex-grow: 2;
+  padding: 10px; 
+}
+
+.right-content {
+  order: 3;
+  flex-grow: 4; 
+  padding: 10px; 
+}
+.bottom-right-content {
+  display: flex; 
+}
+
+/**************************** STYLING FOR PROFILE  ***********************************/
 .profile-photo {
   height: 230px;
   width: 230px;
@@ -54,28 +68,15 @@
   width: 140px;
   border-radius: 50%;
 }
-
-.profile-badge {
-  margin-top: -120px ; 
-  margin-left: 160px;
-  padding: 44px; 
-  border-radius: 50%; 
-  position: absolute;
-  background-color: black; 
-  
-
-}
 .profile-user-score{ 
   margin-top: -85px ; 
-  margin-left: 190px;
+  margin-left: 200px;
   position: absolute;
 }
-.piechart {
-  padding-left: 10%; 
-  padding-top: 1%; 
-  height: 170px;
-  width: 170px;
+.profile-info {
+  padding-left: 50px; 
 }
+
 
 /**************************** STYLING FOR USER INFORMATION ***********************************/
 .information {
@@ -85,25 +86,68 @@
   word-break:break-all;
 }
  
-.content , .interest-content { 
-  border-color: #747474;
-  border-style: solid; 
+.content{ 
   background-color: #747474;
   padding-top: 10px;
-  padding-bottom: 40px; 
+  min-height: 200px ;
+  max-height: 200px;  
   padding-left: 10px; 
   padding-right: 10px;      
 }
+
+/***************************** STYLE FOR RADAR LIST *************************************/
+.radar-list p {
+  background-color: #747474;
+  padding-top: 10px;
+  min-height: 300px ; 
+  max-height: 300px; 
+  padding-left: 10px; 
+  padding-right: 10px; 
+}
+/********************************** STYLING FOR INTEREST ***********************************************************/
+.interest , .picks{
+  flex-grow: 4;
+  padding: 10px;
+}
+.interest p {
+  background-color: #747474;
+  padding-top: 10px;
+  min-height: 300px ; 
+  max-height: 300px; 
+  padding-left: 10px; 
+  padding-right: 10px; 
+}
+
 
 .interest img{
   height: auto;
   width: 5%;  
 
 }
-.asc-content {
+.picks p {
   background-color: #747474;
+  padding-top: 10px;
+  min-height: 300px ; 
+  max-height: 300px; 
+  padding-left: 10px; 
+  padding-right: 10px; 
 }
-.asc-content td {
+
+/*********************STYLES FOR ACS HISTORY*********************/
+.piechart {
+  padding-left: 10%; 
+  padding-right: 10%; 
+  padding-top: 1%; 
+  padding-bottom: 1%; 
+  height: 170px;
+  width: 170px;
+}
+.acs-content {
+  background-color: #747474;
+  display: flex;
+
+}
+.acs-content td {
   padding: 10px; 
 }
 .score-content[answer="pos"] { 
@@ -112,23 +156,6 @@
 .score-content[answer="neg"] { 
   color: #B33838;
 } 
-
-/******************************STYLES FOR FEATURE POSITIONING **********************************/
-.left-content{
-  order: 1; 
-  flex-grow: 2;
-  padding: 10px; 
-}
-
-.middle-content{ 
-  order: 2; 
-  flex-grow: 4; 
-}
-
-.right-content {
-  order: 3;
-  flex-grow: 2; 
-}
 
 
 @font-face {

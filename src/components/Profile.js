@@ -9,6 +9,8 @@ export default class Profile extends Component {
     constructor(props) {
         super(props);
         //console.log(props.location.pathname); 
+        this.onSubmit = this.onSubmit.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
         this.state = { 
             path: props.location.pathname,
             username: '',
@@ -20,15 +22,17 @@ export default class Profile extends Component {
             new_post: '', 
         }
     }
-
-    handleChangePost(event) {
+    //******************* CREATING POST FUNCTIONS ****************************/
+    onSubmit(event) {
         this.setState({new_post: event.target.value});
     }
 
     handleSubmit(event) {
         alert('A new post has been created ' + this.state.value);
         event.preventDefault();
-      }
+    }
+    
+    /************************GET REQUEST FOR USER INFRORMATION ***********************/
     componentDidMount(){ 
 
         axios.get('http://localhost:5000' + this.state.path)
@@ -45,23 +49,29 @@ export default class Profile extends Component {
         })
         
     }
-    
+    /*
+    <form onSubmit={handleSubmit(onSubmit)}>
+                        <input type="submit" className="submit" value="Continue" /> 
+                    </form>
+                    */
     render(){
         
         return (
             <div className="background">
                 <Header/>
                 <div className="container-profile"> 
+                    
                     <div className="profile-photo">
                         <img src={this.state.image} className="profile-user-given-photo"/>  
                         <label className="profile-user-score">{this.state.asc}</label>   
-                        
+                                          
+                    </div>
+                    <div className="profile-info">
+                        <h1>{this.state.username}</h1>
+                        <p>{this.state.status}</p>
                     </div>
                     
-                </div>
-                <div className="container-top-section">
-                    <h1>{this.state.username}</h1>
-                    <p>{this.state.status}</p>
+                    
                 </div>
                 <div className="container-middle-section"> 
                     <div className="left-content">
@@ -69,39 +79,29 @@ export default class Profile extends Component {
                         <h2 className="title"> About</h2>
                         <p className="content">{this.state.about}</p>
 
-                        <div className="interest">
-                        <h2 className="title">Interest</h2>
-                        <p className="interest-content">
-                            {this.state.interest}
-                        </p>
-
-                        <h2 className="title"> Radar List</h2>
-                        <p className="content"> To be implemented </p>
-                </div>
+                        <div className="radar-list">
+                            <h2> Radar List</h2>
+                            <p> To be implemented </p>
+                        </div>
+                        
+                        
                     </div>
 
-                    <div className="middle-content">
-                        <form onSubmit={this.handleSubmit}>
-                            <h2>
-                            How are you Feeling Today? 
-                            <input type="text" value={this.state.value} onChange={this.handleChangePost} />
-                            </h2>
-                            <input type="submit" value="Submit" />
-                        </form>
-                    </div>
                     
                                  
                     <div className="right-content">
-                        <h2 className="title"> ACS History </h2>
-                        <PieChart className="piechart"
-                      data={[
-                          { title: 'One', value: 10, color: '#61b305' },
-                          { title: 'Two', value: 15, color: '#f8e871' },
-                          { title: 'Three', value: 20, color: '#d30909' },
-                          { title: 'Four', value: 5, color: ' #ff7e1f'}
-                        ]}/>
-                        <div className="asc-content"> 
                         
+
+                        <h2 className="title"> ACS History </h2>
+                        
+                        <div className="acs-content"> 
+                            <PieChart className="piechart"
+                        data={[
+                            { title: 'One', value: 10, color: '#61b305' },
+                            { title: 'Two', value: 15, color: '#f8e871' },
+                            { title: 'Three', value: 20, color: '#d30909' },
+                            { title: 'Four', value: 5, color: ' #ff7e1f'}
+                            ]}/>
                             <table>
                                 <tbody>
                                 <tr>
@@ -129,9 +129,18 @@ export default class Profile extends Component {
                             </table>
                             
                         </div>
-                    
-                        <h2 className="title"> Pick History </h2>
-                        <p className="content"> To be implemented </p>
+                        <div className="bottom-right-content">
+                            <div className="interest">
+                                <h2>Interest</h2>
+                                <p>{this.state.interest}</p>
+                            </div>
+                            <div className="picks">
+                                <h2> Current Picks </h2>
+                                <p> To be implemented </p>
+                            </div>
+                           
+                        </div>
+                        
                     </div>
                     
                   
