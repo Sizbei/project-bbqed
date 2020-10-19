@@ -9,7 +9,6 @@ const profileSchema = new Schema({
     required: true,
     unique: true,
     trim: true,
-    minlength: 3
   },
   about: {
     type: String,
@@ -31,17 +30,17 @@ const profileSchema = new Schema({
   },
   image: {
     type: String,
-    required: true,
+    required: false,
     unique: false,
     trim: true,
     default: 'https://thumbs.dreamstime.com/b/default-avatar-profile-image-vector-social-media-user-icon-potrait-182347582.jpg'
   },
   acs: {
     type: Number,
-    default: 0,
     required: true,
     unique: false,
-    trim: true,
+    default: 0,
+    trim: true
   },
 }, {
   timestamps: true,
