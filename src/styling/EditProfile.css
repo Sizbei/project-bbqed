@@ -36,31 +36,30 @@
   word-break:break-all;
 }
 
-.content { 
-  border-color: #747474;
+.status-edit { 
+  border-color:white;
   border-style: solid; 
-  background-color: #747474;   
+  background-color:white;   
   width: 100%;
-  height: auto;  
-}
-
-.saveButton {
-  float: right; 
-  padding-top: 10px;
-  padding-bottom: 10px; 
-  padding-left: 10px; 
-  padding-right: 10px;
+  height: auto;
+  padding-top: 7px;
+  padding-bottom: 7px;
   border-radius: 8px;
-  background-color: white;
-  color: black;
-  font-size: 25px;
-  transition-duration: 0.3s;
-  margin-top: 50px;
 }
 
-.saveButton:hover {
-  background-color: #999999;
+
+  
+.about-edit {
+  border-color: white;
+  border-style: solid; 
+  background-color: white;   
+  width: 100%;
+  height: auto;
+  padding-top: 7px;
+  padding-bottom: 70px;
+  border-radius: 8px;
 }
+
 
 .preview {
   display: flex;

@@ -254,10 +254,10 @@ export default class Example extends Component {
                   </div>
 
                   <h2 className="title">Status (optional)</h2>
-                  <textarea type="text" placeholder="Status (optional)" id="timer" className="content" maxLength="30" onBlur={this.onBlur} onChange={this.onChangeStatus} value={this.state.status}></textarea>
+                  <input type="text" placeholder="Status (optional)" id="timer" className="status-edit" maxLength="30" onBlur={this.onBlur} onChange={this.onChangeStatus} value={this.state.status}></input>
                   <label className="characters">Characters remaining: {this.state.statusCharacters}</label>
                   <h2 className="title"> About (optional)</h2>
-                  <textarea type="text" placeholder="About (optional)" id="timer" className="content" maxLength="300" onBlur={this.onBlur} onChange={this.onChangeAbout} value={this.state.about}></textarea>
+                  <textarea type="text" placeholder="About (optional)" id="timer" className="about-edit" maxLength="300" onBlur={this.onBlur} onChange={this.onChangeAbout} value={this.state.about}></textarea>
                   <label className="characters">Characters remaining: {this.state.aboutCharacters}</label>
                   
                   <h2 className="title">Favorite Teams</h2>
