@@ -33,7 +33,9 @@ export default function ImageSelect(props) {
   const onSubmitHandler = props.onSubmit;
   const updateOnClick = props.updateOnClick;
   const onBlurHandler = props.onBlurHandler;
+  const noButton = props.noButton;
   const [tableContents, setTableContents] = useState(null);
+  const [changed, setChanged] = useState(false);
 
 
 
@@ -63,7 +65,8 @@ export default function ImageSelect(props) {
         return obj;
       }
     })
-    setTileState(newTileState)
+    setTileState(newTileState);
+    setChanged(true);
   }
 
   const tiles = data.map((e) => <Tile name={e["name"]} image={e["image"]} key={e["name"]} 
@@ -80,6 +83,13 @@ export default function ImageSelect(props) {
     onSubmitHandler(buffer);
   }
 
+  const handleMouseLeave = () => {
+    console.log("changed", changed);
+    if (changed) {
+      setChanged(false);
+      onBlurHandler();
+    }
+  }
   
   useEffect(() => {
     let buffer = []
@@ -107,17 +117,24 @@ export default function ImageSelect(props) {
     }
   }, [tileState]) // aka refresh on tileState change, otherwise setTileState() does nothing
 
+  let btn;
+  if (noButton) {
+    btn = null;
+  } else {
+    btn = (<div className="imageselect-btn-container">
+      <button className="imageselect-btn" onClick={getData}>{btntext}</button>
+    </div>)
+  }
+
   return (
-    <div className="imageselect-container" onMouseLeave={onBlurHandler}>
+    <div className="imageselect-container">
       <table className="imageselect-table">
-        <tbody>
+        <tbody onMouseLeave={handleMouseLeave}>
           {tableContents}
         </tbody>
       </table>
 
-      <div className="imageselect-btn-container">
-        <button className="imageselect-btn" onClick={getData}>{btntext}</button>
-      </div>
+      {btn}
     </div>  
   )
 }

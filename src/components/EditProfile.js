@@ -78,7 +78,8 @@ export default class Example extends Component {
             this.setState({
               imageSelect: <ImageSelect btntext="Submit!" data={e.data} width={6} 
               selected={response.data.interest} updateOnClick={true} 
-              onSubmit={this.handleImageSelectData} onBlurHandler={this.onBlur} />
+              onSubmit={this.handleImageSelectData} onBlurHandler={this.onBlur} 
+              noButton={true}/>
             })
           }
         ); 
@@ -116,7 +117,7 @@ export default class Example extends Component {
         onclick: null,
         showDuration: "300",
         hideDuration: "1000",
-        timeOut: "5000",
+        timeOut: "2000",
         extendedTimeOut: "1000",
         showEasing: "swing",
         hideEasing: "linear",
@@ -251,6 +252,8 @@ export default class Example extends Component {
                   
                   <h2 className="title">Favorite Teams</h2>
                   {this.state.imageSelect}
+                  {/* <div className="editPP-imageselect-container">
+                  </div> */}
               </div>
           </div>
           
