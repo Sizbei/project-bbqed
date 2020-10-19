@@ -32,14 +32,10 @@ export default function ImageSelect(props) {
   const data = props.data;
   const onSubmitHandler = props.onSubmit;
   const updateOnClick = props.updateOnClick;
-  const onBlurHandler = props.onBlurHandler;
+  const onBlurHandler = ("onBlurHandler" in props) ? props.onBlurHandler : () => {};
   const noButton = props.noButton;
   const [tableContents, setTableContents] = useState(null);
   const [changed, setChanged] = useState(false);
-
-
-
-  // const tiles = data.map((e) => <Tile name={e["name"]} image={e["image"]} key={e["name"]} notifyTable={handleToggle} />)
 
   const pairs = data.map((t) => {
     const obj = {
