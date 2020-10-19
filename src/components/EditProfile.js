@@ -10,7 +10,7 @@ function ErrorMessage(props) {
   if (flag) {
     return <span className="error-message"> {text} </span>;
   } else {
-    return null;
+    return <span className="error-message"> <br></br> </span>;
   }
 } 
 
@@ -90,7 +90,8 @@ export default class Example extends Component {
       const url = e.target.value;
       this.setState({
         image: url,
-        imgInputValue: url
+        imgInputValue: url,
+        showImageSubmit: false
       })
 
       if (url === "" || url === this.state.prevImage) {
@@ -112,10 +113,8 @@ export default class Example extends Component {
 
     handleImageError = (e) => {      
       if (this.state.imgInputValue === "" || this.imgInputValue === this.state.prevImage) {
-        console.log("here");
         this.setState({imageNoError: true})
       } else {
-        console.log("error");
         this.setState({
           imageNoError: false
         })
@@ -128,7 +127,6 @@ export default class Example extends Component {
     }
 
     handleImageSubmit = () => {
-      console.log("Submitted " + this.state.image);
       this.setState({
         prevImage: this.state.image
         , showImageSubmit: false
@@ -144,6 +142,7 @@ export default class Example extends Component {
       // } else {
       //   imgSubmitBtn = null;
       // }
+
       if (this.state.showImageSubmit) {
         imgSubmitBtn = <button className="image-submit" onClick={this.handleImageSubmit}>Update</button>
       } else {
@@ -162,7 +161,8 @@ export default class Example extends Component {
                     <div className="editPP-photo-container">
                       <div className="preview">
                         <div className="registration-photo">
-                          <img src={this.state.image} key={this.state.image} className="registration-user-given-photo" alt="" onError={this.handleImageError} onLoad={this.handleImageLoad} />
+                          <img style={{ display: this.state.showImageSubmit ? "block" : "none" }} src={this.state.image} key={this.state.image} className="registration-user-given-photo" alt="" onError={this.handleImageError} onLoad={this.handleImageLoad} />
+                          <img style={{ display: this.state.showImageSubmit ? "none" : "block" }} src={this.state.prevImage} key={this.state.previmage} className="registration-user-given-photo" alt="" />
                         </div>
                       </div>
                     </div>
@@ -170,9 +170,10 @@ export default class Example extends Component {
                     <label>Profile Picture URL: </label>
                     <div className="editPP-input-container">
                       <input className="input-field" type="text" name="url" onChange={this.urlChangeHandler} value={this.imgInputValue}/>
+
                       {imgSubmitBtn}
                     </div>
-                    <ErrorMessage flag={!this.state.imageNoError} text="Improper url." />
+                    <ErrorMessage flag={!this.state.imageNoError} text="*Improper url." />
                   </div>
 
                   <h2 className="title">Status (optional)</h2>
