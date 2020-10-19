@@ -72,19 +72,22 @@ export default class Example extends Component {
           interest: response.data.interest,
           image: response.data.image
         })
-        
+
+        axios.get('http://localhost:5000/teams/').then(
+          (e) => {
+            this.setState({
+              imageSelect: <ImageSelect btntext="Submit!" data={e.data} width={6} 
+              selected={response.data.interest} updateOnClick={true} 
+              onSubmit={this.handleImageSelectData} onBlurHandler={this.onBlur} />
+            })
+          }
+        ); 
       })
       .catch((error) => {
         console.log(error);
       })
 
-      axios.get('http://localhost:5000/teams/').then(
-        (e) => {
-          this.setState({
-            imageSelect: <ImageSelect btntext="Submit!" data={e.data} width={6} onSubmit={this.handleImageSelectData} />
-          })
-        }
-      ); 
+      
     }
 
     onChangeStatus(e) {
@@ -102,7 +105,7 @@ export default class Example extends Component {
     }
 
     
-    onBlur = () => {
+    onBlur = () => {      
       toastr.options = {
         closeButton: false,
         debug: false,
@@ -124,18 +127,17 @@ export default class Example extends Component {
       setTimeout(() => toastr.success('Profile Updated'), 300)
     }
 
-    onSubmit(e) {
-      //prevents default html form submit from taking place
-      e.preventDefault();
+    onSubmit() {
       //Creates a body for a db call with the current variables
 
       const updatedInfo = {
         username: this.state.username,
         status: this.state.status,
         about: this.state.about,
-        image: this.state.image
+        image: this.state.image,
+        interest: this.state.interest
       }
-      console.log("submit ", updatedInfo["status"])
+      console.log("submit ", updatedInfo)
 
       //Connects the backend with the frontend
       axios.post('http://localhost:5000/settings/profile/update', updatedInfo)
@@ -193,11 +195,14 @@ export default class Example extends Component {
         showImageSubmit: false
       })
 
-      this.onSubmit(e);
+      this.onSubmit();
     }
 
     handleImageSelectData = (d) => {
-
+      console.log("got", d);
+      this.setState({
+        interest: d
+      }, this.onSubmit())
     }
     
     render(){
@@ -233,7 +238,7 @@ export default class Example extends Component {
 
                     <label>Profile Picture URL: </label>
                     <div className="editPP-input-container">
-                      <input className="input-field" type="text" name="url" onChange={this.urlChangeHandler} value={this.imgInputValue}/>
+                      <input className="editPP-input-field" type="text" name="url" onChange={this.urlChangeHandler} value={this.imgInputValue}/>
                       {imgSubmitBtn}
                     </div>
                     <ErrorMessage flag={!this.state.imageNoError} text="*Improper url." />
@@ -244,10 +249,8 @@ export default class Example extends Component {
                   <h2 className="title"> About (optional)</h2>
                   <input type="text" id="timer" className="content" onBlur={this.onBlur} onChange={this.onChangeAbout} value={this.state.about}></input>
                   
-
-                  {ImageSelect}
-
-
+                  <h2 className="title">Favorite Teams</h2>
+                  {this.state.imageSelect}
               </div>
           </div>
           

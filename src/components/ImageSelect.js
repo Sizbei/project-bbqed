@@ -8,7 +8,7 @@ function Tile(props) {
   const image = props.image;
   const notifyTable = props.notifyTable
 
-  const [selected, setSelected] = useState(false);
+  const [selected, setSelected] = useState(props.initial);
   
   const handleClick = () => {
     let newSelected = !selected;
@@ -27,10 +27,28 @@ function Tile(props) {
 
 export default function ImageSelect(props) {
   const btntext = props.btntext;
+  const selected = ("selected" in props) ? props.selected : [];
   const width = props.width;
   const data = props.data;
-  const onSubmitHandler = props.onSubmit
+  const onSubmitHandler = props.onSubmit;
+  const updateOnClick = props.updateOnClick;
+  const onBlurHandler = props.onBlurHandler;
   const [tableContents, setTableContents] = useState(null);
+
+
+
+  // const tiles = data.map((e) => <Tile name={e["name"]} image={e["image"]} key={e["name"]} notifyTable={handleToggle} />)
+
+  const pairs = data.map((t) => {
+    const obj = {
+      pair_name: t["name"],
+      pair_bool: selected.some(v => {return v === t["name"]})
+    }
+
+    return obj;
+  })
+
+  const [tileState, setTileState] = useState(pairs);
 
   const handleToggle = (name, selected) => {
     let newTileState = tileState.map( o => {
@@ -48,18 +66,8 @@ export default function ImageSelect(props) {
     setTileState(newTileState)
   }
 
-  const tiles = data.map((e) => <Tile name={e["name"]} image={e["image"]} key={e["name"]} notifyTable={handleToggle} />)
-
-  const pairs = data.map((t) => {
-    const obj = {
-      pair_name: t["name"],
-      pair_bool: false
-    }
-
-    return obj;
-  })
-
-  const [tileState, setTileState] = useState(pairs);
+  const tiles = data.map((e) => <Tile name={e["name"]} image={e["image"]} key={e["name"]} 
+  initial={selected.some(v => {return v === e["name"]})} notifyTable={handleToggle} />)
 
   const getData = () => {
     let buffer = []
@@ -93,10 +101,14 @@ export default function ImageSelect(props) {
     }
 
     setTableContents(buffer);
+
+    if (updateOnClick) {
+      getData();
+    }
   }, [tileState]) // aka refresh on tileState change, otherwise setTileState() does nothing
 
   return (
-    <div className="imageselect-container">
+    <div className="imageselect-container" onMouseLeave={onBlurHandler}>
       <table className="imageselect-table">
         <tbody>
           {tableContents}
