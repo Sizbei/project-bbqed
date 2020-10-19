@@ -18,7 +18,7 @@ const profileSchema = new Schema({
     trim: true,
   },
   interest: {
-    type: String,
+    type: [String],
     required: false,
     unique: false,
     trim: true,

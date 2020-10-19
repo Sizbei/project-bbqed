@@ -1,8 +1,14 @@
 import React, {Component} from 'react';
+import toastr from 'toastr'
 import axios from 'axios';
 import '../styling/EditProfile.css'
+import '../styling/toastr.min.css'
+
+
 import Header from './Header';
 import ImageSelect from './ImageSelect'
+
+
 
 function ErrorMessage(props) {
   const flag = props.flag;
@@ -22,6 +28,7 @@ export default class Example extends Component {
         //Binds to methods that listen for events
         this.onChangeStatus = this.onChangeStatus.bind(this);
         this.onChangeAbout = this.onChangeAbout.bind(this);
+        this.onBlur = this.onBlur.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.handleImageLoad = this.handleImageLoad.bind(this);
         this.handleImageError = this.handleImageError.bind(this);
@@ -34,7 +41,7 @@ export default class Example extends Component {
           username: 'user3',
           status: '',
           about: '' ,
-          interest: '',
+          interest: [],
           prevImage: '',
           image: '',
           imageNoError: true,
@@ -92,6 +99,29 @@ export default class Example extends Component {
       this.setState({
         about: e.target.value
       }, () => this.onSubmit(e))
+    }
+
+    
+    onBlur = () => {
+      toastr.options = {
+        closeButton: false,
+        debug: false,
+        newestOnTop: false,
+        progressBar: false,
+        positionClass: "toast-bottom-full-width",
+        preventDuplicates: true,
+        onclick: null,
+        showDuration: "300",
+        hideDuration: "1000",
+        timeOut: "5000",
+        extendedTimeOut: "1000",
+        showEasing: "swing",
+        hideEasing: "linear",
+        showMethod: "fadeIn",
+        hideMethod: "fadeOut"
+      }
+      toastr.clear()
+      setTimeout(() => toastr.success('Profile Updated'), 300)
     }
 
     onSubmit(e) {
@@ -178,8 +208,12 @@ export default class Example extends Component {
       } else {
         imgSubmitBtn = null;
       }
+      
 
       return (
+
+        
+        
         <div className="editprofile-container">
           <Header />
 
@@ -206,11 +240,14 @@ export default class Example extends Component {
                   </div>
 
                   <h2 className="title">Status (optional)</h2>
-                  <input type="text" className="content" onChange={this.onChangeStatus} value={this.state.status}></input>
+                  <input type="text" id="timer" className="content" onBlur={this.onBlur} onChange={this.onChangeStatus} value={this.state.status}></input>
                   <h2 className="title"> About (optional)</h2>
-                  <input type="text" className="content" onChange={this.onChangeAbout} value={this.state.about}></input>
+                  <input type="text" id="timer" className="content" onBlur={this.onBlur} onChange={this.onChangeAbout} value={this.state.about}></input>
                   
+
                   {ImageSelect}
+
+
               </div>
           </div>
           

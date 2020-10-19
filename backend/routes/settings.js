@@ -13,6 +13,7 @@ router.route('/profile/update').post((req, res) => {
     .then(user => {
       user.status = req.body.status;
       user.about = req.body.about;
+      user.interest = req.body.interest;
       user.image = req.body.image;
       user.save()
         .then(() => res.json('Profile updated!'))
