@@ -49,11 +49,7 @@ export default class Profile extends Component {
         })
         
     }
-    /*
-    <form onSubmit={handleSubmit(onSubmit)}>
-                        <input type="submit" className="submit" value="Continue" /> 
-                    </form>
-                    */
+
     render(){
         
         return (
@@ -69,7 +65,14 @@ export default class Profile extends Component {
                     <div className="profile-info">
                         <h1>{this.state.username}</h1>
                         <p>{this.state.status}</p>
+                        <div className="form-group">
+                            <input type="submit" value="Create Post" className="btn btn-primary"/>
+                        </div>
                     </div>
+                    <div className="edit-profile">
+                        <input type="submit" value="Edit Profile" className="btn btn-primary"/>
+                    </div>
+                    
                     
                     
                 </div>
@@ -81,13 +84,13 @@ export default class Profile extends Component {
 
                         <div className="radar-list">
                             <h2> Radar List</h2>
-                            <p> To be implemented </p>
+                            <p>
+                            
+                            </p>
                         </div>
                         
                         
                     </div>
-
-                    
                                  
                     <div className="right-content">
                         
@@ -112,13 +115,13 @@ export default class Profile extends Component {
                                 <tr>
                                     <td answer="pos" className="score-content">+7</td>
                                     <td>Trivia</td>
-                                    <td> 10 hours ago </td>
+                                    <td> 2 hours ago </td>
                                 </tr>
                                 <tr>
                                     
                                     <td answer="neg" className="score-content">-10</td>
                                     <td>Picks</td>
-                                    <td> 10 hours ago </td>
+                                    <td> 5 hours ago </td>
                                 </tr>
                                 <tr>
                                     <td answer="pos" className="score-content">+13</td>
@@ -126,7 +129,11 @@ export default class Profile extends Component {
                                     <td> 10 hours ago </td>
                                 </tr>
                                 </tbody>
+                                <td answer="neg" className="score-content">-3</td>
+                                    <td>Trivia</td>
+                                <td> 20 hours ago </td>
                             </table>
+
                             
                         </div>
                         <div className="bottom-right-content">
@@ -136,9 +143,9 @@ export default class Profile extends Component {
                             </div>
                             <div className="picks">
                                 <h2> Current Picks </h2>
-                                <p> To be implemented </p>
+                                <p> To be implemented in future sprint</p>
                             </div>
-                           
+
                         </div>
                         
                     </div>

@@ -5,21 +5,17 @@
 }
 .container-middle-section, .container-profile, .container-top-section{ 
   color: white;
-  display: flex; 
+  display: flex;
+  padding-left: 10%
 }
 .container-middle-section { 
   position: relative; 
-  padding: 0% 10%;
   background-color: black;
   align-items: flex-start;
-  justify-content: center;
+ 
 
 }
 
-.container-middle-section h1{ 
-  padding-left: 45%; 
-
-}
 .container-top-section {
   position: relative;
   flex-direction: column;
@@ -30,21 +26,17 @@
   padding-top: 10px;  
   background-image: linear-gradient(transparent, black);
   position: relative;
-  padding-left: 10%;
 
 }
 
 /******************************STYLES FOR FEATURE POSITIONING **********************************/
 .left-content{
   order: 1; 
-  flex-grow: 2;
-  padding: 10px; 
+  padding: 1%; 
 }
 
 .right-content {
-  order: 3;
-  flex-grow: 4; 
-  padding: 10px; 
+  order: 2;
 }
 .bottom-right-content {
   display: flex; 
@@ -76,46 +68,49 @@
 .profile-info {
   padding-left: 50px; 
 }
-
-
-/**************************** STYLING FOR USER INFORMATION ***********************************/
-.information {
-  position: relative; 
-  padding-left: 20%;
-  padding-right: 20%;
-  word-break:break-all;
+.edit-profile{
+  padding-left: 645px;
+  align-self: flex-end ; 
 }
+
+/**************************** STYLING FOR ABOUT + RADAR LIST***********************************/
  
-.content{ 
+.content, .radar-list p{ 
   background-color: #747474;
   padding-top: 10px;
   min-height: 200px ;
   max-height: 200px;  
+  min-width: 200px ;
+  max-width: 200px;  
   padding-left: 10px; 
-  padding-right: 10px;      
+  padding-right: 10px;    
+  word-break:break-all;  
 }
 
 /***************************** STYLE FOR RADAR LIST *************************************/
 .radar-list p {
   background-color: #747474;
   padding-top: 10px;
-  min-height: 300px ; 
-  max-height: 300px; 
+  min-height: 500px ; 
+  max-height: 500px; 
   padding-left: 10px; 
   padding-right: 10px; 
 }
-/********************************** STYLING FOR INTEREST ***********************************************************/
-.interest , .picks{
-  flex-grow: 4;
-  padding: 10px;
+/********************************** STYLING FOR INTEREST + PICKS ***********************************************************/
+
+.picks, .interest{
+  padding-left: 2%; 
 }
-.interest p {
+.interest p, .picks p {
   background-color: #747474;
   padding-top: 10px;
-  min-height: 300px ; 
-  max-height: 300px; 
+  min-height: 400px; 
+  max-height: 400px; 
+  min-width: 400px ; 
+  max-width: 400px; 
   padding-left: 10px; 
-  padding-right: 10px; 
+  padding-right: 10px;
+  word-break:break-all; 
 }
 
 
@@ -124,27 +119,20 @@
   width: 5%;  
 
 }
-.picks p {
-  background-color: #747474;
-  padding-top: 10px;
-  min-height: 300px ; 
-  max-height: 300px; 
-  padding-left: 10px; 
-  padding-right: 10px; 
-}
 
 /*********************STYLES FOR ACS HISTORY*********************/
 .piechart {
-  padding-left: 10%; 
-  padding-right: 10%; 
-  padding-top: 1%; 
-  padding-bottom: 1%; 
-  height: 170px;
-  width: 170px;
+  padding-left: 50px ; 
+  padding-right: 100px ; 
+  padding-top: 50px; 
+  padding-bottom: 50px;
+  height: 200px;
+  width: 200px;
 }
 .acs-content {
   background-color: #747474;
   display: flex;
+  max-width: 1100px;
 
 }
 .acs-content td {
