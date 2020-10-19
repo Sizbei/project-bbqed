@@ -37,6 +37,7 @@ const profileSchema = new Schema({
   },
   acs: {
     type: Number,
+    default: 0,
     required: true,
     unique: false,
     trim: true,

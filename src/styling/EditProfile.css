@@ -38,9 +38,26 @@
 .content { 
   border-color: #747474;
   border-style: solid; 
-  background-color: #747474;
+  background-color: #747474;   
+  width: 100%;
+  height: auto;  
+}
+
+button {
+  float: right; 
   padding-top: 10px;
-  padding-bottom: 50px; 
+  padding-bottom: 10px; 
   padding-left: 10px; 
-  padding-right: 10px;      
+  padding-right: 10px;
+  border-radius: 8px;
+  background-color: white;
+  color: black;
+  font-size: 25px;
+  transition-duration: 0.3s;
+  margin-top: 50px;
+}
+
+button:hover {
+  background-color: #999999;
+  ;
 }
