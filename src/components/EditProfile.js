@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import '../styling/EditProfile.css'
 import Header from './Header';
+import ImageSelect from './ImageSelect'
 
 function ErrorMessage(props) {
   const flag = props.flag;
@@ -26,6 +27,7 @@ export default class Example extends Component {
         this.handleImageError = this.handleImageError.bind(this);
         this.urlChangeHandler = this.urlChangeHandler.bind(this);
         this.handleImageSubmit = this.handleImageSubmit.bind(this);
+        this.handleImageSelectData = this.handleImageSelectData.bind(this);
 
         //variables
         this.state = {
@@ -33,11 +35,12 @@ export default class Example extends Component {
           status: '',
           about: '' ,
           interest: '',
-          prevImage: 'https://i.imgur.com/55sUslQ.png',
-          image: 'https://i.imgur.com/55sUslQ.png',
+          prevImage: '',
+          image: '',
           imageNoError: true,
           showImageSubmit: false,
-          imgInputValue: ''
+          imgInputValue: '',
+          imageSelect: null
         }
     }
       
@@ -45,45 +48,50 @@ export default class Example extends Component {
 
     
     componentDidMount() {
-
-        const send = {
-          params: {
-            username: this.state.username
-          }
+      const send = {
+        params: {
+          username: this.state.username
         }
+      }
 
-        axios.get('http://localhost:5000/settings/profile', send)
-        .then(response => {
-          console.log(response.data);
-          console.log(response.data.length);
+      axios.get('http://localhost:5000/settings/profile', send)
+      .then(response => {
+        console.log(response.data);
+        console.log(response.data.length);
+        this.setState({
+          image: response.data.image,
+          status: response.data.status,
+          about: response.data.about,
+          interest: response.data.interest,
+          image: response.data.image
+        })
+        
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+      axios.get('http://localhost:5000/teams/').then(
+        (e) => {
           this.setState({
-            image: response.data.image,
-            status: response.data.status,
-            about: response.data.about,
-            interest: response.data.interest,
-            image: response.data.image
+            imageSelect: <ImageSelect btntext="Submit!" data={e.data} width={6} onSubmit={this.handleImageSelectData} />
           })
-          
-        })
-        .catch((error) => {
-          console.log(error);
-        })
+        }
+      ); 
     }
 
     onChangeStatus(e) {
+      console.log("onchange", e.target.value);
+
       this.setState({
         status: e.target.value
-      })
-
-      this.onSubmit(e);
+      }, () => this.onSubmit(e));
     }
 
     onChangeAbout(e) {
       this.setState({
         about: e.target.value
-      })
-
-      this.onSubmit(e);
+      }, () => this.onSubmit(e))
     }
 
     onSubmit(e) {
@@ -97,11 +105,11 @@ export default class Example extends Component {
         about: this.state.about,
         image: this.state.image
       }
+      console.log("submit ", updatedInfo["status"])
 
       //Connects the backend with the frontend
       axios.post('http://localhost:5000/settings/profile/update', updatedInfo)
       .then(response => {   
-          
       })
       .catch((error) => {
         console.log(error);
@@ -155,25 +163,10 @@ export default class Example extends Component {
         showImageSubmit: false
       })
 
-      e.preventDefault();
+      this.onSubmit(e);
+    }
 
-      const updatedInfo = {
-        username: this.state.username,
-        status: this.state.status,
-        about: this.state.about,
-        image: this.state.image
-      }
-
-      
-      //Connects the backend with the frontend
-      axios.post('http://localhost:5000/settings/profile/update', updatedInfo)
-      .then(response => {   
-        console.log("done");
-        console.log("sent image", updatedInfo);
-      })
-      .catch((error) => {
-        console.log(error);
-      })
+    handleImageSelectData = (d) => {
 
     }
     
@@ -216,6 +209,8 @@ export default class Example extends Component {
                   <input type="text" className="content" onChange={this.onChangeStatus} value={this.state.status}></input>
                   <h2 className="title"> About (optional)</h2>
                   <input type="text" className="content" onChange={this.onChangeAbout} value={this.state.about}></input>
+                  
+                  {ImageSelect}
               </div>
           </div>
           
