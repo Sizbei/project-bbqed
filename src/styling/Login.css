@@ -93,35 +93,32 @@
     text-decoration: none;
 }
 
-.signuplink {
-    color: #FF7e1F;
-    font-size:24px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-    float: right;
-    font-weight: 700;
-    text-decoration: none;
-    
-}
-
-.signuplink:hover {
-    color: #FF7e1F;
-    font-size:24px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-    float:right;
-    font-weight: 700;
-    text-decoration: none;
-}
-
 .right {
     width:100%;
 }
 
 .signup {
     width:70%;
+}
+
+.SignUpBtn {
+  /* background: transparent !important; */
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #FF7e1F;
+  font-size:24px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif;
+  float: right;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.SignUpBtn:hover {
+  cursor: pointer;
 }
 
 @font-face {
