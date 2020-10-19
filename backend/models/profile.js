@@ -31,9 +31,10 @@ const profileSchema = new Schema({
   },
   image: {
     type: String,
-    required: false,
+    required: true,
     unique: false,
     trim: true,
+    default: 'https://thumbs.dreamstime.com/b/default-avatar-profile-image-vector-social-media-user-icon-potrait-182347582.jpg'
   },
   acs: {
     type: Number,

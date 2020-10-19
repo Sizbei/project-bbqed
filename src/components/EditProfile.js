@@ -74,12 +74,16 @@ export default class Example extends Component {
       this.setState({
         status: e.target.value
       })
+
+      this.onSubmit(e);
     }
 
     onChangeAbout(e) {
       this.setState({
         about: e.target.value
       })
+
+      this.onSubmit(e);
     }
 
     onSubmit(e) {
@@ -167,7 +171,6 @@ export default class Example extends Component {
         <div className="editprofile-container">
           <Header />
 
-          <form onSubmit={this.onSubmit}>
           <div className="container-middle-section"> 
               <h1> {'Profile Settings'} </h1> 
               <div className="information"> 
@@ -195,10 +198,8 @@ export default class Example extends Component {
                   <input type="text" className="content" onChange={this.onChangeStatus} value={this.state.status}></input>
                   <h2 className="title"> About (optional)</h2>
                   <input type="text" className="content" onChange={this.onChangeAbout} value={this.state.about}></input>
-                  <button type="submit" className="saveButton">Save</button>
               </div>
           </div>
-          </form>
           
           </div>
 
