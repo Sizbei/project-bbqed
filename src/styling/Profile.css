@@ -98,8 +98,8 @@
 }
 /********************************** STYLING FOR INTEREST + PICKS ***********************************************************/
 
-.picks, .interest{
-  padding-left: 2%; 
+.picks{
+  padding-left: 2%;
 }
 .interest p, .picks p {
   background-color: #747474;

@@ -1,10 +1,14 @@
 import React, {Component, useDebugValue} from 'react';
 import axios from 'axios';
 import { PieChart } from 'react-minimal-pie-chart';
+import {TableSimple} from 'react-pagination-table'; 
 import '../styling/Profile.css'
 import Header from './Header';
 
-
+const defaultLabelStyle = {
+    fontSize: '5px',
+    fontFamily: 'sans-serif',
+  };
 export default class Profile extends Component {
     constructor(props) {
         super(props);
@@ -19,9 +23,10 @@ export default class Profile extends Component {
             interest: '',
             image: 'https://i.imgur.com/55sUslQ.png',
             asc: 0,  
-            new_post: '', 
+            acschart: [], 
         }
     }
+    
     //******************* CREATING POST FUNCTIONS ****************************/
     onSubmit(event) {
         this.setState({new_post: event.target.value});
@@ -37,11 +42,21 @@ export default class Profile extends Component {
 
         axios.get('http://localhost:5000' + this.state.path)
         .then(response => {   
+            const tag = 10; 
+            const aad = 15; 
+            const pap = 20; 
+            const pah = 5;
             this.setState({
                 username: response.data.username,
                 status: response.data.status,
                 about: response.data.about,
-                interest: response.data.interest,     
+                interest: response.data.interest,   
+                ascchart: [
+                    { title: 'Trivia & Games', value: tag, color: '#61b305' },
+                    { title: 'Analysis & Debate', value: aad, color: '#f8e871' },
+                    { title: 'Picks & Prediction', value: pap, color: '#d30909' },
+                    { title: 'Participation & History', value: pah, color: ' #ff7e1f'},
+                ]  
             }) 
         })
         .catch((error) => {
@@ -99,12 +114,12 @@ export default class Profile extends Component {
                         
                         <div className="acs-content"> 
                             <PieChart className="piechart"
-                        data={[
-                            { title: 'One', value: 10, color: '#61b305' },
-                            { title: 'Two', value: 15, color: '#f8e871' },
-                            { title: 'Three', value: 20, color: '#d30909' },
-                            { title: 'Four', value: 5, color: ' #ff7e1f'}
-                            ]}/>
+                            data={this.state.ascchart}
+                            label={({ dataEntry }) => Math.round(dataEntry.percentage) + '%'}
+                            labelStyle={defaultLabelStyle}                
+                            raidus={42}
+                            reveal ={({dataEntry}) => Math.round(dataEntry.percentage) + '%'}
+                        />
                             <table>
                                 <tbody>
                                 <tr>
