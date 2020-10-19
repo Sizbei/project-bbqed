@@ -6,11 +6,7 @@ import Profile from "./EditProfile";
 
 function App() {
   return (
-    <Router>
-      <div className="container">
-      <Route path="/Settings/Profile" component={Profile} />
-      </div>
-    </Router>
+    <Route path="/Settings/Profile" component={Profile} />
   );
 }
 
