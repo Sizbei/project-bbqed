@@ -42,8 +42,8 @@ export default class Example extends Component {
           status: '',
           about: '' ,
           interest: [],
-          prevImage: '',
           image: '',
+          nextImage: '',
           imageNoError: true,
           showImageSubmit: false,
           imgInputValue: '',
@@ -68,13 +68,13 @@ export default class Example extends Component {
         console.log(response.data);
         console.log(response.data.length);
         this.setState({
-          image: response.data.image,
           status: response.data.status,
           about: response.data.about,
           interest: response.data.interest,
           image: response.data.image,
           statusCharacters: 30 - response.data.status.length,
           aboutCharacters: 300 - response.data.about.length,
+          nextImage: response.data.image
         })
 
         axios.get('http://localhost:5000/teams/').then(
@@ -161,12 +161,12 @@ export default class Example extends Component {
     urlChangeHandler = (e) => {
       const url = e.target.value;
       this.setState({
-        image: url,
+        nextImage: url,
         imgInputValue: url,
         showImageSubmit: false
       })
 
-      if (url === "" || url === this.state.prevImage) {
+      if (url === "" || url === this.state.image) {
         console.log("noerror");
         this.setState({
           imageNoError: true
@@ -175,7 +175,7 @@ export default class Example extends Component {
     }
 
     handleImageLoad = () => { 
-      if (this.state.image != this.state.prevImage) {
+      if (this.state.nextImage != this.state.image) {
         this.setState({ 
           imageNoError: true,
           showImageSubmit: true
@@ -184,7 +184,7 @@ export default class Example extends Component {
     }
 
     handleImageError = (e) => {      
-      if (this.state.imgInputValue === "" || this.imgInputValue === this.state.prevImage) {
+      if (this.state.imgInputValue === "" || this.imgInputValue === this.state.image) {
         this.setState({imageNoError: true})
       } else {
         this.setState({
@@ -194,24 +194,22 @@ export default class Example extends Component {
 
       this.setState({
         showImageSubmit: false,
-        image: this.state.prevImage
+        nextImage: this.state.image
       })
     }
 
     handleImageSubmit = (e) => {
       this.setState({
-        prevImage: this.state.image, 
+        image: this.state.nextImage, 
         showImageSubmit: false
-      })
-
-      this.onSubmit();
+      }, () => this.onSubmit())
     }
 
     handleImageSelectData = (d) => {
       console.log("got", d);
       this.setState({
         interest: d
-      }, this.onSubmit())
+      }, () => this.onSubmit())
     }
     
     render(){
@@ -223,11 +221,7 @@ export default class Example extends Component {
         imgSubmitBtn = null;
       }
       
-
       return (
-
-        
-        
         <div className="editprofile-container">
           <Header />
 
@@ -239,8 +233,8 @@ export default class Example extends Component {
                     <div className="editPP-photo-container">
                       <div className="preview">
                         <div className="registration-photo">
-                          <img style={{ display: this.state.showImageSubmit ? "block" : "none" }} src={this.state.image} key={this.state.image} className="registration-user-given-photo" alt="" onError={this.handleImageError} onLoad={this.handleImageLoad} />
-                          <img style={{ display: this.state.showImageSubmit ? "none" : "block" }} src={this.state.prevImage} key={this.state.previmage} className="registration-user-given-photo" alt="" />
+                          <img style={{ display: this.state.showImageSubmit ? "block" : "none" }} src={this.state.nextImage} key={"one-" + this.state.nextImage} className="registration-user-given-photo" alt="" onError={this.handleImageError} onLoad={this.handleImageLoad} />
+                          <img style={{ display: this.state.showImageSubmit ? "none" : "block" }} src={this.state.image} key={"two-" + this.state.image} className="registration-user-given-photo" alt="" />                     
                         </div>
                       </div>
                     </div>
