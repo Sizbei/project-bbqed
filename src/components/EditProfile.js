@@ -24,6 +24,7 @@ export default class Example extends Component {
         this.handleImageLoad = this.handleImageLoad.bind(this);
         this.handleImageError = this.handleImageError.bind(this);
         this.urlChangeHandler = this.urlChangeHandler.bind(this);
+        this.handleImageSubmit = this.handleImageSubmit.bind(this);
 
         //variables
         this.state = {
@@ -32,8 +33,9 @@ export default class Example extends Component {
           interest: '',
           prevImage: 'https://i.imgur.com/55sUslQ.png',
           image: 'https://i.imgur.com/55sUslQ.png',
-          imageLoaded: true,
-          showImageSubmit: false
+          imageNoError: true,
+          showImageSubmit: false,
+          imgInputValue: ''
         }
     }
       
@@ -86,39 +88,61 @@ export default class Example extends Component {
 
     urlChangeHandler = (e) => {
       const url = e.target.value;
-      
       this.setState({
-        image: url
+        image: url,
+        imgInputValue: url
       })
-    }
 
-    handleImageLoad = () => {
-      this.setState({imageLoaded: true})
-
-      if (this.state.image != this.state.prevImage) {
-        this.setState({ 
-          showImageSubmit: true,
+      if (this.state.imgInputValue === "" || this.state.imgInputValue === this.state.imgInputValue) {
+        this.setState({
+          imageNoError: true
         })
       }
     }
 
-    handleImageError = () => {
+    handleImageLoad = () => {
+      if (this.state.image != this.state.prevImage) {
+        this.setState({ 
+          imageNoError: true,
+          showImageSubmit: true
+        })
+      }
+    }
+
+    handleImageError = (e) => {      
+      if (this.state.imgInputValue === "") {
+        this.setState({imageNoError: true})
+      } else {
+        this.setState({
+          imageNoError: false
+        })
+      }
+
       this.setState({
-        imageLoaded: false,
         showImageSubmit: false,
         image: this.state.prevImage
       })
     }
+
+    handleImageSubmit = () => {
+      console.log("Submitted " + this.state.image);
+      this.setState({
+        prevImage: this.state.image
+        , showImageSubmit: false
+      })
+
+      // TODO connect to db and add
+    }
     
     render(){
       let imgSubmitBtn;
-      // if (this.state.imageLoaded && (this.state.image != this.state.prevImage)) {
+      // if (this.state.imageNoError && (this.state.image != this.state.prevImage)) {
       //   imgSubmitBtn = <button className="image-submit">Update</button>
       // } else {
       //   imgSubmitBtn = null;
       // }
       if (this.state.showImageSubmit) {
-        imgSubmitBtn = <button className="image-submit">Update</button>
+        imgSubmitBtn = <button className="image-submit" onClick={this.handleImageSubmit}>Update</button>
       } else {
         imgSubmitBtn = null;
       }
@@ -142,10 +166,10 @@ export default class Example extends Component {
 
                     <label>Profile Picture URL: </label>
                     <div className="editPP-input-container">
-                      <input className="input-field" type="text" name="url" onChange={this.urlChangeHandler}/>
+                      <input className="input-field" type="text" name="url" onChange={this.urlChangeHandler} value={this.imgInputValue}/>
                       {imgSubmitBtn}
                     </div>
-                    <ErrorMessage flag={!this.state.imageLoaded} text="Improper url." />
+                    <ErrorMessage flag={!this.state.imageNoError} text="Improper url." />
                   </div>
 
                   <h2 className="title">Status (optional)</h2>
