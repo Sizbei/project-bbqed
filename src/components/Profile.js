@@ -24,6 +24,7 @@ export default class Profile extends Component {
             image: 'https://i.imgur.com/55sUslQ.png',
             asc: 0,  
             acschart: [], 
+            acshistory: [],
         }
     }
     
@@ -56,7 +57,14 @@ export default class Profile extends Component {
                     { title: 'Analysis & Debate', value: aad, color: '#f8e871' },
                     { title: 'Picks & Prediction', value: pap, color: '#d30909' },
                     { title: 'Participation & History', value: pah, color: ' #ff7e1f'},
-                ]  
+                ],  
+                acshistory: [
+                    {point: 10 , category: 'Picks', time: '1 hour ago'}, 
+                    {point: 7 , category: 'Debate', time: '7 hours ago'}, 
+                    {point: -10 , category: 'Trivia', time: '10 hours ago'}, 
+                    {point: 13 , category: 'Debate', time: '13 hours ago'}, 
+                    {point: -3 , category: 'Picks', time: '20 hours ago'}, 
+                ]
             }) 
         })
         .catch((error) => {
@@ -64,7 +72,13 @@ export default class Profile extends Component {
         })
         
     }
-
+/*
+<tr>
+                                    <td className={10>= 0? "score-content-pos" : "score-content-neg"}> 10 </td>
+                                    <td>Picks</td>
+                                    <td> 10 hours ago </td>
+                                </tr>
+*/
     render(){
         
         return (
@@ -100,7 +114,7 @@ export default class Profile extends Component {
                         <div className="radar-list">
                             <h2> Radar List</h2>
                             <p>
-                            
+                            To be implemented 
                             </p>
                         </div>
                         
@@ -119,37 +133,31 @@ export default class Profile extends Component {
                             labelStyle={defaultLabelStyle}                
                             raidus={42}
                             reveal ={({dataEntry}) => Math.round(dataEntry.percentage) + '%'}
-                        />
+                            />
+
                             <table>
+                                <thead> 
+                                    <tr>
+                                        <th>Points </th>
+                                        <th> Category </th>
+                                        <th> Time </th>
+                                    </tr>
+                                </thead>
                                 <tbody>
-                                <tr>
-                                    <td answer="pos" className="score-content">+10</td>
-                                    <td>Picks</td>
-                                    <td> 10 hours ago </td>
-                                </tr>
-                                <tr>
-                                    <td answer="pos" className="score-content">+7</td>
-                                    <td>Trivia</td>
-                                    <td> 2 hours ago </td>
-                                </tr>
-                                <tr>
-                                    
-                                    <td answer="neg" className="score-content">-10</td>
-                                    <td>Picks</td>
-                                    <td> 5 hours ago </td>
-                                </tr>
-                                <tr>
-                                    <td answer="pos" className="score-content">+13</td>
-                                    <td>Debate</td>
-                                    <td> 10 hours ago </td>
-                                </tr>
+                                {this.state.acshistory.map(data => {
+                                    return (
+                                        <tr>
+                                            <td className={data.point>= 0? "score-content-pos" : "score-content-neg"}>{data.point}</td>
+                                            <td>{data.category}</td>
+                                            <td>{data.time}</td>
+                                        </tr>
+                                    )
+                                })} 
+                            
                                 </tbody>
-                                <td answer="neg" className="score-content">-3</td>
-                                    <td>Trivia</td>
-                                <td> 20 hours ago </td>
                             </table>
 
-                            
+                            <button> View all history</button>
                         </div>
                         <div className="bottom-right-content">
                             <div className="interest">

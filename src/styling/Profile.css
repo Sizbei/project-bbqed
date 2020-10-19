@@ -131,6 +131,7 @@
 }
 .acs-content {
   background-color: #747474;
+  color: white; 
   display: flex;
   max-width: 1100px;
 
@@ -138,13 +139,17 @@
 .acs-content td {
   padding: 10px; 
 }
-.score-content[answer="pos"] { 
+.score-content-pos { 
   color:#61b305;
 } 
-.score-content[answer="neg"] { 
+.score-content-neg { 
   color: #B33838;
 } 
-
+.acs-content button {
+  align-self: flex-end;
+  margin-bottom: 10px; 
+  margin-left: 40px; 
+}
 
 @font-face {
 
