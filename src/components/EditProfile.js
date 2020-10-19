@@ -93,14 +93,15 @@ export default class Example extends Component {
         imgInputValue: url
       })
 
-      if (this.state.imgInputValue === "" || this.state.imgInputValue === this.state.imgInputValue) {
+      if (url === "" || url === this.state.prevImage) {
+        console.log("noerror");
         this.setState({
           imageNoError: true
         })
       }
     }
 
-    handleImageLoad = () => {
+    handleImageLoad = () => { 
       if (this.state.image != this.state.prevImage) {
         this.setState({ 
           imageNoError: true,
@@ -110,9 +111,11 @@ export default class Example extends Component {
     }
 
     handleImageError = (e) => {      
-      if (this.state.imgInputValue === "") {
+      if (this.state.imgInputValue === "" || this.imgInputValue === this.state.prevImage) {
+        console.log("here");
         this.setState({imageNoError: true})
       } else {
+        console.log("error");
         this.setState({
           imageNoError: false
         })
