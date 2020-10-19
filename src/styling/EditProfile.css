@@ -15,7 +15,7 @@
 
 .container-middle-section { 
   display: flex;
-  padding: 10px; 
+  /* padding: 10px;  */
 }
 
 .container-middle-section h1{ 
@@ -57,9 +57,8 @@
   margin-top: 50px;
 }
 
-button:hover {
+.saveButton:hover {
   background-color: #999999;
-  ;    
 }
 
 .preview {

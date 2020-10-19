@@ -145,13 +145,32 @@ export default class Example extends Component {
       })
     }
 
-    handleImageSubmit = () => {
+    handleImageSubmit = (e) => {
       this.setState({
-        prevImage: this.state.image
-        , showImageSubmit: false
+        prevImage: this.state.image, 
+        showImageSubmit: false
       })
 
-      // TODO connect to db and add
+      e.preventDefault();
+
+      const updatedInfo = {
+        username: this.state.username,
+        status: this.state.status,
+        about: this.state.about,
+        image: this.state.image
+      }
+
+      
+      //Connects the backend with the frontend
+      axios.post('http://localhost:5000/settings/profile/update', updatedInfo)
+      .then(response => {   
+        console.log("done");
+        console.log("sent image", updatedInfo);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
     }
     
     render(){
@@ -185,7 +204,6 @@ export default class Example extends Component {
                     <label>Profile Picture URL: </label>
                     <div className="editPP-input-container">
                       <input className="input-field" type="text" name="url" onChange={this.urlChangeHandler} value={this.imgInputValue}/>
-
                       {imgSubmitBtn}
                     </div>
                     <ErrorMessage flag={!this.state.imageNoError} text="*Improper url." />
