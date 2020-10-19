@@ -16,6 +16,7 @@ const profileSchema = new Schema({
     required: false,
     unique: false,
     trim: true,
+    maxlength: 300
   },
   interest: {
     type: [String],
@@ -28,6 +29,7 @@ const profileSchema = new Schema({
     required: false,
     unique: false,
     trim: true,
+    maxlength: 30
   },
   image: {
     type: String,

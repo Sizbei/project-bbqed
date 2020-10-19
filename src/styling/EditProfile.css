@@ -142,3 +142,8 @@
   color: crimson;
   display: block;
 }
+
+.characters {
+  font-size: 12px;
+  margin-bottom: 50px;
+}

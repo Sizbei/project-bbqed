@@ -47,7 +47,9 @@ export default class Example extends Component {
           imageNoError: true,
           showImageSubmit: false,
           imgInputValue: '',
-          imageSelect: null
+          imageSelect: null,
+          statusCharacters: 30,
+          aboutCharacters: 300
         }
     }
       
@@ -70,7 +72,9 @@ export default class Example extends Component {
           status: response.data.status,
           about: response.data.about,
           interest: response.data.interest,
-          image: response.data.image
+          image: response.data.image,
+          statusCharacters: 30 - response.data.status.length,
+          aboutCharacters: 300 - response.data.about.length,
         })
 
         axios.get('http://localhost:5000/teams/').then(
@@ -91,17 +95,21 @@ export default class Example extends Component {
       
     }
 
-    onChangeStatus(e) {
-      console.log("onchange", e.target.value);
+    onChangeStatus(e) {;
 
       this.setState({
-        status: e.target.value
+        status: e.target.value,
+        statusCharacters: 30 - e.target.value.length
       }, () => this.onSubmit(e));
+
+      
+
     }
 
     onChangeAbout(e) {
       this.setState({
-        about: e.target.value
+        about: e.target.value,
+        aboutCharacters: 300 - e.target.value.length
       }, () => this.onSubmit(e))
     }
 
@@ -246,9 +254,11 @@ export default class Example extends Component {
                   </div>
 
                   <h2 className="title">Status (optional)</h2>
-                  <input type="text" id="timer" className="content" onBlur={this.onBlur} onChange={this.onChangeStatus} value={this.state.status}></input>
+                  <textarea type="text" placeholder="Status (optional)" id="timer" className="content" maxLength="30" onBlur={this.onBlur} onChange={this.onChangeStatus} value={this.state.status}></textarea>
+                  <label className="characters">Characters remaining: {this.state.statusCharacters}</label>
                   <h2 className="title"> About (optional)</h2>
-                  <input type="text" id="timer" className="content" onBlur={this.onBlur} onChange={this.onChangeAbout} value={this.state.about}></input>
+                  <textarea type="text" placeholder="About (optional)" id="timer" className="content" maxLength="300" onBlur={this.onBlur} onChange={this.onChangeAbout} value={this.state.about}></textarea>
+                  <label className="characters">Characters remaining: {this.state.aboutCharacters}</label>
                   
                   <h2 className="title">Favorite Teams</h2>
                   {this.state.imageSelect}
