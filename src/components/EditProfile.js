@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import '../styling/EditProfile.css'
 import Header from './Header';
 
 export default class Example extends Component {
@@ -56,7 +57,7 @@ export default class Example extends Component {
       console.log(exampleBody);
 
       //Connects the backend with the frontend
-      axios.put('http://localhost:5000/example/add', exampleBody)
+      axios.put('http://localhost:5000/settings/profile/update', exampleBody)
         .then(res => console.log(res.data));
       window.location = '/';
 
@@ -68,11 +69,10 @@ export default class Example extends Component {
     render(){
         
       return (
+        
         <div className="container">
           <Header />
           
-
-
           <div className="container-middle-section"> 
               <h1> {'Profile Settings'} </h1> 
               <div className="information"> 
@@ -87,10 +87,17 @@ export default class Example extends Component {
 
               </div>
                
-          </div>         
           </div>
-          
+
+          <div className="save-changes">
+            
+          </div>
+
+
+          </div>
+
       )
   }
+  
 }
 
