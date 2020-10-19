@@ -45,10 +45,17 @@
   padding-top: 7px;
   padding-bottom: 7px;
   padding-left: 5px;
+  padding-right: 5px;
   border-radius: 8px;
 }
 
-
+.settings-hr {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 0;
+  width: 101.5%;
+  margin-inline-end: 0;
+}
   
 .about-edit {
   border-color: white;
@@ -58,7 +65,8 @@
   height: auto;
   padding-top: 7px;
   padding-bottom: 70px;
-  padding-left: 5px;
+  padding-left: 7px;
+  padding-right: 7px;
   border-radius: 8px;
 }
 
@@ -103,10 +111,13 @@
 
 .editPP-input-field {
   padding: 5px;
+  padding-top: 7px;
+  padding-bottom: 7px;
   border-radius: 8px;
   width: 300px;
   font-size: 15px;
-  border: none;
+  border-color: white;
+  border-style: solid; 
 }
 
 .editPP-imageselect-container {

@@ -239,21 +239,25 @@ export default class Example extends Component {
                       </div>
                     </div>
 
-                    <label>Profile Picture URL: </label>
+                    {/* <label>Profile Picture URL: </label> */}
                     <div className="editPP-input-container">
-                      <input className="editPP-input-field" type="text" name="url" onChange={this.urlChangeHandler} value={this.imgInputValue}/>
+                      <input className="editPP-input-field" placeholder="Photo link" type="text" name="url" onChange={this.urlChangeHandler} value={this.imgInputValue}/>
                       {imgSubmitBtn}
                     </div>
                     <ErrorMessage flag={!this.state.imageNoError} text="*Improper url." />
                   </div>
 
+                  <hr className="settings-hr"></hr>
                   <h2 className="title">Status (optional)</h2>
                   <input type="text" placeholder="Status (optional)" id="timer" className="status-edit" maxLength="30" onBlur={this.onBlur} onChange={this.onChangeStatus} value={this.state.status}></input>
                   <label className="characters">Characters remaining: {this.state.statusCharacters}</label>
+                  
+                  <hr className="settings-hr"></hr>
                   <h2 className="title"> About (optional)</h2>
                   <textarea type="text" placeholder="About (optional)" id="timer" className="about-edit" maxLength="300" onBlur={this.onBlur} onChange={this.onChangeAbout} value={this.state.about}></textarea>
                   <label className="characters">Characters remaining: {this.state.aboutCharacters}</label>
                   
+                  <hr className="settings-hr"></hr>
                   <h2 className="title">Favorite Teams</h2>
                   {this.state.imageSelect}
                   {/* <div className="editPP-imageselect-container">
