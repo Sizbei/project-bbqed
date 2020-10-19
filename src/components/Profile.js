@@ -27,7 +27,8 @@ export default class Profile extends Component {
                 username: response.data.username,
                 status: response.data.status,
                 about: response.data.about,
-                interest: response.data.interest,     
+                interest: response.data.interest,
+                image: response.data.image     
             }) 
         })
         .catch((error) => {

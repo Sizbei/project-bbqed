@@ -25,7 +25,6 @@ export default class Example extends Component {
     //One of react's lifecycle methods - method is called before displaying this component
 
     
-
     componentDidMount() {
 
         const send = {
@@ -42,7 +41,8 @@ export default class Example extends Component {
             image: response.data.image,
             status: response.data.status,
             about: response.data.about,
-            interest: response.data.interest
+            interest: response.data.interest,
+            image: response.data.image
           })
           
         })
