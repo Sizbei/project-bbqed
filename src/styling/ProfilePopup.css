@@ -51,3 +51,7 @@
   color: #747474;
   background-color: white; 
 }
+
+.profile-popup-error {
+  color: red; 
+}
