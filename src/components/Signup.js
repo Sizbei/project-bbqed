@@ -21,7 +21,7 @@ function ErrorMessage(props) {
 } 
 
 export default function Popup() {
-  const [formState, setFormState] = useState("button");
+  const [formState, setFormState] = useState("form-1");
   const [formData, setFormData] = useState({});
   const { register, handleSubmit, watch, errors } = useForm();
   const [usernameExists, setUsernameExists] = useState(false)
@@ -260,8 +260,14 @@ export default function Popup() {
             {errors.sportInterest && <span className="error-message">Tell us!</span>}
 
             <label className="form-question">What is your highest level of play in any sport?</label>
-            <input name="highestLevelOfPlay" key="highestLevelOfPlay" className="signup-input-field" defaultValue="" ref={register({ required: true })} />
-            {errors.highestLevelOfPlay && <span className="error-message">This field is required.</span>}
+
+            <select name="highestLevelOfPlay" ref={register} className="select-highestLevelOfPlay" >
+              <option value="noHistory" key="noHistory"> No History </option>
+              <option value="highschool">High School</option>
+              <option value="university">University</option>
+              <option value="professional">Professional</option>
+            </select>
+            
 
             <input type="submit" className="submit" value="Continue" /> 
           </form>
