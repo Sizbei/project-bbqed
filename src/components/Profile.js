@@ -19,12 +19,12 @@ export default class Profile extends Component {
             username: '',
             status: '',
             about: '' ,
-            interest: '',
+            interest: [],
             image: 'https://i.imgur.com/55sUslQ.png',
             asc: 0,  
             acschart: [], 
             acshistory: [],
-            showpostpopup: false,
+            showpostpopup: false
         }
         this.handleEditProfile = this.handleEditProfile.bind(this);
         this.handleACSHistory = this.handleACSHistory.bind(this);
@@ -50,16 +50,19 @@ export default class Profile extends Component {
     componentDidMount(){ 
 
         axios.get('http://localhost:5000' + this.state.path)
-        .then(response => {   
+        .then(response => {
+            
             const tag = 10; 
             const aad = 15; 
             const pap = 20; 
             const pah = 5;
+            console.log(response.data.interest);
             this.setState({
                 username: response.data.username,
                 status: response.data.status,
                 about: response.data.about,
-                interest: response.data.interest,   
+                interest: response.data.interest,
+                image: response.data.image,
                 ascchart: [
                     { title: 'Trivia & Games', value: tag, color: '#61b305' },
                     { title: 'Analysis & Debate', value: aad, color: '#f8e871' },
@@ -76,9 +79,32 @@ export default class Profile extends Component {
                 
             }) 
         })
+        .then(response => {
+            console.log("interest: " + this.state.interest);
+            const send = {
+                params: {
+                  teams: this.state.interest
+                }
+              }
+            
+            axios.get('http://localhost:5000' + this.state.path + '/teams', send)
+            .then(response => { 
+                this.setState({
+                    interest: response.data.map(team => team.image)
+                })
+            console.log(this.state.interest);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+
+            }
+
+        )
         .catch((error) => {
           console.log(error);
         })
+
         
     }
 
