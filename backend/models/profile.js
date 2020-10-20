@@ -14,25 +14,25 @@ const profileSchema = new Schema({
   about: {
     type: String,
     required: false,
-    unique: true,
+    unique: false,
     trim: true,
   },
   interest: {
-    type: String,
+    type: [String],
     required: false,
-    unique: true,
+    unique: false,
     trim: true,
   },
   status: {
     type: String,
     required: false,
-    unique: true,
+    unique: false,
     trim: true,
   },
   image: {
     type: String,
     required: false,
-    unique: true,
+    unique: false,
     trim: true,
   },
   acsHistory: [{
