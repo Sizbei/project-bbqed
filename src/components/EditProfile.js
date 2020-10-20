@@ -222,8 +222,6 @@ export default class EditProfile extends Component {
       
       return (
         <div className="editprofile-container">
-          <Header />
-
           <div className="editprofile-container-mid"> 
               
               <div className="info"> 

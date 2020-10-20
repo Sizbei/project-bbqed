@@ -10,11 +10,13 @@ import PicksAndPredictions from "./components/PicksAndPredictions";
 import Profile from "./components/Profile";
 import Registration from "./components/Registration"
 import Settings from "./components/Settings"
+import Header from "./components/Header"
 
 function App() {
   return (
     <Router>
       <div className="container">
+      <Header />
       <Route path="/" exact component={Login} />
       <Route path="/TheZone" exact component={TheZone} />
       <Route path="/Trivia" component={Trivia} />

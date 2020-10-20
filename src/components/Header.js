@@ -41,7 +41,7 @@ function Navbar() {
 }
 
 function User() {
-  const [imgUrl, setImgUrl] = useState("https://i.imgur.com/9fyUaFV.jpg");
+  const [imgUrl, setImgUrl] = useState("");
 
   useEffect(() => {
     const body = {

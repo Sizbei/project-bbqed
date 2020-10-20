@@ -127,7 +127,6 @@ export default class Profile extends Component {
             <div>
             
             <div className="prof-background">
-                <Header/>
                 <div className="prof-container-profile"> 
                     
                     <div className="prof-profile-photo">
