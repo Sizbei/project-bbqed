@@ -21,7 +21,7 @@ function ErrorMessage(props) {
   }
 } 
 
-export default class Example extends Component {
+export default class EditProfile extends Component {
     constructor(props) {
         super(props);
 
