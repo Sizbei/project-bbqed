@@ -2,6 +2,7 @@
 .prof-background { 
   background-size: cover; 
   background-color: #2c2c2c;
+  padding-bottom: 50px;
   color: white;  
 }
 .prof-container-middle-section, .prof-container-profile{ 
@@ -116,6 +117,13 @@
 .prof-picks{
   padding-left: 2%;
 }
+
+.prof-interest-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .prof-interest-content, .prof-picks-content{
   background-color: #747474;
   min-height: 400px; 
@@ -125,11 +133,53 @@
   word-break:break-all; 
 }
 
-.prof-interest img{
-  height: auto;
-  width: 5%;  
-
+.prof-interest-content .imageselect-tile {
+  display: table-cell;
+  padding: 0;
+  padding-left: 1px;
+  padding-top: 1px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding: 7px;
 }
+
+.prof-interest-content .image-tile-selected {
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 107px;
+  height: 107px;
+
+  border-radius: 5%;
+  border: 1px solid black;
+
+  background-color: lightskyblue;
+}
+
+.prof-interest-content .image-tile-unselected {
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 107px;
+  height: 107px;
+
+  border-radius: 5%;
+  border: 1px solid black;
+
+  background-color: white;
+}
+
+.prof-interest-content .imageselect-image {
+  max-height: px;
+  max-width: 80px;
+}
+
+
+
 
 /*********************STYLES FOR ACS HISTORY*********************/
 .prof-piechart {

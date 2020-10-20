@@ -4,6 +4,7 @@ import { PieChart } from 'react-minimal-pie-chart';
 import '../styling/Profile.css'
 import Header from './Header';
 import PostPopup from './ProfilePostPopup';
+import ImageSelect from './ImageSelect';
 
 const defaultLabelStyle = {
     fontSize: '5px',
@@ -24,7 +25,9 @@ export default class Profile extends Component {
             acs: 0,  
             acschart: [], 
             acshistory: [],
-            showpostpopup: false
+            showpostpopup: false,
+            teams: [],
+            imgSelect: null
         }
         this.handleEditProfile = this.handleEditProfile.bind(this);
         this.handleRadarList = this.handleRadarList.bind(this);
@@ -60,6 +63,7 @@ export default class Profile extends Component {
             this.setState({
                 username: response.data.username,
                 status: response.data.status,
+                interest: response.data.interest,
                 about: response.data.about,  
                 image: response.data.image, 
                 acs: response.data.acs,
@@ -75,8 +79,8 @@ export default class Profile extends Component {
                     {point: -10 , category: 'Trivia', time: '10 hours ago'}, 
                     {point: 13 , category: 'Debate', time: '13 hours ago'}, 
                     {point: -3 , category: 'Picks', time: '20 hours ago'}, 
-                ]
-                
+                ],
+                teams: response.data.teams
             }) 
         })
         .then(response => {
@@ -89,10 +93,19 @@ export default class Profile extends Component {
             
             axios.get('http://localhost:5000' + this.state.path + '/teams', send)
             .then(response => { 
-                this.setState({
-                    interest: response.data.map(team => team.image)
-                })
-            console.log(this.state.interest);
+              const mapped = response.data.map(team => team.image).map((e) => {
+                const obj = {
+                  name: "",
+                  image: e
+                }
+
+                return obj;
+              })
+              
+              console.log(mapped);
+              this.setState({
+                imgSelect: <ImageSelect btntext="Submit!" data={mapped} width={3} noError={true} noSelect={true} noButton={true} />
+              })
             })
             .catch((error) => {
                 console.log(error);
@@ -109,7 +122,7 @@ export default class Profile extends Component {
     }
 
     render(){
-        
+            
         return (
             <div>
             
@@ -203,7 +216,7 @@ export default class Profile extends Component {
                             <div className="prof-interest">
                                 <h2>Interest</h2>
                                 <div className="prof-interest-content">
-                                    something
+                                  {this.state.imgSelect}
                                 </div>
                             </div>
                             

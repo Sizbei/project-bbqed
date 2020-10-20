@@ -51,6 +51,7 @@ export default function ImageSelect(props) {
   const noButton = props.noButton;
   const maxTeams = props.maxTeams;
   const noSelect = ("noSelect" in props) ? props.noSelect : false;
+  const noError = ("noError" in props) ? props.noError : false;
   const notifyMaxHandler = ("notifyMaxHandler" in props) ? props.notifyMaxHandler : () => {};
   const [tableContents, setTableContents] = useState(null);
   const [changed, setChanged] = useState(false);
@@ -164,6 +165,13 @@ export default function ImageSelect(props) {
     </div>)
   }
 
+  let error;
+  if (noError) {
+    error = null;
+  } else {
+    error = <ErrorMessage flag={maxError} text={"*Maximum reached."}></ErrorMessage>
+  }
+
   return (
     <div className="imageselect-container">
       <table className="imageselect-table">
@@ -171,7 +179,7 @@ export default function ImageSelect(props) {
           {tableContents}
         </tbody>
       </table>
-      <ErrorMessage flag={maxError} text={"*Maximum reached."}></ErrorMessage>
+      {error}
       {btn}
     </div>  
   )
