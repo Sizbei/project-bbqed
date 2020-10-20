@@ -73,6 +73,7 @@ export default class Profile extends Component {
                     {point: 13 , category: 'Debate', time: '13 hours ago'}, 
                     {point: -3 , category: 'Picks', time: '20 hours ago'}, 
                 ]
+                
             }) 
         })
         .catch((error) => {
@@ -98,8 +99,7 @@ export default class Profile extends Component {
                     <div className="profile-info">
                         <h1>{this.state.username}</h1>
                         <p>{this.state.status}</p>
-                        <button className ="create-post-button" onClick={this.togglePopup.bind(this)}>Create Post</button>
-                        
+                        <button className ="create-post-button" onClick={this.togglePopup.bind(this)}>Create Post</button>                       
                     </div>
                     <div className="edit-profile">
                         <button onClick={this.handleEditProfile}>Edit Profile</button>
