@@ -1,9 +1,9 @@
 import React, {Component, useDebugValue} from 'react';
 import axios from 'axios';
 import { PieChart } from 'react-minimal-pie-chart';
-import {TableSimple} from 'react-pagination-table'; 
 import '../styling/Profile.css'
 import Header from './Header';
+import PostPopup from './ProfilePostPopup';
 
 const defaultLabelStyle = {
     fontSize: '5px',
@@ -13,8 +13,7 @@ export default class Profile extends Component {
     constructor(props) {
         super(props);
         //console.log(props.location.pathname); 
-        this.onSubmit = this.onSubmit.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        
         this.state = { 
             path: props.location.pathname,
             username: '',
@@ -25,19 +24,27 @@ export default class Profile extends Component {
             asc: 0,  
             acschart: [], 
             acshistory: [],
+            showpostpopup: false,
         }
+        this.handleEditProfile = this.handleEditProfile.bind(this);
+        this.handleACSHistory = this.handleACSHistory.bind(this);
     }
     
     //******************* CREATING POST FUNCTIONS ****************************/
-    onSubmit(event) {
-        this.setState({new_post: event.target.value});
-    }
-
-    handleSubmit(event) {
-        alert('A new post has been created ' + this.state.value);
-        event.preventDefault();
+    togglePopup() {  
+        this.setState({  
+             showPopup: !this.state.showPopup  
+        });  
     }
     
+    handleEditProfile(event) { 
+        alert('Will send to edit profile page');
+        event.preventDefault();
+    }
+    handleACSHistory(event) { 
+        alert('Will send to new page with history'); 
+    }
+
     /************************GET REQUEST FOR USER INFRORMATION ***********************/
     componentDidMount(){ 
 
@@ -72,16 +79,12 @@ export default class Profile extends Component {
         })
         
     }
-/*
-<tr>
-                                    <td className={10>= 0? "score-content-pos" : "score-content-neg"}> 10 </td>
-                                    <td>Picks</td>
-                                    <td> 10 hours ago </td>
-                                </tr>
-*/
+
     render(){
         
         return (
+            <div>
+            
             <div className="background">
                 <Header/>
                 <div className="container-profile"> 
@@ -94,18 +97,23 @@ export default class Profile extends Component {
                     <div className="profile-info">
                         <h1>{this.state.username}</h1>
                         <p>{this.state.status}</p>
-                        <div className="form-group">
-                            <input type="submit" value="Create Post" className="btn btn-primary"/>
-                        </div>
+                        <button className ="create-post-button" onClick={this.togglePopup.bind(this)}>Create Post</button>
+                        
                     </div>
                     <div className="edit-profile">
-                        <input type="submit" value="Edit Profile" className="btn btn-primary"/>
+                        <button onClick={this.handleEditProfile}>Edit Profile</button>
                     </div>
                     
                     
                     
                 </div>
+                
                 <div className="container-middle-section"> 
+                    {this.state.showPopup ?  
+                            <PostPopup closePopup={this.togglePopup.bind(this)} />  
+                            : null  
+                    }
+                                        
                     <div className="left-content">
 
                         <h2 className="title"> About</h2>
@@ -122,7 +130,6 @@ export default class Profile extends Component {
                     </div>
                                  
                     <div className="right-content">
-                        
 
                         <h2 className="title"> ACS History </h2>
                         
@@ -138,7 +145,7 @@ export default class Profile extends Component {
                             <table>
                                 <thead> 
                                     <tr>
-                                        <th>Points </th>
+                                        <th> Point </th>
                                         <th> Category </th>
                                         <th> Time </th>
                                     </tr>
@@ -157,7 +164,7 @@ export default class Profile extends Component {
                                 </tbody>
                             </table>
 
-                            <button> View all history</button>
+                            <button onClick={this.handleACSHistory}> View history</button>
                         </div>
                         <div className="bottom-right-content">
                             <div className="interest">
@@ -180,7 +187,7 @@ export default class Profile extends Component {
                 
                 </div>
             </div>
-            
+            </div>
         )
             
         
