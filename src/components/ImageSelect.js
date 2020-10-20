@@ -9,12 +9,17 @@ function Tile(props) {
   const name = props.name;
   const image = props.image;
   const max = props.max;
+  const noSelect = props.noSelect;
   const notifyMaxHandler = props.notifyMaxHandler;
   const notifyTable = props.notifyTable;
 
   const [selected, setSelected] = useState(props.initial);
   
   const handleClick = () => {
+    if (noSelect) {
+      return;
+    }
+
     if (count() == max && !selected) {
       notifyMaxHandler(true);
       return;
@@ -45,6 +50,7 @@ export default function ImageSelect(props) {
   const onBlurHandler = ("onBlurHandler" in props) ? props.onBlurHandler : () => {};
   const noButton = props.noButton;
   const maxTeams = props.maxTeams;
+  const noSelect = ("noSelect" in props) ? props.noSelect : false;
   const notifyMaxHandler = ("notifyMaxHandler" in props) ? props.notifyMaxHandler : () => {};
   const [tableContents, setTableContents] = useState(null);
   const [changed, setChanged] = useState(false);
@@ -101,7 +107,7 @@ export default function ImageSelect(props) {
   
   const tiles = data.map((e) => <Tile name={e["name"]} image={e["image"]} key={e["name"]} 
   count={count} setCount={() => setCount} max={maxTeams} notifyMaxHandler={handleMax}
-  initial={selected.some(v => {return v === e["name"]})} notifyTable={handleToggle} />)
+  noSelect={noSelect} initial={selected.some(v => {return v === e["name"]})} notifyTable={handleToggle} />)
 
   const getData = () => {
     let buffer = []
