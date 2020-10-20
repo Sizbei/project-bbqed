@@ -2,6 +2,7 @@ import axios from 'axios';
 import '../styling/Login.css';
 import logo from '../res/images/Logo.png';
 import React, {Component} from 'react';
+import Signup from "./Signup"
 
 export default class Login extends Component{
     
@@ -89,7 +90,7 @@ export default class Login extends Component{
                         <label className="boldtext">Not a Member?</label>
                     </div>
                     <div className="signup">
-                        <a href="/Registration" className="signuplink">Sign Up</a> 
+                      <Signup />
                     </div>               
                 </div>
             </div>

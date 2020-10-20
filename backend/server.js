@@ -30,6 +30,11 @@ app.use('/profile', profileRouter);
 const signupRouter = require('./routes/signup');
 app.use('/signup', signupRouter);
 
+const settingsRouter = require('./routes/settings');
+app.use('/settings', settingsRouter);
+
+const teamsRouter = require('./routes/team');
+app.use('/teams', teamsRouter);
 //App is now listening for calls
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);

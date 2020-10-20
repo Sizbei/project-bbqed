@@ -50,6 +50,7 @@ In terminal, you should see:
      npm install axios
      npm install react-hook-form
      npm install react-multi-select-component
+     npm install toastr
      
 7. Test that everything related to frontend is working by typing the following:
      npm start 
