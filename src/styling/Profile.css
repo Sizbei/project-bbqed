@@ -7,9 +7,13 @@
 }
 .prof-container-middle-section, .prof-container-profile{ 
   justify-content: center;
-  flex-wrap: column; 
   display: flex;
 }
+
+.prof-container-middle-section{ 
+  flex-wrap: column;
+}
+
 
 .prof-interest-content, .prof-picks-content , .prof-radar-list-content, .prof-about-content, .prof-acs-content { 
   border-radius: 8px;
@@ -29,6 +33,9 @@
 }
 
 /**************************** STYLING FOR PROFILE  ***********************************/
+.prof-profile-preview{
+  display: flex;
+}
 .prof-profile-photo {
   height: 230px;
   width: 230px;
@@ -38,13 +45,17 @@
 }
 
 .prof-profile-user-given-photo {
-  margin-left: 37px;
-  margin-top: 45px;
+  margin-left: 35px;
+  margin-top: 43px;
 
   display: block;
   height: 140px;
   width: 140px;
   border-radius: 50%;
+
+  text-indent: -10000px; /* A hack to hide the broken image icon */ 
+  background-image: url('../res/account-circle.svg');
+  background-size: contain;
 }
 .prof-profile-user-score{ 
   margin-top: -85px ; 

@@ -128,11 +128,12 @@ export default class Profile extends Component {
             
             <div className="prof-background">
                 <div className="prof-container-profile"> 
-                    
-                    <div className="prof-profile-photo">
-                        <img src={this.state.image} className="prof-profile-user-given-photo"/>  
-                        <label className="prof-profile-user-score">{this.state.acs}</label>   
-                                          
+                    <div className="prof-profile-preview">
+                        <div className="prof-profile-photo">
+                            <img src={this.state.image} className="prof-profile-user-given-photo"/>  
+                            <label className="prof-profile-user-score">{this.state.acs}</label>   
+                                            
+                        </div>
                     </div>
                     <div className="prof-profile-info">
                         <h1>{this.state.username}</h1>
