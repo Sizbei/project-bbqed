@@ -21,7 +21,7 @@ function ErrorMessage(props) {
 } 
 
 export default function Popup() {
-  const [formState, setFormState] = useState("form-1");
+  const [formState, setFormState] = useState("form-2");
   const [formData, setFormData] = useState({});
   const { register, handleSubmit, watch, errors } = useForm();
   const [usernameExists, setUsernameExists] = useState(false)
@@ -288,7 +288,9 @@ export default function Popup() {
           </div>
 
           <label className="form-question">What are your favorite teams?</label>
-          {imageSelect}
+          <div className="signup-imageselect-container">
+            {imageSelect}
+          </div>
         </div>
       </div>
     </div>

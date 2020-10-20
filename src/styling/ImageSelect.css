@@ -51,6 +51,10 @@
   background-color: lightskyblue;
 }
 
+.signup-imageselect-container {
+  margin-top: 10px;
+}
+
 .imageselect-image {
   max-height: 60px;
   max-width: 60px;
