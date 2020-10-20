@@ -113,21 +113,21 @@ export default class Profile extends Component {
         return (
             <div>
             
-            <div className="background">
+            <div className="prof-background">
                 <Header/>
-                <div className="container-profile"> 
+                <div className="prof-container-profile"> 
                     
-                    <div className="profile-photo">
-                        <img src={this.state.image} className="profile-user-given-photo"/>  
-                        <label className="profile-user-score">{this.state.acs}</label>   
+                    <div className="prof-profile-photo">
+                        <img src={this.state.image} className="prof-profile-user-given-photo"/>  
+                        <label className="prof-profile-user-score">{this.state.acs}</label>   
                                           
                     </div>
-                    <div className="profile-info">
+                    <div className="prof-profile-info">
                         <h1>{this.state.username}</h1>
                         <p>{this.state.status}</p>
-                        <button className ="create-post-button" onClick={this.togglePopup.bind(this)}>Create Post</button>                       
+                        <button className ="prof-create-post-button" onClick={this.togglePopup.bind(this)}>Create Post</button>                       
                     </div>
-                    <div className="edit-profile">
+                    <div className="prof-edit-profile">
                         <button onClick={this.handleEditProfile}>Edit Profile</button>
                     </div>
                     
@@ -135,21 +135,21 @@ export default class Profile extends Component {
                     
                 </div>
                 
-                <div className="container-middle-section"> 
+                <div className="prof-container-middle-section"> 
                     {this.state.showPopup ?  
                             <PostPopup closePopup={this.togglePopup.bind(this)} />  
                             : null  
                     }
                                         
-                    <div className="left-content">
-                        <div className="about">
-                            <h2 className="title"> About</h2>
-                            <p className="about-content">{this.state.about}</p>
+                    <div className="prof-left-content">
+                        <div className="prof-about">
+                            <h2 className="prof-title"> About</h2>
+                            <p className="prof-about-content">{this.state.about}</p>
                         </div>
                         
-                        <div className="radar-list">
-                            <h2 className="title"> Radar List</h2>
-                            <div className="radar-list-content">
+                        <div className="prof-radar-list">
+                            <h2 className="prof-title"> Radar List</h2>
+                            <div className="prof-radar-list-content">
                                 
                                 To be implemented 
                                 
@@ -162,12 +162,12 @@ export default class Profile extends Component {
                         
                     </div>
                                  
-                    <div className="right-content">
-                        <div className="acs">
-                            <h2 className="title"> ACS History </h2>
+                    <div className="prof-right-content">
+                        <div className="prof-cs">
+                            <h2 className="prof-title"> ACS History </h2>
                             
-                            <div className="acs-content"> 
-                            <PieChart className="piechart"
+                            <div className="prof-acs-content"> 
+                            <PieChart className="prof-piechart"
                             data={this.state.ascchart}
                             label={({ dataEntry }) => Math.round(dataEntry.percentage) + '%'}
                             labelStyle={defaultLabelStyle}                
@@ -187,7 +187,7 @@ export default class Profile extends Component {
                                 {this.state.acshistory.map(data => {
                                     return (
                                         <tr>
-                                            <td className={data.point>= 0? "score-content-pos" : "score-content-neg"}>{data.point}</td>
+                                            <td className={data.point>= 0? "prof-score-content-pos" : "prof-score-content-neg"}>{data.point}</td>
                                             <td>{data.category}</td>
                                             <td>{data.time}</td>
                                         </tr>
@@ -198,18 +198,18 @@ export default class Profile extends Component {
                             </table>
                         </div>
                         </div>
-                        <div className="bottom-right-content">
+                        <div className="prof-bottom-right-content">
                             
-                            <div className="interest">
+                            <div className="prof-interest">
                                 <h2>Interest</h2>
-                                <div className="interest-content">
+                                <div className="prof-interest-content">
                                     something
                                 </div>
                             </div>
                             
-                            <div className="picks">
+                            <div className="prof-picks">
                                 <h2> Current Picks </h2>
-                                <div className="picks-content">
+                                <div className="prof-picks-content">
                                     To be implemented in future sprint
                                 </div>
                             </div>
@@ -221,7 +221,7 @@ export default class Profile extends Component {
                   
                 </div>
                 
-                <div className="container-middle-section"> 
+                <div className="prof-container-middle-section"> 
                 
                 </div>
             </div>

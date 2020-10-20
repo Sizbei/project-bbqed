@@ -11,21 +11,22 @@ class Popup extends React.Component {
   handleSubmit(event) {
     const data = {
       user: 'something'
+
     }
     alert('You have created post!')
   }
   render() {  
   return (  
-  <div className='popup'>  
-    <div className='popup-content'>  
+  <div className='profile-popup'>  
+    <div className='profile-popup-popup-content'>  
       <div>
-        <button className="close-button" onClick={this.props.closePopup}> X </button>  
+        <button className="profile-popup-close-button" onClick={this.props.closePopup}> X </button>  
       </div>
       
-      <div className="post-content">
+      <div className="profile-popup-content">
         <h1> Create a Post </h1>
-        <input className="input" name="post-content"/>
-        <button className="submit-button" onClick={this.handleSubmit}> Post </button>
+        <input className="profile-popup-input" name="post-content"/>
+        <button className="profile-popup-submit-button" onClick={this.handleSubmit}> Post </button>
       </div>
       
 

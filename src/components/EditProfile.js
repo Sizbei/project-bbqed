@@ -224,11 +224,12 @@ export default class EditProfile extends Component {
         <div className="editprofile-container">
           <Header />
 
-          <div className="container-middle-section"> 
-              <h1> {'Profile Settings'} </h1> 
-              <div className="information"> 
+          <div className="editprofile-container-mid"> 
+              
+              <div className="info"> 
+              <h1 className="editProfile-h1"> {'Profile Settings'} </h1> 
                   <div className="editPP-container">
-                    <h2 className="title">Profile Picture</h2>
+                    <h2 className="editProfile-h2">Profile Picture</h2>
                     <div className="editPP-photo-container">
                       <div className="preview">
                         <div className="registration-photo">
@@ -247,12 +248,12 @@ export default class EditProfile extends Component {
                   </div>
 
                   <hr className="settings-hr"></hr>
-                  <h2 className="title">Status (optional)</h2>
+                  <h2 className="editProfile-h2">Status (optional)</h2>
                   <input type="text" placeholder="Status (optional)" id="timer" className="status-edit" maxLength="30" onBlur={this.onBlur} onChange={this.onChangeStatus} value={this.state.status}></input>
                   <label className="characters">Characters remaining: {this.state.statusCharacters}</label>
                   
                   <hr className="settings-hr"></hr>
-                  <h2 className="title"> About (optional)</h2>
+                  <h2 className="editProfile-h2"> About (optional)</h2>
                   <textarea type="text" placeholder="About (optional)" id="timer" className="about-edit" maxLength="300" onBlur={this.onBlur} onChange={this.onChangeAbout} value={this.state.about}></textarea>
                   <label className="characters">Characters remaining: {this.state.aboutCharacters}</label>
                   
