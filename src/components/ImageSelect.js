@@ -4,13 +4,23 @@ import axios from 'axios';
 import "../styling/ImageSelect.css"
 
 function Tile(props) {
+  let count = props.count;
+  let setCount = props.setCount;
   const name = props.name;
   const image = props.image;
-  const notifyTable = props.notifyTable
+  const max = props.max;
+  const notifyMax = props.notifyMax;
+  const notifyTable = props.notifyTable;
 
-  const [selected, setSelected] = useState(false);
+  const [selected, setSelected] = useState(props.initial);
   
   const handleClick = () => {
+    console.log("count here", count(), max);
+    if (count() == max && !selected) {
+      console.log("Reached maximum.");
+      return;
+    }
+
     let newSelected = !selected;
     setSelected(newSelected);
     notifyTable(name, newSelected);
@@ -27,10 +37,29 @@ function Tile(props) {
 
 export default function ImageSelect(props) {
   const btntext = props.btntext;
+  const selected = ("selected" in props) ? props.selected : [];
   const width = props.width;
   const data = props.data;
-  const onSubmitHandler = props.onSubmit
+  const onSubmitHandler = props.onSubmit;
+  const updateOnClick = props.updateOnClick;
+  const onBlurHandler = ("onBlurHandler" in props) ? props.onBlurHandler : () => {};
+  const noButton = props.noButton;
+  const maxTeams = props.maxTeams;
+  const notifyMaxHandler = ("notifyMaxHandler" in props) ? props.notifyMaxHandler : () => {};
   const [tableContents, setTableContents] = useState(null);
+  const [changed, setChanged] = useState(false);
+  const [count, setCount] = useState(() => () => 0);
+
+  const pairs = data.map((t) => {
+    const obj = {
+      pair_name: t["name"],
+      pair_bool: selected.some(v => {return v === t["name"]})
+    }
+
+    return obj;
+  })
+
+  const [tileState, setTileState] = useState(pairs);
 
   const handleToggle = (name, selected) => {
     let newTileState = tileState.map( o => {
@@ -45,21 +74,25 @@ export default function ImageSelect(props) {
         return obj;
       }
     })
-    setTileState(newTileState)
+    if (selected) {
+      setCount(() => () => {return count() + 1});
+    } else {
+      setCount(() => () => {return count() - 1});
+    }
+    setTileState(newTileState);
+    setChanged(true);
+
+    
   }
 
-  const tiles = data.map((e) => <Tile name={e["name"]} image={e["image"]} key={e["name"]} notifyTable={handleToggle} />)
-
-  const pairs = data.map((t) => {
-    const obj = {
-      pair_name: t["name"],
-      pair_bool: false
-    }
-
-    return obj;
-  })
-
-  const [tileState, setTileState] = useState(pairs);
+  const notifyMax = () => {
+    console.log("maximum");
+    notifyMaxHandler();
+  }
+  
+  const tiles = data.map((e) => <Tile name={e["name"]} image={e["image"]} key={e["name"]} 
+  count={count} setCount={() => setCount} max={maxTeams} notifyMax={notifyMaxHandler}
+  initial={selected.some(v => {return v === e["name"]})} notifyTable={handleToggle} />)
 
   const getData = () => {
     let buffer = []
@@ -72,6 +105,12 @@ export default function ImageSelect(props) {
     onSubmitHandler(buffer);
   }
 
+  const handleMouseLeave = () => {
+    if (changed) {
+      setChanged(false);
+      onBlurHandler();
+    }
+  }
   
   useEffect(() => {
     let buffer = []
@@ -93,19 +132,30 @@ export default function ImageSelect(props) {
     }
 
     setTableContents(buffer);
-  }, [tileState]) // aka refresh on tileState change, otherwise setTileState() does nothing
+
+    if (updateOnClick) {
+      getData();
+    }
+  }, [tileState, count()]) // aka refresh on tileState change, otherwise setTileState() does nothing
+
+  let btn;
+  if (noButton) {
+    btn = null;
+  } else {
+    btn = (<div className="imageselect-btn-container">
+      <button className="imageselect-btn" onClick={getData}>{btntext}</button>
+    </div>)
+  }
 
   return (
     <div className="imageselect-container">
       <table className="imageselect-table">
-        <tbody>
+        <tbody onMouseLeave={handleMouseLeave}>
           {tableContents}
         </tbody>
       </table>
 
-      <div className="imageselect-btn-container">
-        <button className="imageselect-btn" onClick={getData}>{btntext}</button>
-      </div>
+      {btn}
     </div>  
   )
 }

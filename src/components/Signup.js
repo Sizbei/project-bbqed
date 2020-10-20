@@ -133,7 +133,7 @@ export default function Popup() {
   useEffect(() => {
     axios.get('http://localhost:5000/teams/', "").then(
       (e) => {
-        setImageSelect(<ImageSelect btntext="Finish!" data={e.data} width={6} onSubmit={handleImageSelectData} />)
+        setImageSelect(<ImageSelect btntext="Finish!" data={e.data} width={6} onSubmit={handleImageSelectData} maxTeams={9} />)
       }
     ); 
   }, [])
