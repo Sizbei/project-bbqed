@@ -138,7 +138,7 @@ export default class Profile extends Component {
                     <div className="prof-profile-info">
                         <h1>{this.state.username}</h1>
                         <p>{this.state.status}</p>
-                        <button className ="prof-create-post-button" onClick={this.togglePopup.bind(this)}>Create Post</button>                       
+                        <button className ="prof-create-post-button" onClick={this.togglePostPopup.bind(this)}>Create Post</button>                       
                     </div>
                     <div className="prof-edit-profile">
                         <button onClick={this.handleEditProfile}>Edit Profile</button>
