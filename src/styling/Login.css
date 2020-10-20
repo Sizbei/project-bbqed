@@ -1,3 +1,4 @@
+/**************************** STYLING FOR OVERALL LOGIN PAGE ***********************************/
 .page {
     position: fixed;
     top: 0;
@@ -20,6 +21,8 @@
     justify-content: center;
 }
 
+/**************************** STYLING FOR HEADER/LOGO SECTION  ***********************************/
+
 .logo {
     min-width: 35%;
 }
@@ -29,6 +32,8 @@
     font-family: 'CommissionerBold';
     font-size: xx-large;
 }
+
+/**************************** STYLING FOR USER INPUT SECTION  ***********************************/
 
 .identifier {
     width: 25%;
@@ -41,13 +46,6 @@
     font-family: 'CommissionerMedium';
 }
 
-.boldtext {
-    color:white;
-    font-weight: 600;
-    font-size:20px;
-    font-family: 'CommissionerMedium';
-}
-
 .input {
     width:100%;
     height:30px;
@@ -56,6 +54,24 @@
 .input:focus {
     outline:none;
 }
+
+.passwordlink {
+    color: #FF7e1F;
+    font-size:18px;
+    font-family: 'CommissionerMedium';
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.passwordlink:hover {
+    color: #FF7e1F;
+    font-size:18px;
+    font-family: 'CommissionerMedium';
+    font-weight: 500;
+    text-decoration: none;
+}
+
+/**************************** STYLING FOR LOGIN BUTTON  ***********************************/
 
 .loginBtn {
     background-color: #FF7e1F;
@@ -76,20 +92,13 @@
     outline:none;
 }
 
-.passwordlink {
-    color: #FF7e1F;
-    font-size:18px;
-    font-family: 'CommissionerMedium';
-    font-weight: 500;
-    text-decoration: none;
-}
+/**************************** STYLING FOR SIGN UP SECTION  ***********************************/
 
-.passwordlink:hover {
-    color: #FF7e1F;
-    font-size:18px;
+.boldtext {
+    color:white;
+    font-weight: 600;
+    font-size:20px;
     font-family: 'CommissionerMedium';
-    font-weight: 500;
-    text-decoration: none;
 }
 
 .signuplink {
@@ -109,14 +118,12 @@
     text-decoration: none;
 }
 
-.right {
-    width:100%;
-}
-
 .signup {
     width:10%;
     position:center;
 }
+
+/**************************** FONT SECTION  ***********************************/
 
 @font-face {
     font-family: 'CommissionerExtraBold';
