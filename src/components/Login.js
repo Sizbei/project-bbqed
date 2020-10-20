@@ -2,7 +2,6 @@ import axios from 'axios';
 import '../styling/Login.css';
 import logo from '../res/images/Logo.png';
 import React, {Component} from 'react';
-import Signup from "./Signup"
 
 export default class Login extends Component{
     
@@ -86,12 +85,9 @@ export default class Login extends Component{
                     </div>
                     <button className="loginBtn" onClick={this.onLogin}>Log In</button>
                     <br></br>
-                    <div className="signup">
                         <label className="boldtext">Not a Member?</label>
-                    </div>
-                    <div className="signup">
-                      <Signup />
-                    </div>               
+                        <a href="/Registration" className="signuplink">Sign Up</a> 
+                     
                 </div>
             </div>
         );

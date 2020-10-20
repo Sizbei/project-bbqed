@@ -223,21 +223,7 @@
 
 
 @font-face {
-
-
   font-family: 'Commissioner';
-
-
-  src: local('Anton'), url(../res/fonts/Anton/Anton-Regular.ttf) format('truetype');
-  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-VariableFont_wght.ttf) format('truetype');
-  src: local('Roboto Condensed'), local('RobotoCondensed'), url(../res/fonts/Roboto_Condensed/RobotoCondensed-Regular.ttf) format('truetype');
-  src: local('Open Sans'), local('OpenSans'),
-       url(../res/fonts/Open_Sans/OpenSans-Regular.ttf) format('truetype');
-
-  src: local('Oxygen'), url(../res/fonts/Oxygen/Oxygen-Regular.ttf) format('truetype');
-  src: local('Tahoma'), url(../res/fonts/Tahoma/Tahoma-Regular.ttf) format('truetype');
-  src: local('Helveticaneue'), url(../res/fonts/Helveticaneue/HelveticaNeue.ttf) format('truetype');
-  /* src: local('Uni Sans'), url(../res/fonts/Uni-Sans/Uni-Sans-Thin.ttf) format('truetype'); */
-
+  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Medium.ttf) format('truetype');
 }
 
