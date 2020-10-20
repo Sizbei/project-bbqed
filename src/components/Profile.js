@@ -21,13 +21,13 @@ export default class Profile extends Component {
             about: '' ,
             interest: '',
             image: 'https://i.imgur.com/55sUslQ.png',
-            asc: 0,  
+            acs: 0,  
             acschart: [], 
             acshistory: [],
             showpostpopup: false,
         }
         this.handleEditProfile = this.handleEditProfile.bind(this);
-        this.handleACSHistory = this.handleACSHistory.bind(this);
+        this.handleRadarList = this.handleRadarList.bind(this);
     }
     
     //******************* CREATING POST FUNCTIONS ****************************/
@@ -42,8 +42,8 @@ export default class Profile extends Component {
         event.preventDefault();
         this.props.history.push("/settings/profile");
     }
-    handleACSHistory(event) { 
-        alert('Will send to new page with history'); 
+    handleRadarList(event) { 
+        alert('Will send to pop up of all friends ??'); 
     }
 
     /************************GET REQUEST FOR USER INFRORMATION ***********************/
@@ -58,8 +58,9 @@ export default class Profile extends Component {
             this.setState({
                 username: response.data.username,
                 status: response.data.status,
-                about: response.data.about,
-                interest: response.data.interest,   
+                about: response.data.about,  
+                image: response.data.image, 
+                acs: response.data.acs,
                 ascchart: [
                     { title: 'Trivia & Games', value: tag, color: '#61b305' },
                     { title: 'Analysis & Debate', value: aad, color: '#f8e871' },
@@ -93,7 +94,7 @@ export default class Profile extends Component {
                     
                     <div className="profile-photo">
                         <img src={this.state.image} className="profile-user-given-photo"/>  
-                        <label className="profile-user-score">{this.state.asc}</label>   
+                        <label className="profile-user-score">{this.state.acs}</label>   
                                           
                     </div>
                     <div className="profile-info">
@@ -116,25 +117,31 @@ export default class Profile extends Component {
                     }
                                         
                     <div className="left-content">
-
-                        <h2 className="title"> About</h2>
-                        <p className="content">{this.state.about}</p>
-
-                        <div className="radar-list">
-                            <h2> Radar List</h2>
-                            <p>
-                            To be implemented 
-                            </p>
+                        <div className="about">
+                            <h2 className="title"> About</h2>
+                            <p className="about-content">{this.state.about}</p>
                         </div>
+                        
+                        <div className="radar-list">
+                            <h2 className="title"> Radar List</h2>
+                            <div className="radar-list-content">
+                                
+                                To be implemented 
+                                
+                                
+                                <button onClick={this.handleRadarList}> View all</button>
+                            </div>
+                        </div>
+                        
                         
                         
                     </div>
                                  
                     <div className="right-content">
-
-                        <h2 className="title"> ACS History </h2>
-                        
-                        <div className="acs-content"> 
+                        <div className="acs">
+                            <h2 className="title"> ACS History </h2>
+                            
+                            <div className="acs-content"> 
                             <PieChart className="piechart"
                             data={this.state.ascchart}
                             label={({ dataEntry }) => Math.round(dataEntry.percentage) + '%'}
@@ -164,17 +171,22 @@ export default class Profile extends Component {
                             
                                 </tbody>
                             </table>
-
-                            <button onClick={this.handleACSHistory}> View history</button>
+                        </div>
                         </div>
                         <div className="bottom-right-content">
+                            
                             <div className="interest">
                                 <h2>Interest</h2>
-                                <p>{this.state.interest}</p>
+                                <div className="interest-content">
+                                    something
+                                </div>
                             </div>
+                            
                             <div className="picks">
                                 <h2> Current Picks </h2>
-                                <p> To be implemented in future sprint</p>
+                                <div className="picks-content">
+                                    To be implemented in future sprint
+                                </div>
                             </div>
 
                         </div>
