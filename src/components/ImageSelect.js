@@ -9,20 +9,20 @@ function Tile(props) {
   const name = props.name;
   const image = props.image;
   const max = props.max;
-  const notifyMax = props.notifyMax;
+  const notifyMaxHandler = props.notifyMaxHandler;
   const notifyTable = props.notifyTable;
 
   const [selected, setSelected] = useState(props.initial);
   
   const handleClick = () => {
-    console.log("count here", count(), max);
     if (count() == max && !selected) {
-      console.log("Reached maximum.");
+      notifyMaxHandler(true);
       return;
     }
 
     let newSelected = !selected;
     setSelected(newSelected);
+    notifyMaxHandler(false);
     notifyTable(name, newSelected);
   }
 
@@ -91,17 +91,10 @@ export default function ImageSelect(props) {
     }
     setTileState(newTileState);
     setChanged(true);
-
-    
-  }
-
-  const notifyMax = () => {
-    console.log("maximum");
-    notifyMaxHandler();
   }
   
   const tiles = data.map((e) => <Tile name={e["name"]} image={e["image"]} key={e["name"]} 
-  count={count} setCount={() => setCount} max={maxTeams} notifyMax={notifyMaxHandler}
+  count={count} setCount={() => setCount} max={maxTeams} notifyMaxHandler={notifyMaxHandler}
   initial={selected.some(v => {return v === e["name"]})} notifyTable={handleToggle} />)
 
   const getData = () => {
@@ -123,8 +116,6 @@ export default function ImageSelect(props) {
   }
   
   useEffect(() => {
-    console.log(numSelectedAlready());
-
     let buffer = []
     for (var row = 0; row < Math.ceil(data.length / width); row++) {
       let tr_contents = []
