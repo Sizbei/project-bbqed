@@ -82,6 +82,7 @@ export default class EditProfile extends Component {
             this.setState({
               imageSelect: <ImageSelect btntext="Submit!" data={e.data} width={6} 
               selected={response.data.interest} updateOnClick={true} 
+              maxTeams={9}
               onSubmit={this.handleImageSelectData} onBlurHandler={this.onBlur} 
               noButton={true}/>
             })
