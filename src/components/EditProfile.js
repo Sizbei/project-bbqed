@@ -50,7 +50,6 @@ export default class EditProfile extends Component {
           imageSelect: null,
           statusCharacters: 30,
           aboutCharacters: 300,
-          imageSelectMaxError: false
         }
     }
       
@@ -83,7 +82,7 @@ export default class EditProfile extends Component {
             this.setState({
               imageSelect: <ImageSelect btntext="Submit!" data={e.data} width={6} 
               selected={response.data.interest} updateOnClick={true} 
-              maxTeams={9} notifyMaxHandler={this.handleNotifyMax}
+              maxTeams={9}
               onSubmit={this.handleImageSelectData} onBlurHandler={this.onBlur} 
               noButton={true}/>
             })
@@ -211,13 +210,6 @@ export default class EditProfile extends Component {
         interest: d
       }, () => this.onSubmit())
     }
-
-    handleNotifyMax = (b) => {
-      console.log("notified", b);
-      this.setState({
-        imageSelectMaxError: b
-      })
-    }
     
     render(){
       let imgSubmitBtn;
@@ -267,9 +259,6 @@ export default class EditProfile extends Component {
                   <hr className="settings-hr"></hr>
                   <h2 className="title">Favorite Teams</h2>
                   {this.state.imageSelect}
-                  <ErrorMessage flag={this.state.imageSelectMaxError} text="*Maximum teams has been reached."></ErrorMessage>
-                  {/* <div className="editPP-imageselect-container">
-                  </div> */}
               </div>
           </div>
           

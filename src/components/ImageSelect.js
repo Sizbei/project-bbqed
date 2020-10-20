@@ -48,6 +48,7 @@ export default function ImageSelect(props) {
   const notifyMaxHandler = ("notifyMaxHandler" in props) ? props.notifyMaxHandler : () => {};
   const [tableContents, setTableContents] = useState(null);
   const [changed, setChanged] = useState(false);
+  const [maxError, setMaxError] = useState(false);
   
   const pairs = data.map((t) => {
     const obj = {
@@ -92,9 +93,14 @@ export default function ImageSelect(props) {
     setTileState(newTileState);
     setChanged(true);
   }
+
+  const handleMax = (e) => {
+    setMaxError(e);
+    notifyMaxHandler(e);
+  }
   
   const tiles = data.map((e) => <Tile name={e["name"]} image={e["image"]} key={e["name"]} 
-  count={count} setCount={() => setCount} max={maxTeams} notifyMaxHandler={notifyMaxHandler}
+  count={count} setCount={() => setCount} max={maxTeams} notifyMaxHandler={handleMax}
   initial={selected.some(v => {return v === e["name"]})} notifyTable={handleToggle} />)
 
   const getData = () => {
@@ -107,6 +113,8 @@ export default function ImageSelect(props) {
 
     onSubmitHandler(buffer);
   }
+
+
 
   const handleMouseLeave = () => {
     if (changed) {
@@ -157,11 +165,22 @@ export default function ImageSelect(props) {
           {tableContents}
         </tbody>
       </table>
-
+      <ErrorMessage flag={maxError} text={"*Maximum reached."}></ErrorMessage>
       {btn}
     </div>  
   )
 }
+
+function ErrorMessage(props) {
+  const flag = props.flag;
+  const text = props.text;
+
+  if (flag) {
+    return <span className="error-message"> {text} </span>;
+  } else {
+    return <span className="error-message"> <br></br> </span>;
+  }
+} 
 
 // A minimal example for ImageSelect
 function ImageTest(props) {
