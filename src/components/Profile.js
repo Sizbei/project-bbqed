@@ -23,9 +23,9 @@ export default class Profile extends Component {
             interest: [],
             image: 'https://i.imgur.com/55sUslQ.png',
             acs: 0,  
-            acschart: [], 
-            acshistory: [],
-            showpostpopup: false,
+            acsChart: [], 
+            acsHistory: [],
+            showPostPopup: false,
             teams: [],
             imgSelect: null
         }
@@ -34,9 +34,9 @@ export default class Profile extends Component {
     }
     
     //******************* CREATING POST FUNCTIONS ****************************/
-    togglePopup() {  
+    togglePostPopup() {  
         this.setState({  
-             showPopup: !this.state.showPopup  
+             showPostPopup: !this.state.showPostPopup  
         });  
     }
     
@@ -54,7 +54,7 @@ export default class Profile extends Component {
 
         axios.get('http://localhost:5000' + this.state.path)
         .then(response => {
-            
+   
             const tag = 10; 
             const aad = 15; 
             const pap = 20; 
@@ -67,13 +67,13 @@ export default class Profile extends Component {
                 about: response.data.about,  
                 image: response.data.image, 
                 acs: response.data.acs,
-                ascchart: [
+                acsChart: [
                     { title: 'Trivia & Games', value: tag, color: '#61b305' },
                     { title: 'Analysis & Debate', value: aad, color: '#f8e871' },
                     { title: 'Picks & Prediction', value: pap, color: '#d30909' },
                     { title: 'Participation & History', value: pah, color: ' #ff7e1f'},
                 ],  
-                acshistory: [
+                acsHistory: [
                     {point: 10 , category: 'Picks', time: '1 hour ago'}, 
                     {point: 7 , category: 'Debate', time: '7 hours ago'}, 
                     {point: -10 , category: 'Trivia', time: '10 hours ago'}, 
@@ -149,8 +149,8 @@ export default class Profile extends Component {
                 </div>
                 
                 <div className="prof-container-middle-section"> 
-                    {this.state.showPopup ?  
-                            <PostPopup closePopup={this.togglePopup.bind(this)} />  
+                    {this.state.showPostPopup ?  
+                            <PostPopup closePopup={this.togglePostPopup.bind(this)} />  
                             : null  
                     }
                                         
@@ -181,7 +181,7 @@ export default class Profile extends Component {
                             
                             <div className="prof-acs-content"> 
                             <PieChart className="prof-piechart"
-                            data={this.state.ascchart}
+                            data={this.state.acsChart}
                             label={({ dataEntry }) => Math.round(dataEntry.percentage) + '%'}
                             labelStyle={defaultLabelStyle}                
                             raidus={42}
@@ -197,7 +197,7 @@ export default class Profile extends Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                {this.state.acshistory.map(data => {
+                                {this.state.acsHistory.map(data => {
                                     return (
                                         <tr>
                                             <td className={data.point>= 0? "prof-score-content-pos" : "prof-score-content-neg"}>{data.point}</td>
