@@ -224,6 +224,10 @@
   font-weight: 650;
 }
 
+.imageselect-btn {
+  margin-top:0;
+}
+
 .error-message {
   font-size: 12px;
   margin-bottom: 2px;
