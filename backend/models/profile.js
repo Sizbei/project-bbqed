@@ -49,11 +49,33 @@ const profileSchema = new Schema({
       required: true
     }
   }],
-  acsTotal: {
-    type: Number,
-    required: true,
-    default: 0
-  }
+  acsTotal: [{
+    total: {
+      type: Number,
+      required: true,
+      default: 0
+    },
+    triviaGamesPc: {
+      type: Number,
+      required: true,
+      default: 0
+    },
+    analysisDebatePc: {
+      type: Number,
+      required: true,
+      default: 0
+    },
+    picksPredicitonPc: {
+      type: Number,
+      required: true,
+      default: 0
+    },
+    participationHistoryPc: {
+      type: Number,
+      required: true,
+      default: 0
+    }
+  }]
   
 }, {
   timestamps: true,
