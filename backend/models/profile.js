@@ -35,12 +35,33 @@ const profileSchema = new Schema({
     unique: true,
     trim: true,
   },
-  acs: {
+  acsHistory: [{
+    category: {
+      type: String,
+      required: true
+    },
+    points: {
+      type: Number,
+      required: true
+    },
+    date: {
+      type: Date,
+      required: true
+    }
+  }],
+  acsTotal: {
     type: Number,
+<<<<<<< Updated upstream
     required: false,
     unique: true,
     trim: true,
   },
+=======
+    required: true,
+    default: 0
+  }
+  
+>>>>>>> Stashed changes
 }, {
   timestamps: true,
 });
