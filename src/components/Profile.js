@@ -38,8 +38,9 @@ export default class Profile extends Component {
     }
     
     handleEditProfile(event) { 
-        alert('Will send to edit profile page');
+        // alert('Will send to edit profile page');
         event.preventDefault();
+        this.props.history.push("/settings/profile");
     }
     handleACSHistory(event) { 
         alert('Will send to new page with history'); 
