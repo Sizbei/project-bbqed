@@ -175,7 +175,11 @@ function ErrorMessage(props) {
   const flag = props.flag;
   const text = props.text;
 
-  return <span className="error-message" style={{display: flag ? "block" : "none"}}> {text} </span>
+  if (flag) {
+    return <span className="error-message"> {text} </span>;
+  } else {
+    return <span className="error-message"> <br></br> </span>;
+  }
 } 
 
 // A minimal example for ImageSelect
