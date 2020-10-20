@@ -9,20 +9,20 @@ function Tile(props) {
   const name = props.name;
   const image = props.image;
   const max = props.max;
-  const notifyMax = props.notifyMax;
+  const notifyMaxHandler = props.notifyMaxHandler;
   const notifyTable = props.notifyTable;
 
   const [selected, setSelected] = useState(props.initial);
   
   const handleClick = () => {
-    console.log("count here", count(), max);
     if (count() == max && !selected) {
-      console.log("Reached maximum.");
+      notifyMaxHandler(true);
       return;
     }
 
     let newSelected = !selected;
     setSelected(newSelected);
+    notifyMaxHandler(false);
     notifyTable(name, newSelected);
   }
 
@@ -48,8 +48,8 @@ export default function ImageSelect(props) {
   const notifyMaxHandler = ("notifyMaxHandler" in props) ? props.notifyMaxHandler : () => {};
   const [tableContents, setTableContents] = useState(null);
   const [changed, setChanged] = useState(false);
-  const [count, setCount] = useState(() => () => 0);
-
+  const [maxError, setMaxError] = useState(false);
+  
   const pairs = data.map((t) => {
     const obj = {
       pair_name: t["name"],
@@ -59,6 +59,17 @@ export default function ImageSelect(props) {
     return obj;
   })
 
+  const numSelectedAlready = () => {
+    let c = 0;
+    data.forEach((t, i) => {
+      if (selected.some(v => {return v === t["name"]})) {
+        c = c + 1;
+      }
+    })
+    return c;
+  } 
+  
+  const [count, setCount] = useState(() => () => numSelectedAlready());
   const [tileState, setTileState] = useState(pairs);
 
   const handleToggle = (name, selected) => {
@@ -81,17 +92,15 @@ export default function ImageSelect(props) {
     }
     setTileState(newTileState);
     setChanged(true);
-
-    
   }
 
-  const notifyMax = () => {
-    console.log("maximum");
-    notifyMaxHandler();
+  const handleMax = (e) => {
+    setMaxError(e);
+    notifyMaxHandler(e);
   }
   
   const tiles = data.map((e) => <Tile name={e["name"]} image={e["image"]} key={e["name"]} 
-  count={count} setCount={() => setCount} max={maxTeams} notifyMax={notifyMaxHandler}
+  count={count} setCount={() => setCount} max={maxTeams} notifyMaxHandler={handleMax}
   initial={selected.some(v => {return v === e["name"]})} notifyTable={handleToggle} />)
 
   const getData = () => {
@@ -104,6 +113,8 @@ export default function ImageSelect(props) {
 
     onSubmitHandler(buffer);
   }
+
+
 
   const handleMouseLeave = () => {
     if (changed) {
@@ -154,11 +165,18 @@ export default function ImageSelect(props) {
           {tableContents}
         </tbody>
       </table>
-
+      <ErrorMessage flag={maxError} text={"*Maximum reached."}></ErrorMessage>
       {btn}
     </div>  
   )
 }
+
+function ErrorMessage(props) {
+  const flag = props.flag;
+  const text = props.text;
+
+  return <span className="error-message" style={{display: flag ? "block" : "none"}}> {text} </span>
+} 
 
 // A minimal example for ImageSelect
 function ImageTest(props) {
