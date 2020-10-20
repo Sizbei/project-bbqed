@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const postSchema = new Schema({
     poster: {
-        type: ObjectID,
-        ref: "user",
+        type: String,
         required: true
     },
     body: {
@@ -12,16 +11,15 @@ const postSchema = new Schema({
         required: true
     },
     likes: {
-        type: number,
+        type: Number,
         required: true,
         default: 0
     },
     interacted: {
-        type:[{ObjectID, ref:"user"}]
+        type:[{String}],
+        required: false
     },
-    comments: {
-        type:[{ObjectID, ref:"comment"}]
-    }
+    comments: [{type: Schema.ObjectId, ref:"comment"}]
 },{
     timestamps:true
 });
