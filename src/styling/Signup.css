@@ -31,23 +31,24 @@
 }
 
 /* Example css for .SignUpBtn */
-/* .SignUpBtn {
+.SignUpBtn {
   padding-left: 2em;
   padding-right: 2em;
 
-  background-color: #FF7e1F;
+  background-color: transparent;
   border: none;
   border-radius: 3em;
-  height: 3em;
-  color: white;
-  font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-  sans-serif;
+  color: #FF7e1F;
+  font-family:'CommissionerMedium';
   text-align: center;
   display: inline-block;
-  font-size: 18px;
+  font-size: 32px;
   font-weight: 650;
-} */
+} 
+
+.SignUpBtn:focus {
+  outline: none;
+}
 
 .div-name {
   display: flex;
@@ -68,7 +69,8 @@
   display: block;
   color:  #FF7e1F;
   margin-top: 8px;
-  font-size: 14px;
+  font-size: 18px;
+  font-family: 'CommissionerMedium';
 }
 
 .signup-logo-container {
@@ -86,11 +88,9 @@
 .slogan {
   margin-bottom: 10px;
   color: white;
-  font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-  sans-serif;
+  font-family:'CommissionerMedium';
   text-align: center;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 650;
 }
 
@@ -189,20 +189,19 @@
   margin-left: auto;
   margin-right: auto;
   margin-top: 1.5em;
-  margin-bottom: 0;
+  margin-bottom: 0.8em;
   padding-left: 1.1em;
   padding-right: 1.1em;
 
   background-color: #FF7e1F;
   border: none;
   border-radius: 3em;
-  height: 1.8em;
+  height: 2.2em;
+  width: 60%;
   color: white;
-  font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-  sans-serif;
+  font-family:'CommissionerMedium';
   text-align: center;
-  font-size: 18px;
+  font-size: 25px;
   font-weight: 650;
 }
 
@@ -211,4 +210,9 @@
   margin-bottom: 2px;
   color:  #FF7e1F;
   display: block;
+}
+
+@font-face {
+  font-family: 'CommissionerMedium';
+  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Medium.ttf) format('truetype');
 }

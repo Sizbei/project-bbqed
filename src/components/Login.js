@@ -2,6 +2,7 @@ import axios from 'axios';
 import '../styling/Login.css';
 import logo from '../res/images/Logo.png';
 import React, {Component} from 'react';
+import Signup from "./Signup"
 
 export default class Login extends Component{
     
@@ -65,7 +66,7 @@ export default class Login extends Component{
             <div className="page">
                 <div className="login">
                     <img src={logo} className="logo"/>
-                    <label className="slogan">Start Building Your ACS Score</label>
+                    <label className="sloganLogin">Start Building Your ACS Score</label>
                     <div className="identifier">
                         <label className="text">Username or Email</label>
                         <input className="input"
@@ -75,7 +76,7 @@ export default class Login extends Component{
                             onChange={this.onChangeUsername} />
                     </div>
                     <div className="identifier">
-                        <label className="text" >Password</label>
+                        <label className="text">Password</label>
                         <input className="input" 
                             id="password"
                             type="password"
@@ -86,8 +87,9 @@ export default class Login extends Component{
                     <button className="loginBtn" onClick={this.onLogin}>Log In</button>
                     <br></br>
                         <label className="boldtext">Not a Member?</label>
-                        <a href="/Registration" className="signuplink">Sign Up</a> 
-                     
+                        <div className="signup">
+                            <Signup />
+                        </div>
                 </div>
             </div>
         );
