@@ -62,6 +62,10 @@ export default class Login extends Component{
                     document.getElementById('password').style.borderColor = "red";
                 }
             })
+            .catch(() => {
+                document.getElementById('username').style.borderColor = "red";
+                document.getElementById('password').style.borderColor = "red";
+            });
     }
 
     render() {
@@ -87,6 +91,7 @@ export default class Login extends Component{
                             onChange={this.onChangePassword} />
                         {/* <a href="" className="passwordlink">Forgot Password?</a> */}
                     </div>
+                    <br></br>
                     <button className="loginBtn" onClick={this.onLogin}>Log In</button>
                     <br></br>
                         <label className="boldtext">Not a Member?</label>
