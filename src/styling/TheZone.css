@@ -1,0 +1,30 @@
+.post{
+    position: relative; 
+    flex-direction: column; 
+    color: white; 
+}
+
+.comment{
+
+}
+
+.profile-badge {
+    margin-top: -120px ; 
+    margin-left: 160px;
+    padding: 44px; 
+    border-radius: 50%; 
+    position: absolute;
+    background-color: black; 
+    
+
+}
+
+  .content { 
+    border-color: #747474;
+    border-style: solid; 
+    background-color: #747474;
+    padding-top: 10px;
+    padding-bottom: 50px; 
+    padding-left: 10px; 
+    padding-right: 10px;      
+  }
