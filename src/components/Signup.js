@@ -21,7 +21,7 @@ function ErrorMessage(props) {
 } 
 
 export default function Popup() {
-  const [formState, setFormState] = useState("form-2");
+  const [formState, setFormState] = useState("button");
   const [formData, setFormData] = useState({});
   const { register, handleSubmit, watch, errors } = useForm();
   const [usernameExists, setUsernameExists] = useState(false)
@@ -79,7 +79,7 @@ export default function Popup() {
   }
 
   const submitForm2 = data => {
-    formData["favoriteTeam"] = data;
+    formData.favoriteTeam = data;
     submitData(formData);
   }
 
