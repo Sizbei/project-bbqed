@@ -1,0 +1,31 @@
+/*************** PAGINATION CSS **********************/
+.radar-list-pagination { 
+  display: flex; 
+  flex-direction: row;
+}
+
+.radar-list-page-link {
+  padding: 10px; 
+}
+/*************** POST CSS **********************/
+
+.radar-list-popup-table{ 
+  color: white; 
+}
+
+.radar-list-popup-img {
+  width: 20px;
+  height: 20px; 
+}
+
+/******** RADAR LIST CSS *********************/
+.radar-list-container {
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  flex-direction: column;
+}
+
+.radar-list-h1 {
+
+}

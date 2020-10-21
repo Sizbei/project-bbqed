@@ -1,15 +1,17 @@
-import React, {Component, useDebugValue} from 'react';
+import React, {Component} from 'react';
 import axios from 'axios';
 import { PieChart } from 'react-minimal-pie-chart';
 import '../styling/Profile.css'
-import Header from './Header';
 import PostPopup from './ProfilePostPopup';
 import ImageSelect from './ImageSelect';
+import RLPopup from './ProfileRadarListPopup'; 
 
 const defaultLabelStyle = {
     fontSize: '5px',
     fontFamily: 'sans-serif',
   };
+
+
 export default class Profile extends Component {
     constructor(props) {
         super(props);
@@ -26,6 +28,8 @@ export default class Profile extends Component {
             acsChart: [], 
             acsHistory: [],
             showPostPopup: false,
+            showRLPopup: false, 
+            radarList: [], 
             teams: [],
             imgSelect: null
         }
@@ -39,6 +43,11 @@ export default class Profile extends Component {
              showPostPopup: !this.state.showPostPopup  
         });  
     }
+    toggleRLPopup() {  
+        this.setState({  
+             showRLPopup: !this.state.showRLPopup  
+        });  
+    }
     
     handleEditProfile(event) { 
         // alert('Will send to edit profile page');
@@ -46,7 +55,7 @@ export default class Profile extends Component {
         this.props.history.push("/settings/profile");
     }
     handleRadarList(event) { 
-        alert('Will send to pop up of all friends ??'); 
+        this.props.history.push("/settings/profile");
     }
 
     /************************GET REQUEST FOR USER INFRORMATION ***********************/
@@ -80,7 +89,22 @@ export default class Profile extends Component {
                     {point: 13 , category: 'Debate', time: '13 hours ago'}, 
                     {point: -3 , category: 'Picks', time: '20 hours ago'}, 
                 ],
-                teams: response.data.teams
+                teams: response.data.teams,
+                /*
+                radarList: [ 
+                    {pictureUrl: "https://i.imgur.com/55sUslQ.png", username: "user1",acs: 20},
+                    {pictureUrl: "https://i.imgur.com/55sUslQ.png", username: "user2",acs: 21},
+                    {pictureUrl: "https://i.imgur.com/55sUslQ.png", username: "user3",acs: 22},
+                    {pictureUrl: "https://i.imgur.com/55sUslQ.png", username: "user4",acs: 23},
+                    {pictureUrl: "https://i.imgur.com/55sUslQ.png", username: "user5",acs: 24},
+                    {pictureUrl: "https://i.imgur.com/55sUslQ.png", username: "user6",acs: 25},
+                    {pictureUrl: "https://i.imgur.com/55sUslQ.png", username: "user7",acs: 26},
+                    {pictureUrl: "https://i.imgur.com/55sUslQ.png", username: "user8",acs: 27},
+                    {pictureUrl: "https://i.imgur.com/55sUslQ.png", username: "user9",acs: 28},
+                    {pictureUrl: "https://i.imgur.com/55sUslQ.png", username: "user10",acs: 90},
+                    {pictureUrl: "https://i.imgur.com/55sUslQ.png", username: "user11",acs: 30},
+                ]
+                */
             }) 
         })
         .then(response => {
@@ -114,6 +138,12 @@ export default class Profile extends Component {
             }
 
         )
+        /*.then (response => 
+            axios.get('http://localhost:5000' + this.state.path + '/radarlist')
+            .then(response => {
+
+            })   
+        )*/
         .catch((error) => {
           console.log(error);
         })
@@ -122,7 +152,23 @@ export default class Profile extends Component {
     }
 
     render(){
+            /*
+            FOR RADAR LIST IMPLEMENTATION 
+            <table>
+                <tbody>
+                {this.state.radarList.map(data => {
+                    return (
+                        <tr>
+                            <td><img className="prof-radar-list-img" src={data.pictureUrl}></img></td>
+                            <td>{data.username}</td>
+                            <td>{data.acs}</td>
+                        </tr>
+                    )
+                })} 
             
+                </tbody>
+            </table>        
+            */
         return (
             <div>
             
@@ -153,6 +199,11 @@ export default class Profile extends Component {
                             <PostPopup closePopup={this.togglePostPopup.bind(this)} />  
                             : null  
                     }
+
+                    {this.state.showRLPopup ?     
+                            <RLPopup closePopup={this.toggleRLPopup.bind(this)} />  
+                            : null  
+                    }
                                         
                     <div className="prof-left-content">
                         <div className="prof-about">
@@ -163,11 +214,8 @@ export default class Profile extends Component {
                         <div className="prof-radar-list">
                             <h2 className="prof-title"> Radar List</h2>
                             <div className="prof-radar-list-content">
-                                
-                                To be implemented 
-                                
-                                
-                                <button onClick={this.handleRadarList}> View all</button>
+                                To be implemented in the future              
+                                <button onClick={this.toggleRLPopup.bind(this)}> View all</button>
                             </div>
                         </div>
                         
@@ -234,9 +282,6 @@ export default class Profile extends Component {
                   
                 </div>
                 
-                <div className="prof-container-middle-section"> 
-                
-                </div>
             </div>
             </div>
         )
