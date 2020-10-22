@@ -42,7 +42,7 @@
 .user-photo {
   display: flex;
   align-items: center;
-
+  margin:0% 0% 0% -20%;
   height: 100px;
   width: 100px;
   display: block;
