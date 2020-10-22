@@ -84,11 +84,14 @@ function OptionsMenu() {
     }
     });
   }
+
+  
   return (
     <div className="options">
       <button className="optionsMenu" />
           <div className="optionsContent">
-          <button className="optionsButtons" onClick={() => LogOut()}>Log Out</button>
+            <button className="optionsButtons">Settings</button>
+            <button className="optionsButtons" onClick={() => LogOut()}>Log Out</button>
         </div>
     </div>
   );
