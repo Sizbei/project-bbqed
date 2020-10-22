@@ -88,7 +88,7 @@
     font-family: 'CommissionerMedium';
     text-align: center;
     display: inline-block;
-    font-size: 28px;
+    font-size: 23px;
     font-weight: 650;
     margin: 20px;
 }
@@ -102,25 +102,8 @@
 .boldtext {
     color:white;
     font-weight: 600;
-    font-size:25px;
+    font-size:20px;
     font-family: 'CommissionerMedium';
-}
-
-.signuplink {
-    color: #FF7e1F;
-    font-size:24px;
-    font-family: 'CommissionerMedium';
-    font-weight: 700;
-    text-decoration: none;
-    
-}
-
-.signuplink:hover {
-    color: #FF7e1F;
-    font-size:24px;
-    font-family: 'CommissionerMedium';
-    font-weight: 700;
-    text-decoration: none;
 }
 
 .signup {
