@@ -237,15 +237,15 @@ export default function Popup() {
               <label className="form-label">Gender:</label>
               <div className="gender-container">
                   <span className="radio-container" onClick={ () => setGenderState("male") }> 
-                    <label className="radio-text">male</label>
+                    <label className="radio-text">Male</label>
                     <input type="radio" name="gender-male" className="gender-radio" checked={genderState === "male"} readOnly></input>
                   </span>
                   <span className="radio-container" onClick={ () => setGenderState("female") }> 
-                    <label className="radio-text">female</label>
+                    <label className="radio-text">Female</label>
                     <input type="radio" name="gender-female" className="gender-radio" checked={genderState === "female"} readOnly></input>
                   </span>
                   <span className="radio-container" onClick={ () => setGenderState("other") }> 
-                    <label className="radio-text">other</label>
+                    <label className="radio-text">Other</label>
                     <input type="radio" name="gender-other" className="gender-radio" checked={genderState === "other"} readOnly></input>
                   </span>
               </div>
