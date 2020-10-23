@@ -36,9 +36,9 @@ Persona’s of each key user can be found in Personas.pdf
 
 ## How To Run It Yourself:
 
-Upon cloning the sportcred folder
-There are dependencies that are required to be installed
-Follow the steps carefully to ensure the code runs correctly on your respective devices
+Upon cloning the sportcred folder.
+There are dependencies that are required to be installed.
+Follow the steps carefully to ensure the code runs correctly on your respective devices.
 
 ### 1. Ensure that node is installed
     
