@@ -1,6 +1,4 @@
 ## SPORTSCRED - SUMMARY
-## Implementation Done By BBQED
-
 
 ## Objective:
     The objective is to build a web application that allows for people to be more involved in sports, specifically the NBA. This application allows users to view game results, play sports related trivia both solely and versus, make picks and predictions, and have debates with other users. A forum which we’ll be calling the “open court” will also be included to create a community. A.C.S (analytical credibility score) will be used to quantitatively rank a user’s sports knowledge gained through using the application.
@@ -64,3 +62,7 @@ In terminal, you should see:
      npm start 
      
 If configured correctly, the code would redirect to a localhost where frontend code is visible
+
+## Credits
+This project is brought to you by team BBQED
+
