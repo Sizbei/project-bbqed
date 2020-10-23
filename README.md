@@ -1,5 +1,5 @@
 ## SPORTSCRED - SUMMARY
-Implemenation done by project-bbqed
+## Implementation Done By BBQED
 
 
 ## Objective:
