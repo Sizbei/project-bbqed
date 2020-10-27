@@ -31,6 +31,7 @@ export default class Profile extends Component {
             acsHistory: [],
             showPostPopup: false,
             showRLPopup: false, 
+            radarList: [], 
             teams: [],
             imgSelect: null
         }
@@ -123,6 +124,13 @@ export default class Profile extends Component {
           console.log(error);
         })
         
+        fetch("http://localhost:5000" + this.state.path + "/radarlist" ).then(res => res.json()) 
+        .then (data => {
+            console.log(data.radarList); 
+            this.setState({
+                radarList: data.radarList, 
+            })     
+        })
         
         
     }
@@ -162,7 +170,7 @@ export default class Profile extends Component {
                             : null  
                     }
                     {this.state.showRLPopup ?  
-                            <RLPopup closePopup={this.toggleRLPopup.bind(this)} />  
+                            <RLPopup closePopup={this.toggleRLPopup.bind(this)} radarList={this.state.radarList} />  
                             : null  
                     }
                     <div className="prof-left-content">
