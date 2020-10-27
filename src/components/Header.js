@@ -90,11 +90,16 @@ function OptionsMenu() {
     history.push("/settings/profile");
   }
 
+  const navigateToCitations = () => {
+    history.push("/citations");
+  }
+
   return (
     <div className="options">
       <button className="optionsMenu" />
           <div className="optionsContent">
           <button className="optionsButtons" onClick={navigateToSettings}>Settings</button>
+          <button className="optionsButtons" onClick={navigateToCitations}>Citations</button>
           <button className="optionsButtons" onClick={LogOut}>Log Out</button>
         </div>
     </div>
