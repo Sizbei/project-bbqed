@@ -1,10 +1,17 @@
-import axios from 'axios';
+import AuthService from '../Services/AuthService';
 import '../styling/Login.css';
 import logo from '../res/images/Logo.png';
-import React, {Component} from 'react';
+import React, {Component, useState, useContext} from 'react';
+import {AuthContext} from '../Context/AuthContext';
+import Signup from "./Signup"
 
 export default class Login extends Component{
     
+    //example of using authContext in class
+    //define contextType in the class using AuthContext
+    //so that we are able to access it through this.context
+    static contextType = AuthContext;
+
     constructor(props) {
         super(props);
 
@@ -12,6 +19,7 @@ export default class Login extends Component{
         this.onChangeUsername = this.onChangeUsername.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
         this.onLogin = this.onLogin.bind(this);
+        this.onEnter = this.onEnter.bind(this);
 
         //variables
         this.state = {
@@ -24,7 +32,7 @@ export default class Login extends Component{
     onChangeUsername(e) {
         this.setState({
             username: e.target.value
-        })
+        });
         document.getElementById('username').style.borderColor = "transparent";
         document.getElementById('password').style.borderColor = "transparent";
     }
@@ -33,31 +41,54 @@ export default class Login extends Component{
     onChangePassword(e) {
         this.setState({
             password: e.target.value
-        })
+        });
         document.getElementById('username').style.borderColor = "transparent";
         document.getElementById('password').style.borderColor = "transparent";
+    }
+
+    onEnter(e) {
+        if(e.keyCode === 13) {
+            AuthService.login({username: this.state.username, password: this.state.password})
+            .then(data => {
+                const isAuthenticated = data.isAuthenticated;
+                const user = data.user;
+                if(isAuthenticated) {
+                    this.context.setUser(user);
+                    this.context.setIsAuthenticated(isAuthenticated);
+                    this.props.history.push('/Profile/' + this.state.username);
+                } else {
+                    document.getElementById('username').style.borderColor = "red";
+                    document.getElementById('password').style.borderColor = "red";
+                }
+            })
+            .catch(() => {
+                document.getElementById('username').style.borderColor = "red";
+                document.getElementById('password').style.borderColor = "red";
+            });
+        }
     }
 
     onLogin(e) {
         //prevents default html form submit from taking place
         e.preventDefault();
-        //Creates a body for a db call with the current variables
-        const userBody = {params:{
-            username: this.state.username,
-            password: this.state.password
-        }}
-       
-        axios.get('http://localhost:5000/login', userBody)
-        .then(res => {
-            if (res.data.authenticated) {
-                window.location.href = '/TheZone'; 
-            }
-            else {
-                 document.getElementById('username').style.borderColor = "red";
+        // generate a consumer of authContext
+        AuthService.login({username: this.state.username, password: this.state.password})
+            .then(data => {
+                const isAuthenticated = data.isAuthenticated;
+                const user = data.user;
+                if(isAuthenticated) {
+                    this.context.setUser(user);
+                    this.context.setIsAuthenticated(isAuthenticated);
+                    this.props.history.push('/Profile/' + this.state.username);
+                } else {
+                    document.getElementById('username').style.borderColor = "red";
+                    document.getElementById('password').style.borderColor = "red";
+                }
+            })
+            .catch(() => {
+                document.getElementById('username').style.borderColor = "red";
                 document.getElementById('password').style.borderColor = "red";
-            }
-        });
-        console.log(userBody);
+            });
     }
 
     render() {
@@ -65,7 +96,7 @@ export default class Login extends Component{
             <div className="page">
                 <div className="login">
                     <img src={logo} className="logo"/>
-                    <label className="slogan">Start Building Your ACS Score</label>
+                    <label className="sloganLogin">Start Building Your ACS Score</label>
                     <div className="identifier">
                         <label className="text">Username or Email</label>
                         <input className="input"
@@ -75,22 +106,22 @@ export default class Login extends Component{
                             onChange={this.onChangeUsername} />
                     </div>
                     <div className="identifier">
-                        <label className="text" >Password</label>
+                        <label className="text">Password</label>
                         <input className="input" 
                             id="password"
                             type="password"
                             value={this.state.password}
-                            onChange={this.onChangePassword}/>
-                        <a href="" className="passwordlink">Forgot Password?</a>
+                            onChange={this.onChangePassword}
+                            onKeyUp={this.onEnter} />
+                        {/* <a href="" className="passwordlink">Forgot Password?</a> */}
                     </div>
+                    <br></br>
                     <button className="loginBtn" onClick={this.onLogin}>Log In</button>
                     <br></br>
+                    <label className="boldtext">Not a Member?</label>
                     <div className="signup">
-                        <label className="boldtext">Not a Member?</label>
+                        <Signup />
                     </div>
-                    <div className="signup">
-                        <a href="/Registration" className="signuplink">Sign Up</a> 
-                    </div>               
                 </div>
             </div>
         );

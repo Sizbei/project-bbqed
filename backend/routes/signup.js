@@ -1,5 +1,6 @@
 const router = require('Express').Router();
 let user = require('../models/user');
+let profile = require('../models/profile')
 
 router.route('/').get((req, res) => {
     user.find()
@@ -39,8 +40,50 @@ router.route('/add').post((req, res) =>{
     const email = req.body.email;
     const username = req.body.username;
     const password = req.body.password;
+    var month;
+    switch(req.body.month) {
+        case "January":
+            month = "1";
+            break;
+        case "February":
+            month = "2";
+            break;
+        case "March":
+            month = "3";
+            break;
+        case "April":
+            month = "4";
+            break;
+        case "May":
+            month = "5";
+            break;
+        case "June":
+            month = "6";
+            break;
+        case "July":
+            month = "7";
+            break;
+        case "August":
+            month = "8";
+            break;
+        case "September":
+            month = "9";
+            break;
+        case "October":
+            month = "10";
+            break;
+        case "November":
+            month = "11";
+            break;
+        case "December":
+            month = "12";
+            break;
+        default:
+            month = "1"
+    }
+    const year = req.body.year;
+    const day = req.body.day;
 
-    const age = req.body.age;
     const favoriteSport = req.body.favoriteSport;
     const highestLevelOfPlay = req.body.highestLevelOfPlay;
     const favoriteTeam = req.body.favoriteTeam;
@@ -49,13 +92,12 @@ router.route('/add').post((req, res) =>{
     const gender = req.body.gender;
     const lastName = req.body.lastName;
     const firstName = req.body.firstName;
-    const imageURL = req.body.url;
     
     const newUser = new user({
         email: email,
         username: username,
         password: password,
-        age: age,
+        dateOfBirth: year + "-" + month + "-" + day,
         favoriteSport: favoriteSport,
         highestLevelOfPlay: highestLevelOfPlay,
         favoriteTeam: favoriteTeam,
@@ -63,11 +105,21 @@ router.route('/add').post((req, res) =>{
         gender: gender,
         lastName: lastName,
         firstName: firstName,
-        imageURL: imageURL
-    })
+    });
+    const newProfile = new profile({
+        username: username,
+        interest: favoriteTeam
+    });
     newUser.save()
-        .then(() => res.json('Added User'))
-        .catch(err => res.status(400).json('Error: ' + err));
+      .then(() => {
+          newProfile.save()
+          .then(res.json("Added Actor"))
+          .catch((err) => 
+            {
+                user.deleteOne({username: username})
+                res.status(400).json('Error: ' + err)})
+      })
+     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 module.exports = router;

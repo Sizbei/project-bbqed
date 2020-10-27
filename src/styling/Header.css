@@ -42,7 +42,6 @@
 .user-photo {
   display: flex;
   align-items: center;
-
   height: 100px;
   width: 100px;
   display: block;
@@ -62,7 +61,6 @@
   text-indent: -10000px; /* A hack to hide the broken image icon */ 
   background-image: url('../res/account-circle.svg');
   background-size: contain;
-  background-color: white;
 }
 
 .profile-link {
@@ -85,4 +83,66 @@
   padding-top: 0.4em;
   padding-bottom: 0.4em;
   background-color: black;
+}
+.options {
+  display: inline-block;
+}
+
+.options:hover .optionsContent {
+  display: block;
+}
+
+.options {
+  display: inline-block;
+}
+
+.options:hover .optionsContent {
+  display: block;
+}
+
+.optionsMenu {
+  height: 1.5em;
+  width:1.5em;
+  margin:0% 0% 0% 50%;
+  outline:none;
+  border:0px;
+  background-image: url("../res/images/ExpandMore.png");
+  background-size:contain;
+  background-color: transparent;
+}
+
+.optionsMenu:hover {
+  background-image: url("../res/images/ExpandMoreHovered.png");
+}
+
+.optionsContent {
+  display: none;
+  position: absolute;
+  background-color: #747474;
+  border-radius: 10px;
+  margin: 0% 0% 0% -5%;
+}
+
+.optionsButtons {
+  position: relative;
+  border: none;
+  padding:20px;
+  width:100%;
+  color:white;
+  font-size: 15px;
+  background-color: transparent;
+}
+
+.optionsButtons:hover {
+  background-color: #222629;
+  border-radius: 10px;
+}
+
+.optionsButtons:focus {
+  outline: none;
+}
+
+@font-face {
+  font-family: 'CommissionerMedium';
+  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Medium.ttf) format('truetype');
 }
