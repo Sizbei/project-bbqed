@@ -28,6 +28,7 @@
 .TSB-header-icon {
   width: 150px;
   height: 150px;
+  margin-left: 20px;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center center;
