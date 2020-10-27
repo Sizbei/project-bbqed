@@ -5,6 +5,7 @@ import PostPopup from './ProfilePostPopup';
 import RLPopup from './ProfileRLPopup'; 
 import ImageSelect from './ImageSelect';
 import {AuthContext} from '../Context/AuthContext';
+import Axios from 'axios';
 
 const defaultLabelStyle = {
     fontSize: '5px',
@@ -30,11 +31,11 @@ export default class Profile extends Component {
             acsHistory: [],
             showPostPopup: false,
             showRLPopup: false, 
+            following: false, 
             teams: [],
             imgSelect: null
         }
         this.handleEditProfile = this.handleEditProfile.bind(this);
-        this.handleRadarList = this.handleRadarList.bind(this);
     }
     
     //******************* CREATING POST FUNCTIONS ****************************/
@@ -54,17 +55,20 @@ export default class Profile extends Component {
         event.preventDefault();
         this.props.history.push("/settings/profile");
     }
-    handleRadarList(event) { 
-        alert('Will send to pop up of all friends ??'); 
+    handleAddFollower(event) {
+        alert('add follower'); 
     }
 
+    handleDeleteFollower(event) { 
+
+    }
     /************************GET REQUEST FOR USER INFRORMATION ***********************/
     componentDidMount(){
         //defualt method in fetch is get so no need to put that as param
         fetch(this.state.path).then(res => res.json())
         //axios.get('http://localhost:5000' + this.state.path)
         .then(data => {
-   
+            //console.log("Path: " + this.state.path + "\n users:  profile/" + this.context.user.username); 
             const tag = 10; 
             const aad = 15; 
             const pap = 20; 
@@ -110,7 +114,7 @@ export default class Profile extends Component {
                 return obj;
               })
               
-              console.log(mapped);
+              //console.log(mapped);
               this.setState({
                 imgSelect: <ImageSelect btntext="Submit!" data={mapped} width={3} noError={true} noSelect={true} noButton={true} />
               })
@@ -125,9 +129,23 @@ export default class Profile extends Component {
         .catch((error) => {
           console.log(error);
         })
-
+        
+        const body = {
+            authUser: this.context.user.username,
+            targetUser: this.state.username
+        }
+        Axios.post('http://localhost:5000/profile/following', body).then(res => res.json())
+        .then(data => {
+            this.setState ({
+                following: data.following, 
+            })
+        })
+        .catch((error) => {
+            console.log(error); 
+        })
         
     }
+
 
     render(){
             
@@ -146,10 +164,20 @@ export default class Profile extends Component {
                     <div className="prof-profile-info">
                         <h1>{this.state.username}</h1>
                         <p>{this.state.status}</p>
-                        <button className ="prof-create-post-button" onClick={this.togglePostPopup.bind(this)}>Create Post</button>                       
+                        {this.state.path === "/profile/" + this.context.user.username ? 
+                        <button className ="prof-create-post-button" onClick={this.togglePostPopup.bind(this)}>Create Post</button> : 
+                        null
+                      
+                        }                      
+
                     </div>
                     <div className="prof-edit-profile">
-                        <button onClick={this.handleEditProfile}>Edit Profile</button>
+                         {this.state.path === "/profile/" + this.context.user.username ? 
+                         <button onClick={this.handleEditProfile}>Edit Profile</button> : 
+                        null
+                      
+                        }
+                       
                     </div>
                     
                     
@@ -178,7 +206,7 @@ export default class Profile extends Component {
                                 To be implemented 
                                 
                                 
-                                <button onClick={this.togglePostPopup.bind(this)}> View all</button>
+                                <button onClick={this.toggleRLPopup.bind(this)}> View all</button>
                             </div>
                         </div>
                         
@@ -210,7 +238,7 @@ export default class Profile extends Component {
                                 <tbody>
                                 {this.state.acsHistory.map(data => {
                                     return (
-                                        <tr>
+                                        <tr key={data.time}>
                                             <td className={data.point>= 0? "prof-score-content-pos" : "prof-score-content-neg"}>{data.point}</td>
                                             <td>{data.category}</td>
                                             <td>{data.time}</td>
