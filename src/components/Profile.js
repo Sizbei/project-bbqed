@@ -31,7 +31,6 @@ export default class Profile extends Component {
             acsHistory: [],
             showPostPopup: false,
             showRLPopup: false, 
-            following: false, 
             teams: [],
             imgSelect: null
         }
@@ -55,13 +54,7 @@ export default class Profile extends Component {
         event.preventDefault();
         this.props.history.push("/settings/profile");
     }
-    handleAddFollower(event) {
-        alert('add follower'); 
-    }
-
-    handleDeleteFollower(event) { 
-
-    }
+    
     /************************GET REQUEST FOR USER INFRORMATION ***********************/
     componentDidMount(){
         //defualt method in fetch is get so no need to put that as param
@@ -130,19 +123,7 @@ export default class Profile extends Component {
           console.log(error);
         })
         
-        const body = {
-            authUser: this.context.user.username,
-            targetUser: this.state.username
-        }
-        Axios.post('http://localhost:5000/profile/following', body).then(res => res.json())
-        .then(data => {
-            this.setState ({
-                following: data.following, 
-            })
-        })
-        .catch((error) => {
-            console.log(error); 
-        })
+        
         
     }
 
@@ -164,20 +145,11 @@ export default class Profile extends Component {
                     <div className="prof-profile-info">
                         <h1>{this.state.username}</h1>
                         <p>{this.state.status}</p>
-                        {this.state.path === "/profile/" + this.context.user.username ? 
-                        <button className ="prof-create-post-button" onClick={this.togglePostPopup.bind(this)}>Create Post</button> : 
-                        null
-                      
-                        }                      
-
+                        <button className ="prof-create-post-button" onClick={this.togglePostPopup.bind(this)}>Create Post</button> 
                     </div>
-                    <div className="prof-edit-profile">
-                         {this.state.path === "/profile/" + this.context.user.username ? 
-                         <button onClick={this.handleEditProfile}>Edit Profile</button> : 
-                        null
-                      
-                        }
-                       
+                    <div className="prof-edit-profile">                    
+                        <button onClick={this.handleEditProfile}>Edit Profile</button> 
+
                     </div>
                     
                     
