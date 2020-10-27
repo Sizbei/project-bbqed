@@ -112,9 +112,14 @@
   padding: 0.3em;
   padding-left: 0.5em;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   background-color: rgb(46, 43, 43);
 }
+
+  .TSBG-list-item-baseline {
+    display: flex;
+    align-items: baseline;
+  }
 
 .TSBG-list-item-o {
   background-color: rgb(48, 48, 49);  
@@ -127,4 +132,36 @@
 .TSBG-list-item-text {
   font-size: 0.8em;
   color: rgb(202, 202, 202);
+}
+
+.TSBG-list-item-checks {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.TSBG-list-item-checkmark-div {
+  margin-left: 10px; 
+  margin-right: 10px;
+}
+
+.TSBG-list-item-checkmark {
+  display: inline-block;
+  position: relative;
+  transform: rotate(45deg);
+  height: 15px;
+  width: 7.0px;
+  border-bottom: 3px solid #78b13f;
+  border-right: 3px solid #78b13f;
+}
+
+.TSBG-list-item-crossmark {
+  width: 30px;
+  display: inline-block;
+  font-size: 35px;
+  height: 19px;
+  line-height: 14px;
+  font-weight: 600;
+  color: crimson;
+  text-align: center;
 }
