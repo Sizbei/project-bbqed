@@ -14,6 +14,7 @@ import Profile from "./components/Profile";
 import Registration from "./components/Registration"
 import Settings from "./components/Settings"
 import Header from "./components/Header"
+import Citations from "./components/Citations"
 
 function App() {
   //example of using authContext in function
@@ -33,6 +34,7 @@ function App() {
       <PrivateRoute path="/Profile" component={Profile} />
       <PublicRoute path="/Registration" component={Registration} />
       <PrivateRoute path="/Settings" component={Settings} />
+      <PrivateRoute path="/Citations" component={Citations} />
       </div>
     </Router>
   );
