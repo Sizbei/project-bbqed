@@ -1,9 +1,8 @@
 import React, {Component, useDebugValue} from 'react';
-import axios from 'axios';
 import { PieChart } from 'react-minimal-pie-chart';
 import '../styling/Profile.css'
-import Header from './Header';
 import PostPopup from './ProfilePostPopup';
+import RLPopup from './ProfileRLPopup'; 
 import ImageSelect from './ImageSelect';
 import {AuthContext} from '../Context/AuthContext';
 
@@ -30,6 +29,7 @@ export default class Profile extends Component {
             acsChart: [], 
             acsHistory: [],
             showPostPopup: false,
+            showRLPopup: false, 
             teams: [],
             imgSelect: null
         }
@@ -41,6 +41,11 @@ export default class Profile extends Component {
     togglePostPopup() {  
         this.setState({  
              showPostPopup: !this.state.showPostPopup  
+        });  
+    }
+    toggleRLPopup() {  
+        this.setState({  
+            showRLPopup: !this.state.showRLPopup  
         });  
     }
     
@@ -156,7 +161,10 @@ export default class Profile extends Component {
                             <PostPopup closePopup={this.togglePostPopup.bind(this)} />  
                             : null  
                     }
-                                        
+                    {this.state.showRLPopup ?  
+                            <RLPopup closePopup={this.toggleRLPopup.bind(this)} />  
+                            : null  
+                    }
                     <div className="prof-left-content">
                         <div className="prof-about">
                             <h2 className="prof-title"> About</h2>
@@ -170,7 +178,7 @@ export default class Profile extends Component {
                                 To be implemented 
                                 
                                 
-                                <button onClick={this.handleRadarList}> View all</button>
+                                <button onClick={this.togglePostPopup.bind(this)}> View all</button>
                             </div>
                         </div>
                         
