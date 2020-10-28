@@ -64,6 +64,8 @@
 }
 .prof-profile-info {
   padding-left: 50px; 
+  max-width: 650px; 
+  min-width: 650px; 
 
 }
 
@@ -73,8 +75,9 @@
 .prof-edit-profile {
   
   align-self: flex-end ; 
-  margin-left: 600px;
   margin-bottom: 10px; 
+  max-width: 150px; 
+  min-width: 150px; 
 
 }
 
@@ -88,6 +91,7 @@
 
 .prof-edit-profile button:hover ,.prof-create-post-button:hover{
   background-color: #539B04;
+  cursor:pointer;
  
 }
 /**************************** STYLING FOR ABOUT + RADAR LIST***********************************/
@@ -106,6 +110,7 @@
   min-height: 450px; 
   max-height: 450px; 
   display: flex;
+  flex-direction: column;
   
 }
 .prof-radar-list-content button {
@@ -121,7 +126,12 @@
   border-color: white; 
   border-style: solid; 
   color:  #747474;
-  background-color: white;  
+  background-color: white; 
+  cursor:pointer; 
+}
+.prof-radar-list-table { 
+  min-height: 400px; 
+  max-height: 400px;
 }
 /********************************** STYLING FOR INTEREST + PICKS ***********************************************************/
 
@@ -185,7 +195,7 @@
 }
 
 .prof-interest-content .imageselect-image {
-  max-height: px;
+  max-height: 80px;
   max-width: 80px;
 }
 

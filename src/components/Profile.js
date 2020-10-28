@@ -1,11 +1,12 @@
-import React, {Component, useDebugValue} from 'react';
-import axios from 'axios';
+import React, {Component} from 'react';
 import { PieChart } from 'react-minimal-pie-chart';
 import '../styling/Profile.css'
-import Header from './Header';
 import PostPopup from './ProfilePostPopup';
+import RLPopup from './ProfileRLPopup'; 
 import ImageSelect from './ImageSelect';
 import {AuthContext} from '../Context/AuthContext';
+import Axios from 'axios';
+
 
 const defaultLabelStyle = {
     fontSize: '5px',
@@ -30,11 +31,14 @@ export default class Profile extends Component {
             acsChart: [], 
             acsHistory: [],
             showPostPopup: false,
+            showRLPopup: false, 
+            following: false, 
+            fullRadarList: [], 
             teams: [],
             imgSelect: null
         }
         this.handleEditProfile = this.handleEditProfile.bind(this);
-        this.handleRadarList = this.handleRadarList.bind(this);
+        this.changeUser = this.changeUser.bind(this);
     }
     
     //******************* CREATING POST FUNCTIONS ****************************/
@@ -43,14 +47,40 @@ export default class Profile extends Component {
              showPostPopup: !this.state.showPostPopup  
         });  
     }
-    
+    toggleRLPopup() {  
+        this.setState({  
+            showRLPopup: !this.state.showRLPopup  
+        });  
+    }
+    changeUser(user) {
+        const url = '/profile/' + user; 
+        this.props.history.push(url);
+        window.location.reload(); 
+    }
     handleEditProfile(event) { 
         // alert('Will send to edit profile page');
         event.preventDefault();
         this.props.history.push("/settings/profile");
     }
-    handleRadarList(event) { 
-        alert('Will send to pop up of all friends ??'); 
+    
+    async handleAddRadarList (){
+        console.log("http://localhost:5000" + this.state.path +"/addRadar"); 
+        console.log("username: " + this.context.user.username + "\n viewing: " + this.state.username );
+        const body = {
+            username: this.context.user.username, 
+            viewing: this.state.username, 
+        }
+        //console.log(body) 
+        const response = await fetch("http://localhost:5000" + this.state.path + "/addRadar" , {
+            method: 'PUT' , 
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify(body), 
+        })
+        //console.log(response); 
+        window.location.reload(); 
     }
 
     /************************GET REQUEST FOR USER INFRORMATION ***********************/
@@ -59,7 +89,7 @@ export default class Profile extends Component {
         fetch(this.state.path).then(res => res.json())
         //axios.get('http://localhost:5000' + this.state.path)
         .then(data => {
-   
+            //console.log("Path: " + this.state.path + "\n users:  profile/" + this.context.user.username); 
             const tag = 10; 
             const aad = 15; 
             const pap = 20; 
@@ -105,7 +135,7 @@ export default class Profile extends Component {
                 return obj;
               })
               
-              console.log(mapped);
+              //console.log(mapped);
               this.setState({
                 imgSelect: <ImageSelect btntext="Submit!" data={mapped} width={3} noError={true} noSelect={true} noButton={true} />
               })
@@ -120,12 +150,30 @@ export default class Profile extends Component {
         .catch((error) => {
           console.log(error);
         })
-
         
+        fetch("http://localhost:5000" + this.state.path + "/radarlist" ).then(res => res.json()) 
+        .then (data => {
+            console.log("http://localhost:5000" + this.state.path + "/radarlist");
+            console.log(data.radarList); 
+            this.setState({
+                fullRadarList: data.radarList, 
+            })     
+        })
+        console.log("http://localhost:5000/profile/" + this.context.user.username + this.state.path.slice(8, this.state.path.length) + "/checkRadar");
+        fetch("http://localhost:5000/profile/" + this.context.user.username + this.state.path.slice(8, this.state.path.length) + "/checkRadar").then(res=>res.json())
+        .then (data => {
+            
+            console.log("following: " + data.following); 
+            this.setState({
+                following: data.following, 
+            })
+        })
     }
 
+
     render(){
-            
+        console.log(this.state.fullRadarList);
+        const radarList = this.state.fullRadarList.slice(0, 10); 
         return (
             <div>
             
@@ -141,10 +189,19 @@ export default class Profile extends Component {
                     <div className="prof-profile-info">
                         <h1>{this.state.username}</h1>
                         <p>{this.state.status}</p>
-                        <button className ="prof-create-post-button" onClick={this.togglePostPopup.bind(this)}>Create Post</button>                       
+                        {this.state.path === "/profile/" + this.context.user.username ? 
+                            <button className ="prof-create-post-button" onClick={this.togglePostPopup.bind(this)}>Create Post</button> 
+                            : 
+                            (this.state.following ? 
+                                <button className="prof-create-post-button"> unFollow </button>
+                                : 
+                                <button className="prof-create-post-button" onClick={this.handleAddRadarList.bind(this)}> Follow </button>
+                            )                     
+                        }      
                     </div>
-                    <div className="prof-edit-profile">
-                        <button onClick={this.handleEditProfile}>Edit Profile</button>
+                    <div className="prof-edit-profile">                    
+                        <button onClick={this.handleEditProfile}>Edit Profile</button> 
+
                     </div>
                     
                     
@@ -156,7 +213,10 @@ export default class Profile extends Component {
                             <PostPopup closePopup={this.togglePostPopup.bind(this)} />  
                             : null  
                     }
-                                        
+                    {this.state.showRLPopup ?  
+                            <RLPopup changeUser={this.changeUser.bind(this)} closePopup={this.toggleRLPopup.bind(this)} radarList={this.state.fullRadarList} />  
+                            : null  
+                    }
                     <div className="prof-left-content">
                         <div className="prof-about">
                             <h2 className="prof-title"> About</h2>
@@ -166,11 +226,31 @@ export default class Profile extends Component {
                         <div className="prof-radar-list">
                             <h2 className="prof-title"> Radar List</h2>
                             <div className="prof-radar-list-content">
-                                
-                                To be implemented 
-                                
-                                
-                                <button onClick={this.handleRadarList}> View all</button>
+                                <div className="prof-radar-list-table"> 
+                                    <table>
+                                        <tbody>
+                                        {radarList.map(data => {
+                                        return (
+                                            <tr key={data.acs + data.username}>
+                                                <td>
+                                                <div className="radar-list-profile-preview">
+                                                    <div className="radar-list-photo">
+                                                    <img className="radar-list-popup-img" src={data.profilePic}></img>
+                                                                        
+                                                    </div>
+                                                </div>
+                                                
+                                                </td>
+                                                <td><a className="radar-list-table-username" onClick={()=>this.changeUser(data.username)}>{data.username}</a></td>
+                                                <td className="radar-list-table-acs">{data.acs}</td>
+                                            </tr>
+                                        )
+                                        })} 
+
+                                        </tbody>
+                                    </table>       
+                                </div>                   
+                            <button onClick={this.toggleRLPopup.bind(this)}> View all</button>
                             </div>
                         </div>
                         
@@ -202,7 +282,7 @@ export default class Profile extends Component {
                                 <tbody>
                                 {this.state.acsHistory.map(data => {
                                     return (
-                                        <tr>
+                                        <tr key={data.time}>
                                             <td className={data.point>= 0? "prof-score-content-pos" : "prof-score-content-neg"}>{data.point}</td>
                                             <td>{data.category}</td>
                                             <td>{data.time}</td>
