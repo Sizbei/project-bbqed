@@ -5,15 +5,22 @@ import '../styling/ProfilePicture.css';
 // Renders a profile picture with the sportcred logo around it
 // As props, give EITHER a username or a url
 // 
-// Optionally, provide a scale number to scale the entire result.
-// Default: 1.0, which is the size of the profile picture in the header.
+// Optionally, set absSize to true to get a fixed size that doesn't 
+// scale with the viewport.
 //
-// Optionally, provide an onclick handler to fire when the user clicks the image
+// Optionally, provide a scale number to scale the entire result based on 
+// the size in the header. 
+// Default: 1.0
+//
+// Optionally, provide an onClick handler to fire when the user clicks the image
+
 export default function ProfilePicture(props) {
   const urlExists = "url" in props;
   const usernameExists = "username" in props;
   const username = "username" in props ? props.username : "";
   const scale = "scale" in props ? props.scale : 1.0;
+  const abs = "abs" in props ? props.abs : false;
+  const handleClick = "onClick" in props ? props.onClick : () => {}
 
   const [url, setUrl] = useState(urlExists ? props.url : "");
 
@@ -37,21 +44,22 @@ export default function ProfilePicture(props) {
     }
   }, [urlExists, username, url])
 
-  const ppDivStyle = {
-    height: scale * 100 + "px",
-    width: scale * 100 + "px",
-  }
-
-  const ppPhotoStyle = {
-    marginLeft: scale * 17 + "px",
-    marginTop: scale * 20 + "px",
-    height: scale * 60 + "px",
-    width: scale * 60 + "px",
+  let ppDivStyle;
+  if (abs) {
+    ppDivStyle = {
+      height: scale * 100 + "px",
+      width: scale * 100 + "px",
+    }
+  } else {
+    ppDivStyle = {
+      height: scale * 6 + "vw",
+      width: scale * 6 + "vw",
+    }
   }
 
   return (
     <div className="pp-div" style={ppDivStyle}>
-      <img src={url} key={url} className="pp-photo" alt="" style={ppPhotoStyle} />
+      <img src={url} key={url} className="pp-photo" onClick={handleClick} alt="" />
     </div>
   )
 }
