@@ -30,10 +30,12 @@
 .radar-list-popup-table-acs {
   padding-left: 100px;
 }
-
-.radar-list-popup-table-username:hover {
+.radar-list-popup-table-username:hover, .radar-list-table-username:hover {
   color: #FF7e1F; 
   cursor: pointer; 
+}
+.radar-list-table-username {
+  margin-right: 100px;
 }
 .radar-list-popup-img {
   margin-left: 13px;

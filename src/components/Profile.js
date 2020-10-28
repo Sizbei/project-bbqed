@@ -5,7 +5,6 @@ import PostPopup from './ProfilePostPopup';
 import RLPopup from './ProfileRLPopup'; 
 import ImageSelect from './ImageSelect';
 import {AuthContext} from '../Context/AuthContext';
-import RadarList from './RadarList';
 
 
 const defaultLabelStyle = {
@@ -32,11 +31,13 @@ export default class Profile extends Component {
             acsHistory: [],
             showPostPopup: false,
             showRLPopup: false, 
-            radarList: [], 
+            following: false, 
+            fullRadarList: [], 
             teams: [],
             imgSelect: null
         }
         this.handleEditProfile = this.handleEditProfile.bind(this);
+        this.changeUser = this.changeUser.bind(this);
     }
     
     //******************* CREATING POST FUNCTIONS ****************************/
@@ -51,7 +52,8 @@ export default class Profile extends Component {
         });  
     }
     changeUser(user) {
-        this.props.history.push('/profile/user1');
+        const url = '/profile/' + user; 
+        this.props.history.push(url);
         window.location.reload(); 
     }
     handleEditProfile(event) { 
@@ -133,16 +135,16 @@ export default class Profile extends Component {
             console.log("http://localhost:5000" + this.state.path + "/radarlist");
             console.log(data.radarList); 
             this.setState({
-                radarList: data.radarList, 
+                fullRadarList: data.radarList, 
             })     
         })
         
-        
+       
     }
 
 
     render(){
-            
+        const radarList = this.state.fullRadarList.slice(0, 10); 
         return (
             <div>
             
@@ -158,7 +160,11 @@ export default class Profile extends Component {
                     <div className="prof-profile-info">
                         <h1>{this.state.username}</h1>
                         <p>{this.state.status}</p>
-                        <button className ="prof-create-post-button" onClick={this.togglePostPopup.bind(this)}>Create Post</button> 
+                        {this.state.path === "/profile/" + this.context.user.username ? 
+                        <button className ="prof-create-post-button" onClick={this.togglePostPopup.bind(this)}>Create Post</button> : 
+                        {}
+                      
+                        }      
                     </div>
                     <div className="prof-edit-profile">                    
                         <button onClick={this.handleEditProfile}>Edit Profile</button> 
@@ -175,7 +181,7 @@ export default class Profile extends Component {
                             : null  
                     }
                     {this.state.showRLPopup ?  
-                            <RLPopup changeUser={this.changeUser.bind(this)} closePopup={this.toggleRLPopup.bind(this)} radarList={this.state.radarList} />  
+                            <RLPopup changeUser={this.changeUser.bind(this)} closePopup={this.toggleRLPopup.bind(this)} radarList={this.state.fullRadarList} />  
                             : null  
                     }
                     <div className="prof-left-content">
@@ -187,7 +193,28 @@ export default class Profile extends Component {
                         <div className="prof-radar-list">
                             <h2 className="prof-title"> Radar List</h2>
                             <div className="prof-radar-list-content">
-                                To be implemented                         
+                            <table>
+                                <tbody>
+                                {radarList.map(data => {
+                                return (
+                                    <tr key={data.acs + data.username}>
+                                        <td>
+                                        <div className="radar-list-profile-preview">
+                                            <div className="radar-list-photo">
+                                            <img className="radar-list-popup-img" src={data.profilePic}></img>
+                                                                
+                                            </div>
+                                        </div>
+                                        
+                                        </td>
+                                        <td><a className="radar-list-table-username" onClick={()=>this.changeUser(data.username)}>{data.username}</a></td>
+                                        <td className="radar-list-table-acs">{data.acs}</td>
+                                    </tr>
+                                )
+                                })} 
+
+                                </tbody>
+                            </table>                          
                                 <button onClick={this.toggleRLPopup.bind(this)}> View all</button>
                             </div>
                         </div>

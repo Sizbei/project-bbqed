@@ -110,6 +110,7 @@
   min-height: 450px; 
   max-height: 450px; 
   display: flex;
+  flex-direction: column;
   
 }
 .prof-radar-list-content button {
