@@ -5,8 +5,8 @@ import {AuthContext} from '../Context/AuthContext';
 import AuthService from '../Services/AuthService';
 
 export default function Trivia() {
-
   const [inQueue, setInQueue] = useState(false);
+  const [waitConfirm, setWaitConfirm] = useState(false);
   const authContext = useContext(AuthContext);
 
   const joinQueue = (e) => {
@@ -25,20 +25,18 @@ export default function Trivia() {
       return;
     }
 
-    const body = {
-      username: "user1",
-      acs: 1
-    }
-    axios.put("http://localhost:5000/trivia/findMatch", body)
+    axios.put("http://localhost:5000/trivia/findMatch", { username: authContext.user.username, acs: 1 })
       .then(data => {
         if (data.data === "not found") {
-          // findMatch();
+          
         } else {  
-          console.log("done");
+          console.log("data", data);
+          console.log("done", data.data.user);
+          setInQueue(false);
+          setWaitConfirm(true)
         }
       }).catch(() => {
         console.log("error");
-        // findMatch();
       })
   }
 
@@ -52,21 +50,24 @@ export default function Trivia() {
   }, [inQueue])
 
   const leaveQueue = (e) => {
+    if (!inQueue) {
+      return;
+    }
+
     console.log("Toggle off.");
 
-    const body = {
-      username: "user1",
-      acs: 1
-    }
-    
     setInQueue(false);
-    axios.delete('http://localhost:5000/trivia/leaveQueue', { username: authContext.user.username, acs: 1 })
+
+    axios.delete('http://localhost:5000/trivia/leaveQueue/' + authContext.user.username)
       .then(data => {
-        console.log(data);
         console.log("Left the queue.");
       }).catch(() => {
         console.log("error leaving queue.");
       })
+  }
+  
+  const confirmMatch = () => {
+    console.log("CLICKLED CONFIRMED!", waitConfirm);
   }
 
   return(
@@ -76,6 +77,9 @@ export default function Trivia() {
     <button onClick={leaveQueue}>leave queue</button>
     <br></br>
     <span>{inQueue ? "QUEUE TIME" : "no"}</span>
+    <br></br>
+    <br></br>
+    <button onClick={confirmMatch}>{waitConfirm ? "CONFIRM" : ""} </button>
   </div>
   );
 }
