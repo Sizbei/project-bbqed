@@ -1,5 +1,6 @@
 //Start every model with this line
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 const acsSchema = new Schema({
 
