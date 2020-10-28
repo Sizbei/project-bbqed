@@ -1,5 +1,3 @@
-import { render } from "@testing-library/react";
-import axios from "axios";
 import React from 'react';  
 import '../styling/ProfilePopup.css';
 import {AuthContext} from '../Context/AuthContext';

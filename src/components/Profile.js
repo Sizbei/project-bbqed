@@ -1,11 +1,12 @@
-import React, {Component, useDebugValue} from 'react';
+import React, {Component} from 'react';
 import { PieChart } from 'react-minimal-pie-chart';
 import '../styling/Profile.css'
 import PostPopup from './ProfilePostPopup';
 import RLPopup from './ProfileRLPopup'; 
 import ImageSelect from './ImageSelect';
 import {AuthContext} from '../Context/AuthContext';
-import Axios from 'axios';
+import RadarList from './RadarList';
+
 
 const defaultLabelStyle = {
     fontSize: '5px',
@@ -49,7 +50,10 @@ export default class Profile extends Component {
             showRLPopup: !this.state.showRLPopup  
         });  
     }
-    
+    changeUser(user) {
+        this.props.history.push('/profile/user1');
+        window.location.reload(); 
+    }
     handleEditProfile(event) { 
         // alert('Will send to edit profile page');
         event.preventDefault();
@@ -126,6 +130,7 @@ export default class Profile extends Component {
         
         fetch("http://localhost:5000" + this.state.path + "/radarlist" ).then(res => res.json()) 
         .then (data => {
+            console.log("http://localhost:5000" + this.state.path + "/radarlist");
             console.log(data.radarList); 
             this.setState({
                 radarList: data.radarList, 
@@ -170,7 +175,7 @@ export default class Profile extends Component {
                             : null  
                     }
                     {this.state.showRLPopup ?  
-                            <RLPopup closePopup={this.toggleRLPopup.bind(this)} radarList={this.state.radarList} />  
+                            <RLPopup changeUser={this.changeUser.bind(this)} closePopup={this.toggleRLPopup.bind(this)} radarList={this.state.radarList} />  
                             : null  
                     }
                     <div className="prof-left-content">
@@ -182,10 +187,7 @@ export default class Profile extends Component {
                         <div className="prof-radar-list">
                             <h2 className="prof-title"> Radar List</h2>
                             <div className="prof-radar-list-content">
-                                
-                                To be implemented 
-                                
-                                
+                                To be implemented                         
                                 <button onClick={this.toggleRLPopup.bind(this)}> View all</button>
                             </div>
                         </div>

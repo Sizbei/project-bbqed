@@ -88,6 +88,7 @@
 
 .prof-edit-profile button:hover ,.prof-create-post-button:hover{
   background-color: #539B04;
+  cursor:pointer;
  
 }
 /**************************** STYLING FOR ABOUT + RADAR LIST***********************************/
@@ -121,7 +122,8 @@
   border-color: white; 
   border-style: solid; 
   color:  #747474;
-  background-color: white;  
+  background-color: white; 
+  cursor:pointer; 
 }
 /********************************** STYLING FOR INTEREST + PICKS ***********************************************************/
 
