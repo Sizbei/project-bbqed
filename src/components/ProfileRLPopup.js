@@ -10,7 +10,7 @@ export default function PopUp(props) {
 
   return (
     <div className='profile-popup' onClick={closePopup}>  
-    <div className='profile-popup-popup-content' onClick = {(e) => { e.stopPropagation(); }}>  
+    <div className='profile-rl-popup-content' onClick = {(e) => { e.stopPropagation(); }}>  
       <RadarList radarList={radarList} changeUser={changeUser}/>
       
     </div>  

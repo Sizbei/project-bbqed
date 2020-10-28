@@ -37,9 +37,12 @@ function Pagination(props) {
       <nav> 
           <ul className="radar-list-pagination"> 
               {pageNumbers.map(number => ( 
-                <button key={number} onClick={()=>props.paginate(number)} className='radar-list-page-link'> 
-                {number}
-                </button>
+                <div className='radar-list-page-box'>
+                    <button key={number} onClick={()=>props.paginate(number)} > 
+                    {number}
+                    </button>
+                </div>
+                
 
               ))}
           </ul>
@@ -56,11 +59,21 @@ function Posts(props){
           <tbody>
           {posts.map(data => {
               return (
+                <tbody>
                   <tr key={data.acs + data.username}>
-                      <td><img className="radar-list-popup-img" src={data.profilePic}></img></td>
-                      <td><button onClick={()=>props.changeUser(data.username)}>{data.username}</button></td>
-                      <td>{data.acs}</td>
+                      <td>
+                        <div className="radar-list-profile-preview">
+                          <div className="radar-list-photo">
+                            <img className="radar-list-popup-img" src={data.profilePic}></img>
+                                              
+                          </div>
+                      </div>
+                        
+                        </td>
+                      <td><a className="radar-list-popup-table-username" onClick={()=>props.changeUser(data.username)}>{data.username}</a></td>
+                      <td className="radar-list-popup-table-acs">{data.acs}</td>
                   </tr>
+                </tbody>
               )
           })} 
       
@@ -73,7 +86,7 @@ function Posts(props){
 export default function RadarList(props) { 
 const posts =  props.radarList; 
 const [currentPage, setCurrentPage] = useState(1);
-const [postsPerPage] = useState(5); 
+const [postsPerPage] = useState(1); 
 const changeUser = props.changeUser;
 
 //Get current posts 
