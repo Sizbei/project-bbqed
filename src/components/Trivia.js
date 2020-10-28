@@ -25,16 +25,13 @@ export default function Trivia() {
       return;
     }
 
-    const body = {
-      username: "user1",
-      acs: 1
-    }
-    axios.put("http://localhost:5000/trivia/findMatch", body)
+    axios.put("http://localhost:5000/trivia/findMatch", { username: authContext.user.username, acs: 1 })
       .then(data => {
-        if (data.data === "not found") {
+        if (data.data.user === "not found") {
           // findMatch();
         } else {  
-          console.log("done");
+          console.log("done", data.data.user);
+          setInQueue(false);
         }
       }).catch(() => {
         console.log("error");
@@ -53,16 +50,19 @@ export default function Trivia() {
 
   const leaveQueue = (e) => {
     console.log("Toggle off.");
-
-    const body = {
-      username: "user1",
-      acs: 1
-    }
     
+    const body = {
+      data: {
+        username: authContext.user.username,
+        acs: 1
+      }
+    }
+
     setInQueue(false);
-    axios.delete('http://localhost:5000/trivia/leaveQueue', { username: authContext.user.username, acs: 1 })
+    axios.delete('http://localhost:5000/trivia/leaveQueue/' + authContext.user.username)
       .then(data => {
         console.log(data);
+        console.log(inQueue);
         console.log("Left the queue.");
       }).catch(() => {
         console.log("error leaving queue.");

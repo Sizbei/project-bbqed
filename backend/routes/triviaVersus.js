@@ -29,15 +29,15 @@ router.route('/joinQueue').post((req, res) => {
 
 });
 
-router.route('/leaveQueue').delete((req, res) => {
-  queue.remove(queue.findOne({"payload.user": req.body.username}))
+router.route('/leaveQueue/:username').delete((req, res) => {
+  queue.remove(queue.findOne({"payload.user": req.params.username}))
     .then(() => res.json("Left queue"))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.route('/findMatch').put((req, res) => {
-  queue.findOneAndUpdate({startTime: new Date(), "payload.user": {"$ne": req.body.username}}, {startTime: null}, {sort: {createdOn: 1}, new: true})
-    .then(opp => res.json(opp.payload.user))
+  queue.findOneAndUpdate({startTime: null, "payload.user": {"$ne": req.body.username}}, {startTime: null}, {sort: {createdOn: 1}, new: true})
+    .then(opp => res.json({ user: opp.payload.user }))
     .catch(err => res.json("not found"));
 });
 
