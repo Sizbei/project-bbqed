@@ -53,6 +53,7 @@ export default function Trivia() {
     console.log("Toggle off.");
 
     setInQueue(false);
+    setWaitConfirm(false);
 
     axios.delete('http://localhost:5000/trivia/leaveQueue/' + authContext.user.username)
       .then(data => {
@@ -64,6 +65,13 @@ export default function Trivia() {
   
   const confirmMatch = () => {
     console.log("CLICKLED CONFIRMED!", waitConfirm);
+
+    axios.post("http://localhost:5000/trivia/createGame", { username: authContext.user.username, acs: 1 })
+      .then(data => {
+        console.log("GOT", data);
+      }).catch(data => {
+        console.log("ERROR in confirming", data);
+      })
   }
 
   return(

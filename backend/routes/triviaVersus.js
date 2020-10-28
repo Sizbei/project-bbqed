@@ -52,9 +52,42 @@ router.route('/findMatch').put((req, res) => {
     })
 });
 
+function setIntervals(n, f, t) {
+  if (n == 0) return;
+
+  setTimeout(() => {
+    f();
+    setIntervals(n-1, f, t);
+  }, t)
+}
+
 router.route('/createGame').post((req, res) => {
   queue.findOne({startTime: {"$ne": null},  "payload.user": req.body.user})
-    //.then(user => res.json("Accepted"))
+    .then(user => {
+      // console.log("hi");
+      // setTimeout(() => {
+      //   console.log("this happens after 5 seconds");
+      //   setTimeout(() => {
+      //     console.log("this happens after 5 seconds");
+      //     setTimeout(() => {
+      //       console.log("this happens after 5 seconds");
+      //       setTimeout(() => {
+      //         console.log("this happens after 5 seconds");
+      //         setTimeout(() => {
+      //           console.log("this happens after 5 seconds");
+      //         }, 1000)
+      //       }, 1000)
+      //     }, 1000)
+      //   }, 1000)
+      // }, 1000)
+
+      setIntervals(5, () => console.log("this happens after 5 seconds"), 1000);
+      
+      
+      
+      
+      res.json("Waiting");
+    })
     .catch(err => res.json("Waiting"))
 });
 
