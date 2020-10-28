@@ -116,21 +116,24 @@
   background-color: rgb(46, 43, 43);
 }
 
-  .TSBG-list-item-baseline {
-    display: flex;
-    align-items: baseline;
-  }
+.TSBG-list-item-baseline {
+  display: flex;
+  overflow: hidden;
+  align-items: baseline;
+}
 
 .TSBG-list-item-o {
   background-color: rgb(48, 48, 49);  
 }
 
 .TSBG-list-item-number {
+  font-size: 1.1em;
+  font-weight: 400;
   color: rgb(185, 185, 185);
 }
 
 .TSBG-list-item-text {
-  font-size: 0.8em;
+  font-size: 0.9em;
   color: rgb(202, 202, 202);
 }
 
@@ -143,7 +146,7 @@
 .TSBG-list-item-checkmark-div {
   margin-left: 10px; 
   margin-right: 10px;
-}
+} 
 
 .TSBG-list-item-checkmark {
   display: inline-block;

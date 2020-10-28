@@ -1,8 +1,22 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import Header from './Header';
 import '../styling/TriviaSidebar.css';
 import icon from '../res/images/puzzle-piece.png'
+
+function QuestionPreview(props) {
+  const max = 42;
+  const ellipses = props.text.length > max;
+  let text = props.text.substring(0, max);
+  while (text.length > 0 && text[text.length - 1] === ' ') {
+    console.log(text);
+    text = text.substring(0, text.length -  1);
+  }
+
+  return (
+    <span className="TSBG-list-item-text"> {text + (ellipses ? "..." : "")}</span>
+  )
+}
 
 export default function TriviaSidebar(props) {
   const [nav, setNav] = useState(false);  
@@ -75,7 +89,7 @@ export default function TriviaSidebar(props) {
           <div className="TSBG-list-item TSBG-list-item-e">
             <span className="TSBG-list-item-baseline">
               <span className="TSBG-list-item-number"> &nbsp; 1. &nbsp; </span>
-              <span className="TSBG-list-item-text"> Here lies the first few words of the question...</span>
+              <QuestionPreview text="blah blah blahblah blah blahblah blah blahblah blah blahblah blah blah" />
             </span>
             <div className="TSBG-list-item-checks">
               {checkmark}
@@ -83,24 +97,32 @@ export default function TriviaSidebar(props) {
             </div>
           </div>
           <div className="TSBG-list-item TSBG-list-item-o">
-            <span className="TSBG-list-item-number"> &nbsp; 2. &nbsp;</span>
+            <span className="TSBG-list-item-baseline">
+              <span className="TSBG-list-item-number"> &nbsp; 2. &nbsp; </span>
+              <QuestionPreview text="If a question is very long, what happens? Needs to be dynamic." />
+            </span>            
             <div className="TSBG-list-item-checks">
               {crossmark}
               {checkmark}
             </div>
           </div>
           <div className="TSBG-list-item TSBG-list-item-e">
-            <span className="TSBG-list-item-number"> &nbsp; 3. &nbsp;</span>
+            <span className="TSBG-list-item-baseline">
+              <span className="TSBG-list-item-number"> &nbsp; 3. &nbsp; </span>
+              <QuestionPreview text="Short question." />
+            </span>
             <div className="TSBG-list-item-checks">
               {checkmark}
               {checkmark}
             </div>
           </div>
           <div className="TSBG-list-item TSBG-list-item-o">
-            <span className="TSBG-list-item-number"> 10. &nbsp; </span>
-            <span className="TSBG-list-item-text"> Here lies the few words of the question...</span>
+            <span className="TSBG-list-item-baseline">
+              <span className="TSBG-list-item-number"> 10. &nbsp; </span>
+              <QuestionPreview text="lopis dopis lopis dopis lopis dopis lopis dopis lopis dopis " />
+            </span>
             <div className="TSBG-list-item-checks">
-              {crossmark}
+              {crossmark} 
               {crossmark}
             </div>
           </div>
