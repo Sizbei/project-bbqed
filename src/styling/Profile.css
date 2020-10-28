@@ -129,6 +129,10 @@
   background-color: white; 
   cursor:pointer; 
 }
+.prof-radar-list-table { 
+  min-height: 400px; 
+  max-height: 400px;
+}
 /********************************** STYLING FOR INTEREST + PICKS ***********************************************************/
 
 .prof-picks{
@@ -191,7 +195,7 @@
 }
 
 .prof-interest-content .imageselect-image {
-  max-height: px;
+  max-height: 80px;
   max-width: 80px;
 }
 

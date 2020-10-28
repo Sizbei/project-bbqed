@@ -5,6 +5,7 @@ import PostPopup from './ProfilePostPopup';
 import RLPopup from './ProfileRLPopup'; 
 import ImageSelect from './ImageSelect';
 import {AuthContext} from '../Context/AuthContext';
+import Axios from 'axios';
 
 
 const defaultLabelStyle = {
@@ -62,6 +63,26 @@ export default class Profile extends Component {
         this.props.history.push("/settings/profile");
     }
     
+    async handleAddRadarList (){
+        console.log("http://localhost:5000" + this.state.path +"/addRadar"); 
+        console.log("username: " + this.context.user.username + "\n viewing: " + this.state.username );
+        const body = {
+            username: this.context.user.username, 
+            viewing: this.state.username, 
+        }
+        //console.log(body) 
+        const response = await fetch("http://localhost:5000" + this.state.path + "/addRadar" , {
+            method: 'PUT' , 
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify(body), 
+        })
+        //console.log(response); 
+        window.location.reload(); 
+    }
+
     /************************GET REQUEST FOR USER INFRORMATION ***********************/
     componentDidMount(){
         //defualt method in fetch is get so no need to put that as param
@@ -138,12 +159,20 @@ export default class Profile extends Component {
                 fullRadarList: data.radarList, 
             })     
         })
-        
-       
+        console.log("http://localhost:5000/profile/" + this.context.user.username + this.state.path.slice(8, this.state.path.length) + "/checkRadar");
+        fetch("http://localhost:5000/profile/" + this.context.user.username + this.state.path.slice(8, this.state.path.length) + "/checkRadar").then(res=>res.json())
+        .then (data => {
+            
+            console.log("following: " + data.following); 
+            this.setState({
+                following: data.following, 
+            })
+        })
     }
 
 
     render(){
+        console.log(this.state.fullRadarList);
         const radarList = this.state.fullRadarList.slice(0, 10); 
         return (
             <div>
@@ -161,9 +190,13 @@ export default class Profile extends Component {
                         <h1>{this.state.username}</h1>
                         <p>{this.state.status}</p>
                         {this.state.path === "/profile/" + this.context.user.username ? 
-                        <button className ="prof-create-post-button" onClick={this.togglePostPopup.bind(this)}>Create Post</button> : 
-                        {}
-                      
+                            <button className ="prof-create-post-button" onClick={this.togglePostPopup.bind(this)}>Create Post</button> 
+                            : 
+                            (this.state.following ? 
+                                <button className="prof-create-post-button"> unFollow </button>
+                                : 
+                                <button className="prof-create-post-button" onClick={this.handleAddRadarList.bind(this)}> Follow </button>
+                            )                     
                         }      
                     </div>
                     <div className="prof-edit-profile">                    
@@ -193,29 +226,31 @@ export default class Profile extends Component {
                         <div className="prof-radar-list">
                             <h2 className="prof-title"> Radar List</h2>
                             <div className="prof-radar-list-content">
-                            <table>
-                                <tbody>
-                                {radarList.map(data => {
-                                return (
-                                    <tr key={data.acs + data.username}>
-                                        <td>
-                                        <div className="radar-list-profile-preview">
-                                            <div className="radar-list-photo">
-                                            <img className="radar-list-popup-img" src={data.profilePic}></img>
-                                                                
-                                            </div>
-                                        </div>
-                                        
-                                        </td>
-                                        <td><a className="radar-list-table-username" onClick={()=>this.changeUser(data.username)}>{data.username}</a></td>
-                                        <td className="radar-list-table-acs">{data.acs}</td>
-                                    </tr>
-                                )
-                                })} 
+                                <div className="prof-radar-list-table"> 
+                                    <table>
+                                        <tbody>
+                                        {radarList.map(data => {
+                                        return (
+                                            <tr key={data.acs + data.username}>
+                                                <td>
+                                                <div className="radar-list-profile-preview">
+                                                    <div className="radar-list-photo">
+                                                    <img className="radar-list-popup-img" src={data.profilePic}></img>
+                                                                        
+                                                    </div>
+                                                </div>
+                                                
+                                                </td>
+                                                <td><a className="radar-list-table-username" onClick={()=>this.changeUser(data.username)}>{data.username}</a></td>
+                                                <td className="radar-list-table-acs">{data.acs}</td>
+                                            </tr>
+                                        )
+                                        })} 
 
-                                </tbody>
-                            </table>                          
-                                <button onClick={this.toggleRLPopup.bind(this)}> View all</button>
+                                        </tbody>
+                                    </table>       
+                                </div>                   
+                            <button onClick={this.toggleRLPopup.bind(this)}> View all</button>
                             </div>
                         </div>
                         
