@@ -5,14 +5,12 @@ import '../styling/ProfilePopup.css';
 
 export default function PopUp(props) {
   const closePopup = props.closePopup;
+  const radarList = props.radarList;
 
   return (
-    <div className='profile-popup'>  
-    <div className='profile-popup-popup-content'>  
-      <div>
-        <button className="profile-popup-close-button" onClick={closePopup}> X </button>        
-      </div>
-      <RadarList/>
+    <div className='profile-popup' onClick={closePopup}>  
+    <div className='profile-popup-popup-content' onClick = {(e) => { e.stopPropagation(); }}>  
+      <RadarList RadarList={radarList}/>
       
     </div>  
   </div>  
