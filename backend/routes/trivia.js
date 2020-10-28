@@ -37,7 +37,7 @@ router.route('/leaveQueue').delete((req, res) => {
 });
 
 router.route('/findMatch').put((req, res) => {
-  queue.findOneAndUpdate({startTime: null, "payload.user": {"$ne": req.body.username}}, {startTime: null}, {sort: {createdOn: -1}, new: true})
+  queue.findOneAndUpdate({startTime: null, "payload.user": {"$ne": req.body.username}}, {startTime: null}, {sort: {createdOn: 1}, new: true})
     .then(opp => res.json(opp.payload.user))
 });
 
