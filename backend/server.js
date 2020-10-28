@@ -42,7 +42,7 @@ app.use('/teams', teamsRouter);
 const postRouter = require('./routes/post');
 app.use('/post', postRouter)
 
-const triviaRouter = require('./routes/trivia');
+const triviaRouter = require('./routes/triviaVersus');
 app.use('/trivia', triviaRouter)
 
 //App is now listening for calls

@@ -1,7 +1,6 @@
 //Start every route with these lines - connects with model
 const router = require('express').Router();
 let trivia = require('../models/trivia');
-let instance = require('../models/triviaInstance');
 let acs = require('../models/acs');
 let queue = require('../models/queue');
 
