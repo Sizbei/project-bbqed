@@ -5,7 +5,7 @@ import '../styling/TriviaSidebar.css';
 import icon from '../res/images/puzzle-piece.png'
 
 function QuestionPreview(props) {
-  const max = 42;
+  const max = 40;
   const ellipses = props.text.length > max;
   let text = props.text.substring(0, max);
   while (text.length > 0 && text[text.length - 1] === ' ') {
@@ -38,8 +38,10 @@ export default function TriviaSidebar(props) {
   }
 
   const checkmark = (
-    <div className="TSBG-list-item-checkmark-div">
-      <div className="TSBG-list-item-checkmark"></div>
+    <div className="TSBG-list-item-mark-div">
+      <div className="TSBG-list-item-checkmark-div">
+        <div className="TSBG-list-item-checkmark"></div>
+      </div>
     </div>
   )
 
@@ -84,8 +86,18 @@ export default function TriviaSidebar(props) {
 
         {/* <div className="TSBG-header">
         </div> */}
-
+        
         <div className="TSBG-list">
+          <div className="TSBG-list-icons-div">
+            <div className="TSBG-list-icons">
+              <div className="TSBG-list-icon-div">
+                <img className="TSBG-list-icon" src="https://www.citypng.com/public/uploads/preview/-41601313914ox6c3d6e4n.png"></img>
+              </div>
+              <div className="TSBG-list-icon-div TSBG-list-icon-div-2">
+                <img className="TSBG-list-icon" src="https://s3.amazonaws.com/cdn-origin-etr.akc.org/wp-content/uploads/2017/11/17140825/Swedish-Vallhund-head-portrait-outdoors.jpg"></img>
+              </div>
+            </div>
+          </div>
           <div className="TSBG-list-item TSBG-list-item-e">
             <span className="TSBG-list-item-baseline">
               <span className="TSBG-list-item-number"> &nbsp; 1. &nbsp; </span>
@@ -102,8 +114,8 @@ export default function TriviaSidebar(props) {
               <QuestionPreview text="If a question is very long, what happens? Needs to be dynamic." />
             </span>            
             <div className="TSBG-list-item-checks">
-              {crossmark}
               {checkmark}
+              {crossmark}
             </div>
           </div>
           <div className="TSBG-list-item TSBG-list-item-e">
