@@ -5,7 +5,6 @@ import PostPopup from './ProfilePostPopup';
 import RLPopup from './ProfileRLPopup'; 
 import ImageSelect from './ImageSelect';
 import {AuthContext} from '../Context/AuthContext';
-import Axios from 'axios';
 
 
 const defaultLabelStyle = {
@@ -64,8 +63,8 @@ export default class Profile extends Component {
     }
     
     async handleAddRadarList (){
-        console.log("http://localhost:5000" + this.state.path +"/addRadar"); 
-        console.log("username: " + this.context.user.username + "\n viewing: " + this.state.username );
+        //console.log("http://localhost:5000" + this.state.path +"/addRadar"); 
+        //console.log("username: " + this.context.user.username + "\n viewing: " + this.state.username );
         const body = {
             username: this.context.user.username, 
             viewing: this.state.username, 
@@ -73,6 +72,25 @@ export default class Profile extends Component {
         //console.log(body) 
         const response = await fetch("http://localhost:5000" + this.state.path + "/addRadar" , {
             method: 'PUT' , 
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify(body), 
+        })
+        //console.log(response); 
+        window.location.reload(); 
+    }
+    async handleDeleteRadarList (){
+        //console.log("http://localhost:5000" + this.state.path +"/deleteRadar"); 
+        //console.log("username: " + this.context.user.username + "\n viewing: " + this.state.username );
+        const body = {
+            username: this.context.user.username, 
+            viewing: this.state.username, 
+        }
+        //console.log(body) 
+        const response = await fetch("http://localhost:5000" + this.state.path +"/removeRadar" , {
+            method: 'DELETE' , 
             headers: {
                 'Content-Type': 'application/json'
                 // 'Content-Type': 'application/x-www-form-urlencoded',
@@ -153,21 +171,22 @@ export default class Profile extends Component {
         
         fetch("http://localhost:5000" + this.state.path + "/radarlist" ).then(res => res.json()) 
         .then (data => {
-            console.log("http://localhost:5000" + this.state.path + "/radarlist");
-            console.log(data.radarList); 
+            //console.log("http://localhost:5000" + this.state.path + "/radarlist");
+            //console.log(data.radarList); 
             this.setState({
                 fullRadarList: data.radarList, 
             })     
         })
-        console.log("http://localhost:5000/profile/" + this.context.user.username + this.state.path.slice(8, this.state.path.length) + "/checkRadar");
+        //console.log("http://localhost:5000/profile/" + this.context.user.username + this.state.path.slice(8, this.state.path.length) + "/checkRadar");
         fetch("http://localhost:5000/profile/" + this.context.user.username + this.state.path.slice(8, this.state.path.length) + "/checkRadar").then(res=>res.json())
         .then (data => {
-            
-            console.log("following: " + data.following); 
+            //console.log("following: " + data.following); 
             this.setState({
                 following: data.following, 
             })
+
         })
+
     }
 
 
@@ -193,7 +212,7 @@ export default class Profile extends Component {
                             <button className ="prof-create-post-button" onClick={this.togglePostPopup.bind(this)}>Create Post</button> 
                             : 
                             (this.state.following ? 
-                                <button className="prof-create-post-button"> unFollow </button>
+                                <button className="prof-create-post-button" onClick={this.handleDeleteRadarList.bind(this)}> Unfollow </button>
                                 : 
                                 <button className="prof-create-post-button" onClick={this.handleAddRadarList.bind(this)}> Follow </button>
                             )                     
@@ -202,10 +221,7 @@ export default class Profile extends Component {
                     <div className="prof-edit-profile">                    
                         <button onClick={this.handleEditProfile}>Edit Profile</button> 
 
-                    </div>
-                    
-                    
-                    
+                    </div>                   
                 </div>
                 
                 <div className="prof-container-middle-section"> 

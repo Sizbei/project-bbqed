@@ -54,4 +54,11 @@ router.route('/:username/addRadar').put(async (req, res) => {
   ).catch(err => res.status(400).json('Error ' + err));
 })
 
+router.route('/:username/removeRadar').delete(async(req,res) => { 
+  console.log(req.body)
+  await Profile.updateOne({username: req.body.username}, {$pullAll: {radarList:[req.body.viewing]}}).then(
+    res.json("Removed friend")
+  ).catch(err => res.status(400).json('Error ' + err));
+});
+
 module.exports = router;
