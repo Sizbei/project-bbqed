@@ -5,7 +5,7 @@ import '../styling/TriviaSidebar.css';
 import icon from '../res/images/puzzle-piece.png'
 
 function QuestionPreviewText(props) {
-  const max = 40;
+  const max = 38;
   const ellipses = props.text.length > max;
   let text = props.text.substring(0, max);
   while (text.length > 0 && text[text.length - 1] === ' ') {
@@ -20,7 +20,7 @@ function QuestionPreviewText(props) {
 
 function QuestionListItem(props) {
   const number = props.number;
-  const text = props.text;
+  const text = props.text;  
   const userCorrect = props.userCorrect;
   const enemyCorrect = props.enemyCorrect;
   
@@ -37,7 +37,6 @@ function QuestionListItem(props) {
   )
 
   const divClassName = "TSBG-list-item TSBG-list-item-" + (number % 2 == 0 ? "e" : "o");
-  console.log(divClassName);
 
   return (
     <div className={divClassName}>
@@ -50,6 +49,53 @@ function QuestionListItem(props) {
         {enemyCorrect ? checkmark : crossmark}
       </div>
   </div>
+  )
+}
+
+function EmptyQuestionListItem(props) {
+  const number = props.number;
+  const divClassName = "TSBG-list-item TSBG-list-item-" + (number % 2 == 0 ? "e" : "o");
+
+  return (
+    <div className={divClassName}>
+      <span className="TSBG-list-item-baseline">
+        <span className="TSBG-list-item-number"> {number > 9 ? '' : '\u00A0'} {number}. {'\u00A0'} </span>
+      </span>
+      <div className="TSBG-list-item-checks">
+        <div className="TSBG-list-item-empty"></div>
+        <div className="TSBG-list-item-empty"></div>
+      </div>
+  </div>
+  )
+}
+
+function QuestionList(props) {
+  const list = props.list;
+
+  let accum = [];
+  list.forEach(e => {
+    const props = {
+      number: e["questionNumber"],
+      text: e["question"],
+      userCorrect: e["userCorrect"],
+      enemyCorrect: e["enemyCorrect"]
+    }
+    const item = <QuestionListItem {...props} /> 
+    accum.push(item);
+  })
+
+  for (let i = list.length + 1; i <= 10; i++) {
+    const props = {
+      number: i
+    }
+    const item = <EmptyQuestionListItem {...props} /> 
+    accum.push(item);
+  }
+
+  return (
+    <div >
+      {accum}
+    </div>
   )
 }
 
@@ -73,17 +119,34 @@ export default function TriviaSidebar(props) {
     e.stopPropagation();
   }
 
-  const checkmark = (
-    <div className="TSBG-list-item-mark-div">
-      <div className="TSBG-list-item-checkmark-div">
-        <div className="TSBG-list-item-checkmark"></div>
-      </div>
-    </div>
-  )
+  const qprops = [  // Some hardcoded data here.
+    {
+      questionNumber: 1,
+      question: "Question 1 goes here.",
+      userCorrect: true,
+      enemyCorrect: true 
+    },
+    {
+      questionNumber: 2,
+      question: "Question 2 goes here. Question 2 goes here. Question 2 goes here. ",
+      userCorrect: false,
+      enemyCorrect: true 
+    },
+    {
+      questionNumber: 3,
+      question: "Question 3 goes here.",
+      userCorrect: true,
+      enemyCorrect: false 
+    },
+    {
+      questionNumber: 4,
+      question: "Question 4 goes here.",
+      userCorrect: false,
+      enemyCorrect: false 
+    },
+  ]
 
-  const crossmark = (
-    <div className="TSBG-list-item-crossmark">&times;</div>
-  )
+  const QList = <QuestionList list={qprops} />
 
   if (nav) {
     return (
@@ -135,17 +198,7 @@ export default function TriviaSidebar(props) {
             </div>
           </div>
           
-          <QuestionListItem number={1} text="Question 1 goes here" userCorrect={true} enemyCorrect={false} />
-          <QuestionListItem number={2} text="Question 2 goes here" userCorrect={true} enemyCorrect={true} />
-          <QuestionListItem number={3} text="Question 3 goes here" userCorrect={true} enemyCorrect={false} />
-          <QuestionListItem number={4} text="Question 4 goes here" userCorrect={true} enemyCorrect={true} />
-          <QuestionListItem number={5} text="Question 5 goes here" userCorrect={true} enemyCorrect={false} />
-          <QuestionListItem number={6} text="Question 6 goes here" userCorrect={false} enemyCorrect={true} />
-          <QuestionListItem number={7} text="Question 7 goes here" userCorrect={false} enemyCorrect={false} />
-          <QuestionListItem number={8} text="Question 8 goes here" userCorrect={true} enemyCorrect={true} />
-          <QuestionListItem number={9} text="Question 9 goes here" userCorrect={true} enemyCorrect={false} />
-          <QuestionListItem number={10} text="Question 10 goes here" userCorrect={true} enemyCorrect={true} />
-          <QuestionListItem number={11} text="TIEBREAKER QUESTION" userCorrect={true} enemyCorrect={true} />
+          {QList}
         </div>
       </div>
     )
