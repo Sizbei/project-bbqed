@@ -98,9 +98,9 @@ function OptionsMenu() {
     <div className="options">
       <button className="optionsMenu" />
           <div className="optionsContent">
-          <button className="optionsButtons" onClick={navigateToSettings}>Settings</button>
+          <button className="optionsButtonsTopEnd" onClick={navigateToSettings}>Settings</button>
           <button className="optionsButtons" onClick={navigateToCitations}>Citations</button>
-          <button className="optionsButtons" onClick={LogOut}>Log Out</button>
+          <button className="optionsButtonsBotEnd" onClick={LogOut}>Log Out</button>
         </div>
     </div>
   );
