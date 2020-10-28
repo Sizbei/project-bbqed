@@ -3,6 +3,7 @@ import axios from 'axios';
 import Header from './Header';
 import  '../styling/InGameTrivia.css';
 import TriviaSidebar from './TriviaSidebar';
+import ProfilePicture from './ProfilePicture';
 
 export default function InGameTrivia() {
 
@@ -33,9 +34,8 @@ export default function InGameTrivia() {
               </div>
             </div>
             <div className='profile'>
-              <div className='user-border'>
-                <div className="profilePic"/>  
- 
+              <div className='user-border'> 
+                <ProfilePicture scale={2.0} username="user1" />
               </div>
               <label className='points'>9</label>
             </div>
