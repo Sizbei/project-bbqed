@@ -17,7 +17,8 @@ router.route('/joinQueue').post((req, res) => {
     priority: 1,
     payload: {
       user: user,
-      acs: acs
+      acs: acs,
+      opp: ""
     }
   })
 
@@ -29,16 +30,31 @@ router.route('/joinQueue').post((req, res) => {
 
 });
 
-router.route('/leaveQueue').delete((req, res) => {
-  queue.remove(queue.findOne({"payload.user": req.body.username}))
+router.route('/leaveQueue/:username').delete((req, res) => {
+  queue.remove(queue.findOne({"payload.user": req.params.username}))
     .then(() => res.json("Left queue"))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.route('/findMatch').put((req, res) => {
-  queue.findOneAndUpdate({startTime: new Date(), "payload.user": {"$ne": req.body.username}}, {startTime: null}, {sort: {createdOn: 1}, new: true})
-    .then(opp => res.json(opp.payload.user))
-    .catch(err => res.json("not found"));
+
+  queue.findOne({startTime: {"$ne": null}, "payload.user": req.body.username})
+    .then(user => res.json(user.payload.opp))
+    .catch(() => {
+      queue.findOneAndUpdate({startTime: null, "payload.user": {"$ne": req.body.username}}, {startTime: new Date()}, {sort: {createdOn: 1}, new: true})
+      .then(opp => {
+        queue.findOneAndUpdate({"payload.user": opp.payload.user}, {startTime: new Date(), "payload.opp": req.body.username})
+        queue.findOneAndUpdate({"payload.user": req.body.username}, {"payload.opp": opp.payload.user})
+        res.json(opp.payload.user)
+      })
+      .catch(err => res.json("not found"));
+    })
+});
+
+router.route('/createGame').post((req, res) => {
+  queue.findOne({startTime: {"$ne": null},  "payload.user": req.body.user, "payload.opp": req.body.opp})
+    //.then(() => res.json("Accepted"))
+    .catch(err => res.json("Waiting"))
 });
 
 module.exports = router;
