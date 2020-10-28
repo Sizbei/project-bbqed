@@ -204,3 +204,13 @@
   color: crimson;
   text-align: center;
 }
+
+.TSBG-list-item-empty {
+  margin-left: 19px;
+  margin-right: 8px;
+  width: 14px;
+  margin-top: -10px;
+  margin-bottom: -10px;
+  /* height: 47px; */
+  border-bottom: 1px solid rgb(158, 158, 158);
+}
