@@ -1,0 +1,14 @@
+.pp-div {
+  display: flex;
+  align-items: center;
+  display: block;
+  background-image: url('../res/ACSBorder.png');
+  background-size: contain;
+}
+
+.pp-photo {
+  border-radius: 50%;
+  text-indent: -10000px; /* A hack to hide the broken image icon */ 
+  background-image: url('../res/account-circle.svg');
+  background-size: contain;
+}
