@@ -41,10 +41,11 @@ router.route('/findMatch').put((req, res) => {
   queue.findOne({startTime: {"$ne": null}, "payload.user": req.body.username})
     .then(user => res.json(user.payload.opp))
     .catch(() => {
-      queue.findOneAndUpdate({startTime: null, "payload.user": {"$ne": req.body.username}}, {startTime: new Date()}, {sort: {createdOn: 1}, new: true})
+      queue.findOneAndUpdate({startTime: null, "payload.user": {"$ne": req.body.username}}, {startTime: new Date()}, {sort: {createdOn: 1}, new: true}).exec()
       .then(opp => {
-        queue.findOneAndUpdate({"payload.user": opp.payload.user}, {startTime: new Date(), "payload.opp": req.body.username})
-        queue.findOneAndUpdate({"payload.user": req.body.username}, {"payload.opp": opp.payload.user})
+        console.log(opp.payload.user);
+        queue.findOneAndUpdate({"payload.user": req.body.username}, {startTime: new Date(), "payload.opp": opp.payload.user}).exec()
+        queue.findOneAndUpdate({"payload.user": opp.payload.user}, {"payload.opp": req.body.username}).exec()
         res.json(opp.payload.user)
       })
       .catch(err => res.json("not found"));
@@ -52,8 +53,8 @@ router.route('/findMatch').put((req, res) => {
 });
 
 router.route('/createGame').post((req, res) => {
-  queue.findOne({startTime: {"$ne": null},  "payload.user": req.body.user, "payload.opp": req.body.opp})
-    //.then(() => res.json("Accepted"))
+  queue.findOne({startTime: {"$ne": null},  "payload.user": req.body.user})
+    //.then(user => res.json("Accepted"))
     .catch(err => res.json("Waiting"))
 });
 

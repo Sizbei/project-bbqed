@@ -50,9 +50,6 @@ export default function Trivia() {
   }, [inQueue])
 
   const leaveQueue = (e) => {
-    if (!inQueue) {
-      return;
-    }
 
     console.log("Toggle off.");
 
