@@ -7,6 +7,8 @@ router.route('/create').post((req, res) => {
 
   const user = req.body.username;
 
+  instance.remove({user: user, inProgress: true}).catch(err => res.status(400).json('Error: ' + err));
+
   const newGame = new instance({
     user: user
   })
@@ -24,14 +26,17 @@ router.route('/next').put((req, res) => {
   instance.findOne({_id: req.body.instance})
   .then(game => {
 
+    console.log(game);
+
     if(game.questionIds.length == 10){
       acs.findOne({username: game.username})
         .then(userACS => 
         {
+          console.log("username found.");
           const entry = {
-            categroy: "Picks&Predictions",
+            category: "Picks&Predictions",
             points: game.points,
-            date: new Date ()
+            date: new Date()
           }
           userACS.acsHistory.push(entry);
           userACS.acsTotal.total += game.points;
@@ -40,32 +45,43 @@ router.route('/next').put((req, res) => {
             .then(() => res.json('Points updated'))
             .catch(err => res.status(400).json('Error: ' + err));
 
-      }).catch(err => res.status(400).json('Error: ' + err));
+      }).catch(err => res.status(401).json('Error: ' + err));
 
     } else {
+      console.log("hello");
 
-      if(game.questionIds.length > 0){
-        trivia.findOne({_id: req.body.question})
-            .then(response => {
-              if(response.answer === req.body.answer){
-                game.points += 1;
-                game.save();
-              }
-            }).catch(err => res.status(400).json('Error: ' + err));
+      const sendRandom = () => {
+        trivia.aggregate([
+          { $match: { _id: { $nin: game.questionIds } } },
+          { $sample: { size: 1 } } 
+        ]).then(q => {
+          const question = q[0];
+          console.log("question", question);
+            game.questionIds.push(question);
+            game.save()
+              .then(() => res.json({ currentQuestion:question.question, options:question.options }))
+              .catch(err => res.status(403).json('Error: ' + err));
+          }).catch(err => res.status(404).json('Error: ' + err));
       }
 
-      trivia.aggregate([{"$match": { _id: { "$nin:" : req.body.instance.questionIds } } }])
-        .then(question => {
-          game.questionIds.push(question);
-          game.save()
-            .then(() => res.json(question))
-            .catch(err => res.status(400).json('Error: ' + err));
-        }).catch(err => res.status(400).json('Error: ' + err));
-
+      if(game.questionIds.length > 0){
+        console.log("hellow");
+        console.log("not running");
+        trivia.findOne({question: req.body.question})
+          .then(response => {
+            console.log("step 2");
+            if(response.answer === req.body.answer){
+              console.log("step 3");
+              game.points += 1;
+              game.save().then(sendRandom);
+            }              
+          }).catch(err => res.status(402).json('Error: ' + err));
+      } else {
+        sendRandom();
+      }
     }
 
-  }).catch(err => res.status(400).json('Error: ' + err));
-
+  }).catch(err => res.status(405).json('Error: ' + err));
 });
 
 router.route('/add').post((req, res) => {
