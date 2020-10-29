@@ -81,6 +81,7 @@ function QuestionList(props) {
   list.forEach(e => {
     const props = {
       mode: mode,
+      key: e["questionNumber"],
       number: e["questionNumber"],
       text: e["question"],
       userCorrect: e["userCorrect"],
@@ -93,6 +94,7 @@ function QuestionList(props) {
   for (let i = list.length + 1; i <= 11; i++) {
     const props = {
       mode: mode,
+      key: i,
       number: i
     }
     const item = <EmptyQuestionListItem {...props} /> 
