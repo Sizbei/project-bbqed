@@ -21,7 +21,7 @@ router.route('/:username/teams').get(passport.authenticate('jwt', {session : fal
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/:username/radarlist').get(async (req,res) => {
+router.route('/:username/radarlist').get(passport.authenticate('jwt', {session : false}), async (req,res) => {
   Profile.findOne({username: req.params.username})
   .then(async (user) => {
     let tempAcs = 0;
@@ -36,7 +36,7 @@ router.route('/:username/radarlist').get(async (req,res) => {
   .catch(err => res.status(400).json('Error: ' + err));
 })
 
-router.route('/:username/:viewing/checkRadar').get(async (req,res) => {
+router.route('/:username/:viewing/checkRadar').get(passport.authenticate('jwt', {session : false}), async (req,res) => {
   await Profile.findOne({username:req.params.username}).then(async (user) => {
     var following = false;
     for (var i = 0; i < user.radarList.length; i ++) {
@@ -48,20 +48,20 @@ router.route('/:username/:viewing/checkRadar').get(async (req,res) => {
   }).catch(err => res.status(400).json('Error ' + err));
 })
 
-router.route('/:username/addRadar').put(async (req, res) => {
+router.route('/:username/addRadar').put(passport.authenticate('jwt', {session : false}), async (req, res) => {
   await Profile.updateOne({username: req.body.username}, {$push: {radarList:[req.body.viewing]}}).then(
     res.json("Added friend")
   ).catch(err => res.status(400).json('Error ' + err));
 })
 
-router.route('/:username/removeRadar').delete(async(req,res) => { 
+router.route('/:username/removeRadar').delete(passport.authenticate('jwt', {session : false}), async(req,res) => { 
   console.log(req.body)
   await Profile.updateOne({username: req.body.username}, {$pullAll: {radarList:[req.body.viewing]}}).then(
     res.json("Removed friend")
   ).catch(err => res.status(400).json('Error ' + err));
 });
 
-router.route('/:username/acs').get(async(req, res) => {
+router.route('/:username/acs').get(passport.authenticate('jwt', {session : false}), async(req, res) => {
   await Acs.findOne({username:req.params.username}).then(
     (user) => {
       var acsChart = []
@@ -75,7 +75,7 @@ router.route('/:username/acs').get(async(req, res) => {
       for (var i = 0; i < toProcess.length; i++) {
         newEditedAcsHistory[i] = {category: toProcess[i].category, points: toProcess[i].points, date: dateDifference(currentTime, toProcess[i].date)}
       }
-      var acs = {acsChart: acsChart, acsHistory: newEditedAcsHistory.reverse()}
+      var acs = {acsChart: acsChart, acsHistory: newEditedAcsHistory.reverse(), acsTotal:user.acsTotal.total}
       res.json(acs)
     }
   ).catch(err => res.status(400).json('Error ' + err));
