@@ -13,25 +13,28 @@ router.route('/create').post((req, res) => {
 
   newGame.save()
   .then(() => {
-    res.json("Game created")
+    res.json(newGame.id)
   })
   .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.route('/next').put((req, res) => {
 
-    if(req.body.instance.questionIds.length == 10){
-      acs.findOne({username: req.body.instance.username})
+  instance.findOne({_id: req.body.instance})
+  .then(game => {
+
+    if(game.questionIds.length == 10){
+      acs.findOne({username: game.username})
         .then(userACS => 
         {
           const entry = {
             categroy: "Picks&Predictions",
-            points: req.body.instance.points,
+            points: game.points,
             date: new Date ()
           }
           userACS.acsHistory.push(entry);
-          userACS.acsTotal.total += req.body.instance.points;
-          userACS.acsTotal.picksPrediciton += req.body.instance.points;
+          userACS.acsTotal.total += game.points;
+          userACS.acsTotal.picksPrediciton += game.points;
           userACS.save()
             .then(() => res.json('Points updated'))
             .catch(err => res.status(400).json('Error: ' + err));
@@ -39,15 +42,26 @@ router.route('/next').put((req, res) => {
       }).catch(err => res.status(400).json('Error: ' + err));
 
     } else {
+
+        trivia.findOne({_id: req.body.question})
+          .then(response => {
+            if(response.answer === req.body.answer){
+              game.points += 1;
+              game.save();
+            }
+          })
+
         trivia.aggregate([{"$match": { _id: { "$nin:" : req.body.instance.questionIds } } }])
           .then(question => {
-            req.body.instance.questionIds.push(question);
-            req.body.instance.questionIds.save()
+            game.questionIds.push(question);
+            game.save()
             .then(() => res.json(question))
             .catch(err => res.status(400).json('Error: ' + err));
           })
     }
-    
+
+  })
+
 });
 
 router.route('/add').post((req, res) => {
