@@ -19,11 +19,13 @@ function QuestionPreviewText(props) {
 }
 
 function QuestionListItem(props) {
+  const mode = props.mode;
   const number = props.number;
   const text = props.text;  
   const userCorrect = props.userCorrect;
-  const enemyCorrect = props.enemyCorrect;
-  
+  const enemyCorrect = "enemyCorrect" in props ? props.enemyCorrect : false;
+  const multiplayer = mode === "online";
+
   const checkmark = (
     <div className="TSBG-list-item-mark-div">
       <div className="TSBG-list-item-checkmark-div">
@@ -46,15 +48,17 @@ function QuestionListItem(props) {
       </span>
       <div className="TSBG-list-item-checks">
         {userCorrect ? checkmark : crossmark}
-        {enemyCorrect ? checkmark : crossmark}
+        {multiplayer ? (enemyCorrect ? checkmark : crossmark) : null}
       </div>
   </div>
   )
 }
 
 function EmptyQuestionListItem(props) {
+  const mode = props.mode;
   const number = props.number;
   const divClassName = "TSBG-list-item TSBG-list-item-" + (number % 2 == 0 ? "e" : "o");
+  const multiplayer = mode === "online";
 
   return (
     <div className={divClassName}>
@@ -63,18 +67,20 @@ function EmptyQuestionListItem(props) {
       </span>
       <div className="TSBG-list-item-checks">
         <div className="TSBG-list-item-empty"></div>
-        <div className="TSBG-list-item-empty"></div>
+        {multiplayer ? <div className="TSBG-list-item-empty"></div> : null } 
       </div>
   </div>
   )
 }
 
 function QuestionList(props) {
+  const mode = props.mode;
   const list = props.list;
 
   let accum = [];
   list.forEach(e => {
     const props = {
+      mode: mode,
       number: e["questionNumber"],
       text: e["question"],
       userCorrect: e["userCorrect"],
@@ -86,6 +92,7 @@ function QuestionList(props) {
 
   for (let i = list.length + 1; i <= 11; i++) {
     const props = {
+      mode: mode,
       number: i
     }
     const item = <EmptyQuestionListItem {...props} /> 
@@ -100,23 +107,28 @@ function QuestionList(props) {
 }
 
 export default function TriviaSidebar(props) {
-  const [nav, setNav] = useState(false);  
+  const handleModeSelect = props.handleModeSelect;
+  const mode = props.mode;
+  const nav = mode === "nav";
 
   const handleClickOnline = e => {
-    // axios.
     e.stopPropagation();
+    handleModeSelect("online");
   }
 
   const handleClickSingle = e => {
     e.stopPropagation();  
+    handleModeSelect("singlePlayer");
   }
 
   const handleClickSend = e => {
     e.stopPropagation();
+    handleModeSelect("send");
   }
 
   const handleClickSolo = e => {
     e.stopPropagation();
+    handleModeSelect("solo");
   }
 
   const qprops = [  // Some hardcoded data here.
@@ -147,6 +159,24 @@ export default function TriviaSidebar(props) {
   ]
 
   const QList = <QuestionList list={qprops} />
+  const enemyHeaderSection = mode === "online" ? (
+    <div className="TSBG-header-block TSBG-header-them">
+      <div className="TSBG-header-block TSBG-header-us">
+        <span className="TSBG-header-username">
+          User3 &nbsp;
+          <span className="TSBG-header-acs">(600)</span>
+        </span>
+        <ProfilePicture scale={1.5} username="user3" />
+        <label className="TSBG-header-score">2</label>
+      </div>
+    </div>
+  ) : null;
+
+  const enemyListIcon = mode === "online" ? (
+    <div className="TSBG-list-icon-div TSBG-list-icon-div-2">
+      <img className="TSBG-list-icon" src="https://s3.amazonaws.com/cdn-origin-etr.akc.org/wp-content/uploads/2017/11/17140825/Swedish-Vallhund-head-portrait-outdoors.jpg"></img>
+    </div>
+  ) : null;
 
   if (nav) {
     return (
@@ -178,11 +208,6 @@ export default function TriviaSidebar(props) {
   } else {
     return (
       <div className="TSB-div">
-        {/* <div className="TSB-header">
-          <span className="TSB-header-text">Trivia!</span>
-          <div className="TSB-header-icon"></div>
-        </div> */}
-
         <div className="TSBG-header">
           <div className="TSBG-header-block TSBG-header-us">
             <span className="TSBG-header-username">
@@ -192,16 +217,7 @@ export default function TriviaSidebar(props) {
             <ProfilePicture scale={1.5} username="user1" />
             <label className="TSBG-header-score">2</label>
           </div>
-          <div className="TSBG-header-block TSBG-header-them">
-            <div className="TSBG-header-block TSBG-header-us">
-              <span className="TSBG-header-username">
-                User3 &nbsp;
-                <span className="TSBG-header-acs">(600)</span>
-              </span>
-              <ProfilePicture scale={1.5} username="user3" />
-              <label className="TSBG-header-score">2</label>
-            </div>
-          </div>
+          {enemyHeaderSection}
         </div>
         
         <div className="TSBG-list">
@@ -210,9 +226,7 @@ export default function TriviaSidebar(props) {
               <div className="TSBG-list-icon-div">
                 <img className="TSBG-list-icon" src="https://www.citypng.com/public/uploads/preview/-41601313914ox6c3d6e4n.png"></img>
               </div>
-              <div className="TSBG-list-icon-div TSBG-list-icon-div-2">
-                <img className="TSBG-list-icon" src="https://s3.amazonaws.com/cdn-origin-etr.akc.org/wp-content/uploads/2017/11/17140825/Swedish-Vallhund-head-portrait-outdoors.jpg"></img>
-              </div>
+              {enemyListIcon}
             </div>
           </div>
           

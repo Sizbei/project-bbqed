@@ -6,9 +6,15 @@ import TriviaSidebar from './TriviaSidebar';
 import ProfilePicture from './ProfilePicture';
 
 export default function InGameTrivia(props) {
-  const currentQuestion = props.currentQuestion;
-  const options = props.options;
+  const mode = props.mode;
   const handleOptionSelect = props.handleOptionSelect;
+  const handleModeSelect = props.handleModeSelect;
+  let currentQuestion = '\u00A0'; // initialize with space to preserve spacing
+  let options = ['\u00A0', '\u00A0', '\u00A0', '\u00A0'];
+  if (mode == "singlePlayer") {
+    currentQuestion = props.currentQuestion;
+    options = props.options;
+  }
       
   return(
       <div className='trivia-background'>
@@ -45,7 +51,7 @@ export default function InGameTrivia(props) {
         </div>
 
         <div className='right-segment'>
-          <TriviaSidebar/>
+          <TriviaSidebar mode={mode} handleModeSelect={handleModeSelect}/>
         </div>
       </div>
   );
