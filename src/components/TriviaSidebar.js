@@ -101,7 +101,7 @@ function QuestionList(props) {
 }
 
 export default function TriviaSidebar(props) {
-  const [nav, setNav] = useState(false);  
+  const [nav, setNav] = useState(true);  
 
   const handleClickOnline = e => {
     // axios.
