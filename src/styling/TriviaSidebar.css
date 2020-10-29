@@ -141,38 +141,33 @@
 
 .TSBG-list-icons-div {
   display: flex;
-  margin-bottom: 5px;
+  margin-bottom: 0.2632vw;
 }
 
 .TSBG-list-icons {
   margin-left: auto;
-  padding-right: 4.8px;
+  padding-right: 0.25263vw;
   /* width: auto; */
-  height: 30px;
+  height: 1.57895vw;
   
   display: flex;
 }
 
 .TSBG-list-icon-div {
-  margin-left: 10px;
+  margin-left: 0.526316vw;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-image: url('../res/images/dumbbell.png'); */
 }
 
 .TSBG-list-icon {
-  width: 30px;
-  height: 30px;
+  width: 1.57895vw;
+  height: 1.57895vw;
   border-radius: 50%; 
 }
 
 .TSBG-list-item {
   max-width: 100%;
-  /* height: 1.8em; */
   padding: 0.3em;
   padding-left: 0.5em;
   display: flex;
@@ -202,7 +197,7 @@
 }
 
 .TSBG-list-item-mark-div {
-    margin-left: 10px; 
+  margin-left: 0.52631vw; 
 }
 
 .TSBG-list-item-checks {
@@ -212,38 +207,38 @@
 }
 
 .TSBG-list-item-checkmark-div {
-  margin-left: 10px; 
-  margin-right: 10px;
+  margin-left: 0.52631vw; 
+  margin-right: 0.52631vw;
 } 
 
 .TSBG-list-item-checkmark {
   display: inline-block;
   position: relative;
   transform: rotate(45deg);
-  height: 15px;
-  width: 7.0px;
-  border-bottom: 3px solid #78b13f;
-  border-right: 3px solid #78b13f;
+  height: 0.78947vw;
+  width: 0.36842vw;
+  border-bottom: 0.157895vw solid #78b13f;
+  border-right: 0.157895vw solid #78b13f;
 }
 
 .TSBG-list-item-crossmark {
-  width: 30px;
-  margin-left: 10px;
+  width: 1.57895vw;
+  margin-left: 0.52631vw;
   display: inline-block;
-  font-size: 35px;
-  height: 19px;
-  line-height: 14px;
+  font-size: 1.842105vw;
+  height: 1.0vw;
+  line-height: 0.73684vw;
   font-weight: 600;
   color: crimson;
   text-align: center;
 }
 
 .TSBG-list-item-empty {
-  margin-left: 19px;
-  margin-right: 8px;
-  width: 14px;
-  margin-top: -10px;
-  margin-bottom: -10px;
+  margin-left: 1.0vw;
+  margin-right: 0.42105vw;
+  width: 0.736842vw;
+  margin-top: -0.526316vw;
+  margin-bottom: -0.526316vw;
   /* height: 47px; */
   border-bottom: 1px solid rgb(158, 158, 158);
 }
