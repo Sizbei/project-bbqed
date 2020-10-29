@@ -59,6 +59,19 @@ db.acs.insertMany([
   }
 ])
 
+db.acs.deleteOne({username:"user4"})
+db.acs.insertOne({
+    username: "user4",
+    acsHistory: [],
+    acsTotal: {
+      total: 0,
+      triviaGames: 0,
+      analysisDebate: 0,
+      picksPrediction: 0,
+      participationHistory: 0
+    }
+})
+
 db.profiles.deleteOne({username: "user1"})
 db.profiles.deleteOne({username: "user2"})
 db.profiles.deleteOne({username: "user3"})
