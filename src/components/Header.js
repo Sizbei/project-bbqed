@@ -39,9 +39,6 @@ function Navbar() {
       <li className="navbar-item">
       <Link to="/picksandpredictions" className="nav-link">Picks/Predictions</Link>
       </li>
-      <li className="navbar-item">
-      <Link to="/registration" className="nav-link">Registration</Link>
-      </li>
     </ul>
   );
 }
