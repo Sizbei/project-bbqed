@@ -70,8 +70,7 @@ function Posts(props){
                       </div>
                         
                         </td>
-                      <td><a className="radar-list-popup-table-username" onClick={()=>props.changeUser(data.username)}>{data.username}</a></td>
-                      <td className="radar-list-popup-table-acs">{data.acs}</td>
+                      <td><a className="radar-list-popup-table-username" onClick={()=>props.changeUser(data.username)}>{data.username}  ({data.acs})</a></td>
                   </tr>
                 </tbody>
               )

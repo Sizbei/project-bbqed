@@ -6,10 +6,24 @@ import RLPopup from './ProfileRLPopup';
 import ImageSelect from './ImageSelect';
 import {AuthContext} from '../Context/AuthContext';
 
-
+/*
+acsChart: [
+    { title: 'Trivia & Games', value: tag, color: '#61b305' },
+    { title: 'Analysis & Debate', value: aad, color: '#f8e871' },
+    { title: 'Picks & Prediction', value: pap, color: '#d30909' },
+    { title: 'Participation & History', value: pah, color: ' #ff7e1f'},
+],  
+acsHistory: [
+    {point: 10 , category: 'Picks', time: '1 hour ago'}, 
+    {point: 7 , category: 'Debate', time: '7 hours ago'}, 
+    {point: -10 , category: 'Trivia', time: '10 hours ago'}, 
+    {point: 13 , category: 'Debate', time: '13 hours ago'}, 
+    {point: -3 , category: 'Picks', time: '20 hours ago'}, 
+],
+*/
 const defaultLabelStyle = {
-    fontSize: '5px',
-    fontFamily: 'sans-serif',
+    fontSize: '7px',
+    fontFamily: 'CommissionerMedium',
   };
 export default class Profile extends Component {
     
@@ -70,7 +84,7 @@ export default class Profile extends Component {
             viewing: this.state.username, 
         }
         //console.log(body) 
-        const response = await fetch("http://localhost:5000" + this.state.path + "/addRadar" , {
+        const response = await fetch( this.state.path + "/addRadar" , {
             method: 'PUT' , 
             headers: {
                 'Content-Type': 'application/json'
@@ -89,7 +103,7 @@ export default class Profile extends Component {
             viewing: this.state.username, 
         }
         //console.log(body) 
-        const response = await fetch("http://localhost:5000" + this.state.path +"/removeRadar" , {
+        const response = await fetch(this.state.path +"/removeRadar" , {
             method: 'DELETE' , 
             headers: {
                 'Content-Type': 'application/json'
@@ -103,15 +117,12 @@ export default class Profile extends Component {
 
     /************************GET REQUEST FOR USER INFRORMATION ***********************/
     componentDidMount(){
+        
         //defualt method in fetch is get so no need to put that as param
         fetch(this.state.path).then(res => res.json())
         //axios.get('http://localhost:5000' + this.state.path)
         .then(data => {
             //console.log("Path: " + this.state.path + "\n users:  profile/" + this.context.user.username); 
-            const tag = 10; 
-            const aad = 15; 
-            const pap = 20; 
-            const pah = 5;
             //console.log(response.data.interest);
             this.setState({
                 username: data.username,
@@ -119,19 +130,6 @@ export default class Profile extends Component {
                 interest: data.interest,
                 about: data.about,  
                 image: data.image, 
-                acsChart: [
-                    { title: 'Trivia & Games', value: tag, color: '#61b305' },
-                    { title: 'Analysis & Debate', value: aad, color: '#f8e871' },
-                    { title: 'Picks & Prediction', value: pap, color: '#d30909' },
-                    { title: 'Participation & History', value: pah, color: ' #ff7e1f'},
-                ],  
-                acsHistory: [
-                    {point: 10 , category: 'Picks', time: '1 hour ago'}, 
-                    {point: 7 , category: 'Debate', time: '7 hours ago'}, 
-                    {point: -10 , category: 'Trivia', time: '10 hours ago'}, 
-                    {point: 13 , category: 'Debate', time: '13 hours ago'}, 
-                    {point: -3 , category: 'Picks', time: '20 hours ago'}, 
-                ],
                 teams: data.teams
             }) 
         })
@@ -169,7 +167,7 @@ export default class Profile extends Component {
           console.log(error);
         })
         
-        fetch("http://localhost:5000" + this.state.path + "/radarlist" ).then(res => res.json()) 
+        fetch(this.state.path + "/radarlist" ).then(res => res.json()) 
         .then (data => {
             //console.log("http://localhost:5000" + this.state.path + "/radarlist");
             //console.log(data.radarList); 
@@ -178,7 +176,7 @@ export default class Profile extends Component {
             })     
         })
         //console.log("http://localhost:5000/profile/" + this.context.user.username + this.state.path.slice(8, this.state.path.length) + "/checkRadar");
-        fetch("http://localhost:5000/profile/" + this.context.user.username + this.state.path.slice(8, this.state.path.length) + "/checkRadar").then(res=>res.json())
+        fetch("/profile/" + this.context.user.username + this.state.path.slice(8, this.state.path.length) + "/checkRadar").then(res=>res.json())
         .then (data => {
             //console.log("following: " + data.following); 
             this.setState({
@@ -186,12 +184,25 @@ export default class Profile extends Component {
             })
 
         })
-
-    }
+    
+        fetch( this.state.path + "/acs").then(res => res.json()) 
+        .then(data => {
+            console.log(data.acsChart[0].value);
+            this.setState({
+                acs: data.acsTotal,
+                acsHistory: data.acsHistory, 
+                acsChart: [   
+                    { title: data.acsChart[0].title, value: data.acsChart[0].value, color: '#61b305' },
+                    { title: data.acsChart[1].title, value: data.acsChart[1].value, color: '#f8e871' },
+                    { title: data.acsChart[2].title, value: data.acsChart[2].value, color: '#d30909' },
+                    { title: data.acsChart[3].title, value: data.acsChart[3].value, color: ' #ff7e1f'},
+                ]
+            })
+        })
+    }   
 
 
     render(){
-        console.log(this.state.fullRadarList);
         const radarList = this.state.fullRadarList.slice(0, 10); 
         return (
             <div>
@@ -208,7 +219,7 @@ export default class Profile extends Component {
                     <div className="prof-profile-info">
                         <h1>{this.state.username}</h1>
                         <p>{this.state.status}</p>
-                        {this.state.path === "/profile/" + this.context.user.username ? 
+                        {this.state.path.toLowerCase() === "/profile/" + this.context.user.username ? 
                             <button className ="prof-create-post-button" onClick={this.togglePostPopup.bind(this)}>Create Post</button> 
                             : 
                             (this.state.following ? 
@@ -219,8 +230,10 @@ export default class Profile extends Component {
                         }      
                     </div>
                     <div className="prof-edit-profile">                    
-                        <button onClick={this.handleEditProfile}>Edit Profile</button> 
-
+                        {this.state.path.toLowerCase() === "/profile/" + this.context.user.username ? 
+                        <button onClick={this.handleEditProfile}>Edit Profile</button> : 
+                        null
+                        }
                     </div>                   
                 </div>
                 
@@ -247,6 +260,7 @@ export default class Profile extends Component {
                                         <tbody>
                                         {radarList.map(data => {
                                         return (
+
                                             <tr key={data.acs + data.username}>
                                                 <td>
                                                 <div className="radar-list-profile-preview">
@@ -257,9 +271,9 @@ export default class Profile extends Component {
                                                 </div>
                                                 
                                                 </td>
-                                                <td><a className="radar-list-table-username" onClick={()=>this.changeUser(data.username)}>{data.username}</a></td>
-                                                <td className="radar-list-table-acs">{data.acs}</td>
+                                                <td><a className="radar-list-table-username" onClick={()=>this.changeUser(data.username)}>{data.username} ({data.acs})</a></td>
                                             </tr>
+
                                         )
                                         })} 
 
@@ -275,17 +289,24 @@ export default class Profile extends Component {
                     </div>
                                  
                     <div className="prof-right-content">
-                        <div className="prof-cs">
+                        <div className="prof-acs">
                             <h2 className="prof-title"> ACS History </h2>
                             
                             <div className="prof-acs-content"> 
-                            <PieChart className="prof-piechart"
-                            data={this.state.acsChart}
-                            label={({ dataEntry }) => Math.round(dataEntry.percentage) + '%'}
-                            labelStyle={defaultLabelStyle}                
-                            raidus={42}
-                            reveal ={({dataEntry}) => Math.round(dataEntry.percentage) + '%'}
-                            />
+                            {this.state.acs === 0 ?  
+                                <div className="prof-piechart">
+                                    Unavailable
+                                 </div>   
+                                : 
+                                <PieChart className="prof-piechart"
+                                data={this.state.acsChart}
+                                label={({ dataEntry }) => Math.round(dataEntry.percentage) + '%'}
+                                labelStyle={defaultLabelStyle}                
+                                raidus={42}
+                                reveal ={({dataEntry}) => Math.round(dataEntry.percentage) + '%'}
+                                />
+                            }
+                            
 
                             <table>
                                 <thead> 
@@ -299,9 +320,9 @@ export default class Profile extends Component {
                                 {this.state.acsHistory.map(data => {
                                     return (
                                         <tr key={data.time}>
-                                            <td className={data.point>= 0? "prof-score-content-pos" : "prof-score-content-neg"}>{data.point}</td>
+                                            <td className={data.points>= 0? "prof-score-content-pos" : "prof-score-content-neg"}>{data.points}</td>
                                             <td>{data.category}</td>
-                                            <td>{data.time}</td>
+                                            <td>{data.date}</td>
                                         </tr>
                                     )
                                 })} 

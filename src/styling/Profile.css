@@ -45,12 +45,12 @@
 }
 
 .prof-profile-user-given-photo {
-  margin-left: 35px;
-  margin-top: 43px;
+  margin-left: 38px;
+  margin-top: 45px;
 
   display: block;
-  height: 140px;
-  width: 140px;
+  height: 139px;
+  width: 139px;
   border-radius: 50%;
 
   text-indent: -10000px; /* A hack to hide the broken image icon */ 
@@ -58,14 +58,14 @@
   background-size: contain;
 }
 .prof-profile-user-score{ 
-  margin-top: -85px ; 
+  margin-top: -83px ; 
   margin-left: 200px;
   position: absolute;
 }
 .prof-profile-info {
   padding-left: 50px; 
-  max-width: 650px; 
-  min-width: 650px; 
+  max-width: 700px; 
+  min-width: 700px; 
 
 }
 
@@ -76,8 +76,8 @@
   
   align-self: flex-end ; 
   margin-bottom: 10px; 
-  max-width: 150px; 
-  min-width: 150px; 
+  max-width: 115px; 
+  min-width: 115px; 
 
 }
 
@@ -130,9 +130,11 @@
   cursor:pointer; 
 }
 .prof-radar-list-table { 
-  min-height: 400px; 
-  max-height: 400px;
+  min-height: 425px; 
+  max-height: 425px;
 }
+
+
 /********************************** STYLING FOR INTEREST + PICKS ***********************************************************/
 
 .prof-picks{
@@ -239,7 +241,7 @@
 }
 
 @font-face {
-  font-family: 'CommissionerMedium';
+  font-family: 'CommissionerMedium' ;
   src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Medium.ttf) format('truetype');
 }
 
