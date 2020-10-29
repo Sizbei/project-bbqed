@@ -10,7 +10,6 @@ function QuestionPreviewText(props) {
   const ellipses = props.text.length > max;
   let text = props.text.substring(0, max);
   while (text.length > 0 && text[text.length - 1] === ' ') {
-    console.log(text);
     text = text.substring(0, text.length -  1);
   }
 
@@ -101,7 +100,7 @@ function QuestionList(props) {
 }
 
 export default function TriviaSidebar(props) {
-  const [nav, setNav] = useState(true);  
+  const [nav, setNav] = useState(false);  
 
   const handleClickOnline = e => {
     // axios.

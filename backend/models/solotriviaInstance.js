@@ -13,7 +13,7 @@ const soloTriviaInstanceSchema = new Schema({
       required: true,
       default: 0
     },
-    questionIDs: {
+    questionIds: {
       type: [ObjectId],
       required: true,
       default: []
