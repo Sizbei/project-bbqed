@@ -203,7 +203,7 @@ export default class Profile extends Component {
 
 
     render(){
-        const radarList = this.state.fullRadarList.slice(0, 10); 
+        const radarList = this.state.fullRadarList.slice(0, 5); 
         return (
             <div>
             
