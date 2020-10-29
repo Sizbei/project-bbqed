@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const instance = require('../models/soloTriviaInstace');
+const instance = require('../models/soloTriviaInstance');
 const trivia = require('../models/trivia');
 const acs = require('../models/acs');
 
