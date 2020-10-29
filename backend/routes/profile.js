@@ -28,7 +28,7 @@ router.route('/:username/radarlist').get(async (req,res) => {
     var tempPic = "";
     var radarList = [];
     for (var i = 0; i < user.radarList.length; i++) {
-      tempAcs = await Acs.findOne({username:user.radarList[i]}).then(acs => {return acs.acsTotal[0].total});
+      tempAcs = await Acs.findOne({username:user.radarList[i]}).then(acs => {return acs.acsTotal.total});
       tempPic = await Profile.findOne({username: user.radarList[i]}).then(profile => {return profile.image});
         radarList[i] = {username: user.radarList[i], acs:tempAcs, profilePic:tempPic}
     }
@@ -60,5 +60,44 @@ router.route('/:username/removeRadar').delete(async(req,res) => {
     res.json("Removed friend")
   ).catch(err => res.status(400).json('Error ' + err));
 });
+
+router.route('/:username/acs').get(async(req, res) => {
+  await Acs.findOne({username:req.params.username}).then(
+    (user) => {
+      var acsChart = []
+      acsChart[0] = {title: "Trivia & Games", value: user.acsTotal.triviaGames/user.acsTotal.total}
+      acsChart[1] = {title: "Analysis & Debate", value: user.acsTotal.analysisDebate/user.acsTotal.total}
+      acsChart[2] = {title: "Picks & Prediction", value: user.acsTotal.picksPrediciton/user.acsTotal.total}
+      acsChart[3] = {title: "Participation & History", value: user.acsTotal.participationHistory/user.acsTotal.total}
+      var currentTime = Date.now()
+      var toProcess = user.acsHistory.slice(Math.max(user.acsHistory.length - 5, 0))
+      var newEditedAcsHistory = []
+      for (var i = 0; i < toProcess.length; i++) {
+        newEditedAcsHistory[i] = {category: toProcess[i].category, points: toProcess[i].points, date: dateDifference(currentTime, toProcess[i].date)}
+      }
+      var acs = {acsChart: acsChart, acsHistory: newEditedAcsHistory}
+      res.json(acs)
+    }
+  ).catch(err => res.status(400).json('Error ' + err));
+})
+
+console.log(dateDifference(Date.now(), new Date("October 13, 2020 11:13:00")))
+
+function dateDifference(now,then) {
+  var timeElapsedinSeconds = (now - then)/1000;
+  var timeElapsedinMinutes =  timeElapsedinSeconds/60;
+  if (timeElapsedinMinutes < 1) {
+    return 'A few seconds Ago';
+  }
+  var timeElapsedinHours = timeElapsedinMinutes/60
+  if (timeElapsedinHours < 1) {
+    return Math.floor(timeElapsedinMinutes).toString() + " Minutes Ago"
+  }
+  var timeElapsedinDays = timeElapsedinHours/24
+  if (timeElapsedinDays < 1) {
+    return Math.floor(timeElapsedinHours).toString() + " Hours Ago"
+  } 
+  return Math.floor(timeElapsedinDays).toString() + " Days Ago"
+}
 
 module.exports = router;

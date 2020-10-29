@@ -9,6 +9,7 @@ const acsSchema = new Schema({
     unique:true,
     required:true
   },
+
   acsHistory: [{
     category: {
       type: String,
@@ -24,33 +25,33 @@ const acsSchema = new Schema({
     }
   }],
 
-  acsTotal: [{
+  acsTotal: {
     total: {
       type: Number,
       required: true,
       default: 0
     },
-    triviaGamesPc: {
+    triviaGames: {
       type: Number,
       required: true,
       default: 0
     },
-    analysisDebatePc: {
+    analysisDebate: {
       type: Number,
       required: true,
       default: 0
     },
-    picksPredicitonPc: {
+    picksPrediciton: {
       type: Number,
       required: true,
       default: 0
     },
-    participationHistoryPc: {
+    participationHistory: {
       type: Number,
       required: true,
       default: 0
     }
-  }]
+  }
 
 })
 
