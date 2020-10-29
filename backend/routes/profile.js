@@ -65,10 +65,10 @@ router.route('/:username/acs').get(async(req, res) => {
   await Acs.findOne({username:req.params.username}).then(
     (user) => {
       var acsChart = []
-      acsChart[0] = {title: "Trivia & Games", value: (user.acsTotal.triviaGames/user.acsTotal.total).toFixed(2)}
-      acsChart[1] = {title: "Analysis & Debate", value: (user.acsTotal.analysisDebate/user.acsTotal.total).toFixed(2)}
-      acsChart[2] = {title: "Picks & Prediction", value: (user.acsTotal.picksPrediction/user.acsTotal.total).toFixed(2)}
-      acsChart[3] = {title: "Participation & History", value: (user.acsTotal.participationHistory/user.acsTotal.total).toFixed(2)}
+      acsChart[0] = {title: "Trivia & Games", value: user.acsTotal.triviaGames/user.acsTotal.total}
+      acsChart[1] = {title: "Analysis & Debate", value: user.acsTotal.analysisDebate/user.acsTotal.total}
+      acsChart[2] = {title: "Picks & Prediction", value: user.acsTotal.picksPrediction/user.acsTotal.total}
+      acsChart[3] = {title: "Participation & History", value: user.acsTotal.participationHistory/user.acsTotal.total}
       var currentTime = Date.now()
       var toProcess = user.acsHistory.slice(Math.max(user.acsHistory.length - 5, 0))
       var newEditedAcsHistory = []
