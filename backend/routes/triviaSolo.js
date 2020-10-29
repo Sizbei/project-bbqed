@@ -20,6 +20,7 @@ router.route('/create').post((req, res) => {
 
 router.route('/next').put((req, res) => {
 
+
   instance.findOne({_id: req.body.instance})
   .then(game => {
 
@@ -43,21 +44,24 @@ router.route('/next').put((req, res) => {
 
     } else {
 
+      if(game.questionIds.length > 0){
         trivia.findOne({_id: req.body.question})
-          .then(response => {
-            if(response.answer === req.body.answer){
-              game.points += 1;
-              game.save();
-            }
-          })
+            .then(response => {
+              if(response.answer === req.body.answer){
+                game.points += 1;
+                game.save();
+              }
+            }).catch(err => res.status(400).json('Error: ' + err));
+      }
 
-        trivia.aggregate([{"$match": { _id: { "$nin:" : req.body.instance.questionIds } } }])
-          .then(question => {
-            game.questionIds.push(question);
-            game.save()
+      trivia.aggregate([{"$match": { _id: { "$nin:" : req.body.instance.questionIds } } }])
+        .then(question => {
+          game.questionIds.push(question);
+          game.save()
             .then(() => res.json(question))
             .catch(err => res.status(400).json('Error: ' + err));
-          })
+        }).catch(err => res.status(400).json('Error: ' + err));
+
     }
 
   })
