@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const ObjectId = require('mongodb').ObjectID;
 
 const Schema = mongoose.Schema;
 const soloTriviaInstanceSchema = new Schema({
