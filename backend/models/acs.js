@@ -4,6 +4,12 @@ const Schema = mongoose.Schema;
 
 const acsSchema = new Schema({
 
+  username: {
+    type: String,
+    required: true,
+    unique: true
+  },
+
   acsHistory: [{
     category: {
       type: String,
@@ -19,33 +25,33 @@ const acsSchema = new Schema({
     }
   }],
 
-  acsTotal: [{
+  acsTotal: {
     total: {
       type: Number,
       required: true,
       default: 0
     },
-    triviaGamesPc: {
+    triviaGames: {
       type: Number,
       required: true,
       default: 0
     },
-    analysisDebatePc: {
+    analysisDebate: {
       type: Number,
       required: true,
       default: 0
     },
-    picksPredicitonPc: {
+    picksPrediciton: {
       type: Number,
       required: true,
       default: 0
     },
-    participationHistoryPc: {
+    participationHistory: {
       type: Number,
       required: true,
       default: 0
     }
-  }]
+  }
 
 })
 

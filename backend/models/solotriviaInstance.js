@@ -2,39 +2,30 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 const triviaInstanceSchema = new Schema({
-    user1: {
+    user: {
       type: String,
       required: true,
       trim: true,
     },
-    user2: {
-      type: String,
-      required: false,
-      trim: true,
-    },
-    points1: {
+    points: {
       type: Number,
       required: true,
       default: 0
     },
-    points2: {
-      type: Number,
-      required: false,
-      default: 0
-    },
-    questionCount: {
-      type: Number,
+    questionIDs: {
+      type: [ObjectId],
       required: true,
-      default: 0
+      default: []
     },
-    elapsedTime: {
-      type: Number,
+    times: {
+      type: [Date],
       required: true,
-      default: 0
+      default: []
     },
 
   }, {
     timestamps: true,
   });
-const triviaInstance = mongoose.model('triviaInstance', triviaInstanceSchema);
-module.exports = triviaInstance;
+  
+const triviaInstance = mongoose.model('soloTriviaInstance', soloTriviaInstanceSchema);
+module.exports = soloTriviaInstance;
