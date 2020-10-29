@@ -54,6 +54,8 @@ export default function ProfilePicture(props) {
     ppDivStyle = {
       height: scale * 6 + "vw",
       width: scale * 6 + "vw",
+      minHeight: scale * 6 + "vw",
+      minWidth: scale * 6 + "vw",
     }
   }
 
