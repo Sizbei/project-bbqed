@@ -59,11 +59,11 @@ db.acs.insertMany([
   }
 ])
 
-db.profile.deleteOne({username: "user1"})
-db.profile.deleteOne({username: "user2"})
-db.profile.deleteOne({username: "user3"})
+db.profiles.deleteOne({username: "user1"})
+db.profiles.deleteOne({username: "user2"})
+db.profiles.deleteOne({username: "user3"})
 
-db.profile.insertMany([
+db.profiles.insertMany([
   {username: "user1",
    about: "",
    interests: ["ChicagoBulls","HoustonRockets","MilwaukeeBucks","NewYorkKnicks","PhoenixSuns"],
