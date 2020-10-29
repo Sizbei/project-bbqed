@@ -41,7 +41,7 @@ const acsSchema = new Schema({
       required: true,
       default: 0
     },
-    picksPrediciton: {
+    picksPrediction: {
       type: Number,
       required: true,
       default: 0
