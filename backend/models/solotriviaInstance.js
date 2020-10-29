@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
-const triviaInstanceSchema = new Schema({
+const soloTriviaInstanceSchema = new Schema({
     user: {
       type: String,
       required: true,
@@ -27,5 +27,5 @@ const triviaInstanceSchema = new Schema({
     timestamps: true,
   });
   
-const triviaInstance = mongoose.model('soloTriviaInstance', soloTriviaInstanceSchema);
+const soloTriviaInstance = mongoose.model('soloTriviaInstance', soloTriviaInstanceSchema);
 module.exports = soloTriviaInstance;
