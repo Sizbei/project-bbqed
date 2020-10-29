@@ -3,6 +3,7 @@ import axios from 'axios';
 import Header from './Header';
 import '../styling/TriviaSidebar.css';
 import icon from '../res/images/puzzle-piece.png'
+import ProfilePicture from './ProfilePicture';
 
 function QuestionPreviewText(props) {
   const max = 38;
@@ -84,7 +85,7 @@ function QuestionList(props) {
     accum.push(item);
   })
 
-  for (let i = list.length + 1; i <= 10; i++) {
+  for (let i = list.length + 1; i <= 11; i++) {
     const props = {
       number: i
     }
@@ -178,13 +179,31 @@ export default function TriviaSidebar(props) {
   } else {
     return (
       <div className="TSB-div">
-        <div className="TSB-header">
+        {/* <div className="TSB-header">
           <span className="TSB-header-text">Trivia!</span>
           <div className="TSB-header-icon"></div>
-        </div>
-
-        {/* <div className="TSBG-header">
         </div> */}
+
+        <div className="TSBG-header">
+          <div className="TSBG-header-block TSBG-header-us">
+            <span className="TSBG-header-username">
+              User1 &nbsp;
+              <span className="TSBG-header-acs">(1234)</span>
+            </span>
+            <ProfilePicture scale={1.5} username="user1" />
+            <label className="TSBG-header-score">2</label>
+          </div>
+          <div className="TSBG-header-block TSBG-header-them">
+            <div className="TSBG-header-block TSBG-header-us">
+              <span className="TSBG-header-username">
+                User3 &nbsp;
+                <span className="TSBG-header-acs">(600)</span>
+              </span>
+              <ProfilePicture scale={1.5} username="user3" />
+              <label className="TSBG-header-score">2</label>
+            </div>
+          </div>
+        </div>
         
         <div className="TSBG-list">
           <div className="TSBG-list-icons-div">
