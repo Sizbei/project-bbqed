@@ -39,7 +39,7 @@ function Navbar() {
       <li className="navbar-item">
       <Link to="/picksandpredictions" className="nav-link">Picks/Predictions</Link>
       </li>
-    </ul> 
+    </ul>
   );
 }
 
