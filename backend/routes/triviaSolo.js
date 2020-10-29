@@ -64,7 +64,7 @@ router.route('/next').put((req, res) => {
 
     }
 
-  })
+  }).catch(err => res.status(400).json('Error: ' + err));
 
 });
 
