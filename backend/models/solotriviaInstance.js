@@ -23,6 +23,11 @@ const soloTriviaInstanceSchema = new Schema({
       required: true,
       default: []
     },
+    inProgress: {
+      type: Boolean,
+      required: true,
+      default: true
+    }
 
   }, {
     timestamps: true,
