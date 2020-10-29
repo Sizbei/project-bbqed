@@ -23,8 +23,8 @@
 
 .radar-list-popup-table {  
   color: white;  
-  max-height: 300px; 
-  min-height: 300px; 
+  max-height: 400px; 
+  min-height: 400px; 
 }
 
 .radar-list-popup-table-username:hover, .radar-list-table-username:hover {
