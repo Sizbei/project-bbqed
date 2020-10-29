@@ -1,11 +1,12 @@
 .TSB-div {
+  box-sizing: border-box;
+  margin-top: 5%;
+  margin-right: 13%;
+  padding: 4%;
   display: flex;
-  /* flex: 1; */
   flex-direction: column;
-  /* max-width: 400px; */
-  min-width: 300px;
   width: 100%;
-  height: 85%;
+  height: 77%;
   border-radius: 8px;
   background-color: #1b1a18;
 }
@@ -32,7 +33,6 @@
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center center;
-  /* background-size: 100% 100%; */
   background-image: url('../res/images/puzzle-piece.png');
 }
 
@@ -98,12 +98,50 @@
 /*------------IN-GAME VIEW-------------*/
 
 .TSBG-header {
-  height: 20%;
-  /* background-color: gray; */
+  height: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-content: space-around;
+}
+
+.TSBG-header-block {
+  margin-top: 5%; 
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* background-color: #78b13f; */
+}
+
+.TSBG-header-them {
+  /* margin-left: 14%; */
+}
+
+.TSBG-header-username {
+  display: inline-block;
+  white-space: nowrap;
+  color: white;
+  font-size: 1.2vw;
+}
+
+.TSBG-header-acs {
+  display: inline-block;
+  color: white;
+  color: rgb(87, 87, 87);
+  font-size: 1.0vw;
+}
+
+.TSBG-header-score {
+  color: white;
+  font-size: 2.5vw;
+  font-weight: 600;
+  line-height: 1vw;
 }
 
 .TSBG-list {
   /* height: 5%; */
+  margin-top: auto;
 }
 
 .TSBG-list-icons-div {
