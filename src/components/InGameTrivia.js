@@ -18,6 +18,8 @@ export default function InGameTrivia(props) {
     options = props.options;
   }
 
+  // currentQuestion = 'initialize with space to preserve spacinginitialize with space to preserve spacinginitialize with space to preserve spacinginitialize with space to preserve spacing'
+
   return(
       <div className='trivia-background'>
         <div className='left-segment'>
