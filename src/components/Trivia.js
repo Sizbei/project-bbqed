@@ -40,8 +40,9 @@ export default function Trivia(props) {
             questionNumber: 1,
             question: nextData.data.currentQuestion,
           }];
-
+          
           console.log("NEXT INITIAL", newState);
+          newState.score = {user: 0};
           setState(newState);
         }).catch(e => {
           console.log("some error", e);
@@ -84,7 +85,10 @@ export default function Trivia(props) {
           const correct = nextData.data.previous === "correct";
           newState.list[newState.list.length - 1].userCorrect = correct;
           newState.score = {"user": nextData.data.score};
+          newState.finalACS = {user: nextData.data.acs};
+          newState.acsChange = {user: nextData.data.points};
           newState.gameOver = true;
+          console.log(newState);
           setState(newState);
         }
       }).catch(e => {
@@ -102,21 +106,20 @@ export default function Trivia(props) {
 
   useEffect(() => {
     fetch("/profile/" + authContext.user.username).then(res => res.json())
-          .then(data => {
-            const newState = {...state};
-            if ("ppurl" in newState) {
-              newState.ppurl.user = data.image;
-            } else {
-              newState.ppurl = {
-                user: data.image,
-                enemy: ""
-              }
-            }
-            setState(newState);
-          })
-          .catch((error) => {
-            console.log(error);
-          })
+      .then(data => {
+        const newState = {...state};
+        if ("ppurl" in newState) {
+          newState.ppurl.user = data.image;
+        } else {
+          newState.ppurl = {
+            user: data.image
+          }
+        }
+        setState(newState);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }, [])
 
   return(

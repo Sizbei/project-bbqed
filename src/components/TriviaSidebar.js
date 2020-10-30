@@ -88,13 +88,37 @@ function QuestionList(props) {
   )
 }
 
+function ACSChange(props) {
+  const change = "change" in props ? props.change : "none";
+
+  if (change === "none") {
+    return null;
+  }
+
+  if (change > 0) {
+    return (
+      <span className={"TSBG-header-acschange-positive"}>+{change}</span>
+    )
+  } else if (change == 0) {
+    return (
+      <span className={"TSBG-header-acschange-zero"}>+-0</span>
+    )
+  } else {
+    return (
+      <span className={"TSBG-header-acschange-negative"}>{change}</span>
+    )
+  }
+}
+
 export default function TriviaSidebar(props) {
   const handleModeSelect = props.handleModeSelect;
-  const score = props.score;
+  const score = "score" in props ? props.score : {user:0, enemy:0};
   const list = props.list;
   const mode = props.mode;
-  const initialACS = props.initialACS;
   const username = props.username;
+  const acs = props.gameOver ? props.finalACS : 
+    ("initialACS" in props ? props.initialACS : {user:"", enemy:""});
+  const acsChange = "acsChange" in props ? props.acsChange : {user:"none", enemy:"none"};
   const ppurl = "ppurl" in props ? props.ppurl : {user: "", enemy: ""};
   const nav = mode === "nav";
 
@@ -119,6 +143,21 @@ export default function TriviaSidebar(props) {
   }
 
   const QList = <QuestionList list={list} />
+
+
+  const userHeaderSection = (
+    <div className="TSBG-header-block TSBG-header-us">
+      <span className="TSBG-header-username">
+        {username.user} &nbsp;
+        <span className="TSBG-header-acs">({acs.user})</span>
+        &nbsp;
+        <ACSChange change={acsChange.user} />
+      </span>
+      <ProfilePicture scale={1.5} url={ppurl.user} />
+      <label className="TSBG-header-score">{score.user}</label>
+    </div>
+  );
+
   const enemyHeaderSection = mode === "online" ? (
     <div className="TSBG-header-block TSBG-header-them">
       <div className="TSBG-header-block TSBG-header-us">
@@ -126,7 +165,7 @@ export default function TriviaSidebar(props) {
           User3 &nbsp;
           <span className="TSBG-header-acs">600</span>
         </span>
-        <ProfilePicture scale={1.5} username="user3" />
+        <ProfilePicture scale={1.5} url={ppurl.enemy} />
         <label className="TSBG-header-score">{score.enemy}</label>
       </div>
     </div>
@@ -169,16 +208,17 @@ export default function TriviaSidebar(props) {
     return (
       <div className="TSB-div">
         <div className="TSBG-header">
-          <div className="TSBG-header-block TSBG-header-us">
+          {/* <div className="TSBG-header-block TSBG-header-us">
             <span className="TSBG-header-username">
               User1 &nbsp;
-              <span className="TSBG-header-acs">({"user" in initialACS ? initialACS.user : ""})</span>
+              <span className="TSBG-header-acs">({acs.user})</span>
               &nbsp;
-              <span className="TSBG-header-acschange-negative">+20</span>
+              <span className="TSBG-header-acschange-negative">+{acsChange.user}</span>
             </span>
             <ProfilePicture scale={1.5} url={ppurl.user} />
             <label className="TSBG-header-score">{score.user}</label>
-          </div>
+          </div> */}
+          {userHeaderSection}
           {enemyHeaderSection}
         </div>
         

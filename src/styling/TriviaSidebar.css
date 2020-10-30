@@ -116,6 +116,7 @@
 }
 
 .TSBG-header-username {
+  margin-left: 0.2vw; /* counteract acs change */
   display: inline-block;
   white-space: nowrap;
   color: white;
@@ -130,7 +131,7 @@
   font-weight: 500;
 }
 
-.TSBG-header-acschange-positive, .TSBG-header-acschange-negative {
+.TSBG-header-acschange-zero, .TSBG-header-acschange-positive, .TSBG-header-acschange-negative {
   display: inline-block;
   font-size: 0.9vw;
 } 
