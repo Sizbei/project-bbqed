@@ -21,9 +21,9 @@ function QuestionPreviewText(props) {
 function QuestionListItem(props) {
   const mode = props.mode;
   const number = props.number;
-  const text = props.text;  
-  const userCorrect = props.userCorrect;
-  const enemyCorrect = "enemyCorrect" in props ? props.enemyCorrect : false;
+  const text = "text" in props ? props.text : "";  
+  const userCorrect = "userCorrect" in props ? props.userCorrect : "none";
+  const enemyCorrect = "enemyCorrect" in props ? props.enemyCorrect : "none";
   const multiplayer = mode === "online";
 
   const checkmark = (
@@ -47,27 +47,8 @@ function QuestionListItem(props) {
         <QuestionPreviewText text={text} />
       </span>
       <div className="TSBG-list-item-checks">
-        {userCorrect ? checkmark : crossmark}
-        {multiplayer ? (enemyCorrect ? checkmark : crossmark) : null}
-      </div>
-  </div>
-  )
-}
-
-function EmptyQuestionListItem(props) {
-  const mode = props.mode;
-  const number = props.number;
-  const divClassName = "TSBG-list-item TSBG-list-item-" + (number % 2 == 0 ? "e" : "o");
-  const multiplayer = mode === "online";
-
-  return (
-    <div className={divClassName}>
-      <span className="TSBG-list-item-baseline">
-        <span className="TSBG-list-item-number"> {number > 9 ? '' : '\u00A0'} {number}. {'\u00A0'} </span>
-      </span>
-      <div className="TSBG-list-item-checks">
-        <div className="TSBG-list-item-empty"></div>
-        {multiplayer ? <div className="TSBG-list-item-empty"></div> : null } 
+        {userCorrect === "none" ? <div className="TSBG-list-item-empty"></div> : (userCorrect ? checkmark : crossmark)}
+        {multiplayer ? (enemyCorrect === "none" ? <div className="TSBG-list-item-empty"></div> : (enemyCorrect ? checkmark : crossmark)) : null}
       </div>
   </div>
   )
@@ -76,6 +57,7 @@ function EmptyQuestionListItem(props) {
 function QuestionList(props) {
   const mode = props.mode;
   const list = props.list;
+  const size = mode === "online" ? 11 : 10;
 
   let accum = [];
   list.forEach(e => {
@@ -84,20 +66,20 @@ function QuestionList(props) {
       key: e["questionNumber"],
       number: e["questionNumber"],
       text: e["question"],
-      userCorrect: e["userCorrect"],
-      enemyCorrect: e["enemyCorrect"]
+      userCorrect: "userCorrect" in e ? e["userCorrect"] : "none",
+      enemyCorrect: "enemyCorrect" in e ? e["enemyCorrect"] : "none"
     }
     const item = <QuestionListItem {...props} /> 
     accum.push(item);
   })
 
-  for (let i = list.length + 1; i <= 11; i++) {
+  for (let i = list.length + 1; i <= size; i++) {
     const props = {
       mode: mode,
       key: i,
       number: i
     }
-    const item = <EmptyQuestionListItem {...props} /> 
+    const item = <QuestionListItem {...props} /> 
     accum.push(item);
   }
 
@@ -108,9 +90,39 @@ function QuestionList(props) {
   )
 }
 
+function ACSChange(props) {
+  const change = "change" in props ? props.change : "none";
+
+  if (change === "none") {
+    return <span className={"TSBG-header-acschange-zero"}>&nbsp;&nbsp;</span>
+  }
+
+  if (change > 0) {
+    return (
+      <span className={"TSBG-header-acschange-positive"}>+{change}</span>
+    )
+  } else if (change == 0) {
+    return (
+      <span className={"TSBG-header-acschange-zero"}>+-0</span>
+    )
+  } else {
+    return (
+      <span className={"TSBG-header-acschange-negative"}>{change}</span>
+    )
+  }
+}
+
 export default function TriviaSidebar(props) {
   const handleModeSelect = props.handleModeSelect;
+  const score = "score" in props ? props.score : {user:0, enemy:0};
+  const list = props.list;
   const mode = props.mode;
+  console.log("username", props);
+  const username = props.username;
+  const acs = props.gameOver ? props.finalACS : 
+    ("initialACS" in props ? props.initialACS : {user:"", enemy:""});
+  const acsChange = "acsChange" in props ? props.acsChange : {user:"none", enemy:"none"};
+  const ppurl = "ppurl" in props ? props.ppurl : {user: "", enemy: ""};
   const nav = mode === "nav";
 
   const handleClickOnline = e => {
@@ -133,50 +145,38 @@ export default function TriviaSidebar(props) {
     handleModeSelect("solo");
   }
 
-  const qprops = [  // Some hardcoded data here.
-    {
-      questionNumber: 1,
-      question: "Question 1 goes here.",
-      userCorrect: true,
-      enemyCorrect: true 
-    },
-    {
-      questionNumber: 2,
-      question: "Question 2 goes here. Question 2 goes here. Question 2 goes here. ",
-      userCorrect: false,
-      enemyCorrect: true 
-    },
-    {
-      questionNumber: 3,
-      question: "Question 3 goes here.",
-      userCorrect: true,
-      enemyCorrect: false 
-    },
-    {
-      questionNumber: 4,
-      question: "Question 4 goes here.",
-      userCorrect: false,
-      enemyCorrect: false 
-    },
-  ]
+  const QList = <QuestionList list={list} />
 
-  const QList = <QuestionList list={qprops} />
+
+  const userHeaderSection = (
+    <div className="TSBG-header-block TSBG-header-us">
+      <span className="TSBG-header-username">
+        {username.user} &nbsp;
+        <span className="TSBG-header-acs">({acs.user})</span>
+        &nbsp;
+        <ACSChange change={acsChange.user} />
+      </span>
+      <ProfilePicture scale={1.5} url={ppurl.user} />
+      <label className="TSBG-header-score">{score.user}</label>
+    </div>
+  );
+
   const enemyHeaderSection = mode === "online" ? (
     <div className="TSBG-header-block TSBG-header-them">
-      <div className="TSBG-header-block TSBG-header-us">
-        <span className="TSBG-header-username">
-          User3 &nbsp;
-          <span className="TSBG-header-acs">(600)</span>
-        </span>
-        <ProfilePicture scale={1.5} username="user3" />
-        <label className="TSBG-header-score">2</label>
-      </div>
+      <span className="TSBG-header-username">
+        {username.user} &nbsp;
+        <span className="TSBG-header-acs">({acs.enemy})</span>
+        &nbsp;
+        <ACSChange change={acsChange.enemy} />
+      </span>
+      <ProfilePicture scale={1.5} url={ppurl.enemy} />
+      <label className="TSBG-header-score">{score.enemy}</label>
     </div>
   ) : null;
 
   const enemyListIcon = mode === "online" ? (
     <div className="TSBG-list-icon-div TSBG-list-icon-div-2">
-      <img className="TSBG-list-icon" src="https://s3.amazonaws.com/cdn-origin-etr.akc.org/wp-content/uploads/2017/11/17140825/Swedish-Vallhund-head-portrait-outdoors.jpg"></img>
+      <img className="TSBG-list-icon" src={ppurl.enemy}></img>
     </div>
   ) : null;
 
@@ -211,14 +211,7 @@ export default function TriviaSidebar(props) {
     return (
       <div className="TSB-div">
         <div className="TSBG-header">
-          <div className="TSBG-header-block TSBG-header-us">
-            <span className="TSBG-header-username">
-              User1 &nbsp;
-              <span className="TSBG-header-acs">(1234)</span>
-            </span>
-            <ProfilePicture scale={1.5} username="user1" />
-            <label className="TSBG-header-score">2</label>
-          </div>
+          {userHeaderSection}
           {enemyHeaderSection}
         </div>
         
@@ -226,7 +219,7 @@ export default function TriviaSidebar(props) {
           <div className="TSBG-list-icons-div">
             <div className="TSBG-list-icons">
               <div className="TSBG-list-icon-div">
-                <img className="TSBG-list-icon" src="https://www.citypng.com/public/uploads/preview/-41601313914ox6c3d6e4n.png"></img>
+                <img className="TSBG-list-icon" src={ppurl.user}></img>
               </div>
               {enemyListIcon}
             </div>

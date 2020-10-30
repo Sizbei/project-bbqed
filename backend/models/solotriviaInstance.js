@@ -13,6 +13,11 @@ const soloTriviaInstanceSchema = new Schema({
       required: true,
       default: 0
     },
+    correct: {
+      type: Number,
+      required: true,
+      default: 0
+    },
     questionIds: {
       type: [ObjectId],
       required: true,

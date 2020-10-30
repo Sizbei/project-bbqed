@@ -116,6 +116,7 @@
 }
 
 .TSBG-header-username {
+  margin-left: 0.2vw; /* counteract acs change */
   display: inline-block;
   white-space: nowrap;
   color: white;
@@ -125,8 +126,24 @@
 .TSBG-header-acs {
   display: inline-block;
   color: white;
-  color: rgb(87, 87, 87);
+  color: rgb(95, 91, 91);
   font-size: 1.0vw;
+  font-weight: 500;
+}
+
+.TSBG-header-acschange-zero, .TSBG-header-acschange-positive, .TSBG-header-acschange-negative {
+  display: inline-block;
+  font-size: 0.9vw;
+} 
+
+.TSBG-header-acschange-positive {
+  display: inline-block;
+  font-size: 0.9vw;
+  color: rgb(64, 175, 64);
+}
+
+.TSBG-header-acschange-negative {
+  color: crimson;
 }
 
 .TSBG-header-score {

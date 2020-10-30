@@ -19,6 +19,19 @@
     float:left;
 }
 
+.timeBox {
+    height: 10%;
+    text-align: center;
+    width: 90%;
+    margin: 0% 2% 0% 8%;
+}
+
+.time {
+    font-family: 'CommissionerMedium';
+    font-size: 5vw;
+    color: white;
+}
+
 .clockRed{
     width: 90%;
     height: 1%;
@@ -47,15 +60,22 @@
 .questionBox {
     border-radius: 15px;
     margin:1% 2% 0% 8%;
-    padding:5%;
+    /* padding:5%; */
+    height: 10vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color:#747474;
     text-align:center;
 }
  
  
 #question {
+    margin-left: 2vw;
+    margin-right: 2vw;
     font-size:1.5vw;
     white-space: pre-wrap;
+    color: white;
 }
  
 .answers {
@@ -84,7 +104,10 @@
     border-radius:6px;
     background-color:#d30909;
     margin-right:0.75%;
-    padding:6%;
+    height: 6vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
  
 .answer2Box {
@@ -92,14 +115,20 @@
     margin-right:0.75%;
     border-radius:6px;
     background-color:#f4b800;
-    padding:6%;
+    height: 6vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
  
 .answer3Box {
     margin-left:0.75%;
     border-radius:6px;
     background-color:#ff6600;
-    padding:6%;
+    height: 6vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
  
 .answer4Box {
@@ -107,16 +136,21 @@
     margin-top:3%;
     border-radius:6px;
     background-color:#61b305;
-    padding:6%;
+    height: 6vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
  
 .answer1, .answer2, .answer3, .answer4 {
+    margin-left: 1vw;
+    margin-right: 1vw;
     position:relative;
     white-space: pre-wrap;
     font-family: 'CommissionerMedium';
     font-size:1vw;
-    margin-bottom:2%;
     align-items: center;
+    color: white;
 }
  
 .history {
@@ -189,6 +223,7 @@
     font-size: 20vh;
     font-family:'CommissionerMedium';
     float:left;
+    color: white;
 }
  
 .profilePic {
