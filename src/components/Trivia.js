@@ -48,7 +48,7 @@ export default function Trivia(props) {
   const handleOptionSelect = option => {
     console.log(option);
 
-    if (state.mode === "singlePlayer") {
+    if (state.mode === "singlePlayer" && state.list.length < 10) {
       const next = {
         instance: state.instance,
         question: state.triviaProps.currentQuestion,
@@ -60,17 +60,22 @@ export default function Trivia(props) {
       axios.put("/trivia/solo/next", next).then (nextData => {
         console.log("TRIVIA NEXT", nextData.data);
         if ("questionCount" in nextData.data) {
+          const correct = nextData.data.previous === "correct";
           const newState = {...state};
           newState.triviaProps = nextData.data;
-          newState.list[newState.list.length - 1].userCorrect = nextData.data.previous === "correct";
+          newState.list[newState.list.length - 1].userCorrect = correct;
           newState.list.push({
             questionNumber: nextData.data.questionCount,
             question: nextData.data.currentQuestion,
           })
+          const newScore = newState.score.user + (correct ? 1 : 0);
+          newState.score = {"user": newScore};
           setState(newState);
         } else { // Game over
-          const newState = {...state};
-          
+          // const newState = {...state};
+          // console.log(newState);
+          // newState.mode = "singlePlayer-wait";
+          // setState(newState);
         }
       }).catch(e => {
         console.log("some error", e);
