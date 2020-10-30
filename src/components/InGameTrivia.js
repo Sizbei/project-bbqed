@@ -19,6 +19,8 @@ export default function InGameTrivia(props) {
 
   const [tickValue, NewTickValue] = useState(0);
   const [opacityValue, NewOpacityValue] = useState(100);
+  const [timeValue, NewTimeValue] = useState(10);
+  
   var timerOn = false;
   var tickJSON = { 
     width: tickValue + "%"
@@ -30,12 +32,15 @@ export default function InGameTrivia(props) {
   const triviaClockTick = () => {
     var divTimeLeft = document.getElementsByClassName('clockTick');
     var divClock = document.getElementsByClassName('clock');
+    var divCountDown = document.getElementsByClassName('time');
     timerOn = true;
     var flashOn = true;
-    var Timer = setInterval(() => count(), 1);
+    var Timer = setInterval(() => triggerTicker(), 1);
     var tick = 0;
+    var counter = 10;
     var opacity = 100;
-    function count() {
+    setInterval(() => triggerCountDown(), 1000);
+    function triggerTicker() {
         if (divTimeLeft[0].clientWidth < divClock[0].clientWidth && timerOn) {
             tick += 0.04;
             // This is 10 seconds, 14 seconds has a tickRate of 0.03 (Make this a variable)
@@ -59,6 +64,12 @@ export default function InGameTrivia(props) {
             clearInterval(Timer);
         }
     }
+    function triggerCountDown() {
+        counter -= 1;
+        if (counter >= 0) {
+            NewTimeValue(counter);
+        }
+    }
   }
 
   const reset = () => {
@@ -70,38 +81,40 @@ export default function InGameTrivia(props) {
   return(
       <div className='trivia-background'>
         <div className='left-segment'>
-        <div className='time'></div>
+        <div className='timeBox'>
+            <label className='time'>{timeValue}</label>
+        </div>
         <div className='clockRed'>
-                <div className='clockTick' style={tickJSON}></div>
-                <div className='clock' style={opacityJSON}>
-                </div>
+            <div className='clockTick' style={tickJSON}></div>
+            <div className='clock' style={opacityJSON}>
             </div>
-          <div className='questionBox'>
-            <label id='question'>{currentQuestion}</label>
-          </div>
-          <div className='answers'>
-            <div className='leftAnswers'>
-              <div className='answer1Box' onClick={() => handleOptionSelect(0)}>
-                <label className='answer1'>{options[0]}</label>
-              </div>
-              <div className='answer2Box' onClick={() => handleOptionSelect(1)}>
-                <label className='answer2'>{options[1]}</label>
-              </div>
-            </div>
-            <div className='rightAnswers'>
-              <div className='answer3Box' onClick={() => handleOptionSelect(2)}>
-                <label className='answer3'>{options[2]}</label>
-              </div>
-              <div className='answer4Box' onClick={() => handleOptionSelect(3)}>
-                <label className='answer4'>{options[3]}</label>
-              </div>
-            </div>
-          </div>
         </div>
+        <div className='questionBox'>
+        <label id='question'>{currentQuestion}</label>
+        </div>
+        <div className='answers'>
+        <div className='leftAnswers'>
+            <div className='answer1Box' onClick={() => handleOptionSelect(0)}>
+            <label className='answer1'>{options[0]}</label>
+            </div>
+            <div className='answer2Box' onClick={() => handleOptionSelect(1)}>
+            <label className='answer2'>{options[1]}</label>
+            </div>
+        </div>
+        <div className='rightAnswers'>
+            <div className='answer3Box' onClick={() => handleOptionSelect(2)}>
+            <label className='answer3'>{options[2]}</label>
+            </div>
+            <div className='answer4Box' onClick={() => handleOptionSelect(3)}>
+            <label className='answer4'>{options[3]}</label>
+            </div>
+        </div>
+        </div>
+    </div>
 
-        <div className='right-segment'>
-          <TriviaSidebar mode={mode} handleModeSelect={handleModeSelect}/>
-        </div>
-      </div>
+    <div className='right-segment'>
+        <TriviaSidebar mode={mode} handleModeSelect={handleModeSelect}/>
+    </div>
+    </div>
   );
 }

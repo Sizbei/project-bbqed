@@ -19,6 +19,18 @@
     float:left;
 }
 
+.timeBox {
+    height: 10%;
+    text-align: center;
+    width: 90%;
+    margin: 0% 2% 0% 8%;
+}
+
+.time {
+    font-family: 'CommissionerMedium';
+    font-size: 5vw;
+}
+
 .clockRed{
     width: 90%;
     height: 1%;
@@ -47,7 +59,7 @@
 .questionBox {
     border-radius: 15px;
     margin:1% 2% 0% 8%;
-    padding:5%;
+    padding:11%;
     background-color:#747474;
     text-align:center;
 }
