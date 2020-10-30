@@ -46,7 +46,7 @@ router.route('/next').put((req, res) => {
             res.json({ currentQuestion:question.question, 
                         options:question.options, previous: previous, 
                         questionCount: game.questionIds.length,
-                        time: game.time[game.time.length - 1] })
+                        time: game.times[game.times.length - 1] })
           })
           .catch(err => res.status(403).json('Error: ' + err));
       }).catch(err => res.status(404).json('Error: ' + err));
@@ -85,7 +85,7 @@ router.route('/next').put((req, res) => {
 
     }
 
-    if(game.questionIds.length > 0){
+    if(game.questionIds.length > 0 && game.inProgress){
       trivia.findOne({question: req.body.question})
         .then(response => {
           if(response.answer === req.body.answer && checkTime(game.times[game.times - 1])){
