@@ -85,17 +85,16 @@ router.route('/next').put((req, res) => {
             if(response.answer === req.body.answer){
               console.log("step 3");
               game.points += 1;
-              game.save().then(sendRandom("correct"));
+              game.save().then(() => sendRandom("correct"));
             } else {
               game.points -= 1;
-              game.save().then(sendRandom("wrong"));
+              game.save().then(() => sendRandom("wrong"));
             }
           }).catch(err => res.status(402).json('Error: ' + err));
       } else {
         sendRandom("none");
       }
     }
-
   }).catch(err => res.status(405).json('Error: ' + err));
 });
 
