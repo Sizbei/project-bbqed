@@ -65,14 +65,14 @@ router.route('/next').put((req, res) => {
       .then(userACS => 
       {
         const entry = {
-          category: "Picks & Predictions",
+          category: "Trivia & Games",
           points: game.points,
           date: new Date()
         }
 
         userACS.acsHistory.push(entry);
         userACS.acsTotal.total += game.points;
-        userACS.acsTotal.picksPrediciton += game.points;
+        userACS.acsTotal.triviaGames += game.points;
         
         game.inProgress = false;
         game.save().catch(err => res.status(400).json('Error: ' + err));
