@@ -102,46 +102,102 @@
  
 .answer1Box {
     border-radius:6px;
-    background-color:#d30909;
     margin-right:0.75%;
     height: 6vw;
     display: flex;
     align-items: center;
     justify-content: center;
 }
- 
+
+.answer1Btn:hover, .answer1Btn:focus {
+    background-color: #900a0a;
+    border-width: 0px;
+    outline:none;
+}
+
+.answer1Btn {
+    height: 100%;
+    width: 100%;
+    border-radius: 0px;
+    border-radius:6px;
+    border-width: 0px;
+    background-color:#d30909;
+}
+
 .answer2Box {
     margin-top:3%;
     margin-right:0.75%;
     border-radius:6px;
-    background-color:#f4b800;
     height: 6vw;
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
+.answer2Btn:hover, .answer2Btn:focus {
+    background-color: #a27a00;
+    border-width: 0px;
+    outline:none;
+}
  
+.answer2Btn {
+    height: 100%;
+    width: 100%;
+    border-radius: 0px;
+    border-radius:6px;
+    border-width: 0px;
+    background-color:#f4b800;
+}
+
 .answer3Box {
     margin-left:0.75%;
     border-radius:6px;
-    background-color:#ff6600;
     height: 6vw;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.answer3Btn:hover, .answer3Btn:focus {
+    background-color: #bc4b00;
+    border-width: 0px;
+    outline:none;
+}
+
+.answer3Btn {
+    height: 100%;
+    width: 100%;
+    border-radius: 0px;
+    border-radius:6px;
+    border-width: 0px;
+    background-color:#ff6600;
 }
  
 .answer4Box {
     margin-left:0.75%;
     margin-top:3%;
     border-radius:6px;
-    background-color:#61b305;
     height: 6vw;
     display: flex;
     align-items: center;
     justify-content: center;
 }
  
+.answer4Btn:hover, .answer4Btn:focus{
+    background-color: #457e04;
+    border-width: 0px;
+    outline:none;
+}
+
+.answer4Btn {
+    height: 100%;
+    width: 100%;
+    border-radius: 0px;
+    border-radius:6px;
+    border-width: 0px;
+    background-color:#61b305;
+}
+
 .answer1, .answer2, .answer3, .answer4 {
     margin-left: 1vw;
     margin-right: 1vw;
