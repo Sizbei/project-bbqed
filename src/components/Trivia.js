@@ -65,32 +65,26 @@ export default function Trivia(props) {
       
       axios.put("/trivia/solo/next", next).then (nextData => {
         console.log("TRIVIA NEXT", nextData.data);
-        if ("questionCount" in nextData.data) {
-          const correct = nextData.data.previous === "correct";
-          const newState = {...state};
-          Object.keys(nextData.data).forEach((name, val) => { // copy over
+        const newState = {...state};
+        newState.list[newState.list.length - 1].userCorrect = nextData.data.previous === "correct";
+        newState.score = {"user": nextData.data.score};
+        newState.gameOver = nextData.data.gameOver;
+
+        if ("questionCount" in nextData.data) { // Game goes on
+          Object.keys(nextData.data).forEach((name, val) => { // copy over from nextData.data
             newState[name] = nextData.data[name];
           }) 
-          newState.list[newState.list.length - 1].userCorrect = correct;
           newState.list.push({
             questionNumber: nextData.data.questionCount,
             question: nextData.data.currentQuestion,
           })
-          newState.gameOver = nextData.data.gameOver;
           newState.startTime = Date.parse(nextData.data.time);
-          newState.score = {"user": nextData.data.score};
-          setState(newState);
         } else { // Game over
-          const newState = {...state};
-          const correct = nextData.data.previous === "correct";
-          newState.list[newState.list.length - 1].userCorrect = correct;
-          newState.score = {"user": nextData.data.score};
           newState.finalACS = {user: nextData.data.acs};
           newState.acsChange = {user: nextData.data.points};
-          newState.gameOver = true;
-          console.log(newState);
-          setState(newState);
         }
+
+        setState(newState);
       }).catch(e => {
         console.log("some error", e);
       })
