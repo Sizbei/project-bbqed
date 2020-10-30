@@ -37,9 +37,9 @@ function Navbar() {
       <Link to="/analysis" className="nav-link">Analysis</Link>
       </li>
       <li className="navbar-item">
-      <Link to="/picksandpredictions" className="nav-link">Picks/P  dictions</Link>
+      <Link to="/picksandpredictions" className="nav-link">Picks/Predictions</Link>
       </li>
-    </ul>
+    </ul> 
   );
 }
 
@@ -49,7 +49,9 @@ function User() {
 
   useEffect(() => {
     fetch('/settings/profile/' + authContext.user.username).then(res => res.json())
+    //axios.get("http://localhost:5000/settings/profile", body)
       .then(data => {
+        console.log("headeer data", data.image);
         setImgUrl(data.image);
       })
   })
@@ -69,6 +71,7 @@ function User() {
 function OptionsMenu() {
   const authContext = useContext(AuthContext);
   let history = useHistory(); 
+  console.log(authContext);
 
   const LogOut = () => {
     console.log("Logging out...");
