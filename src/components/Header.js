@@ -37,10 +37,7 @@ function Navbar() {
       <Link to="/analysis" className="nav-link">Analysis</Link>
       </li>
       <li className="navbar-item">
-      <Link to="/picksandpredictions" className="nav-link">Picks/Predictions</Link>
-      </li>
-      <li className="navbar-item">
-      <Link to="/registration" className="nav-link">Registration</Link>
+      <Link to="/picksandpredictions" className="nav-link">Picks/P  dictions</Link>
       </li>
     </ul>
   );

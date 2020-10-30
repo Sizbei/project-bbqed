@@ -11,7 +11,6 @@ import Trivia from "./components/Trivia";
 import Analysis from "./components/Analysis";
 import PicksAndPredictions from "./components/PicksAndPredictions";
 import Profile from "./components/Profile";
-import Registration from "./components/Registration"
 import Settings from "./components/Settings"
 import Header from "./components/Header"
 import Citations from "./components/Citations"
@@ -32,7 +31,6 @@ function App() {
       <PrivateRoute path="/Analysis" component={Analysis} />
       <PrivateRoute path="/PicksAndPredictions" component={PicksAndPredictions} />
       <PrivateRoute path="/Profile" component={Profile} />
-      <PublicRoute path="/Registration" component={Registration} />
       <PrivateRoute path="/Settings" component={Settings} />
       <PrivateRoute path="/Citations" component={Citations} />
       </div>

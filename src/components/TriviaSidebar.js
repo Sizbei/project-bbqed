@@ -92,7 +92,7 @@ function ACSChange(props) {
   const change = "change" in props ? props.change : "none";
 
   if (change === "none") {
-    return null;
+    return <span className={"TSBG-header-acschange-zero"}>&nbsp;&nbsp;</span>
   }
 
   if (change > 0) {
@@ -160,14 +160,14 @@ export default function TriviaSidebar(props) {
 
   const enemyHeaderSection = mode === "online" ? (
     <div className="TSBG-header-block TSBG-header-them">
-      <div className="TSBG-header-block TSBG-header-us">
-        <span className="TSBG-header-username">
-          User3 &nbsp;
-          <span className="TSBG-header-acs">600</span>
-        </span>
-        <ProfilePicture scale={1.5} url={ppurl.enemy} />
-        <label className="TSBG-header-score">{score.enemy}</label>
-      </div>
+      <span className="TSBG-header-username">
+        {username.user} &nbsp;
+        <span className="TSBG-header-acs">({acs.enemy})</span>
+        &nbsp;
+        <ACSChange change={acsChange.enemy} />
+      </span>
+      <ProfilePicture scale={1.5} url={ppurl.enemy} />
+      <label className="TSBG-header-score">{score.enemy}</label>
     </div>
   ) : null;
 
@@ -208,16 +208,6 @@ export default function TriviaSidebar(props) {
     return (
       <div className="TSB-div">
         <div className="TSBG-header">
-          {/* <div className="TSBG-header-block TSBG-header-us">
-            <span className="TSBG-header-username">
-              User1 &nbsp;
-              <span className="TSBG-header-acs">({acs.user})</span>
-              &nbsp;
-              <span className="TSBG-header-acschange-negative">+{acsChange.user}</span>
-            </span>
-            <ProfilePicture scale={1.5} url={ppurl.user} />
-            <label className="TSBG-header-score">{score.user}</label>
-          </div> */}
           {userHeaderSection}
           {enemyHeaderSection}
         </div>
