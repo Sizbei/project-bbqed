@@ -33,6 +33,10 @@ router.route('/next').put((req, res) => {
 
     // console.log(game);
 
+    const shuffle = (array) => {
+      array.sort(() => Math.random() - 0.5);
+    }
+
     const sendRandom = (previous) => {
       trivia.aggregate([
         { $match: { _id: { $nin: game.questionIds } } },
@@ -46,8 +50,8 @@ router.route('/next').put((req, res) => {
             res.json({ 
               gameOver: !game.inProgress,
               score: game.correct,
-              currentQuestion:question.question, 
-              options:question.options, 
+              currentQuestion: question.question, 
+              options: shuffle(question.options), 
               previous: previous, 
               questionCount: game.questionIds.length,
               time: game.times[game.times.length - 1] })
