@@ -96,12 +96,12 @@ export default function InGameTrivia(props) {
 
   // Stop timers when props.stopTimers === "stop"
   useEffect(() => {
-    if (!("stopTimers" in props) || props.stopTimers !== "stop") {
+    if (!("stop" in props) || props.stop === "nostop") {
       return;
     }
 
     stopTimers();
-  }, [props.stopTimers])
+  }, [props.stop])
 
   // Reset timers on each new question
   useEffect(() => {

@@ -55,49 +55,93 @@ export default function Trivia(props) {
     console.log(option);
 
     if (state.mode === "singlePlayer" && !state.gameOver) {
-      const next = {
-        instance: state.instance,
-        question: state.currentQuestion,
-        answer: state.options[option]
-      }
-  
-      console.log("SENT", next);
-      
-      axios.put("/trivia/solo/next", next).then (nextData => {
-        console.log("TRIVIA NEXT", nextData.data);
-        const newState = {...state};
-        newState.list[newState.list.length - 1].userCorrect = nextData.data.previous === "correct";
-        newState.score = {"user": nextData.data.score};
-        newState.gameOver = nextData.data.gameOver;
-
-        if ("questionCount" in nextData.data) { // Game goes on
-          Object.keys(nextData.data).forEach((name, val) => { // copy over from nextData.data
-            newState[name] = nextData.data[name];
-          }) 
-          newState.list.push({
-            questionNumber: nextData.data.questionCount,
-            question: nextData.data.currentQuestion,
-          })
-          newState.startTime = Date.parse(nextData.data.time);
-        } else { // Game over
-          newState.finalACS = {user: nextData.data.acs};
-          newState.acsChange = {user: nextData.data.points};
-        }
-
-        setState(newState);
-      }).catch(e => {
-        console.log("some error", e);
-      })
+      const newState = {...state};
+      newState.stop = "transition-immediate"
+      newState.chosenOption = option;
+      setState(newState);
     }
   }
 
   const [triviaPage, setTriviaPage] = useState(null);
   
+  /*------------State Transitions----------------*/
+  // A transition from state-immediate to fetching for next data
+  useEffect(() => { 
+    if (!("stop" in state) || state.stop !== "transition-immediate") {
+      return;
+    }
+
+    console.log("TRANSITION 1");
+
+    const next = {
+      instance: state.instance,
+      question: state.currentQuestion,
+      answer: state.options[state.chosenOption],
+    }
+
+    axios.put("/trivia/solo/next", next).then (nextData => {
+      console.log("TRIVIA NEXT", nextData.data);
+
+      const newState = {...state};
+      newState.score = {"user": nextData.data.score}; // needs to overwrite the copy
+      newState.list[newState.list.length - 1].userCorrect = nextData.data.previous === "correct";
+
+      if ("questionCount" in nextData.data) { // Game goes on
+        newState.nextData = nextData; // Store nextData for next transition
+      } else {
+        newState.finalACS = {user: nextData.data.acs};
+        newState.acsChange = {user: nextData.data.points};
+        newState.nextData = {data: {}}; // no next data
+      }
+
+      newState.gameOver = nextData.data.gameOver;
+      newState.stop = "transition-showsolution"
+      setState(newState);
+    }).catch(e => {
+      console.log("some error", e);
+    })
+  }, [state])
+
+  // A transition from transition-showsolution to displaying the next question
+  useEffect(() => { 
+    if (!("stop" in state) || state.stop !== "transition-showsolution") {
+      return;
+    }
+
+    console.log("TRANSITION 2");
+
+    const showNextQuestion = () => {
+      const newState = {...state};
+      const nextData = state.nextData;
+
+      if ("questionCount" in nextData.data) { // Game goes on
+        Object.keys(nextData.data).forEach((name, val) => { // copy over from nextData.data
+          if (name === "score") {
+            return;
+          }
+          newState[name] = nextData.data[name];
+        }) 
+        newState.list.push({
+          questionNumber: nextData.data.questionCount,
+          question: nextData.data.currentQuestion,
+        })
+        newState.startTime = Date.parse(nextData.data.time);
+      }
+
+      newState.stop = "nostop";
+      setState(newState);
+    }
+
+    setTimeout(showNextQuestion, 200);
+  }, [state])
+
+  // Render on change of state
   useEffect(() => {
     let nextTriviaPage = <InGameTrivia {...state} handleModeSelect={handleModeSelect} handleOptionSelect={handleOptionSelect}/>;
     setTriviaPage(nextTriviaPage);
   }, [state]);
 
+  // Initial fetch of user image
   useEffect(() => {
     fetch("/profile/" + authContext.user.username).then(res => res.json())
       .then(data => {
