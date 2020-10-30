@@ -21,9 +21,9 @@ function QuestionPreviewText(props) {
 function QuestionListItem(props) {
   const mode = props.mode;
   const number = props.number;
-  const text = props.text;  
-  const userCorrect = props.userCorrect;
-  const enemyCorrect = "enemyCorrect" in props ? props.enemyCorrect : false;
+  const text = "text" in props ? props.text : "";  
+  const userCorrect = "userCorrect" in props ? props.userCorrect : "none";
+  const enemyCorrect = "enemyCorrect" in props ? props.enemyCorrect : "none";
   const multiplayer = mode === "online";
 
   const checkmark = (
@@ -47,27 +47,8 @@ function QuestionListItem(props) {
         <QuestionPreviewText text={text} />
       </span>
       <div className="TSBG-list-item-checks">
-        {userCorrect ? checkmark : crossmark}
-        {multiplayer ? (enemyCorrect ? checkmark : crossmark) : null}
-      </div>
-  </div>
-  )
-}
-
-function EmptyQuestionListItem(props) {
-  const mode = props.mode;
-  const number = props.number;
-  const divClassName = "TSBG-list-item TSBG-list-item-" + (number % 2 == 0 ? "e" : "o");
-  const multiplayer = mode === "online";
-
-  return (
-    <div className={divClassName}>
-      <span className="TSBG-list-item-baseline">
-        <span className="TSBG-list-item-number"> {number > 9 ? '' : '\u00A0'} {number}. {'\u00A0'} </span>
-      </span>
-      <div className="TSBG-list-item-checks">
-        <div className="TSBG-list-item-empty"></div>
-        {multiplayer ? <div className="TSBG-list-item-empty"></div> : null } 
+        {userCorrect === "none" ? <div className="TSBG-list-item-empty"></div> : (userCorrect ? checkmark : crossmark)}
+        {multiplayer ? (enemyCorrect === "none" ? <div className="TSBG-list-item-empty"></div> : (enemyCorrect ? checkmark : crossmark)) : null}
       </div>
   </div>
   )
@@ -76,6 +57,7 @@ function EmptyQuestionListItem(props) {
 function QuestionList(props) {
   const mode = props.mode;
   const list = props.list;
+  const size = mode === "online" ? 11 : 10;
 
   let accum = [];
   list.forEach(e => {
@@ -83,19 +65,19 @@ function QuestionList(props) {
       mode: mode,
       number: e["questionNumber"],
       text: e["question"],
-      userCorrect: e["userCorrect"],
-      enemyCorrect: e["enemyCorrect"]
+      userCorrect: "userCorrect" in e ? e["userCorrect"] : "none",
+      enemyCorrect: "enemyCorrect" in e ? e["enemyCorrect"] : "none"
     }
     const item = <QuestionListItem {...props} /> 
     accum.push(item);
   })
 
-  for (let i = list.length + 1; i <= 11; i++) {
+  for (let i = list.length + 1; i <= size; i++) {
     const props = {
       mode: mode,
       number: i
     }
-    const item = <EmptyQuestionListItem {...props} /> 
+    const item = <QuestionListItem {...props} /> 
     accum.push(item);
   }
 
@@ -108,6 +90,8 @@ function QuestionList(props) {
 
 export default function TriviaSidebar(props) {
   const handleModeSelect = props.handleModeSelect;
+  const score = props.score;
+  const list = props.list;
   const mode = props.mode;
   const nav = mode === "nav";
 
@@ -131,34 +115,34 @@ export default function TriviaSidebar(props) {
     handleModeSelect("solo");
   }
 
-  const qprops = [  // Some hardcoded data here.
-    {
-      questionNumber: 1,
-      question: "Question 1 goes here.",
-      userCorrect: true,
-      enemyCorrect: true 
-    },
-    {
-      questionNumber: 2,
-      question: "Question 2 goes here. Question 2 goes here. Question 2 goes here. ",
-      userCorrect: false,
-      enemyCorrect: true 
-    },
-    {
-      questionNumber: 3,
-      question: "Question 3 goes here.",
-      userCorrect: true,
-      enemyCorrect: false 
-    },
-    {
-      questionNumber: 4,
-      question: "Question 4 goes here.",
-      userCorrect: false,
-      enemyCorrect: false 
-    },
-  ]
+  // const list = [  // Some hardcoded data here.
+  //   {
+  //     questionNumber: 1,
+  //     question: "Question 1 goes here.",
+  //     userCorrect: true,
+  //     enemyCorrect: true 
+  //   },
+  //   {
+  //     questionNumber: 2,
+  //     question: "Question 2 goes here. Question 2 goes here. Question 2 goes here. ",
+  //     userCorrect: false,
+  //     enemyCorrect: true 
+  //   },
+  //   {
+  //     questionNumber: 3,
+  //     question: "Question 3 goes here.",
+  //     userCorrect: true,
+  //     enemyCorrect: false 
+  //   },
+  //   {
+  //     questionNumber: 4,
+  //     question: "Question 4 goes here.",
+  //     userCorrect: false,
+  //     enemyCorrect: false 
+  //   },
+  // ]
 
-  const QList = <QuestionList list={qprops} />
+  const QList = <QuestionList list={list} />
   const enemyHeaderSection = mode === "online" ? (
     <div className="TSBG-header-block TSBG-header-them">
       <div className="TSBG-header-block TSBG-header-us">
@@ -167,7 +151,7 @@ export default function TriviaSidebar(props) {
           <span className="TSBG-header-acs">(600)</span>
         </span>
         <ProfilePicture scale={1.5} username="user3" />
-        <label className="TSBG-header-score">2</label>
+        <label className="TSBG-header-score">{score.enemy}</label>
       </div>
     </div>
   ) : null;
@@ -215,7 +199,7 @@ export default function TriviaSidebar(props) {
               <span className="TSBG-header-acs">(1234)</span>
             </span>
             <ProfilePicture scale={1.5} username="user1" />
-            <label className="TSBG-header-score">2</label>
+            <label className="TSBG-header-score">{score.user}</label>
           </div>
           {enemyHeaderSection}
         </div>

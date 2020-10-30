@@ -7,6 +7,8 @@ import ProfilePicture from './ProfilePicture';
 
 export default function InGameTrivia(props) {
   const mode = props.mode;
+  const list = props.list;
+  const score = props.score;
   const handleOptionSelect = props.handleOptionSelect;
   const handleModeSelect = props.handleModeSelect;
   let currentQuestion = '\u00A0'; // initialize with space to preserve spacing
@@ -15,7 +17,7 @@ export default function InGameTrivia(props) {
     currentQuestion = props.currentQuestion;
     options = props.options;
   }
-      
+
   return(
       <div className='trivia-background'>
         <div className='left-segment'>
@@ -51,7 +53,7 @@ export default function InGameTrivia(props) {
         </div>
 
         <div className='right-segment'>
-          <TriviaSidebar mode={mode} handleModeSelect={handleModeSelect}/>
+          <TriviaSidebar mode={mode} handleModeSelect={handleModeSelect} list={list} score={score}/>
         </div>
       </div>
   );
