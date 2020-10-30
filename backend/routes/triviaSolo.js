@@ -13,7 +13,7 @@ router.route('/create').post((req, res) => {
     user: user
   })
 
-  acs.findOne({username: game.username})
+  acs.findOne({username: user})
   .then(userACS => {
     newGame.save()
       .then(() => {
@@ -63,8 +63,15 @@ router.route('/next').put((req, res) => {
           const question = q[0];
           console.log("question", question);
             game.questionIds.push(question);
+            console.log("bad");
             game.save()
-              .then(() => res.json({ currentQuestion:question.question, options:question.options, previous: previous, questionCount: game.questionIds.length }))
+              .then(() => {
+                console.log("good");
+                console.log({ currentQuestion:question.question, 
+                  options:question.options, previous: previous, questionCount: game.questionIds.length });
+              return res.json({ currentQuestion:question.question, 
+                options:question.options, previous: previous, questionCount: game.questionIds.length })
+              })
               .catch(err => res.status(403).json('Error: ' + err));
           }).catch(err => res.status(404).json('Error: ' + err));
       }
@@ -83,7 +90,6 @@ router.route('/next').put((req, res) => {
               game.points -= 1;
               game.save().then(sendRandom("wrong"));
             }
-
           }).catch(err => res.status(402).json('Error: ' + err));
       } else {
         sendRandom("none");
