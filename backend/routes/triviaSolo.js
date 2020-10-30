@@ -45,9 +45,10 @@ router.route('/next').put((req, res) => {
           .then(() => {
             res.json({ 
               gameOver: !game.inProgress,
-              points: game.points,
+              score: game.correct,
               currentQuestion:question.question, 
-              options:question.options, previous: previous, 
+              options:question.options, 
+              previous: previous, 
               questionCount: game.questionIds.length,
               time: game.times[game.times.length - 1] })
           })
@@ -93,6 +94,7 @@ router.route('/next').put((req, res) => {
         .then(response => {
           if(response.answer === req.body.answer && checkTime(game.times[game.times.length - 1])){
             game.points += 1;
+            game.correct += 1;
             game.save().then(() => {
               if (game.questionIds.length < 10) {
                 sendRandom("correct")
