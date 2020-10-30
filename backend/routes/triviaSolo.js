@@ -78,7 +78,7 @@ router.route('/next').put((req, res) => {
 
     const checkTime = (time) => {
       const curTime = new Date();
-      if(curTime - time < 10000){
+      if(curTime - time < 12000){
         return true;
       }
       return false;
@@ -88,7 +88,7 @@ router.route('/next').put((req, res) => {
     if(game.questionIds.length > 0 && game.inProgress){
       trivia.findOne({question: req.body.question})
         .then(response => {
-          if(response.answer === req.body.answer && checkTime(game.times[game.times - 1])){
+          if(response.answer === req.body.answer && checkTime(game.times[game.times.length - 1])){
             game.points += 1;
             game.save().then(() => {
               if (game.questionIds.length < 10) {
