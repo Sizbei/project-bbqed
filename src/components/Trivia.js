@@ -20,7 +20,7 @@ export default function Trivia(props) {
       newState.gameOver = false;
 
       axios.post('/trivia/solo/create', { username: authContext.user.username }).then(data => {
-        console.log("TRIVIA GOT", data.data);
+        console.log("START GOT", data.data);
   
         const next = {
           instance: data.data.instance,
@@ -29,16 +29,19 @@ export default function Trivia(props) {
         }
   
         newState.instance = data.data.instance;
-        newState.initialACS = data.data.acs;
+        newState.initialACS = {"user": data.data.acs};
         
         axios.put("/trivia/solo/next", next).then (nextData => {
-          console.log("TRIVIA NEXT", nextData.data);
-          newState.triviaProps = nextData.data;
+          console.log("got next data", nextData.data);
+          Object.keys(nextData.data).forEach((name, val) => { // copy over
+            newState[name] = nextData.data[name];
+          })
           newState.list = [{
             questionNumber: 1,
             question: nextData.data.currentQuestion,
           }];
-          console.log("NEWTTATE", newState);
+
+          console.log("NEXT INITIAL", newState);
           setState(newState);
         }).catch(e => {
           console.log("some error", e);
@@ -53,8 +56,8 @@ export default function Trivia(props) {
     if (state.mode === "singlePlayer" && !state.gameOver) {
       const next = {
         instance: state.instance,
-        question: state.triviaProps.currentQuestion,
-        answer: state.triviaProps.options[option]
+        question: state.currentQuestion,
+        answer: state.options[option]
       }
   
       console.log("SENT", next);
@@ -64,7 +67,9 @@ export default function Trivia(props) {
         if ("questionCount" in nextData.data) {
           const correct = nextData.data.previous === "correct";
           const newState = {...state};
-          newState.triviaProps = nextData.data;
+          Object.keys(nextData.data).forEach((name, val) => { // copy over
+            newState[name] = nextData.data[name];
+          }) 
           newState.list[newState.list.length - 1].userCorrect = correct;
           newState.list.push({
             questionNumber: nextData.data.questionCount,
@@ -91,8 +96,7 @@ export default function Trivia(props) {
   const [triviaPage, setTriviaPage] = useState(null);
   
   useEffect(() => {
-    let nextTriviaPage = <InGameTrivia {...state.triviaProps} 
-      mode={state.mode} handleModeSelect={handleModeSelect} handleOptionSelect={handleOptionSelect} list={state.list} score={state.score}/>;
+    let nextTriviaPage = <InGameTrivia {...state} handleModeSelect={handleModeSelect} handleOptionSelect={handleOptionSelect}/>;
     setTriviaPage(nextTriviaPage);
   }, [state]);
 

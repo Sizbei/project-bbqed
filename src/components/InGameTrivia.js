@@ -53,7 +53,7 @@ export default function InGameTrivia(props) {
         </div>
 
         <div className='right-segment'>
-          <TriviaSidebar mode={mode} handleModeSelect={handleModeSelect} list={list} score={score}/>
+          <TriviaSidebar {...props} handleModeSelect={handleModeSelect}/>
         </div>
       </div>
   );

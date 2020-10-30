@@ -93,6 +93,7 @@ export default function TriviaSidebar(props) {
   const score = props.score;
   const list = props.list;
   const mode = props.mode;
+  const initialACS = props.initialACS;
   const nav = mode === "nav";
 
   const handleClickOnline = e => {
@@ -114,33 +115,6 @@ export default function TriviaSidebar(props) {
     e.stopPropagation();
     handleModeSelect("solo");
   }
-
-  // const list = [  // Some hardcoded data here.
-  //   {
-  //     questionNumber: 1,
-  //     question: "Question 1 goes here.",
-  //     userCorrect: true,
-  //     enemyCorrect: true 
-  //   },
-  //   {
-  //     questionNumber: 2,
-  //     question: "Question 2 goes here. Question 2 goes here. Question 2 goes here. ",
-  //     userCorrect: false,
-  //     enemyCorrect: true 
-  //   },
-  //   {
-  //     questionNumber: 3,
-  //     question: "Question 3 goes here.",
-  //     userCorrect: true,
-  //     enemyCorrect: false 
-  //   },
-  //   {
-  //     questionNumber: 4,
-  //     question: "Question 4 goes here.",
-  //     userCorrect: false,
-  //     enemyCorrect: false 
-  //   },
-  // ]
 
   const QList = <QuestionList list={list} />
   const enemyHeaderSection = mode === "online" ? (
@@ -196,7 +170,7 @@ export default function TriviaSidebar(props) {
           <div className="TSBG-header-block TSBG-header-us">
             <span className="TSBG-header-username">
               User1 &nbsp;
-              <span className="TSBG-header-acs">(1234)</span>
+              <span className="TSBG-header-acs">({"user" in initialACS ? initialACS.user : ""})</span>
               &nbsp;
               <span className="TSBG-header-acschange-negative">+20</span>
             </span>
