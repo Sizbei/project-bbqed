@@ -43,10 +43,13 @@ router.route('/next').put((req, res) => {
         game.times.push(new Date())
         game.save()
           .then(() => {
-            res.json({ currentQuestion:question.question, 
-                        options:question.options, previous: previous, 
-                        questionCount: game.questionIds.length,
-                        time: game.times[game.times.length - 1] })
+            res.json({ 
+              gameOver: !game.inProgress,
+              points: game.points,
+              currentQuestion:question.question, 
+              options:question.options, previous: previous, 
+              questionCount: game.questionIds.length,
+              time: game.times[game.times.length - 1] })
           })
           .catch(err => res.status(403).json('Error: ' + err));
       }).catch(err => res.status(404).json('Error: ' + err));
@@ -70,7 +73,7 @@ router.route('/next').put((req, res) => {
         game.save().catch(err => res.status(400).json('Error: ' + err));
 
         userACS.save()
-          .then(() => res.json({acs: userACS.acsTotal.total, points: game.points, previous: previous}))
+          .then(() => res.json({gameOver: true, acs: userACS.acsTotal.total, points: game.points, previous: previous}))
           .catch(err => res.status(400).json('Error: ' + err));
 
     }).catch(err => res.status(401).json('Error: ' + err));
