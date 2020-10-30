@@ -1,9 +1,10 @@
-import React, {Component} from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import Header from './Header';
 import  '../styling/InGameTrivia.css';
 import TriviaSidebar from './TriviaSidebar';
 import ProfilePicture from './ProfilePicture';
+import { convertCompilerOptionsFromJson } from 'typescript';
 
 export default function InGameTrivia(props) {
   const mode = props.mode;
@@ -18,15 +19,67 @@ export default function InGameTrivia(props) {
     options = props.options;
   }
 
-  // currentQuestion = 'initialize with space to preserve spacinginitialize with space to preserve spacinginitialize with space to preserve spacinginitialize with space to preserve spacing'
+  const [tickValue, NewTickValue] = useState(0);
+  const [opacityValue, NewOpacityValue] = useState(100);
+  var timerOn = false;
+  var tickJSON = { 
+    width: tickValue + "%"
+  }
+  var opacityJSON = {
+    opacity: opacityValue + "%"
+  }
 
+  const triviaClockTick = () => {
+    var divTimeLeft = document.getElementsByClassName('clockTick');
+    var divClock = document.getElementsByClassName('clock');
+    timerOn = true;
+    var flashOn = true;
+    var Timer = setInterval(() => count(), 1);
+    var tick = 0;
+    var opacity = 100;
+    function count() {
+        if (divTimeLeft[0].clientWidth < divClock[0].clientWidth && timerOn) {
+            tick += 0.04;
+            // This is 10 seconds, 14 seconds has a tickRate of 0.03 (Make this a variable)
+            NewTickValue(tick);
+            if (opacity > 100) 
+                opacity = 100;
+            if (opacity < 0)
+                opacity = 0;
+            NewOpacityValue(opacity);
+            if (Math.trunc(tick) % 4 == 0)
+                flashOn = true;
+            else
+                flashOn = false;
+            if (tick >= 60 && !flashOn)
+                opacity -= 0.6;
+            else if (tick >= 60 && flashOn)
+                opacity += 1.5;
+        }
+        else {
+            timerOn = false;
+            clearInterval(Timer);
+        }
+    }
+  }
+
+  const reset = () => {
+    timerOn = false;
+    NewOpacityValue(100);
+    NewTickValue(0);
+  }
+      
   return(
       <div className='trivia-background'>
         <div className='left-segment'>
-          <div className='clock'></div>
+        <div className='time'></div>
+        <div className='clockRed'>
+                <div className='clockTick' style={tickJSON}></div>
+                <div className='clock' style={opacityJSON}>
+                </div>
+            </div>
           <div className='questionBox'>
             <label id='question'>{currentQuestion}</label>
-            {/* Dynamic relabelling: document.getElementById('question').label.value = 'newQuestion' */}
           </div>
           <div className='answers'>
             <div className='leftAnswers'>
@@ -45,12 +98,6 @@ export default function InGameTrivia(props) {
                 <label className='answer4'>{options[3]}</label>
               </div>
             </div>
-          </div>
-          <div className='profile'>
-            <div className='user-border'> 
-              <ProfilePicture scale={2.0} username="user1" />
-            </div>
-            <label className='points'>9</label>
           </div>
         </div>
 
