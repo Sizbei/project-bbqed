@@ -58,7 +58,7 @@ export default function ProfilePicture(props) {
       minWidth: scale * 6 + "vw",
     }
   }
-
+    
   return (
     <div className="pp-div" style={ppDivStyle}>
       <img src={url} key={url} className="pp-photo" onClick={handleClick} alt="" />

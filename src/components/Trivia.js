@@ -19,12 +19,13 @@ export default function Trivia(props) {
         console.log("TRIVIA GOT", data.data);
   
         const next = {
-          instance: data.data,
+          instance: data.data.instance,
           question: "",
           answer: ""
         }
   
-        newState.instance = data.data;
+        newState.instance = data.data.instance;
+        newState.initialACS = data.data.acs;
         
         axios.put("/trivia/solo/next", next).then (nextData => {
           console.log("TRIVIA NEXT", nextData.data);
