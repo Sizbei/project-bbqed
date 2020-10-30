@@ -5,6 +5,7 @@ import  '../styling/InGameTrivia.css';
 import TriviaSidebar from './TriviaSidebar';
 import ProfilePicture from './ProfilePicture';
 import { convertCompilerOptionsFromJson } from 'typescript';
+import PostTrivia from './PostTrivia'
 
 export default function InGameTrivia(props) {
   const mode = props.mode;
@@ -78,11 +79,13 @@ export default function InGameTrivia(props) {
     timerOn = false;
     NewOpacityValue(100);
     NewTickValue(0);
+    NewTimeValue(10);
   }
       
   return(
-    <div className='trivia-background'>
-      <div className='left-segment'>
+      <div className='trivia-background'>
+        <PostTrivia {...props}/>
+        <div className='left-segment'>
         <div className='timeBox'>
             <label className='time'>{timeValue}</label>
         </div>
