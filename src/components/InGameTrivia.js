@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Header from './Header';
 import  '../styling/InGameTrivia.css';
@@ -22,6 +22,7 @@ export default function InGameTrivia(props) {
   const [tickValue, NewTickValue] = useState(0);
   const [opacityValue, NewOpacityValue] = useState(100);
   const [timeValue, NewTimeValue] = useState(10);
+  const [activeTimers, setActiveTimers] = useState({});
   
   var timerOn = false;
   var tickJSON = { 
@@ -32,18 +33,19 @@ export default function InGameTrivia(props) {
   }
 
   const triviaClockTick = () => {
-    var divTimeLeft = document.getElementsByClassName('clockTick');
-    var divClock = document.getElementsByClassName('clock');
+    var divTimeLeft = document.getElementsByClassName('clockTick')[0];
+    var divClock = document.getElementsByClassName('clock')[0];
     var divCountDown = document.getElementsByClassName('time');
     timerOn = true;
     var flashOn = true;
-    var Timer = setInterval(() => triggerTicker(), 1);
     var tick = 0;
-    var counter = 10;
     var opacity = 100;
-    setInterval(() => triggerCountDown(), 1000);
+    var counter = 10;
+    NewTimeValue(counter);
+    var Timer = setInterval(() => triggerTicker(), 1);
+    const clockInterval = setInterval(() => triggerCountDown(), 1000);
     function triggerTicker() {
-        if (divTimeLeft[0].clientWidth < divClock[0].clientWidth && timerOn) {
+        if (divTimeLeft.clientWidth < divClock.clientWidth && timerOn) {
             tick += 0.04;
             // This is 10 seconds, 14 seconds has a tickRate of 0.03 (Make this a variable)
             NewTickValue(tick);
@@ -67,18 +69,51 @@ export default function InGameTrivia(props) {
         }
     }
     function triggerCountDown() {
+      if (counter > 0) {
         counter -= 1;
-        if (counter >= 0) {
-            NewTimeValue(counter);
-        }
+        NewTimeValue(counter);
+      } else {
+        clearInterval(clockInterval);
+      }
     }
+
+    return {clockInterval: clockInterval, Timer: Timer};
   }
 
-  const reset = () => {
+  const stopTimers = () => {
+    // Clear previous intervals
+    clearInterval(activeTimers.Timer);
+    clearInterval(activeTimers.clockInterval);
+  }
+
+  // stopTimers() should be called before this function is called
+  // otherwise it is a seizure simulation
+  const reset = () => { 
     timerOn = false;
     NewOpacityValue(100);
     NewTickValue(0);
   }
+
+  // Stop timers when props.stopTimers === "stop"
+  useEffect(() => {
+    if (!("stopTimers" in props) || props.stopTimers !== "stop") {
+      return;
+    }
+
+    stopTimers();
+  }, [props.stopTimers])
+
+  // Reset timers on each new question
+  useEffect(() => {
+    if (!("questionCount" in props)) {
+      return;
+    }
+
+    stopTimers();
+    reset();
+    const newActiveTimers = triviaClockTick();
+    setActiveTimers(newActiveTimers);
+  }, [props.questionCount])
       
   return(
     <div className='trivia-background'>

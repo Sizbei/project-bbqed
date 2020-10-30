@@ -117,7 +117,6 @@ export default function TriviaSidebar(props) {
   const score = "score" in props ? props.score : {user:0, enemy:0};
   const list = props.list;
   const mode = props.mode;
-  console.log("username", props);
   const username = props.username;
   const acs = props.gameOver ? props.finalACS : 
     ("initialACS" in props ? props.initialACS : {user:"", enemy:""});
