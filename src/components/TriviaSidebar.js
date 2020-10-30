@@ -94,6 +94,8 @@ export default function TriviaSidebar(props) {
   const list = props.list;
   const mode = props.mode;
   const initialACS = props.initialACS;
+  const username = props.username;
+  const ppurl = "ppurl" in props ? props.ppurl : {user: "", enemy: ""};
   const nav = mode === "nav";
 
   const handleClickOnline = e => {
@@ -132,7 +134,7 @@ export default function TriviaSidebar(props) {
 
   const enemyListIcon = mode === "online" ? (
     <div className="TSBG-list-icon-div TSBG-list-icon-div-2">
-      <img className="TSBG-list-icon" src="https://s3.amazonaws.com/cdn-origin-etr.akc.org/wp-content/uploads/2017/11/17140825/Swedish-Vallhund-head-portrait-outdoors.jpg"></img>
+      <img className="TSBG-list-icon" src={ppurl.enemy}></img>
     </div>
   ) : null;
 
@@ -174,7 +176,7 @@ export default function TriviaSidebar(props) {
               &nbsp;
               <span className="TSBG-header-acschange-negative">+20</span>
             </span>
-            <ProfilePicture scale={1.5} username="user1" />
+            <ProfilePicture scale={1.5} url={ppurl.user} />
             <label className="TSBG-header-score">{score.user}</label>
           </div>
           {enemyHeaderSection}
@@ -184,7 +186,7 @@ export default function TriviaSidebar(props) {
           <div className="TSBG-list-icons-div">
             <div className="TSBG-list-icons">
               <div className="TSBG-list-icon-div">
-                <img className="TSBG-list-icon" src="https://www.citypng.com/public/uploads/preview/-41601313914ox6c3d6e4n.png"></img>
+                <img className="TSBG-list-icon" src={ppurl.user}></img>
               </div>
               {enemyListIcon}
             </div>

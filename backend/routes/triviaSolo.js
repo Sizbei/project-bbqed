@@ -34,7 +34,7 @@ router.route('/next').put((req, res) => {
     // console.log(game);
 
     const shuffle = (array) => {
-      array.sort(() => Math.random() - 0.5);
+      return array.sort(() => Math.random() - 0.5);
     }
 
     const sendRandom = (previous) => {

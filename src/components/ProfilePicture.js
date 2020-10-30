@@ -21,6 +21,7 @@ export default function ProfilePicture(props) {
   const scale = "scale" in props ? props.scale : 1.0;
   const abs = "abs" in props ? props.abs : false;
   const handleClick = "onClick" in props ? props.onClick : () => {}
+  const disableBorder = "disableBorder" in props ? props.disableBorder : false;
 
   const [url, setUrl] = useState(urlExists ? props.url : "");
 
@@ -35,7 +36,6 @@ export default function ProfilePicture(props) {
 
       fetch("/profile/" + username).then(res => res.json())
           .then(data => {
-            console.log("got", data.image);
             setUrl(data.image);
           })
           .catch((error) => {

@@ -52,9 +52,7 @@ function User() {
 
   useEffect(() => {
     fetch('/settings/profile/' + authContext.user.username).then(res => res.json())
-    //axios.get("http://localhost:5000/settings/profile", body)
       .then(data => {
-        console.log("headeer data", data.image);
         setImgUrl(data.image);
       })
   })
@@ -74,7 +72,6 @@ function User() {
 function OptionsMenu() {
   const authContext = useContext(AuthContext);
   let history = useHistory(); 
-  console.log(authContext);
 
   const LogOut = () => {
     console.log("Logging out...");

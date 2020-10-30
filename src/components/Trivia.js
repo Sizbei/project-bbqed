@@ -7,8 +7,8 @@ import AuthService from '../Services/AuthService';
 import TriviaSidebar from './TriviaSidebar';
 
 export default function Trivia(props) {
-  const [state, setState] = useState({ mode:"nav" });
   const authContext = useContext(AuthContext);
+  const [state, setState] = useState({ mode:"nav", username:{user: authContext.user.username} });
 
   const handleModeSelect = mode => {
     const newState = {...state};
@@ -99,6 +99,25 @@ export default function Trivia(props) {
     let nextTriviaPage = <InGameTrivia {...state} handleModeSelect={handleModeSelect} handleOptionSelect={handleOptionSelect}/>;
     setTriviaPage(nextTriviaPage);
   }, [state]);
+
+  useEffect(() => {
+    fetch("/profile/" + authContext.user.username).then(res => res.json())
+          .then(data => {
+            const newState = {...state};
+            if ("ppurl" in newState) {
+              newState.ppurl.user = data.image;
+            } else {
+              newState.ppurl = {
+                user: data.image,
+                enemy: ""
+              }
+            }
+            setState(newState);
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+  }, [])
 
   return(
     <div>
