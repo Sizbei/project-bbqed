@@ -148,7 +148,7 @@ export default function TriviaSidebar(props) {
       <div className="TSBG-header-block TSBG-header-us">
         <span className="TSBG-header-username">
           User3 &nbsp;
-          <span className="TSBG-header-acs">(600)</span>
+          <span className="TSBG-header-acs">600</span>
         </span>
         <ProfilePicture scale={1.5} username="user3" />
         <label className="TSBG-header-score">{score.enemy}</label>
@@ -197,6 +197,8 @@ export default function TriviaSidebar(props) {
             <span className="TSBG-header-username">
               User1 &nbsp;
               <span className="TSBG-header-acs">(1234)</span>
+              &nbsp;
+              <span className="TSBG-header-acschange-negative">+20</span>
             </span>
             <ProfilePicture scale={1.5} username="user1" />
             <label className="TSBG-header-score">{score.user}</label>

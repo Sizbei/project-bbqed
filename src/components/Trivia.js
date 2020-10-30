@@ -72,15 +72,13 @@ export default function Trivia(props) {
           })
           newState.gameOver = nextData.data.gameOver;
           newState.startTime = Date.parse(nextData.data.time);
-          const newScore = newState.score.user + (correct ? 1 : 0);
-          newState.score = {"user": newScore};
+          newState.score = {"user": nextData.data.score};
           setState(newState);
         } else { // Game over
           const newState = {...state};
           const correct = nextData.data.previous === "correct";
           newState.list[newState.list.length - 1].userCorrect = correct;
-          const newScore = newState.score.user + (correct ? 1 : 0);
-          newState.score = {"user": newScore};
+          newState.score = {"user": nextData.data.score};
           newState.gameOver = true;
           setState(newState);
         }
