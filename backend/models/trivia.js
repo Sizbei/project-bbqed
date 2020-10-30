@@ -16,6 +16,7 @@ const triviaSchema = new Schema({
       },
     options: {
       type: [String],
+      required: true,
       unique: false,
       trim: true,
     },

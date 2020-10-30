@@ -48,6 +48,9 @@ app.use('/trivia', triviaRouter)
 const soloTriviaRouter = require('./routes/triviaSolo');
 app.use('/trivia/solo', soloTriviaRouter)
 
+const headToHeadTriviaRouter = require('./routes/triviaHeadToHead');
+app.use('/trivia/head-to-head', headToHeadTriviaRouter)
+
 //App is now listening for calls
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
