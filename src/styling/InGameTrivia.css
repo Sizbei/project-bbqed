@@ -105,22 +105,11 @@
     margin-right:0.75%;
     height: 6vw;
     position: relative;
-}
-
-.answer1Btn:hover, .answer1Btn:focus {
-    background-color: #900a0a;
-    border-width: 0px;
-    outline:none;
-}
-
-.answer1Btn {
-    /* position: absolute; */
-    height: 100%;
-    width: 100%;
-    border-radius: 0px;
-    border-radius:6px;
-    border-width: 0px;
     background-color:#d30909;
+}
+
+.answer1Box:hover {
+    background-color: #900a0a;
 }
 
 .answer2Box {
@@ -129,21 +118,11 @@
     border-radius:6px;
     height: 6vw;
     position: relative;
+    background-color:#f4b800;
 }
 
-.answer2Btn:hover, .answer2Btn:focus {
+.answer2Box:hover {
     background-color: #a27a00;
-    border-width: 0px;
-    outline:none;
-}
- 
-.answer2Btn {
-    height: 100%;
-    width: 100%;
-    border-radius: 0px;
-    border-radius:6px;
-    border-width: 0px;
-    background-color:#f4b800;
 }
 
 .answer3Box {
@@ -151,29 +130,20 @@
     border-radius:6px;
     height: 6vw;
     position: relative;
-}
-
-.answer3Btn:hover, .answer3Btn:focus {
-    background-color: #bc4b00;
-    border-width: 0px;
-    outline:none;
-}
-
-.answer3Btn {
-    height: 100%;
-    width: 100%;
-    border-radius: 0px;
-    border-radius:6px;
-    border-width: 0px;
     background-color:#ff6600;
 }
- 
+
+.answer3Box:hover {
+    background-color: #bc4b00;
+}
+
 .answer4Box {
     margin-left:0.75%;
     margin-top:3%;
     border-radius:6px;
     height: 6vw;
     position: relative;
+    background-color:#61b305;
 }
 
 .answer-div {
@@ -185,19 +155,8 @@
   justify-content: center;
 }
  
-.answer4Btn:hover, .answer4Btn:focus{
+.answer4Box:hover {
     background-color: #457e04;
-    border-width: 0px;
-    outline:none;
-}
-
-.answer4Btn {
-    height: 100%;
-    width: 100%;
-    border-radius: 0px;
-    border-radius:6px;
-    border-width: 0px;
-    background-color:#61b305;
 }
 
 .answer1, .answer2, .answer3, .answer4 {
