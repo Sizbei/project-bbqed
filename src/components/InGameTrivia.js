@@ -39,16 +39,20 @@ export default function InGameTrivia(props) {
     var divCountDown = document.getElementsByClassName('time');
     timerOn = true;
     var flashOn = true;
+    var fps = 40;
+    var percentPerFrame = 10 / fps;
+    var triggerCount = 0;
     var tick = 0;
     var opacity = 100;
     var counter = 10;
     NewTimeValue(counter);
-    var Timer = setInterval(() => triggerTicker(), 1);
+    var Timer = setInterval(() => triggerTicker(), 1000 / fps);
     const clockInterval = setInterval(() => triggerCountDown(), 1000);
     function triggerTicker() {
-        if (divTimeLeft.clientWidth < divClock.clientWidth && timerOn) {
-            tick += 0.04;
-            // This is 10 seconds, 14 seconds has a tickRate of 0.03 (Make this a variable)
+        if (timerOn) {
+            triggerCount += 1;
+            tick = triggerCount * percentPerFrame;
+
             NewTickValue(tick);
             if (opacity > 100) 
                 opacity = 100;
@@ -70,7 +74,10 @@ export default function InGameTrivia(props) {
         }
     }
     function triggerCountDown() {
-      if (counter > 0) {
+      if (counter == 0) {
+        stopTimers();
+        handleOptionSelect(null); 
+      } else if (counter > 0) {
         counter -= 1;
         NewTimeValue(counter);
       } else {
