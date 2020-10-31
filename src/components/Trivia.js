@@ -8,11 +8,16 @@ import TriviaSidebar from './TriviaSidebar';
 
 export default function Trivia(props) {
   const authContext = useContext(AuthContext);
-  const [state, setState] = useState({ mode:"nav", username:{user: authContext.user.username} });
+  const [state, setState] = useState({ 
+    mode:"nav", 
+    username:{user: authContext.user.username} ,
+    ppurl: {user: "", enemy: ""},
+  });
 
   const handleModeSelect = mode => {
     const newState = {...state};
 
+    console.log("mode select", mode);
     if (mode == "singlePlayer") {
       newState.mode = mode;
       newState.lists = [];
@@ -58,6 +63,7 @@ export default function Trivia(props) {
       const newState = {...state};
       newState.stop = "transition-immediate"
       newState.chosenOption = option;
+      newState.chosenOptions = {user: state.options[option], enemy: ""};
       setState(newState);
     }
   }
@@ -93,7 +99,7 @@ export default function Trivia(props) {
         newState.acsChange = {user: nextData.data.points};
         newState.nextData = {data: {}}; // no next data
       }
-
+      
       newState.gameOver = nextData.data.gameOver;
       newState.stop = "transition-showsolution"
       setState(newState);
@@ -132,7 +138,7 @@ export default function Trivia(props) {
       setState(newState);
     }
 
-    setTimeout(showNextQuestion, 200);
+    setTimeout(showNextQuestion, 2000);
   }, [state])
 
   // Render on change of state

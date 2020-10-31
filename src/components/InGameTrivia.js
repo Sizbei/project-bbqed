@@ -12,6 +12,7 @@ export default function InGameTrivia(props) {
   const score = props.score;
   const handleOptionSelect = props.handleOptionSelect;
   const handleModeSelect = props.handleModeSelect;
+  const chosenOptions = "chosenOptions" in props ? props.chosenOptions : {user: 1, enemy: 2};
   let currentQuestion = '\u00A0'; // initialize with space to preserve spacing
   let options = ['\u00A0', '\u00A0', '\u00A0', '\u00A0'];
   if (mode == "singlePlayer") {
@@ -132,18 +133,50 @@ export default function InGameTrivia(props) {
         <div className='answers'>
           <div className='leftAnswers'>
               <div className='answer1Box' onClick={() => handleOptionSelect(0)}>
-              <label className='answer1'>{options[0]}</label>
+                <div className='answer-div'>
+                  <label className='answer1'>{options[0]}</label>
+                </div>
+                <div className="answer-icons-div">
+                  <div className="answer-icons">
+                    {chosenOptions.user === options[0] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                    {chosenOptions.enemy === options[0] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                  </div>
+                </div>
               </div>
               <div className='answer2Box' onClick={() => handleOptionSelect(1)}>
-              <label className='answer2'>{options[1]}</label>
+                <div className='answer-div'>
+                  <label className='answer2'>{options[1]}</label>
+                </div>
+                <div className="answer-icons-div">
+                  <div className="answer-icons">
+                    {chosenOptions.user === options[1] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                    {chosenOptions.enemy === options[1] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                  </div>
+                </div>
               </div>
           </div>
           <div className='rightAnswers'>
               <div className='answer3Box' onClick={() => handleOptionSelect(2)}>
-              <label className='answer3'>{options[2]}</label>
+                <div className='answer-div'>
+                  <label className='answer3'>{options[2]}</label>
+                </div>
+                <div className="answer-icons-div">
+                  <div className="answer-icons">
+                    {chosenOptions.user === options[2] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                    {chosenOptions.enemy === options[2] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                  </div>
+                </div>
               </div>
               <div className='answer4Box' onClick={() => handleOptionSelect(3)}>
-              <label className='answer4'>{options[3]}</label>
+                <div className='answer-div'>
+                  <label className='answer3'>{options[2]}</label>
+                </div>
+                <div className="answer-icons-div">
+                  <div className="answer-icons">
+                    {chosenOptions.user === options[3] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                    {chosenOptions.enemy === options[3] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                  </div>
+                </div>
               </div>
           </div>
         </div>

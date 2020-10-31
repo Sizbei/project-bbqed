@@ -105,7 +105,7 @@ router.route('/next').put((req, res) => {
             game.points += 1;
             game.correct += 1;
             game.save().then(() => {
-              if (game.questionIds.length < 2) {
+              if (game.questionIds.length < 10) {
                 sendRandom("correct")
               } else {
                 sendDone("correct")
@@ -114,7 +114,7 @@ router.route('/next').put((req, res) => {
           } else {
             game.points -= 1;
             game.save().then(() => {
-              if (game.questionIds.length < 2) {
+              if (game.questionIds.length < 10) {
                 sendRandom("wrong")
               } else {
                 sendDone("wrong")

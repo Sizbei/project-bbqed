@@ -173,6 +173,12 @@ export default function TriviaSidebar(props) {
     </div>
   ) : null;
 
+  const userListIcon = (
+    <div className="TSBG-list-icon-div">
+      <img className="TSBG-list-icon" src={ppurl.user}></img>
+    </div>
+  );
+
   const enemyListIcon = mode === "online" ? (
     <div className="TSBG-list-icon-div TSBG-list-icon-div-2">
       <img className="TSBG-list-icon" src={ppurl.enemy}></img>
@@ -217,9 +223,7 @@ export default function TriviaSidebar(props) {
         <div className="TSBG-list">
           <div className="TSBG-list-icons-div">
             <div className="TSBG-list-icons">
-              <div className="TSBG-list-icon-div">
-                <img className="TSBG-list-icon" src={ppurl.user}></img>
-              </div>
+              {userListIcon}
               {enemyListIcon}
             </div>
           </div>
