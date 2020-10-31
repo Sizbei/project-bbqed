@@ -37,7 +37,7 @@ router.route('/next').put((req, res) => {
       return array.sort(() => Math.random() - 0.5);
     }
 
-    const sendRandom = (previous) => {
+    const sendRandom = (previousCorrect, previousAnswer) => {
       trivia.aggregate([
         { $match: { _id: { $nin: game.questionIds } } },
         { $sample: { size: 1 } } 
@@ -52,7 +52,8 @@ router.route('/next').put((req, res) => {
               score: game.correct,
               currentQuestion: question.question, 
               options: shuffle(question.options), 
-              previous: previous, 
+              previous: previousCorrect,
+              previousAnswer: previousAnswer, 
               questionCount: game.questionIds.length,
               time: game.times[game.times.length - 1] })
           })
@@ -91,7 +92,7 @@ router.route('/next').put((req, res) => {
 
     const checkTime = (time) => {
       const curTime = new Date();
-      if(curTime - time < 12000){
+      if(curTime - time < 13000){
         return true;
       }
       return false;
@@ -106,18 +107,18 @@ router.route('/next').put((req, res) => {
             game.correct += 1;
             game.save().then(() => {
               if (game.questionIds.length < 10) {
-                sendRandom("correct")
+                sendRandom("correct", response.answer)
               } else {
-                sendDone("correct")
+                sendDone("correct", response.answer)
               }
-            });
+            }); 
           } else {
             game.points -= 1;
             game.save().then(() => {
               if (game.questionIds.length < 10) {
-                sendRandom("wrong")
+                sendRandom("wrong", response.answer)
               } else {
-                sendDone("wrong")
+                sendDone("wrong", response.answer)
               }
             });
           }

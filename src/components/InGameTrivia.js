@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Header from './Header';
 import  '../styling/InGameTrivia.css';
 import TriviaSidebar from './TriviaSidebar';
 import ProfilePicture from './ProfilePicture';
 import { convertCompilerOptionsFromJson } from 'typescript';
+import crown from '../res/images/crowns.png'
+import PostTrivia from './PostTrivia'
 
 export default function InGameTrivia(props) {
   const mode = props.mode;
-  const list = props.list;
-  const score = props.score;
+  const previousAnswer = props.previousAnswer;
   const handleOptionSelect = props.handleOptionSelect;
   const handleModeSelect = props.handleModeSelect;
+  const chosenOptions = "chosenOptions" in props ? props.chosenOptions : {user: 1, enemy: 2};
   let currentQuestion = '\u00A0'; // initialize with space to preserve spacing
   let options = ['\u00A0', '\u00A0', '\u00A0', '\u00A0'];
   if (mode == "singlePlayer") {
@@ -22,6 +24,7 @@ export default function InGameTrivia(props) {
   const [tickValue, NewTickValue] = useState(0);
   const [opacityValue, NewOpacityValue] = useState(100);
   const [timeValue, NewTimeValue] = useState(10);
+  const [activeTimers, setActiveTimers] = useState({});
   
   var timerOn = false;
   var tickJSON = { 
@@ -31,20 +34,24 @@ export default function InGameTrivia(props) {
     opacity: opacityValue + "%"
   }
 
-  const triviaClockTick = () => {
+  //example for 10 second: 
+  //onClick={() => triviaClockTick(10, 0.04, 100, 0)}
+  //example for 14 second:
+  //onClick={() => triviaClockTick(14, 0.03, 100, 0)}
+  const triviaClockTick = (timeAllotted=10, tickSpeed=0.04, setOpacity=100, setTick=0) => {
     var divTimeLeft = document.getElementsByClassName('clockTick');
     var divClock = document.getElementsByClassName('clock');
-    var divCountDown = document.getElementsByClassName('time');
-    timerOn = true;
+        timerOn = true;
     var flashOn = true;
+    var tick = setTick;
+    var opacity = setOpacity;
+    var counter = timeAllotted;
+    NewTimeValue(counter);
     var Timer = setInterval(() => triggerTicker(), 1);
-    var tick = 0;
-    var counter = 10;
-    var opacity = 100;
-    setInterval(() => triggerCountDown(), 1000);
+    const clockInterval = setInterval(() => triggerCountDown(), 1000);
     function triggerTicker() {
         if (divTimeLeft[0].clientWidth < divClock[0].clientWidth && timerOn) {
-            tick += 0.04;
+            tick += tickSpeed;
             // This is 10 seconds, 14 seconds has a tickRate of 0.03 (Make this a variable)
             NewTickValue(tick);
             if (opacity > 100) 
@@ -57,32 +64,71 @@ export default function InGameTrivia(props) {
             else
                 flashOn = false;
             if (tick >= 60 && !flashOn)
-                opacity -= 0.6;
+                opacity -= 3;
             else if (tick >= 60 && flashOn)
-                opacity += 1.5;
+                opacity += 7.5;
         }
         else {
+            NewTickValue(100);
             timerOn = false;
             clearInterval(Timer);
         }
     }
     function triggerCountDown() {
+      if (counter == 0) {
+        stopTimers();
+        handleOptionSelect(null); 
+      } else if (counter > 0) {
         counter -= 1;
-        if (counter >= 0) {
-            NewTimeValue(counter);
-        }
+        NewTimeValue(counter);
+      } else {
+        clearInterval(clockInterval);
+      }
     }
+
+    return {clockInterval: clockInterval, Timer: Timer};
   }
 
-  const reset = () => {
+  const stopTimers = () => {
+    // Clear previous intervals
+    clearInterval(activeTimers.Timer);
+    clearInterval(activeTimers.clockInterval);
+  }
+
+  // stopTimers() should be called before this function is called
+  // otherwise it is a seizure simulation
+  const reset = () => { 
     timerOn = false;
     NewOpacityValue(100);
     NewTickValue(0);
+    NewTimeValue(10);
   }
+
+  // Stop timers when props.stopTimers === "stop"
+  useEffect(() => {
+    if (!("stop" in props) || props.stop === "nostop") {
+      return;
+    }
+
+    stopTimers();
+  }, [props.stop])
+
+  // Reset timers on each new question
+  useEffect(() => {
+    if (!("questionCount" in props)) {
+      return;
+    }
+
+    stopTimers();
+    reset();
+    const newActiveTimers = triviaClockTick();
+    setActiveTimers(newActiveTimers);
+  }, [props.questionCount])
       
   return(
-    <div className='trivia-background'>
-      <div className='left-segment'>
+      <div className='trivia-background'>
+        {/* <PostTrivia {...props}/> */}
+        <div className='left-segment'>
         <div className='timeBox'>
             <label className='time'>{timeValue}</label>
         </div>
@@ -96,19 +142,63 @@ export default function InGameTrivia(props) {
         </div>
         <div className='answers'>
           <div className='leftAnswers'>
-              <div className='answer1Box' onClick={() => handleOptionSelect(0)}>
-              <label className='answer1'>{options[0]}</label>
+              <div className='answer1Box'>
+                <button className='answer1Btn' onClick={() => handleOptionSelect(0)}> 
+                  <div className="answer-icons-div">
+                    <div className="answer-icons">
+                      {previousAnswer === options[0] ? <img className="answer-icon" src={crown}></img> : null}
+                      {chosenOptions.user === options[0] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                      {chosenOptions.enemy === options[0] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                    </div>
+                  </div>
+                  <div className='answer-div'>
+                    <label className='answer1'>{options[0]}</label>
+                  </div>
+                </button>
               </div>
-              <div className='answer2Box' onClick={() => handleOptionSelect(1)}>
-              <label className='answer2'>{options[1]}</label>
+              <div className='answer2Box'>
+                <button className='answer2Btn' onClick={() => handleOptionSelect(1)}> 
+                  <div className="answer-icons-div">
+                    <div className="answer-icons">
+                      {previousAnswer === options[1] ? <img className="answer-icon" src={crown}></img> : null}
+                      {chosenOptions.user === options[1] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                      {chosenOptions.enemy === options[1] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                    </div>
+                  </div>
+                  <div className='answer-div'>
+                    <label className='answer2'>{options[1]}</label>
+                  </div>
+                </button>
               </div>
           </div>
           <div className='rightAnswers'>
-              <div className='answer3Box' onClick={() => handleOptionSelect(2)}>
-              <label className='answer3'>{options[2]}</label>
+              <div className='answer3Box'>
+                <button className='answer3Btn' onClick={() => handleOptionSelect(2)}> 
+                  <div className="answer-icons-div">
+                    <div className="answer-icons">
+                      {previousAnswer === options[2] ? <img className="answer-icon" src={crown}></img> : null}
+                      {chosenOptions.user === options[2] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                      {chosenOptions.enemy === options[2] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                    </div>
+                  </div>
+                  <div className='answer-div'>
+                    <label className='answer3'>{options[2]}</label>
+                  </div>
+                </button>
               </div>
-              <div className='answer4Box' onClick={() => handleOptionSelect(3)}>
-              <label className='answer4'>{options[3]}</label>
+              <div className='answer4Box'>
+                <button className='answer4Btn' onClick={() => handleOptionSelect(3)}> 
+                  <div className="answer-icons-div">
+                    <div className="answer-icons">
+                      {previousAnswer === options[3] ? <img className="answer-icon" src={crown}></img> : null}
+                      {chosenOptions.user === options[3] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                      {chosenOptions.enemy === options[3] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                    </div>
+                  </div>
+                  <div className='answer-div'>
+                    <label className='answer4'>{options[3]}</label>
+                  </div>
+                </button>
               </div>
           </div>
         </div>

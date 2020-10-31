@@ -42,8 +42,8 @@ app.use('/teams', teamsRouter);
 const postRouter = require('./routes/post');
 app.use('/post', postRouter)
 
-const triviaRouter = require('./routes/triviaVersus');
-app.use('/trivia', triviaRouter)
+// const triviaRouter = require('./routes/triviaVersus');
+// app.use('/trivia', triviaRouter)
 
 const soloTriviaRouter = require('./routes/triviaSolo');
 app.use('/trivia/solo', soloTriviaRouter)
