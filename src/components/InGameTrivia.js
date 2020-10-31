@@ -111,7 +111,12 @@ export default function InGameTrivia(props) {
     }
 
     stopTimers();
+
+    if (props.stop === "toNav") {
+      reset();
+    }
   }, [props.stop])
+
 
   // Reset timers on each new question
   useEffect(() => {
@@ -208,10 +213,10 @@ export default function InGameTrivia(props) {
       <TriviaSidebar {...props} handleModeSelect={handleModeSelect}/>
     </div>
     
-    {props.mode === "singlePlayer" ? (
+    {"gameOver" in props && props.gameOver ? (
       <div className="post-trivia-div">
-      <PostTrivia {...props} />
-    </div>
+        <PostTrivia {...props} />
+      </div>
     ) : null}
     
     </div>
