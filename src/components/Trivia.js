@@ -12,6 +12,7 @@ export default function Trivia(props) {
     mode:"nav", 
     username:{user: authContext.user.username} ,
     ppurl: {user: "", enemy: ""},
+    stop: "nostop",
   });
 
   const handleModeSelect = mode => {
@@ -59,7 +60,7 @@ export default function Trivia(props) {
   const handleOptionSelect = option => {
     console.log(option);
 
-    if (state.mode === "singlePlayer" && !state.gameOver) {
+    if (state.mode === "singlePlayer" && !state.gameOver && state.stop === "nostop") {
       const newState = {...state};
       newState.stop = "transition-immediate"
       newState.chosenOption = option;
@@ -91,6 +92,7 @@ export default function Trivia(props) {
       const newState = {...state};
       newState.score = {"user": nextData.data.score}; // needs to overwrite the copy
       newState.list[newState.list.length - 1].userCorrect = nextData.data.previous === "correct";
+      newState.previousAnswer = nextData.data.previousAnswer;
 
       if ("questionCount" in nextData.data) { // Game goes on
         newState.nextData = nextData; // Store nextData for next transition
@@ -119,6 +121,10 @@ export default function Trivia(props) {
     const showNextQuestion = () => {
       const newState = {...state};
       const nextData = state.nextData;
+
+      // Remove transition state
+      newState.previousAnswer = "";
+      newState.previousAnswer = {};
 
       if ("questionCount" in nextData.data) { // Game goes on
         Object.keys(nextData.data).forEach((name, val) => { // copy over from nextData.data

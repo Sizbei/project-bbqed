@@ -5,11 +5,11 @@ import  '../styling/InGameTrivia.css';
 import TriviaSidebar from './TriviaSidebar';
 import ProfilePicture from './ProfilePicture';
 import { convertCompilerOptionsFromJson } from 'typescript';
+import crown from '../res/images/crowns.png'
 
 export default function InGameTrivia(props) {
   const mode = props.mode;
-  const list = props.list;
-  const score = props.score;
+  const previousAnswer = props.previousAnswer;
   const handleOptionSelect = props.handleOptionSelect;
   const handleModeSelect = props.handleModeSelect;
   const chosenOptions = "chosenOptions" in props ? props.chosenOptions : {user: 1, enemy: 2};
@@ -145,6 +145,7 @@ export default function InGameTrivia(props) {
                 </div>
                 <div className="answer-icons-div">
                   <div className="answer-icons">
+                    {previousAnswer === options[0] ? <img className="answer-icon" src={crown}></img> : null}
                     {chosenOptions.user === options[0] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
                     {chosenOptions.enemy === options[0] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
                   </div>
@@ -156,6 +157,7 @@ export default function InGameTrivia(props) {
                 </div>
                 <div className="answer-icons-div">
                   <div className="answer-icons">
+                    {previousAnswer === options[1] ? <img className="answer-icon" src={crown}></img> : null}
                     {chosenOptions.user === options[1] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
                     {chosenOptions.enemy === options[1] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
                   </div>
@@ -169,6 +171,7 @@ export default function InGameTrivia(props) {
                 </div>
                 <div className="answer-icons-div">
                   <div className="answer-icons">
+                    {previousAnswer === options[2] ? <img className="answer-icon" src={crown}></img> : null}
                     {chosenOptions.user === options[2] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
                     {chosenOptions.enemy === options[2] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
                   </div>
@@ -176,10 +179,11 @@ export default function InGameTrivia(props) {
               </div>
               <div className='answer4Box' onClick={() => handleOptionSelect(3)}>
                 <div className='answer-div'>
-                  <label className='answer3'>{options[2]}</label>
+                  <label className='answer3'>{options[3]}</label>
                 </div>
                 <div className="answer-icons-div">
                   <div className="answer-icons">
+                    {previousAnswer === options[3] ? <img className="answer-icon" src={crown}></img> : null}
                     {chosenOptions.user === options[3] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
                     {chosenOptions.enemy === options[3] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
                   </div>
