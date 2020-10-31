@@ -8,21 +8,34 @@ import TriviaSidebar from './TriviaSidebar';
 
 export default function Trivia(props) {
   const authContext = useContext(AuthContext);
-  const [state, setState] = useState({ 
+  const [initialState, setInitialState] = useState({  // still gets modified by one useEffect() to get urls
     mode:"nav", 
-    username:{user: authContext.user.username} ,
+    username:{user: authContext.user.username},
     ppurl: {user: "", enemy: ""},
     stop: "nostop",
+    showPostScreen: false
   });
 
-  const handleModeSelect = mode => {
-    const newState = {...state};
+  const [state, setState] = useState(deepcopy(initialState));
 
-    console.log("mode select", mode);
-    if (mode == "singlePlayer") {
+  const handleModeSelect = req => {
+    const newState = deepcopy(initialState);
+
+    let mode = req;
+    if (req === "playAgain") {
+      mode = state.mode;
+    }
+    console.log("mode select", req, mode);
+
+    /*-----handle navigation--------*/
+    if (mode === "nav") {
+      newState.stop = "toNav";
+      setState(newState);
+    } else if (mode === "singlePlayer") {
       newState.mode = mode;
       newState.lists = [];
       newState.score = {"user": 0};
+      newState.acsChange = {}
       newState.gameOver = false;
 
       axios.post('/trivia/solo/create', { username: authContext.user.username }).then(data => {
@@ -141,10 +154,21 @@ export default function Trivia(props) {
       }
 
       newState.stop = "nostop";
-      setState(newState);
+      setState(deepcopy(newState));      
     }
 
     setTimeout(showNextQuestion, 2000);
+  }, [state])
+
+  // Transition from anywhere to nav screen
+  useEffect(() => {
+    console.log("PRINT THIS", state);
+    console.log("initial", initialState);
+    if (!("stop" in state) || state.stop !== "toNav") {
+      return;
+    }
+    
+    setState(deepcopy(initialState));
   }, [state])
 
   // Render on change of state
@@ -157,7 +181,7 @@ export default function Trivia(props) {
   useEffect(() => {
     fetch("/profile/" + authContext.user.username).then(res => res.json())
       .then(data => {
-        const newState = {...state};
+        const newState = deepcopy(state);
         if ("ppurl" in newState) {
           newState.ppurl.user = data.image;
         } else {
@@ -165,6 +189,7 @@ export default function Trivia(props) {
             user: data.image
           }
         }
+        setInitialState(deepcopy(newState));
         setState(newState);
       })
       .catch((error) => {
@@ -177,4 +202,8 @@ export default function Trivia(props) {
       {triviaPage}
     </div>
   );
+}
+
+function deepcopy(o) {
+  return JSON.parse(JSON.stringify(o))
 }

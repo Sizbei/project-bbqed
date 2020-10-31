@@ -51,10 +51,15 @@ export default function InGameTrivia(props) {
               {enemyHeaderSection}
             </div>
             <div className="post-nav">
-              <button className="post-nav-button">
-                <label className="post-nav-button-label">Again</label>
+              <button className="post-nav-button" onClick={() => handleModeSelect("playAgain")}>
+                <label className="post-nav-button-label">Play Again</label>
               </button>
-              <button className="post-nav-button">
+              {mode !== "singlePlayer" ? (
+                <button className="post-nav-button" onClick={() => handleModeSelect("rematch")}>
+                  <label className="post-nav-button-label">Rematch</label>
+                </button>
+              ) : null}
+              <button className="post-nav-button" onClick={() => handleModeSelect("nav")}>
                 <label className="post-nav-button-label">Select Mode</label>
               </button>
             </div>
