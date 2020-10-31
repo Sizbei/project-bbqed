@@ -147,8 +147,7 @@ export default function InGameTrivia(props) {
         </div>
         <div className='answers'>
           <div className='leftAnswers'>
-              <div className='answer1Box'>
-                <button className='answer1Btn' onMouseDown={() => handleOptionSelect(0)}> 
+              <div className='answer1Box' onClick={() => handleOptionSelect(0)}> 
                   <div className="answer-icons-div">
                     <div className="answer-icons">
                       {previousAnswer === options[0] ? <img className="answer-icon" src={crown}></img> : null}
@@ -159,10 +158,8 @@ export default function InGameTrivia(props) {
                   <div className='answer-div'>
                     <label className='answer1'>{options[0]}</label>
                   </div>
-                </button>
               </div>
-              <div className='answer2Box'>
-                <button className='answer2Btn' onClick={() => handleOptionSelect(1)}> 
+              <div className='answer2Box' onClick={() => handleOptionSelect(1)}>
                   <div className="answer-icons-div">
                     <div className="answer-icons">
                       {previousAnswer === options[1] ? <img className="answer-icon" src={crown}></img> : null}
@@ -173,12 +170,10 @@ export default function InGameTrivia(props) {
                   <div className='answer-div'>
                     <label className='answer2'>{options[1]}</label>
                   </div>
-                </button>
               </div>
           </div>
           <div className='rightAnswers'>
-              <div className='answer3Box'>
-                <button className='answer3Btn' onClick={() => handleOptionSelect(2)}> 
+              <div className='answer3Box' onClick={() => handleOptionSelect(2)}>
                   <div className="answer-icons-div">
                     <div className="answer-icons">
                       {previousAnswer === options[2] ? <img className="answer-icon" src={crown}></img> : null}
@@ -189,10 +184,8 @@ export default function InGameTrivia(props) {
                   <div className='answer-div'>
                     <label className='answer3'>{options[2]}</label>
                   </div>
-                </button>
               </div>
-              <div className='answer4Box'>
-                <button className='answer4Btn' onClick={() => handleOptionSelect(3)}> 
+              <div className='answer4Box' onClick={() => handleOptionSelect(3)}>
                   <div className="answer-icons-div">
                     <div className="answer-icons">
                       {previousAnswer === options[3] ? <img className="answer-icon" src={crown}></img> : null}
@@ -203,7 +196,6 @@ export default function InGameTrivia(props) {
                   <div className='answer-div'>
                     <label className='answer4'>{options[3]}</label>
                   </div>
-                </button>
               </div>
           </div>
         </div>
