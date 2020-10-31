@@ -38,7 +38,7 @@ export default function InGameTrivia(props) {
   //onClick={() => triviaClockTick(10, 0.04, 100, 0)}
   //example for 14 second:
   //onClick={() => triviaClockTick(14, 0.03, 100, 0)}
-  const triviaClockTick = (timeAllotted=10, tickSpeed=0.04, setOpacity=100, setTick=0) => {
+  const triviaClockTick = (timeAllotted=10, tickSpeed=0.042, setOpacity=100, setTick=0) => {
     var divTimeLeft = document.getElementsByClassName('clockTick');
     var divClock = document.getElementsByClassName('clock');
         timerOn = true;
@@ -50,7 +50,7 @@ export default function InGameTrivia(props) {
     var Timer = setInterval(() => triggerTicker(), 1);
     const clockInterval = setInterval(() => triggerCountDown(), 1000);
     function triggerTicker() {
-        if (divTimeLeft[0].clientWidth < divClock[0].clientWidth && timerOn) {
+        if (timerOn) {
             tick += tickSpeed;
             // This is 10 seconds, 14 seconds has a tickRate of 0.03 (Make this a variable)
             NewTickValue(tick);
