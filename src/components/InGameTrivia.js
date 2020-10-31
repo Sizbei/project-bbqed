@@ -64,9 +64,9 @@ export default function InGameTrivia(props) {
             else
                 flashOn = false;
             if (tick >= 60 && !flashOn)
-                opacity -= 0.6;
+                opacity -= 3;
             else if (tick >= 60 && flashOn)
-                opacity += 1.5;
+                opacity += 7.5;
         }
         else {
             timerOn = false;
