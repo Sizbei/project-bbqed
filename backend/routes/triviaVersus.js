@@ -3,14 +3,6 @@ const router = require('express').Router();
 let trivia = require('../models/trivia');
 let acs = require('../models/acs');
 let queue = require('../models/queue');
-let triviaQuestion = require('../models/triviaquestion');
-let headToHeadGame = require('../models/headtoheadgame');
-
-// set the time limit for each trivia question, unit in sec
-const timeLimit = 10;
-// set the total number of question in one round of trivia
-// set to 4 as there are only 4 sample questions in db
-const questionCount = 4;
 
 router.route('/joinQueue').post((req, res) => {
   const user = req.body.username;

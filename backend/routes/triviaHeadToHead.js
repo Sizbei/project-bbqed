@@ -4,11 +4,11 @@ let trivia = require('../models/trivia');
 let acs = require('../models/acs');
 let queue = require('../models/queue');
 let headToHeadGame = require('../models/headtoheadgame');
+const { data } = require('jquery');
 
 // set the time limit for each trivia question, unit in sec
 const timeLimit = 30;
 // set the total number of question in one round of trivia
-// set to 4 as there are only 4 sample questions in db
 const questionCount = 10;
 
 //-------------------------------------------------
@@ -19,7 +19,6 @@ const closeQuestion = game => {
     // find the trivia question relating with current question index
     const questionIndex = game.currentQuestionIndex;
     const curQuestion = game.questions[questionIndex];
-    console.log(curQuestion);
     let winerIndex = 0;
     console.log('1-3-1: check if user1 response to question correctlty');
     if (curQuestion.responses[winerIndex].answer &&
@@ -82,15 +81,15 @@ const updateHeadToHeadDocument = game => {
         if((cur_date - curQuestion.startTime)/1000 <= timeLimit) {
             // check if both users has submitted responses
             if (curQuestion.responses[0].answer && curQuestion.responses[0].answer) {
-                console.log('1-3: timer is still on but both users have completed responses');
+                console.log('1-3: timer is still on and both users have completed responses');
                 game = closeQuestion(game);
-                console.log('1-4: question is closed and moved to next question');
+                console.log('1-4: question is closed');
         }
         // if time limit reached, close the question
         } else {
             console.log('1-5: timer is out');
             game = closeQuestion(game);
-            console.log('1-6: question is closed and moved to next question');
+            console.log('1-6: question is closed');
         }
     // if start time doesn't exist, set it to current time
     } else {
@@ -105,12 +104,12 @@ const updateHeadToHeadDocument = game => {
 //-------------------------------------------------
 
 // a request to update the DB and respond back a updated snapshot of head-to-head trivia information in DB
-// request format: {usermame: str}
+// request format: {_id: str}
 router.route('/update').put((req, res) => {
     console.log('==============update===============');
-    headToHeadGame.findOne({users: req.body.username, status: 'open'})
+    headToHeadGame.findById({_id: req.body._id})
         .then(game => {
-        if(game) {
+        if(game && game.status == 'open') {
             console.log('1: able to find the head to head game in DB');
             game = updateHeadToHeadDocument(game);
             console.log('2: game document updated');
@@ -121,28 +120,40 @@ router.route('/update').put((req, res) => {
             })
             .catch(err => res.status(500).json({msg: err}));
         } else {
-            res.status(400).json({msg: 'Bad request'});
+            res.status(400).json({msg: 'Bad request: request trivia game does not exist or open'});
         }
         })
         .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
 });
 
 // a request to submit trivia question answer to DB
-// request format: {username: str, answer: str}
+// request format: {_id: str, username: str, answer: str}
 router.route('/submit').post((req, res) => {
-    headToHeadGame.findOne({users: req.body.username, status: 'open'})
+    console.log('==============submit===============');
+    headToHeadGame.findById({_id: req.body._id})
         .then(game => {
-        if(game) {
-            const userIndex = game.users.indexOf(req.body.username);
-            game.questions[game.currentQuestionIndex].responses[userIndex] = {
-            answer: req.body.answer,
-            responseTime: new Date()
-            }
-            game.save()
-            .then(() => res.json({msg: "Response submitted"}))
-            .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
-        } else {
-            res.status(400).json({msg: 'Bad request'});
+            if(game && game.status == 'open' && game.users.includes(req.body.username)) {
+                console.log('1: game found');
+                const userIndex = game.users.indexOf(req.body.username);
+                const cur_date = new Date();
+                if((cur_date - game.questions[game.currentQuestionIndex].startTime)/1000 <= timeLimit) {
+                    console.log('2: response is on-time');
+                    game.questions[game.currentQuestionIndex].responses[userIndex] = {
+                        answer: req.body.answer,
+                        responseTime: cur_date
+                    }
+                    console.log('3: save the game');
+                    game.save()
+                    .then(() => res.json({msg: "Response submitted"}))
+                    .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
+                } else {
+                    console.log('3: time is out');
+                    res.json({msg: "submission failed: time is out"});
+                }
+            } else {
+                res.status(400).json({
+                    msg: 'Bad request: request trivia game does not exist/open, or the given user is not in that trivia'
+                });
         }
         })
         .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
@@ -151,44 +162,40 @@ router.route('/submit').post((req, res) => {
 // init a head-to-head game
 // request format: {user1: str, user2: str}
 router.route('/init').post((req, res) => {
-    // get 10 random trivia question from DB and use them to init the game
-    trivia.aggregate([{$sample: {size: 10}}])
-        .then(trivias => {
-            let game = new headToHeadGame({
-                users: [req.body.user1, req.body.user2],
-                status: 'open',
-                points: [0, 0],
-                currentQuestionIndex: 0,
-                questions: []
-            });
-            for (triviaIndex in trivias){
-                let curQuestion = {
-                    triviaQuestion: {
-                        question: trivias[triviaIndex].question,
-                        answer: trivias[triviaIndex].answer,
-                        options: trivias[triviaIndex].options
-                    },
-                    responses: [{},{}]
-                }
-                game.questions.push(curQuestion);
-            }
-            game.save().then(() => res.json({msg: 'Head-to-head gamse initialized'}))
+    // try to find an open trivia using the given two usernamas
+    headToHeadGame.findOne({users: {$all: [req.body.user1, req.body.user2]}, status: 'open'})
+        .then(game => {
+            if(game) {
+                res.json({msg: 'Head-to-head gamse exists', _id: game._id});
+            } else {
+                // get 10 random trivia question from DB and use them to init the game
+                trivia.aggregate([{$sample: {size: questionCount}}])
+                .then(trivias => {
+                    let game = new headToHeadGame({
+                        users: [req.body.user1, req.body.user2],
+                        status: 'open',
+                        points: [0, 0],
+                        currentQuestionIndex: 0,
+                        questions: []
+                    });
+                    for (triviaIndex in trivias){
+                        let curQuestion = {
+                            triviaQuestion: {
+                                question: trivias[triviaIndex].question,
+                                answer: trivias[triviaIndex].answer,
+                                options: trivias[triviaIndex].options
+                            },
+                            responses: [{},{}]
+                        }
+                        game.questions.push(curQuestion);
+                    }
+                    game.save().then(() => res.json({msg: 'Head-to-head gamse initialized', _id: game._id}))
+                        .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
+                })
                 .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
+            }
         })
         .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
 })
-
-router.route('/test').post((req, res) => {
-    console.log('test starts');
-
-    initHeadToHeadGame('test1', 'test2');
-    //initHeadToHeadGame('test3', 'test4');
-    //initHeadToHeadGame('test5', 'test6');
-
-    //test();
-
-    console.log('test done');
-    res.json({msg: 'done'});
-});
 
 module.exports = router;
