@@ -143,7 +143,7 @@ export default function InGameTrivia(props) {
         <div className='answers'>
           <div className='leftAnswers'>
               <div className='answer1Box'>
-                <button className='answer1Btn' onClick={() => handleOptionSelect(0)}> 
+                <button className='answer1Btn' onMouseDown={() => handleOptionSelect(0)}> 
                   <div className="answer-icons-div">
                     <div className="answer-icons">
                       {previousAnswer === options[0] ? <img className="answer-icon" src={crown}></img> : null}
@@ -207,6 +207,12 @@ export default function InGameTrivia(props) {
     <div className='right-segment'>
       <TriviaSidebar {...props} handleModeSelect={handleModeSelect}/>
     </div>
+    
+    {props.mode === "singlePlayer" ? (
+      <div className="post-trivia-div">
+      <PostTrivia {...props} />
+    </div>
+    ) : null}
     
     </div>
   );
