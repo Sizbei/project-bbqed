@@ -67,6 +67,7 @@ export default function InGameTrivia(props) {
                 opacity += 1.5;
         }
         else {
+            NewTickValue(100);
             timerOn = false;
             clearInterval(Timer);
         }
@@ -98,7 +99,7 @@ export default function InGameTrivia(props) {
             <div className='clock' style={opacityJSON}>
             </div>
         </div>
-        <div className='questionBox'>
+        <div className='questionBox' onClick={() => triviaClockTick(10, 0.04, 100, 0)}>
           <label id='question'>{currentQuestion}</label>
         </div>
         <div className='answers'>
