@@ -4,32 +4,83 @@ import  '../styling/PostTrivia.css';
 import ProfilePicture from './ProfilePicture'
 
 export default function InGameTrivia(props) {
-    return (
-        <div>
-            <div className='popup'/>
-            <div className='popup_inner'>
-                {/* <div className='left'>
-                    <div className='left-user'>
-                        <ProfilePicture scale={1.5} username="user1" />
-                    </div>
-                
-                    <span className="TSBG-header-username">
-                        User1 &nbsp;
-                        <span className="TSBG-header-acs">(1234)</span>
-                    </span>
+  const handleModeSelect = props.handleModeSelect;
+  const score = "score" in props ? props.score : {user:0, enemy:0};
+  const list = props.list;
+  const mode = props.mode;
+  const username = props.username;
+  const acs = props.gameOver ? props.finalACS : 
+    ("initialACS" in props ? props.initialACS : {user:"", enemy:""});
+  const acsChange = "acsChange" in props ? props.acsChange : {user:"none", enemy:"none"};
+  const ppurl = "ppurl" in props ? props.ppurl : {user: "", enemy: ""};
+  const nav = mode === "nav";
 
-                </div>
-                <div className ='right'>
-                    <div className='right-user'>
-                        <ProfilePicture scale={1.5} username="user3" />
-                    </div>
-                   
-                    <span className="TSBG-header-username">
-                        User3 &nbsp;
-                        <span className="TSBG-header-acs">(914)</span>
-                    </span>
-                </div> */}
+  const userHeaderSection = (
+    <div className="post-header-block post-header-us">
+      <span className="post-header-username">
+        {username.user} &nbsp;
+        <span className="post-header-acs">({acs.user})</span>
+        &nbsp;
+        <ACSChange change={acsChange.user} />
+      </span>
+      <ProfilePicture scale={1.5} url={ppurl.user} />
+      <label className="post-header-score">{score.user}</label>
+    </div>
+  );
+
+  const enemyHeaderSection = mode === "online" ? (
+    <div className="post-header-block post-header-them">
+      <span className="post-header-username">
+        {username.user} &nbsp;
+        <span className="post-header-acs">({acs.enemy})</span>
+        &nbsp;
+        <ACSChange change={acsChange.enemy} />
+      </span>
+      <ProfilePicture scale={1.5} url={ppurl.enemy} />
+      <label className="post-header-score">{score.enemy}</label>
+    </div>
+  ) : null;
+
+  return (
+      <div>
+          <div className='popup'/>
+          <div className='popup_inner'>
+            <div className="post-header">
+              {userHeaderSection}
+              {userHeaderSection}
+              {enemyHeaderSection}
             </div>
-        </div> 
-    );
+            <div className="post-nav">
+              <button className="post-nav-button">
+                <label className="post-nav-button-label">Again</label>
+              </button>
+              <button className="post-nav-button">
+                <label className="post-nav-button-label">Select Mode</label>
+              </button>
+            </div>
+          </div>
+      </div> 
+  );
+}
+
+function ACSChange(props) {
+  const change = "change" in props ? props.change : "none";
+
+  if (change === "none") {
+    return <span className={"post-header-acschange-zero"}>&nbsp;&nbsp;</span>
+  }
+
+  if (change > 0) {
+    return (
+      <span className={"post-header-acschange-positive"}>+{change}</span>
+    )
+  } else if (change == 0) {
+    return (
+      <span className={"post-header-acschange-zero"}>+-0</span>
+    )
+  } else {
+    return (
+      <span className={"post-header-acschange-negative"}>{change}</span>
+    )
+  }
 }
