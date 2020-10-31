@@ -22,9 +22,24 @@ const headToHeadGameSchema = new Schema({
     questions: [
         {
             triviaQuestion: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'triviaquestion',
-                required: true,
+                question: {
+                    type: String,
+                    required: true,
+                    unique: true,
+                    trim: true,
+                },
+                answer: {
+                    type: String,
+                    required: true,
+                    unique: false,
+                    trim: true,
+                },
+                options: {
+                    type: [String],
+                    required: true,
+                    unique: false,
+                    trim: true,
+                }
             },
             responses: [
                 {
