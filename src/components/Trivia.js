@@ -67,6 +67,33 @@ export default function Trivia(props) {
           console.log("some error", e);
         })
       })
+    } else if (mode === "online") {
+      const fetchInit = {
+        method: "post",
+        body: JSON.stringify({
+          user1: "user3",
+          user2: "user1"
+        }),
+        header: {'Content-Type' : 'application/json'}
+      }
+
+      console.log("Request online init", fetchInit);
+      fetch('/trivia/head-to-head/init', fetchInit).then(res => res.json())
+      .then((initData) => {
+        console.log("got init", initData);
+
+        const fetchUpdate = {
+          method: "post",
+          body: JSON.stringify({id: initData._id}),
+          header: {'Content-Type' : 'application/json'}
+        }
+
+        console.log("Request update", fetchUpdate);
+        fetch('/trivia/head-to-head/update', fetchUpdate).then(res2 => res2.json())
+        .then((updateData) => {
+          console.log("got update", updateData);
+        })
+      })
     }
   }
 
