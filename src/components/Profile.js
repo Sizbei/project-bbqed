@@ -5,6 +5,7 @@ import PostPopup from './ProfilePostPopup';
 import RLPopup from './ProfileRLPopup'; 
 import ImageSelect from './ImageSelect';
 import {AuthContext} from '../Context/AuthContext';
+import ProfilePicture from './ProfilePicture';
 
 /*
 acsChart: [
@@ -210,11 +211,8 @@ export default class Profile extends Component {
             <div className="prof-background">
                 <div className="prof-container-profile"> 
                     <div className="prof-profile-preview">
-                        <div className="prof-profile-photo">
-                            <img src={this.state.image} className="prof-profile-user-given-photo"/>  
-                            <label className="prof-profile-user-score">{this.state.acs}</label>   
-                                            
-                        </div>
+                        <ProfilePicture scale={3}username={this.state.username}/> 
+                        <label className="prof-profile-user-score">{this.state.acs}</label>   
                     </div>
                     <div className="prof-profile-info">
                         <h1>{this.state.username}</h1>
@@ -264,10 +262,7 @@ export default class Profile extends Component {
                                             <tr key={data.acs + data.username}>
                                                 <td>
                                                 <div className="radar-list-profile-preview">
-                                                    <div className="radar-list-photo">
-                                                    <img className="radar-list-popup-img" src={data.profilePic}></img>
-                                                                        
-                                                    </div>
+                                                <ProfilePicture scale={1}username={data.username}/> 
                                                 </div>
                                                 
                                                 </td>
@@ -334,14 +329,14 @@ export default class Profile extends Component {
                         <div className="prof-bottom-right-content">
                             
                             <div className="prof-interest">
-                                <h2>Interest</h2>
+                                <h2 className="prof-title">Interest</h2>
                                 <div className="prof-interest-content">
                                   {this.state.imgSelect}
                                 </div>
                             </div>
                             
                             <div className="prof-picks">
-                                <h2> Current Picks </h2>
+                                <h2 className="prof-title"> Current Picks </h2>
                                 <div className="prof-picks-content">
                                     To be implemented in future sprint
                                 </div>
@@ -354,9 +349,6 @@ export default class Profile extends Component {
                   
                 </div>
                 
-                <div className="prof-container-middle-section"> 
-                
-                </div>
             </div>
             </div>
         )
