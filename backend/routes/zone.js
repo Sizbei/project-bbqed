@@ -7,7 +7,7 @@ let Post = require('../models/post')
 let Comment = require('../models/comment')
 let Profile = require('../models/profile')
 
-router.route('/display/focused/:username').get(async(req, res) => {
+router.route('/display/:username/focused').get(async(req, res) => {
     var radarList = await Profile.findOne({username: req.params.username}).then((user) => {
         return user.radarList;
     });
@@ -24,7 +24,7 @@ router.route('/display/:username').get(async(req, res) => {
     let newPostsList = []
     for (var i = 0; i < recentPosts.length; i++) {
         let newComments = []
-        let comments = await Comment.find({recentPosts: recentPosts[i]._id}, "commenter _id body likes upvoted downvoted").sort({'likes':'desc'}).limit(3).then((comment) => {
+        let comments = await Comment.find({post: recentPosts[i]._id}, "commenter _id body likes upvoted downvoted").sort({'likes':'desc'}).limit(3).then((comment) => {
             return comment;
         }).catch((err) => {res.status(400).json('Error ' + err)})
         for (var j = 0; j < comments.length; j++) {
@@ -51,9 +51,39 @@ router.route('/display/:username').get(async(req, res) => {
     res.json({posts: newPostsList});
 })
 
-// router.route('display/focusedPost/:post').get()
+router.route('/display/:username/:post').get(async(req, res) => {
+    let singlePost = await Post.findById(req.params.post).then(async (post) => {
+        return post
+    }).catch((err) => {res.status(400).json('Error ' + err)})
+    let newComments = []
+    let comments = await Comment.find({post: req.params.post}, "commenter _id body likes upvoted downvoted").sort({'likes':'desc', 'createdAt': 'desc'}).then((comment) => {
+        return comment;
+    }).catch((err) => {res.status(400).json('Error ' + err)})
+    for (var j = 0; j < comments.length; j++) {
+        let newComment = {}
+        newComment._id = comments[j]._id
+        newComment.commenter = comments[j].commenter
+        newComment.likes = comments[j].likes
+        newComment.upvoted = comments[j].upvoted.includes(req.params.username);
+        newComment.downvoted = comments[j].downvoted.includes(req.params.username);
+        newComments[j] = newComment
+    }
+    let upvoted = singlePost.upvoted.includes(req.params.username)
+    let downvoted = singlePost.downvoted.includes(req.params.username)
+    let newPost = {}
+    newPost._id = singlePost._id
+    newPost.likes = singlePost.likes
+    newPost.poster = singlePost.poster
+    newPost.body = singlePost.body
+    newPost.upvoted = upvoted
+    newPost.downvoted = downvoted
+    newPost.comments = newComments
+    res.json({posts: newPost});
+})
 
-// router.route('/:post/addComment').post()
+// router.route('/:post/addComment').post(async(req, res) => {
+//     const newComment
+// })
 
 // router.route('/:post/upvote').post()
 
