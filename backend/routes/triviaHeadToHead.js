@@ -164,7 +164,7 @@ router.route('/submit').post(passport.authenticate('jwt', {session : false}),(re
 
 // init a head-to-head game
 // request format: {user1: str, user2: str}
-router.route('/init').post(passport.authenticate('jwt', {session : false}),req, res) => {
+router.route('/init').post(passport.authenticate('jwt', {session : false}),(req, res) => {
     // try to find an open trivia using the given two usernamas
     headToHeadGame.findOne({users: {$all: [req.body.user1, req.body.user2]}, status: 'open'})
         .then(game => {
