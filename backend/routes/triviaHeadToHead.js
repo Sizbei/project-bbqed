@@ -108,9 +108,8 @@ const updateHeadToHeadDocument = game => {
 
 // a request to update the DB and respond back a updated snapshot of head-to-head trivia information in DB
 // request format: {_id: str}
-router.route('/update').post(passport.authenticate('jwt', {session : false}),(req, res) => {
+router.route('/update').put(passport.authenticate('jwt', {session : false}),(req, res) => {
     console.log('==============update===============');
-    // console.log("req", req);
     console.log("req user", req.user);
     console.log("req query", req.query);
     console.log("req body", req.body);
@@ -131,7 +130,7 @@ router.route('/update').post(passport.authenticate('jwt', {session : false}),(re
             res.status(400).json({msg: 'Bad request: request trivia game does not exist or open'});
         }
         })
-        .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
+        .catch(err => res.status(501).json({msg: 'Internal service error', err: err}));
 });
 
 // a request to submit trivia question answer to DB
@@ -171,7 +170,6 @@ router.route('/submit').post(passport.authenticate('jwt', {session : false}),(re
 // request format: {user1: str, user2: str}
 router.route('/init').post(passport.authenticate('jwt', {session : false}),(req, res) => {
     
-  console.log("init body", req.body);
   // try to find an open trivia using the given two usernamas
     headToHeadGame.findOne({users: {$all: [req.body.user1, req.body.user2]}, status: 'open'})
         .then(game => {
@@ -199,13 +197,14 @@ router.route('/init').post(passport.authenticate('jwt', {session : false}),(req,
                         }
                         game.questions.push(curQuestion);
                     }
+
                     game.save().then(() => res.json({msg: 'Head-to-head gamse initialized', _id: game._id}))
-                        .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
+                        // .catch(err => {res.status(501).json({msg: 'Internal service error', err: err}));
                 })
-                .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
+                // .catch(err => res.status(522).json({msg: 'Internal service error', err: err}));
             }
         })
-        .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
+        // .catch(err => res.status(503).json({msg: 'Internal service error', err: err}));
 })
 
 module.exports = router;
