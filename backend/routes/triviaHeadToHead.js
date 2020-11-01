@@ -10,9 +10,11 @@ const passportConfig = require('../passport');
 const { data } = require('jquery');
 
 // set the time limit for each trivia question, unit in sec
-const timeLimit = 5;
-// set the total number of question in one round of trivia
+const timeLimit = 30;
+// set the total number of question in one regular trivia
 const questionCount = 10;
+// set the total number of question prepared in one trivia game
+const maxQuestionCount = 11;
 
 //-------------------------------------------------
 // Supporting functions for head-to-head trivia game
@@ -108,26 +110,41 @@ const updateHeadToHeadDocument = game => {
     return game;
 }
 
+const generateGameInstance = game => {
+    const loopCount = maxQuestionCount - (game.currentQuestionIndex + 1);
+    for(i = 0; i < loopCount; i++) {
+        game.questions.pop();
+    }
+    return game;
+}
+
 //-------------------------------------------------
 // Routes for head-to-head trivia game
 //-------------------------------------------------
 
 // a request to update the DB and respond back a updated snapshot of head-to-head trivia information in DB
 // request format: {_id: str}
-router.route('/update').put(passport.authenticate('jwt', {session : false}),(req, res) => {
+router.route('/update').put((req, res) => {
+//router.route('/update').put(passport.authenticate('jwt', {session : false}),(req, res) => {
     console.log('==============update===============');
     headToHeadGame.findById({_id: req.body._id})
         .then(game => {
         if(game && game.status == 'open') {
-            console.log('1: able to find the head to head game in DB');
-            game = updateHeadToHeadDocument(game);
-            console.log('2: game document updated');
-            game.save()
-            .then(() => {
-                console.log('3: game document saved');
-                res.json({msg: "Document updated", gameInstance: game});
-            })
-            .catch(err => res.status(500).json({msg: err}));
+            if(game.status == 'open') {
+                console.log('1: able to find the head to head game in DB');
+                game = updateHeadToHeadDocument(game);
+                console.log('2: game document updated');
+                game.save()
+                .then(() => {
+                    console.log('3: game document saved');
+                    gameInstance = generateGameInstance(game);
+                    res.json({msg: 'Document updated', gameInstance: gameInstance});
+                })
+                .catch(err => res.status(500).json({msg: err}));
+            } else {
+                gameInstance = generateGameInstance(game);
+                res.json({msg: 'game is closed', gameInstance: gameInstance});
+            }
         } else {
             res.status(400).json({msg: 'Bad request: request trivia game does not exist or open'});
         }
@@ -137,7 +154,8 @@ router.route('/update').put(passport.authenticate('jwt', {session : false}),(req
 
 // a request to submit trivia question answer to DB
 // request format: {_id: str, username: str, answer: str}
-router.route('/submit').post(passport.authenticate('jwt', {session : false}),(req, res) => {
+router.route('/submit').post((req, res) => {
+//router.route('/submit').post(passport.authenticate('jwt', {session : false}),(req, res) => {
     console.log('==============submit===============');
     headToHeadGame.findById({_id: req.body._id})
         .then(game => {
@@ -170,8 +188,8 @@ router.route('/submit').post(passport.authenticate('jwt', {session : false}),(re
 
 // init a head-to-head game
 // request format: {user1: str, user2: str}
-router.route('/init').post(passport.authenticate('jwt', {session : false}),(req, res) => {
-    
+router.route('/init').post((req, res) => {
+//router.route('/init').post(passport.authenticate('jwt', {session : false}),(req, res) => {
   // try to find an open trivia using the given two usernamas
     headToHeadGame.findOne({users: {$all: [req.body.user1, req.body.user2]}, status: 'open'})
         .then(game => {
@@ -179,7 +197,7 @@ router.route('/init').post(passport.authenticate('jwt', {session : false}),(req,
                 res.json({msg: 'Head-to-head game exists', _id: game._id});
             } else {
                 // get 10 random trivia question from DB and use them to init the game
-                trivia.aggregate([{$sample: {size: questionCount + 1}}])
+                trivia.aggregate([{$sample: {size: maxQuestionCount}}])
                 .then(trivias => {
                     let game = new headToHeadGame({
                         users: [req.body.user1, req.body.user2],
