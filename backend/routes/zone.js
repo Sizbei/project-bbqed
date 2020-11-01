@@ -81,16 +81,65 @@ router.route('/display/:username/:post').get(async(req, res) => {
     res.json({posts: newPost});
 })
 
-// router.route('/:post/addComment').post(async(req, res) => {
-//     const newComment
-// })
+router.route('/addComment').post(async(req, res) => {
+    const newComment = new Comment({
+        commenter: req.body.commenter,
+        post: req.body.post,
+        likes: 0,
+        upvoted: [],
+        downvoted: []
+    })
+    newComment.save()
+    .then(res.status(200).json("Created Comment"))
+    .catch((err) => {res.status(400).json('Error: ' + err)})
+})
 
-// router.route('/:post/upvote').post()
+router.route('/upvote').post(async(req, res) => {
+    //Handle Comments
+    if (req.body.comment.length != 0) {
+        if (req.body.upvoted) {
+            Comment.updateOne({_id: req.body.comment}, {$pull: {upvoted: req.body.username}, $inc: {likes: -1}})
+            .then(res.status(200).json('Comment Upvoted - Removed'))
+            .catch((err) => {
+                res.status(400).json('Error: ' + err)
+            })
+        } else if (req.body.downvoted) {
+            Comment.updateOne({_id: req.body.comment}, {$push: {upvoted: req.body.username}, $inc: {likes: 2}, $pull: {downvoted: req.body.username}})
+            .then(res.status(200).json('Comment Upvoted - From Downvote'))
+            .catch((err) => {
+                res.status(400).json('Error: ' + err)
+            })
+        } else {
+            Comment.updateOne({_id: req.body.comment}, {$push: {upvoted: req.body.username}, $inc: {likes: 1}})
+            .then(res.status(200).json('Comment Upvoted - From Neutral'))
+            .catch((err) => {
+                res.status(400).json('Error: ' + err)
+            })
+        }
+    //Handle Post
+    } else if (req.body.post.length != 0) {
+        if (req.body.upvoted) {
+            Post.updateOne({_id: req.body.post}, {$pull: {upvoted: req.body.username}, $inc: {likes: -1}})
+            .then(res.status(200).json('Post Upvoted - Removed'))
+            .catch((err) => {
+                res.status(400).json('Error: ' + err)
+            })
+        } else if (req.body.downvoted) {
+            Post.updateOne({_id: req.body.post}, {$push: {upvoted: req.body.username}, $inc: {likes: 2}, $pull: {downvoted: req.body.username}})
+            .then(res.status(200).json('Post Upvoted - From Downvote'))
+            .catch((err) => {
+                res.status(400).json('Error: ' + err)
+            })
+        } else {
+            Post.updateOne({_id: req.body.post}, {$push: {upvoted: req.body.username}, $inc: {likes: 1}})
+            .then(res.status(200).json('Post Upvoted - From Neutral'))
+            .catch((err) => {
+                res.status(400).json('Error: ' + err)
+            })
+        }
+    }
+})
 
 // router.route('/:post/downvote').post()
-
-// router.route('/:post/report')
-
-// router.route('/:post/:comment/upvote).post()
 
 module.exports = router;
