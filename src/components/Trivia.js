@@ -82,43 +82,43 @@ export default function Trivia(props) {
       .then((initData) => {
         console.log("got init", initData);
 
-        // const fetchUpdate = {
-        //   method: "put",
-        //   body: JSON.stringify({_id: initData._id}),
-        //   headers: {'Content-Type' : 'application/json'}
-        // }
+        const fetchUpdate = {
+          method: "put",
+          body: JSON.stringify({_id: initData._id}),
+          headers: {'Content-Type' : 'application/json'}
+        }
 
-        // console.log("Request update", fetchUpdate);
-        // fetch('/trivia/head-to-head/update', fetchUpdate).then(res => res.json())
-        // .then((updateData) => {
-        //   console.log("got update", updateData);
-        //   console.log("got update", updateData.gameInstance.currentQuestionIndex);
+        console.log("Request update", fetchUpdate);
+        fetch('/trivia/head-to-head/update', fetchUpdate).then(res => res.json())
+        .then((updateData) => {
+          console.log("got update", updateData);
+          console.log("got update", updateData.gameInstance.currentQuestionIndex);
 
-        //   const fetchSubmit = {
-        //     method: "post",
-        //     body: JSON.stringify({
-        //       _id: initData._id,
-        //       username: "user3",
-        //       answer: "blah blah blah",
-        //     }),
-        //     headers: {'Content-Type' : 'application/json'}
-        //   }
-        //   fetch('/trivia/head-to-head/submit', fetchSubmit).then(res => res.json())
-        //   .then((updateSubmit) => {
-        //     console.log("got submit data", updateSubmit);
+          const fetchSubmit = {
+            method: "post",
+            body: JSON.stringify({
+              _id: initData._id,
+              username: "user3",
+              answer: "blah blah blah",
+            }),
+            headers: {'Content-Type' : 'application/json'}
+          }
+          fetch('/trivia/head-to-head/submit', fetchSubmit).then(res => res.json())
+          .then((updateSubmit) => {
+            console.log("got submit data", updateSubmit);
 
-        //     const fetchFinalUpdate = {
-        //       method: "put",
-        //       body: JSON.stringify({_id: initData._id}),
-        //       headers: {'Content-Type' : 'application/json'}
-        //     }
+            const fetchFinalUpdate = {
+              method: "put",
+              body: JSON.stringify({_id: initData._id}),
+              headers: {'Content-Type' : 'application/json'}
+            }
     
-        //     fetch('/trivia/head-to-head/update', fetchFinalUpdate).then(res => res.json())
-        //     .then((finalData) => {
-        //       console.log("FINAL DATA", finalData.gameInstance.currentQuestionIndex);
-        //     })
-        //   })
-        // })
+            fetch('/trivia/head-to-head/update', fetchFinalUpdate).then(res => res.json())
+            .then((finalData) => {
+              console.log("FINAL DATA", finalData.gameInstance.currentQuestionIndex);
+            })
+          })
+        })
       })
     }
   }

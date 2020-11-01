@@ -10,7 +10,7 @@ const passportConfig = require('../passport');
 const { data } = require('jquery');
 
 // set the time limit for each trivia question, unit in sec
-const timeLimit = 30;
+const timeLimit = 5;
 // set the total number of question in one round of trivia
 const questionCount = 10;
 
@@ -83,7 +83,7 @@ const updateHeadToHeadDocument = game => {
         // check if the question is still in time limit
         if((cur_date - curQuestion.startTime)/1000 <= timeLimit) {
             // check if both users has submitted responses
-            if (curQuestion.responses[0].answer && curQuestion.responses[0].answer) {
+            if (curQuestion.responses[0].answer && curQuestion.responses[1].answer) {
                 console.log('1-3: timer is still on and both users have completed responses');
                 game = closeQuestion(game);
                 console.log('1-4: question is closed');
@@ -110,10 +110,10 @@ const updateHeadToHeadDocument = game => {
 // request format: {_id: str}
 router.route('/update').put(passport.authenticate('jwt', {session : false}),(req, res) => {
     console.log('==============update===============');
-    console.log("req user", req.user);
-    console.log("req query", req.query);
-    console.log("req body", req.body);
-    console.log("game found", req.body._id);
+    // console.log("req user", req.user);
+    // console.log("req query", req.query);
+    // console.log("req body", req.body);
+    // console.log("game found", req.body._id);
     headToHeadGame.findById({_id: req.body._id})
         .then(game => {
         if(game && game.status == 'open') {
