@@ -22,12 +22,12 @@ const commentSchema = new Schema({
         default: 0
     },
     upvoted: {
-        type:[{String}],
+        type:[String],
         required: false,
         default: []
     },
     downvoted: {
-        type:[{String}],
+        type:[String],
         required: false,
         default: []
     },
