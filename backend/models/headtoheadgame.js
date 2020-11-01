@@ -4,19 +4,23 @@ const Schema = mongoose.Schema;
 const headToHeadGameSchema = new Schema({
     users: {
         type: [String],
+        unique: false,
         required: true,
     },
     status: {
         type: String,
         enum : ['open','close'],
+        unique: false,
         required: true,
     },
     points: {
         type: [Number],
+        unique: false,
         required: true,
     },
     currentQuestionIndex: {
         type: Number,
+        unique: false,
         required: true
     },
     questions: [
@@ -42,16 +46,19 @@ const headToHeadGameSchema = new Schema({
                 {
                     answer: {
                         type: String,
+                        unique: false,
                         required: false,
                     },
                     responseTime: {
                         type: Date,
+                        unique: false,
                         required: false,
                     }
                 }
             ],
             startTime: {
                 type: Date,
+                unique: false,
                 required: false,
             },
         },
