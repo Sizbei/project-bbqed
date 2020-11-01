@@ -64,8 +64,14 @@ const closeQuestion = game => {
         game.currentQuestionIndex += 1;
         game.questions[game.currentQuestionIndex].startTime = new Date();
     } else {
-        console.log('1-3-13: last question so close the trivia');
-        game.status = 'close';
+        if (game.points[0] == game.points[1] && game.currentQuestionIndex == questionCount - 1) {
+            console.log('1-3-13: move to extra question');
+            game.currentQuestionIndex += 1;
+            game.questions[game.currentQuestionIndex].startTime = new Date();
+        } else {
+            console.log('1-3-14: last question so close the trivia');
+            game.status = 'close';
+        }
     }
     return game;
 }
@@ -83,7 +89,7 @@ const updateHeadToHeadDocument = game => {
         // check if the question is still in time limit
         if((cur_date - curQuestion.startTime)/1000 <= timeLimit) {
             // check if both users has submitted responses
-            if (curQuestion.responses[0].answer && curQuestion.responses[0].answer) {
+            if (curQuestion.responses[0].answer && curQuestion.responses[1].answer) {
                 console.log('1-3: timer is still on and both users have completed responses');
                 game = closeQuestion(game);
                 console.log('1-4: question is closed');
@@ -110,11 +116,6 @@ const updateHeadToHeadDocument = game => {
 // request format: {_id: str}
 router.route('/update').post(passport.authenticate('jwt', {session : false}),(req, res) => {
     console.log('==============update===============');
-    // console.log("req", req);
-    console.log("req user", req.user);
-    console.log("req query", req.query);
-    console.log("req body", req.body);
-    console.log("game found", req.body._id);
     headToHeadGame.findById({_id: req.body._id})
         .then(game => {
         if(game && game.status == 'open') {
@@ -179,7 +180,7 @@ router.route('/init').post(passport.authenticate('jwt', {session : false}),(req,
                 res.json({msg: 'Head-to-head game exists', _id: game._id});
             } else {
                 // get 10 random trivia question from DB and use them to init the game
-                trivia.aggregate([{$sample: {size: questionCount}}])
+                trivia.aggregate([{$sample: {size: questionCount + 1}}])
                 .then(trivias => {
                     let game = new headToHeadGame({
                         users: [req.body.user1, req.body.user2],
