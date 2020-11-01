@@ -29,19 +29,16 @@ const headToHeadGameSchema = new Schema({
                 question: {
                     type: String,
                     required: true,
-                    unique: false,
                     trim: true,
                 },
                 answer: {
                     type: String,
                     required: true,
-                    unique: false,
                     trim: true,
                 },
                 options: {
                     type: [String],
                     required: true,
-                    unique: false,
                     trim: true,
                 }
             },
