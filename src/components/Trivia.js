@@ -37,6 +37,8 @@ export default function Trivia(props) {
 
   const [state, setState] = useState(deepcopy(initialState));
 
+  const [select, setSelect] = useState(null);
+
   const handleModeSelect = req => {
     const newState = deepcopy(initialState);
 
@@ -181,32 +183,45 @@ export default function Trivia(props) {
       newState.chosenOptions = {user: state.options[option], enemy: ""};
       setState(newState);
     } else if (state.mode === "online" && !state.gameOver) {
-      const newState = {...state};
-      newState.chosenOption = option;
-      newState.unSubmitted = true;
-      newState.chosenOptions = {user: state.options[option], enemy: ""};
-      newState.stop = "repeat";
-      // clearTimeout(state.timeOut); // clear any previous fetch timer
-      setState(newState);
+      setSelect(state.options[option]);
     }
   }
 
+  // process an online option select
   const processOptionSelect = () => {
     if (state.mode !== "online") {
       console.log("ERROR mode can only be online");
       return;
     }
 
-    if (!("unSubmitted" in state && state.unSubmitted == true)) {
+    if (select == null) {
       console.log("ERROR option is not new.");
       return;
     }
 
+    const fetchSubmit = {
+      method: "post",
+      body: JSON.stringify({
+        _id: state.instance,
+        username: authContext.user.username,
+        answer: select,
+      }),
+      headers: {'Content-Type' : 'application/json'}
+    }
     console.log("Process option...");
-    const newState = {...state}
-    newState.unSubmitted = false;
-    newState.stop = "fetch";
-    setState(newState);
+
+    fetch('/trivia/head-to-head/submit', fetchSubmit).then(res => res.json())
+    .then((updateSubmit) => {
+      console.log("got submit data", updateSubmit);
+      const newState = {...state}
+      newState.chosenOption = select;
+      newState.chosenOptions = {user: select, enemy: null}
+      newState.stop = "fetch";
+      setSelect(null);
+      setState(newState);
+    })
+
+    
   }
 
   const [triviaPage, setTriviaPage] = useState(null);
@@ -296,28 +311,16 @@ export default function Trivia(props) {
     setState(deepcopy(initialState));
   }, [state])
 
-  // // check for a user submission
-  // useEffect(() => {
-  //   if (!("stop" in state) || state.stop !== "checkSubmit") {
-  //     return;
-  //   }
-
-  //   if ("unSubmitted" in state && state.unSubmitted == true) {
-  //     clearTimeout(state.timeOut); // clear any previous fetch timer
-  //     processOptionSelect();
-  //   }
-  // }, [state.stop])
-
   // an infinite loop
   useEffect(() => {
     if (!("stop" in state) || state.stop !== "repeat") {
       return;
     }
     
-    clearTimeout(state.timeOut); // clear any previous fetch timer
+    // clearTimeout(state.timeOut); // clear any previous fetch timer
 
     // Check if there is a selected, unprocessed answer
-    if ("unSubmitted" in state && state.unSubmitted == true) {
+    if (select != null) {
       processOptionSelect();
     } else {
       // Otherwise go fetch again
@@ -326,7 +329,7 @@ export default function Trivia(props) {
         newState.stop = "fetch";
         newState.timeOut = timeOut;
         setState(newState);
-      }, 1000);
+      }, 500);
     }
   }, [state.stop])
 
@@ -349,7 +352,7 @@ export default function Trivia(props) {
     fetch('/trivia/head-to-head/update', fetchUpdate).then(res => res.json())
     .then((updateData) => {
       const data = updateData.gameInstance;
-      // console.log("got update", updateData);
+      console.log("got update", updateData);
 
       const newState = {...state}
 
@@ -373,19 +376,20 @@ export default function Trivia(props) {
           question: question,
         }
 
-        if (questionNumber - 1 < data.curQuestionIndex) { // answers present!
-          const userCorrect = "accuracy" in currentQuestion.responses.user ? currentQuestion.responses.user.accuracy : false;
-          const enemyCorrect = (currentQuestion.responses.enemy != null && "accuracy" in currentQuestion.responses.enemy) 
-            ? currentQuestion.responses.enemy.accuracy : false;
+        if (questionNumber - 1 < data.curQuestionIndex || (data.status == "close" && questionNumber <= 11)) { // answers present!
+          const userCorrect = "accuracy" in e.responses.user ? e.responses.user.accuracy : false;
+          const enemyCorrect = (e.responses.enemy != null && "accuracy" in e.responses.enemy) 
+            ? e.responses.enemy.accuracy : false;
           entry.userCorrect = userCorrect;
           entry.enemyCorrect = enemyCorrect;
+          console.log(userCorrect, enemyCorrect);
         }
         list.push(entry);
       })
 
       newState.list = list;
       newState.stop = "repeat";
-      console.log("new state", newState);
+      // console.log("new state", newState);
       setState(newState);
     })
   }, [state.stop])

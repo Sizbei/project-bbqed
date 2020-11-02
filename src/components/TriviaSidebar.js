@@ -57,7 +57,7 @@ function QuestionListItem(props) {
 function QuestionList(props) {
   const mode = props.mode;
   const list = props.list;
-  const size = mode === "online" ? 11 : 10;
+  const size = mode === "online" && list.length == 11 ? 11 : 10;
 
   let accum = [];
   list.forEach(e => {
