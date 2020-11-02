@@ -18,6 +18,11 @@ const headToHeadGameSchema = new Schema({
         unique: false,
         required: true,
     },
+    acsChange: {
+        type: [Number],
+        unique: false,
+        required: false,
+    },
     currentQuestionIndex: {
         type: Number,
         unique: false,
@@ -51,6 +56,11 @@ const headToHeadGameSchema = new Schema({
                     },
                     responseTime: {
                         type: Date,
+                        unique: false,
+                        required: false,
+                    },
+                    accuracy: {
+                        type: Boolean,
                         unique: false,
                         required: false,
                     }
