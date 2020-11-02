@@ -16,9 +16,9 @@ export default function InGameTrivia(props) {
   const chosenOptions = "chosenOptions" in props ? props.chosenOptions : {user: 1, enemy: 2};
   let currentQuestion = '\u00A0'; // initialize with space to preserve spacing
   let options = ['\u00A0', '\u00A0', '\u00A0', '\u00A0'];
-  if (mode == "singlePlayer") {
-    currentQuestion = props.currentQuestion;
-    options = props.options;
+  if (mode == "singlePlayer" || mode == "online") {
+    currentQuestion = "currentQuestion" in props ? props.currentQuestion : currentQuestion;
+    options = "options" in props ? props.options : options;
   }
 
   const [tickValue, NewTickValue] = useState(0);
