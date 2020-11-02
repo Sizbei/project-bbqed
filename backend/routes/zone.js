@@ -7,6 +7,7 @@ let Post = require('../models/post')
 let Comment = require('../models/comment')
 let Profile = require('../models/profile')
 let Acs = require('../models/acs')
+const mongoose = require('mongoose');
 
 router.route('/display/:username/focused').get(async(req, res) => {
     var radarList = await Profile.findOne({username: req.params.username}).then((user) => {
@@ -100,15 +101,21 @@ router.route('/addComment').post(async(req, res) => {
     const newComment = new Comment({
         commenter: req.body.commenter,
         post: req.body.post,
+        body: req.body.body,
         likes: 0,
         upvoted: [],
         downvoted: []
     })
     newComment.save()
     .then(async(comment) => {
-        await Post.findByIdAndUpdate(req.body.post, {comments:{$push: comment.id}})
-        .then(() => {res.status(200).json("Created Comment")})
-        .catch((err) => {res.status(400).json('Error: ' + err)})
+        await Post.findById(req.body.post)
+        .then((post) => {
+            post.comments.push(comment)
+            res.status(200).json("Created Comment")
+        })
+        .catch(async (err) => {
+            res.status(400).json('Error: ' + err)
+        })
     })
     .catch((err) => {res.status(400).json('Error: ' + err)})
 })
