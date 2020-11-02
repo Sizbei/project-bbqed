@@ -11,7 +11,7 @@ import TriviaSidebar from './TriviaSidebar';
     mode: nav | singlePlayer | online | practice
     username: {user:, enemy:}
     ppurl: {user:, enemy:}
-    stop: nostop | transition-immediate | transition-showSolution | toNav  // a state
+    stop: nostop | single-transition-immediate | transition-showSolution | toNav  // a state
     showPostScreen: bool
     lists = [{questionNumber:, question:, enemyCorrect:, userCorrect:}];
     score = {user:, enemy: };
@@ -87,13 +87,13 @@ export default function Trivia(props) {
         })
       })
     } else if (mode === "online") {
-      initOnline("user1");
+      initOnline("user2");
     } else if (mode === "practice") {
       const fetchInit = {
         method: "post",
         body: JSON.stringify({
-          user1: "user1",
-          user2: "user3"
+          user1: "user3",
+          user2: "user2",
         }),
         headers: {'Content-Type' : 'application/json'}
       }
@@ -156,8 +156,8 @@ export default function Trivia(props) {
     const fetchInit = {
       method: "post",
       body: JSON.stringify({
-        user1: authContext.user.username,
-        user2: enemy,
+        user: authContext.user.username,
+        enemy: enemy,
       }),
       headers: {'Content-Type' : 'application/json'}
     }
@@ -176,11 +176,37 @@ export default function Trivia(props) {
 
     if (state.mode === "singlePlayer" && !state.gameOver && state.stop === "nostop") {
       const newState = {...state};
-      newState.stop = "transition-immediate"
+      newState.stop = "single-transition-immediate"
       newState.chosenOption = option;
       newState.chosenOptions = {user: state.options[option], enemy: ""};
       setState(newState);
+    } else if (state.mode === "online" && !state.gameOver) {
+      const newState = {...state};
+      newState.chosenOption = option;
+      newState.unSubmitted = true;
+      newState.chosenOptions = {user: state.options[option], enemy: ""};
+      newState.stop = "repeat";
+      // clearTimeout(state.timeOut); // clear any previous fetch timer
+      setState(newState);
     }
+  }
+
+  const processOptionSelect = () => {
+    if (state.mode !== "online") {
+      console.log("ERROR mode can only be online");
+      return;
+    }
+
+    if (!("unSubmitted" in state && state.unSubmitted == true)) {
+      console.log("ERROR option is not new.");
+      return;
+    }
+
+    console.log("Process option...");
+    const newState = {...state}
+    newState.unSubmitted = false;
+    newState.stop = "fetch";
+    setState(newState);
   }
 
   const [triviaPage, setTriviaPage] = useState(null);
@@ -188,7 +214,7 @@ export default function Trivia(props) {
   /*------------State Transitions----------------*/
   // A transition from state-immediate to fetching for next data
   useEffect(() => { 
-    if (!("stop" in state) || state.stop !== "transition-immediate") {
+    if (!("stop" in state) || state.stop !== "single-transition-immediate") {
       return;
     }
 
@@ -270,8 +296,41 @@ export default function Trivia(props) {
     setState(deepcopy(initialState));
   }, [state])
 
+  // // check for a user submission
+  // useEffect(() => {
+  //   if (!("stop" in state) || state.stop !== "checkSubmit") {
+  //     return;
+  //   }
 
-  // For multiplayer, fetch the state, transition to "nostop"
+  //   if ("unSubmitted" in state && state.unSubmitted == true) {
+  //     clearTimeout(state.timeOut); // clear any previous fetch timer
+  //     processOptionSelect();
+  //   }
+  // }, [state.stop])
+
+  // an infinite loop
+  useEffect(() => {
+    if (!("stop" in state) || state.stop !== "repeat") {
+      return;
+    }
+    
+    clearTimeout(state.timeOut); // clear any previous fetch timer
+
+    // Check if there is a selected, unprocessed answer
+    if ("unSubmitted" in state && state.unSubmitted == true) {
+      processOptionSelect();
+    } else {
+      // Otherwise go fetch again
+      const timeOut = setTimeout(() => {
+        const newState = {...state};
+        newState.stop = "fetch";
+        newState.timeOut = timeOut;
+        setState(newState);
+      }, 1000);
+    }
+  }, [state.stop])
+
+  // For multiplayer, fetch the state, transition to "repeat"
   useEffect(() => {
     if (!("stop" in state) || state.stop !== "fetch") {
       return;
@@ -279,18 +338,27 @@ export default function Trivia(props) {
 
     const fetchUpdate = {
       method: "put",
-      body: JSON.stringify({_id: state.instance}),
+      body: JSON.stringify({
+        _id: state.instance,
+        user: authContext.user.username
+      }),
       headers: {'Content-Type' : 'application/json'}
     }
 
-    console.log("Fetching state...", fetchUpdate);
+    // console.log("Fetching state...", fetchUpdate);
     fetch('/trivia/head-to-head/update', fetchUpdate).then(res => res.json())
     .then((updateData) => {
       const data = updateData.gameInstance;
-      console.log("got update", updateData);
+      // console.log("got update", updateData);
 
       const newState = {...state}
-      const currentQuestion = data.questions[data.currentQuestionIndex];
+
+      // update score
+      newState.score = {user: data.users.user.point, enemy: data.users.enemy.point};
+      newState.acsChange = {user: data.users.user.acsChange, enemy: data.users.enemy.acsChange};
+      
+      // update displayed questions and answers
+      const currentQuestion = data.questions[data.curQuestionIndex];
       newState.currentQuestion = currentQuestion.triviaQuestion.question;
       newState.options = currentQuestion.triviaQuestion.options;
 
@@ -305,14 +373,19 @@ export default function Trivia(props) {
           question: question,
         }
 
-        if (questionNumber - 1 < data.currentQuestionIndex) { // answers present!
-          const userCorrect = null;
+        if (questionNumber - 1 < data.curQuestionIndex) { // answers present!
+          const userCorrect = "accuracy" in currentQuestion.responses.user ? currentQuestion.responses.user.accuracy : false;
+          const enemyCorrect = (currentQuestion.responses.enemy != null && "accuracy" in currentQuestion.responses.enemy) 
+            ? currentQuestion.responses.enemy.accuracy : false;
+          entry.userCorrect = userCorrect;
+          entry.enemyCorrect = enemyCorrect;
         }
         list.push(entry);
       })
 
       newState.list = list;
-      newState.stop = "nostop";
+      newState.stop = "repeat";
+      console.log("new state", newState);
       setState(newState);
     })
   }, [state.stop])
