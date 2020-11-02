@@ -85,7 +85,7 @@ function Posts(props){
 export default function RadarList(props) { 
 const posts =  props.radarList; 
 const [currentPage, setCurrentPage] = useState(1);
-const [postsPerPage] = useState(1); 
+const [postsPerPage] = useState(5); 
 const changeUser = props.changeUser;
 
 //Get current posts 

@@ -1,4 +1,8 @@
 .profile-popup  {  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   position: fixed;  
   width: 100%;  
   height: 100%;  
@@ -14,7 +18,7 @@
   left: 25%;  
   right: 25%;  
   top: 25%;  
-  bottom: 35%;  
+   
   margin: auto;  
   border-radius: 10px;  
   background: #41474b;   
@@ -75,8 +79,7 @@ h1 {
   position: absolute;  
   left: 35%;  
   right: 35%;  
-  top: 10%;  
-  bottom: 10%;  
+  top: 10%;    
   margin: auto;  
   border-radius: 10px;  
   background: #41474b;   
