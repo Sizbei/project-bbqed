@@ -1,10 +1,12 @@
-import React, {useState,  useEffect, Component} from "react"
+import React, {useState,  useEffect, useContext} from "react"
 import ProfilePicture from './ProfilePicture'
 import '../styling/PostView.css'
+import {AuthContext} from '../Context/AuthContext';
 
-
-export default function View() {
-    
+export default function View(props) {
+    const authContext = useContext(AuthContext);
+    const postId = props.location.pathname; 
+    console.log(postId);
     const [username, setUsername] = useState('user3'); 
     const [acs, setAcs] = useState(0); 
     const [content, setContent] = useState('testing123'); 

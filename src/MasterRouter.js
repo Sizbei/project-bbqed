@@ -11,6 +11,7 @@ import Trivia from "./components/Trivia";
 import Analysis from "./components/Analysis";
 import PicksAndPredictions from "./components/PicksAndPredictions";
 import Profile from "./components/Profile";
+import Post from "./components/PostView"
 import Registration from "./components/Registration"
 import Settings from "./components/Settings"
 import Header from "./components/Header"
@@ -27,6 +28,7 @@ function App() {
       <Header />
       <PublicRoute path="/" exact component={Login} />
       <PrivateRoute path="/TheZone" exact component={TheZone} />
+      <PrivateRoute path="/post" component={Post} />
       <PrivateRoute path="/Trivia" component={Trivia} />
       <PrivateRoute path="/Analysis" component={Analysis} />
       <PrivateRoute path="/PicksAndPredictions" component={PicksAndPredictions} />
