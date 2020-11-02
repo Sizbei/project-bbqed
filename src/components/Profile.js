@@ -288,43 +288,43 @@ export default class Profile extends Component {
                             <h2 className="prof-title"> ACS History </h2>
                             
                             <div className="prof-acs-content"> 
-                            {this.state.acs === 0 ?  
-                                <div className="prof-piechart">
-                                    Unavailable
-                                 </div>   
-                                : 
-                                <PieChart className="prof-piechart"
-                                data={this.state.acsChart}
-                                label={({ dataEntry }) => Math.round(dataEntry.percentage) + '%'}
-                                labelStyle={defaultLabelStyle}                
-                                raidus={42}
-                                reveal ={({dataEntry}) => Math.round(dataEntry.percentage) + '%'}
-                                />
-                            }
-                            
+                                {this.state.acs === 0 ?  
+                                    <div className="prof-piechart">
+                                        Unavailable
+                                    </div>   
+                                    : 
+                                    <PieChart className="prof-piechart"
+                                    data={this.state.acsChart}
+                                    label={({ dataEntry }) => Math.round(dataEntry.percentage) + '%'}
+                                    labelStyle={defaultLabelStyle}                
+                                    raidus={42}
+                                    reveal ={({dataEntry}) => Math.round(dataEntry.percentage) + '%'}
+                                    />
+                                }
+                                
 
-                            <table>
-                                <thead> 
-                                    <tr>
-                                        <th> Point </th>
-                                        <th> Category </th>
-                                        <th> Time </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                {this.state.acsHistory.map(data => {
-                                    return (
-                                        <tr key={data.time}>
-                                            <td className={data.points>= 0? "prof-score-content-pos" : "prof-score-content-neg"}>{data.points}</td>
-                                            <td>{data.category}</td>
-                                            <td>{data.date}</td>
+                                <table>
+                                    <thead> 
+                                        <tr>
+                                            <th> Point </th>
+                                            <th> Category </th>
+                                            <th> Time </th>
                                         </tr>
-                                    )
-                                })} 
-                            
-                                </tbody>
-                            </table>
-                        </div>
+                                    </thead>
+                                    <tbody>
+                                    {this.state.acsHistory.map(data => {
+                                        return (
+                                            <tr key={data.time}>
+                                                <td className={data.points>= 0? "prof-score-content-pos" : "prof-score-content-neg"}>{data.points}</td>
+                                                <td >{data.category}</td>
+                                                <td>{data.date}</td>
+                                            </tr>
+                                        )
+                                    })} 
+                                
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div className="prof-bottom-right-content">
                             
