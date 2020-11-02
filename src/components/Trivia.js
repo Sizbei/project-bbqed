@@ -165,6 +165,8 @@ export default function Trivia(props) {
     fetch('/trivia/head-to-head/init', fetchInit).then(res => res.json())
     .then((initData) => {
       console.log("got init", initData);
+      newState.instance = initData._id
+      newState.stop = "fetch";
       setState(newState);
     })
   }
@@ -261,8 +263,6 @@ export default function Trivia(props) {
 
   // Transition from anywhere to nav screen
   useEffect(() => {
-    console.log("PRINT THIS", state);
-    console.log("initial", initialState);
     if (!("stop" in state) || state.stop !== "toNav") {
       return;
     }
@@ -270,11 +270,29 @@ export default function Trivia(props) {
     setState(deepcopy(initialState));
   }, [state])
 
-  // Render on change of state
+
+  // For multiplayer, fetch the state, transition to "nostop"
   useEffect(() => {
-    let nextTriviaPage = <InGameTrivia {...state} handleModeSelect={handleModeSelect} handleOptionSelect={handleOptionSelect}/>;
-    setTriviaPage(nextTriviaPage);
-  }, [state]);
+    if (!("stop" in state) || state.stop !== "fetch") {
+      return;
+    }
+
+    const fetchUpdate = {
+      method: "put",
+      body: JSON.stringify({_id: state.instance}),
+      headers: {'Content-Type' : 'application/json'}
+    }
+
+    console.log("Fetching state...", fetchUpdate);
+    fetch('/trivia/head-to-head/update', fetchUpdate).then(res => res.json())
+    .then((updateData) => {
+      console.log("got update", updateData);
+
+      const newState = {...state}
+      newState.stop = "nostop";
+      setState(newState);
+    })
+  }, [state.stop])
 
   // Fetch this user's image
   useEffect(() => {
@@ -319,6 +337,12 @@ export default function Trivia(props) {
         console.log(error);
       })
   }, [JSON.stringify(state.username)])
+
+  // Render on change of state
+  useEffect(() => {
+    let nextTriviaPage = <InGameTrivia {...state} handleModeSelect={handleModeSelect} handleOptionSelect={handleOptionSelect}/>;
+    setTriviaPage(nextTriviaPage);
+  }, [state]);
 
   return(
     <div>
