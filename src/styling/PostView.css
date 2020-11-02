@@ -6,6 +6,7 @@
     overflow: auto; 
     background-image: url("../res/images/LoginBackground.png");
     background-size: cover;
+    font-family: 'CommissionerMedium';
 }
 
 .tzpv-container { 
@@ -15,12 +16,13 @@
   flex-direction: column;
 }
 
-.tzpv-post-container { 
+.tzpv-post-container , .tzpv-post-comment-container { 
   flex-direction: column;
   display: flex;
   background-color: grey; 
   padding: 2% 3%;
   width: 60%;
+  font-size: 1.5vw; 
 }
 
 .tzpv-comments-container { 
@@ -45,24 +47,82 @@
 .tzpv-post-buttons {
   display: flex; 
 }
-.tzpv-post-button-agree , .tzpv-post-button-disagree { 
-  
+.tzpv-post-button-agree ,.tzpv-post-button-disagree, .tzpv-post-button-agree-selected , .tzpv-post-button-disagree-selected { 
+  margin-top: 2%; 
+  margin-left: 2%;
+  padding: 2%; 
+  outline: none; 
+  color: white; 
+  width: 25vw;
+  font-size: 1.5vw; 
+}
+
+.tzpv-post-comment-container input {
+  height: 5vw;
+  word-break: break-all;
+}
+.tzpv-post-comment-container button{
+  align-self: flex-end;
 }
 .tzpv-post-button-agree {
   background-color: #61b305;
+  border-style: none; 
 }
 
 .tzpv-post-button-agree-selected {
   background-color: #61b305; 
-  border-color: blue; 
-  border-width: 5px;
+  border-color: #B6F9FF;  
+  border-width: 1px;
 
 }
 .tzpv-post-button-disagree {
   background-color: #d30909;
+  border-style: none; 
 }
 .tzpv-post-button-disagree-selected {
   background-color: #d30909; 
-  border-color: blue; 
+  border-color: #B6F9FF; 
+  border-width: 2px;
 
+}
+
+@font-face {
+  font-family: 'CommissionerExtraBold';
+  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-ExtraBold.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'CommissionerBold';
+  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Bold.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'CommissionerMedium';
+  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Medium.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'CommissionerRegular';
+  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'CommissionerBlack';
+  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Black.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'CommissionerLight';
+  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Light.ttf) format('truetype');
+}
+
+
+@font-face {
+  font-family: 'CommissionerThin';
+  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Thin.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'CommissionerSemiBold';
+  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-SemiBold.ttf) format('truetype');
 }
