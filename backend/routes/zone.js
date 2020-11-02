@@ -69,6 +69,7 @@ router.route('/display/:username/:post').get(async(req, res) => {
         }).catch((err) => {res.status(400).json('Error ' + err)})
         newComment.commenter.acs = acs
         newComment.likes = comments[j].likes
+        newComment.body = comments[j].body
         newComment.upvoted = comments[j].upvoted.includes(req.params.username);
         newComment.downvoted = comments[j].downvoted.includes(req.params.username);
         newComments[j] = newComment
