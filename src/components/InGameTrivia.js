@@ -140,7 +140,7 @@ export default function InGameTrivia(props) {
         {/* <PostTrivia {...props}/> */}
         <div className='left-segment'>
         <div className='timeBox'>
-            <label className='time'>{timeValue}</label>
+            <label className='time'>{mode != "nav" ? timeValue : null}</label>
         </div>
         <div className='clockRed'>
             <div className='clockTick' style={tickJSON}></div>
