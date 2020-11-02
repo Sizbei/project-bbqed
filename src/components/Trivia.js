@@ -293,7 +293,7 @@ export default function Trivia(props) {
       const currentQuestion = data.questions[data.currentQuestionIndex];
       newState.currentQuestion = currentQuestion.triviaQuestion.question;
       newState.options = currentQuestion.triviaQuestion.options;
-s
+
       const list = [] // construct list
       let questionNumber = 0;
       data.questions.forEach(e => {
