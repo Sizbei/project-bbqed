@@ -32,6 +32,8 @@ export default function View(props) {
           setAgree(data.posts.upvoted); 
           setDisagree(data.posts.downvoted); 
           setComments(data.posts.comments); 
+          console.log(agree); 
+          console.log(disagree); 
         })
         .catch((error) => {
           console.log(error); 
@@ -39,32 +41,62 @@ export default function View(props) {
         
       }, [])
     
-    const handlePostAgree = async () => {
-      /*
+    const handlePostAgree = () => {
+        
         const body = {
-          username: this.context.user.username, 
-          viewing: this.state.username, 
+          post: postId, 
+          username: authContext.user.username, 
+          upvoted: agree, 
+          downvoted: disagree, 
         }
-        const response = await fetch(this.state.path +"/removeRadar" , {
-          method: 'DELETE' , 
+        fetch('/zone/upvote', {
+          method :  "put",
+          body : JSON.stringify(body),
           headers: {
-              'Content-Type': 'application/json'
-              // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: JSON.stringify(body), 
-        })
-        */
-        setAgree(!agree);
-        setDisagree(false); 
+              'Content-Type' : 'application/json'
+          }
+        }).then(res => res.json())
+        //axios.post('http://localhost:5000/post/add', body)
+        .then(data => {
+          setAgree(data.upvoted);
+          setDisagree(data.downvoted); 
+          setLikes(data.likes); 
+          console.log(data.likes);
+        }) 
+        .catch((error) => {
+          console.log(error);
+        })  
+        
         
     }
     const handlePostDisagree = () => {
-      setDisagree(!disagree); 
-      setAgree(false);
+      
+      const body = {
+        post: postId, 
+        username: authContext.user.username, 
+        upvoted: agree, 
+        downvoted: disagree, 
+      }
+      fetch('/zone/downvote', {
+        method :  "put",
+        body : JSON.stringify(body),
+        headers: {
+            'Content-Type' : 'application/json'
+        }
+      }).then(res => res.json())
+      //axios.post('http://localhost:5000/post/add', body)
+      .then(data => {
+        setDisagree(data.downvoted); 
+        setAgree(data.upvoted);
+        setLikes(data.likes); 
+      }) 
+      .catch((error) => {
+        console.log(error);
+      })  
     }
 
     const handleCommentAgree = () => {
-
+      
     }
     const handleCommentDisagree = () => { 
       
@@ -75,10 +107,10 @@ export default function View(props) {
     const handleAddComment = () => { 
       const body = {
         post: postId, 
-        user: authContext.user.username, 
+        commenter: authContext.user.username, 
         body: commentBody,
       }
-      fetch('/display/comment/add', {
+      fetch('/zone/addComment', {
         method :  "post",
         body : JSON.stringify(body),
         headers: {
@@ -87,7 +119,7 @@ export default function View(props) {
       }).then(res => res.json())
       //axios.post('http://localhost:5000/post/add', body)
       .then(data => {
-        alert('done!'); 
+        window.location.reload(); 
       }) 
       .catch((error) => {
         console.log(error);
@@ -104,6 +136,7 @@ export default function View(props) {
             </div>
             <div className="tzpv-post-info"> 
             <p> {content} </p>
+            <label> {likes} </label>
             </div>
         </div>
         <div className="tzpv-post-buttons"> 
@@ -126,7 +159,8 @@ export default function View(props) {
                                 <a> Disagree </a>
                             </div>      
                         </div>
-                        {data.body}
+                        <label>{data.body}</label>
+                        <label>{data.likes}</label>
 
                     </div>
                 )
