@@ -6,6 +6,21 @@ import {AuthContext} from '../Context/AuthContext';
 import AuthService from '../Services/AuthService';
 import TriviaSidebar from './TriviaSidebar';
 
+/* State.
+  state = {
+    mode: nav | singlePlayer | online | practice
+    username: {user:, enemy:}
+    ppurl: {user:, enemy:}
+    stop: nostop | transition-immediate | transition-showSolution | toNav  // a state
+    showPostScreen: bool
+    lists = [{questionNumber:, question:, enemyCorrect:, userCorrect:}];
+    score = {user:, enemy: };
+    acsChange = {user:, enemy:}
+    instance: // a matchId
+    initialACS {user:, enemy:}
+  }
+*/
+
 export default function Trivia(props) {
   const authContext = useContext(AuthContext);
   const [initialState, setInitialState] = useState({  // still gets modified by one useEffect() to get urls
@@ -13,7 +28,11 @@ export default function Trivia(props) {
     username:{user: authContext.user.username},
     ppurl: {user: "", enemy: ""},
     stop: "nostop",
-    showPostScreen: false
+    showPostScreen: false,
+    list: [],
+    score: {},
+    acsChange: {},
+    instance: null,
   });
 
   const [state, setState] = useState(deepcopy(initialState));
@@ -68,6 +87,8 @@ export default function Trivia(props) {
         })
       })
     } else if (mode === "online") {
+      initOnline("user1");
+    } else if (mode === "practice") {
       const fetchInit = {
         method: "post",
         body: JSON.stringify({
@@ -121,6 +142,31 @@ export default function Trivia(props) {
         })
       })
     }
+  }
+
+  const initOnline = (enemy) => {
+    const newState = deepcopy(initialState);
+    newState.mode = "online";
+    newState.list = [];
+    newState.username["enemy"] = enemy;
+    newState.score = {"user": 0, "enemy": 0};
+    newState.acsChange = {}
+    newState.gameOver = false;
+
+    const fetchInit = {
+      method: "post",
+      body: JSON.stringify({
+        user1: authContext.user.username,
+        user2: enemy,
+      }),
+      headers: {'Content-Type' : 'application/json'}
+    }
+    console.log("Request online init", fetchInit);
+    fetch('/trivia/head-to-head/init', fetchInit).then(res => res.json())
+    .then((initData) => {
+      console.log("got init", initData);
+      setState(newState);
+    })
   }
 
   const handleOptionSelect = option => {
@@ -230,7 +276,7 @@ export default function Trivia(props) {
     setTriviaPage(nextTriviaPage);
   }, [state]);
 
-  // Initial fetch of user image
+  // Fetch this user's image
   useEffect(() => {
     fetch("/profile/" + authContext.user.username).then(res => res.json())
       .then(data => {
@@ -250,6 +296,30 @@ export default function Trivia(props) {
       })
   }, [])
 
+  // Fetch the enemy's image
+  useEffect(() => {
+    if (!("username" in state) || !("enemy" in state.username) || state.username.enemy == "") {
+      return;
+    }
+
+    fetch("/profile/" + state.username.enemy).then(res => res.json())
+      .then(data => {
+        const newState = deepcopy(state);
+        if ("ppurl" in newState) {
+          newState.ppurl.enemy= data.image;
+        } else {
+          newState.ppurl = {
+            enemy: data.image
+          }
+        }
+        console.log("WET ENEMEY URL", newState);
+        setState(newState);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }, [state.username])
+
   return(
     <div>
       {triviaPage}
@@ -258,5 +328,6 @@ export default function Trivia(props) {
 }
 
 function deepcopy(o) {
-  return JSON.parse(JSON.stringify(o))
+  // return JSON.parse(JSON.stringify(o))
+  return {...o}
 }

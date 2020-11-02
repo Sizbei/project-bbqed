@@ -31,7 +31,7 @@ export default function InGameTrivia(props) {
   const enemyHeaderSection = mode === "online" ? (
     <div className="post-header-block post-header-them">
       <span className="post-header-username">
-        {username.user} &nbsp;
+        {username.enemy} &nbsp;
         <span className="post-header-acs">({acs.enemy})</span>
         &nbsp;
         <ACSChange change={acsChange.enemy} />

@@ -141,7 +141,7 @@ export default function TriviaSidebar(props) {
 
   const handleClickSolo = e => {
     e.stopPropagation();
-    handleModeSelect("solo");
+    handleModeSelect("practice");
   }
 
   const QList = <QuestionList list={list} />
@@ -163,7 +163,7 @@ export default function TriviaSidebar(props) {
   const enemyHeaderSection = mode === "online" ? (
     <div className="TSBG-header-block TSBG-header-them">
       <span className="TSBG-header-username">
-        {username.user} &nbsp;
+        {username.enemy} &nbsp;
         <span className="TSBG-header-acs">({acs.enemy})</span>
         &nbsp;
         <ACSChange change={acsChange.enemy} />
