@@ -144,7 +144,7 @@ export default function TriviaSidebar(props) {
     handleModeSelect("practice");
   }
 
-  const QList = <QuestionList list={list} />
+  const QList = <QuestionList {...props} />
 
 
   const userHeaderSection = (
@@ -159,6 +159,7 @@ export default function TriviaSidebar(props) {
       <label className="TSBG-header-score">{score.user}</label>
     </div>
   );
+
 
   const enemyHeaderSection = mode === "online" ? (
     <div className="TSBG-header-block TSBG-header-them">

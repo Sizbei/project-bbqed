@@ -47,7 +47,6 @@ export default function InGameTrivia(props) {
           <div className='popup_inner'>
             <div className="post-header">
               {userHeaderSection}
-              {userHeaderSection}
               {enemyHeaderSection}
             </div>
             <div className="post-nav">
