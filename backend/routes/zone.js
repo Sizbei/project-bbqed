@@ -29,12 +29,13 @@ router.route('/display/:username').get(async(req, res) => {
         let newPost = {}
         newPost._id = recentPosts[i]._id
         newPost.likes = recentPosts[i].likes
+        newPost.poster = {}
         newPost.poster.username = recentPosts[i].poster
-        let image = await Profile.find({username: newPost.poster.username}, "image").then((user) => {
+        let image = await Profile.findOne({username: newPost.poster.username}, "image").then((user) => {
             return user.image
         }).catch((err) => {res.status(400).json('Error ' + err)})
         newPost.poster.image = image;
-        let acs = await Acs.find({username: newPost.poster.username}, 'acsTotal.total').then((acsobj) => {
+        let acs = await Acs.findOne({username: newPost.poster.username}, "acsTotal.total").then((acsobj) => {
             return acsobj.acsTotal.total
         }).catch((err) => {res.status(400).json('Error ' + err)})
         newPost.poster.acs = acs
@@ -57,12 +58,13 @@ router.route('/display/:username/:post').get(async(req, res) => {
     for (var j = 0; j < comments.length; j++) {
         let newComment = {}
         newComment._id = comments[j]._id
+        newComment.commenter = {}
         newComment.commenter.username = comments[j].commenter
-        let image = await Profile.find({username: newComment.commenter.username}, "image").then((user) => {
+        let image = await Profile.findOne({username: newComment.commenter.username}, "image").then((user) => {
             return user.image
         }).catch((err) => {res.status(400).json('Error ' + err)})
         newComment.commenter.image = image
-        let acs = await Acs.find({username: newComment.commenter.username}, 'acsTotal.total').then((acsobj) => {
+        let acs = await Acs.findOne({username: newComment.commenter.username}, 'acsTotal.total').then((acsobj) => {
             return acsobj.acsTotal.total
         }).catch((err) => {res.status(400).json('Error ' + err)})
         newComment.commenter.acs = acs
@@ -76,12 +78,13 @@ router.route('/display/:username/:post').get(async(req, res) => {
     let newPost = {}
     newPost._id = singlePost._id
     newPost.likes = singlePost.likes
+    newPost.poster = {}
     newPost.poster.username = singlePost.poster
-    let image = await Profile.find({username: newPost.poster.username}, "image").then((user) => {
+    let image = await Profile.findOne({username: newPost.poster.username}, "image").then((user) => {
         return user.image
     }).catch((err) => {res.status(400).json('Error ' + err)})
     newPost.poster.image = image;
-    let acs = await Acs.find({username: newPost.poster.username}, 'acsTotal.total').then((acsobj) => {
+    let acs = await Acs.findOne({username: newPost.poster.username}, 'acsTotal.total').then((acsobj) => {
         return acsobj.acsTotal.total
     }).catch((err) => {res.status(400).json('Error ' + err)})
     newPost.poster.acs = acs
