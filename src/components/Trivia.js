@@ -293,12 +293,11 @@ export default function Trivia(props) {
       const currentQuestion = data.questions[data.currentQuestionIndex];
       newState.currentQuestion = currentQuestion.triviaQuestion.question;
       newState.options = currentQuestion.triviaQuestion.options;
-
+s
       const list = [] // construct list
       let questionNumber = 0;
       data.questions.forEach(e => {
         const question = e.triviaQuestion.question;
-        const answer = e.triviaQuestion.answer;
         questionNumber++;
         
         const entry = {
@@ -316,16 +315,6 @@ export default function Trivia(props) {
       newState.stop = "nostop";
       setState(newState);
     })
-  }, [state.stop])
-
-  useEffect(() => { // infinite gets test
-    if (!("stop" in state) || state.stop !== "repeat") {
-      return;
-    }
-
-    const newState = {...state}
-    newState.stop = "fetch";
-    setState(newState);
   }, [state.stop])
 
   // Fetch this user's image
