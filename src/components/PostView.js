@@ -9,23 +9,24 @@ import {AuthContext} from '../Context/AuthContext';
         */
 export default function View(props) {
     const authContext = useContext(AuthContext);
-    const path = ' /zone/display/' + authContext.user.username + '/' + props.location.pathname.slice(17, props.location.pathname.length);
+    const postId = props.location.pathname.slice(17, props.location.pathname.length);
+    const path = ' /zone/display/' + authContext.user.username + '/' + postId ;
+    const [commentBody, setCommentBody] = useState(''); 
     const [username, setUsername] = useState(''); 
     const [likes, setLikes] = useState(0); 
     const [acs, setAcs] = useState(0); 
     const [content, setContent] = useState(''); 
     const [agree, setAgree] = useState(false); 
     const [disagree, setDisagree] = useState(false); 
-    const [comments, setComments] = useState([
-       
-    ]); 
+    const [comments, setComments] = useState([]); 
+
     useEffect(() => {
       
         fetch(path).then(res => res.json())
         .then(data => {
           console.log("Data: " + data.posts.poster);
-          setUsername(data.posts.poster); 
-          //setAcs(data.posts.poster.acs); 
+          setUsername(data.posts.poster.username); 
+          setAcs(data.posts.poster.acs); 
           setLikes(data.posts.likes); 
           setContent(data.posts.body); 
           setAgree(data.posts.upvoted); 
@@ -39,18 +40,58 @@ export default function View(props) {
       }, [])
     
     const handlePostAgree = async () => {
-
+      /*
+        const body = {
+          username: this.context.user.username, 
+          viewing: this.state.username, 
+        }
+        const response = await fetch(this.state.path +"/removeRadar" , {
+          method: 'DELETE' , 
+          headers: {
+              'Content-Type': 'application/json'
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: JSON.stringify(body), 
+        })
+        */
         setAgree(!agree);
+        setDisagree(false); 
+        
     }
-    const handlePostDisagree = () => { 
-
+    const handlePostDisagree = () => {
+      setDisagree(!disagree); 
+      setAgree(false);
     }
 
     const handleCommentAgree = () => {
 
     }
     const handleCommentDisagree = () => { 
-
+      
+    }
+    const handleChangeCommentBody = (e) => {
+      setCommentBody(e.target.value); 
+    }
+    const handleAddComment = () => { 
+      const body = {
+        post: postId, 
+        user: authContext.user.username, 
+        body: commentBody,
+      }
+      fetch('/display/comment/add', {
+        method :  "post",
+        body : JSON.stringify(body),
+        headers: {
+            'Content-Type' : 'application/json'
+        }
+      }).then(res => res.json())
+      //axios.post('http://localhost:5000/post/add', body)
+      .then(data => {
+        alert('done!'); 
+      }) 
+      .catch((error) => {
+        console.log(error);
+      })
     }
   return (
   <div className="tzpv-background">
@@ -70,22 +111,22 @@ export default function View(props) {
             <button onClick={handlePostDisagree} className={disagree? "tzpv-post-button-disagree-selected" : "tzpv-post-button-disagree" }> Disagree </button>
         </div>
         <div className="tzpv-post-comment-container">
-            <input type="text"/>
-            <button> Post Comment </button> 
+            <input type="text" name="comment-body" onChange={handleChangeCommentBody}/>
+            <button onClick={handleAddComment}> Post Comment </button> 
         </div>
         <div className="tzpv-comments-container"> 
             {comments.map(data => {
                 return (
-                    <div key={data.username} className="tzpv-comment-container">
+                    <div className="tzpv-comment-container">
                         <div className="tzpv-profile">
-                            <label> {data.username} ({data.acs})</label>
-                            <ProfilePicture scale={0.8} username={data.username}/>
+                            <label> {data.commenter.username} ({data.commenter.acs})</label>
+                            <ProfilePicture scale={0.8} username={data.commenter.username}/>
                             <div>
                                 <a> Agree </a>
                                 <a> Disagree </a>
                             </div>      
                         </div>
-                        {data.comment}
+                        {data.body}
 
                     </div>
                 )
