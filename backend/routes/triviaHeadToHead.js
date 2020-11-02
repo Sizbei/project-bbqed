@@ -138,12 +138,14 @@ const generateGameInstance = (game, user) => {
             user: {
                 username: game.users[userIndex],
                 point: game.points[userIndex],
-                acsChange: null
+                acsChange: null,
+                initAcs: game.initAcs[userIndex]
             },
             enemy: {
                 username: game.users[enemyIndex],
                 point: game.points[enemyIndex],
-                acsChange: null
+                acsChange: null,
+                initAcs: game.initAcs[enemyIndex]
             }
         },
         curQuestionIndex: game.currentQuestionIndex,
@@ -168,7 +170,6 @@ const generateGameInstance = (game, user) => {
         // hide information for current question to avoid cheating
         if(i == game.currentQuestionIndex && game.status == 'open') {
             question.triviaQuestion.answer = null;
-            console.log(question.responses);
             if(question.responses['user'].accuracy !== undefined) {
                 question.responses['user'].accuracy = null;
             }
@@ -186,8 +187,8 @@ const generateGameInstance = (game, user) => {
 
 // a request to update the DB and respond back a updated snapshot of head-to-head trivia information in DB
 // request format: {_id: str, user: str}
-router.route('/update').put((req, res) => {
-//router.route('/update').put(passport.authenticate('jwt', {session : false}),(req, res) => {
+//router.route('/update').put((req, res) => {
+router.route('/update').put(passport.authenticate('jwt', {session : false}),(req, res) => {
 
     const acsSave = game => {
         game.users.forEach(user => {
@@ -245,8 +246,8 @@ router.route('/update').put((req, res) => {
 
 // a request to submit trivia question answer to DB
 // request format: {_id: str, username: str, answer: str}
-router.route('/submit').post((req, res) => {
-//router.route('/submit').post(passport.authenticate('jwt', {session : false}),(req, res) => {
+//router.route('/submit').post((req, res) => {
+router.route('/submit').post(passport.authenticate('jwt', {session : false}),(req, res) => {
     console.log('==============submit===============');
     headToHeadGame.findById({_id: req.body._id})
         .then(game => {
@@ -280,8 +281,8 @@ router.route('/submit').post((req, res) => {
 
 // init a head-to-head game
 // request format: {user: str, enemy: str}
-router.route('/init').post((req, res) => {
-//router.route('/init').post(passport.authenticate('jwt', {session : false}),(req, res) => {
+//router.route('/init').post((req, res) => {
+router.route('/init').post(passport.authenticate('jwt', {session : false}),(req, res) => {
     // try to find an open trivia using the given two usernamas
     headToHeadGame.findOne({users: {$all: [req.body.user, req.body.enemy]}, status: 'open'})
     .then(game => {
@@ -291,8 +292,7 @@ router.route('/init').post((req, res) => {
             .then(enemyAcs => {
                 if(userAcs && enemyAcs) {
                     if(game) {
-                        res.json({msg: 'Head-to-head game exists', _id: game._id,
-                            acs: {user: userAcs.acsTotal.total, enemy: enemyAcs.acsTotal.total}});
+                        res.json({msg: 'Head-to-head game exists', _id: game._id});
                     } else {
                         // get 10 random trivia question from DB and use them to init the game
                         trivia.aggregate([{$sample: {size: maxQuestionCount}}])
@@ -301,6 +301,7 @@ router.route('/init').post((req, res) => {
                                 users: [req.body.user, req.body.enemy],
                                 status: 'open',
                                 points: [0, 0],
+                                initAcs: [userAcs.acsTotal.total, enemyAcs.acsTotal.total],
                                 currentQuestionIndex: 0,
                                 questions: []
                             });
@@ -316,8 +317,7 @@ router.route('/init').post((req, res) => {
                                 game.questions.push(curQuestion);
                             }
                             game.save()
-                            .then(() => res.json({msg: 'Head-to-head gamse initialized', _id: game._id,
-                                acs: {user: userAcs.acsTotal.total, enemy: enemyAcs.acsTotal.total}}))
+                            .then(() => res.json({msg: 'Head-to-head gamse initialized', _id: game._id}))
                             .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
                         })
                         .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));

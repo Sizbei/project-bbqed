@@ -23,6 +23,11 @@ const headToHeadGameSchema = new Schema({
         unique: false,
         required: false,
     },
+    initAcs: {
+        type: [Number],
+        unique: false,
+        required: false,
+    },
     currentQuestionIndex: {
         type: Number,
         unique: false,
