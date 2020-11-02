@@ -1,5 +1,4 @@
 .tzpv-background { 
-  position:fixed;
     z-index: -1;
     width:100%;
     height:100%;
@@ -9,21 +8,59 @@
 
 .tzpv-container { 
   display: flex; 
-  justify-content: center;
+  align-items: center;
   padding: 3%; 
+  flex-direction: column;
 }
 
 .tzpv-post-container { 
   flex-direction: column;
   display: flex;
   background-color: grey; 
+  padding: 2% 3%;
   width: 60%;
 }
 
+.tzpv-comments-container { 
+  width: 60%; 
+  flex-direction: column;
+  display: flex;
+  color: white; 
+}
+
+.tzpv-comment-container { 
+  display: flex; 
+  width: 60%; 
+}
 .tzpv-user-info {
   display: flex;
 }
 
 .tzpv-post-info {
+  color: white; 
+}
+
+.tzpv-post-buttons {
+  display: flex; 
+}
+.tzpv-post-button-agree , .tzpv-post-button-disagree { 
   
+}
+.tzpv-post-button-agree {
+  background-color: #61b305;
+}
+
+.tzpv-post-button-agree-selected {
+  background-color: #61b305; 
+  border-color: blue; 
+  border-width: 5px;
+
+}
+.tzpv-post-button-disagree {
+  background-color: #d30909;
+}
+.tzpv-post-button-disagree-selected {
+  background-color: #d30909; 
+  border-color: blue; 
+
 }
