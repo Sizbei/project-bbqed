@@ -42,7 +42,7 @@ export default function ProfilePicture(props) {
             console.log(error);
           })
     }
-  }, [urlExists, username, url])
+  }, [urlExists, username, props.url])
 
   let ppDivStyle;
   if (abs) {

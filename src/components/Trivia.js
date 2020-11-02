@@ -318,7 +318,7 @@ export default function Trivia(props) {
       .catch((error) => {
         console.log(error);
       })
-  }, [state.username])
+  }, [JSON.stringify(state.username)])
 
   return(
     <div>
