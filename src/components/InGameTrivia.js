@@ -128,6 +128,11 @@ export default function InGameTrivia(props) {
     reset();
     const newActiveTimers = triviaClockTick();
     setActiveTimers(newActiveTimers);
+
+    return () => {
+      clearInterval(newActiveTimers.Timer);
+      clearInterval(newActiveTimers.clockInterval);
+    }
   }, [props.questionCount])
       
   return(
