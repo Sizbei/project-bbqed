@@ -212,7 +212,7 @@ router.route('/update').put((req, res) => {
     console.log('==============update===============');
     headToHeadGame.findById({_id: req.body._id})
         .then(game => {
-        if(game) {
+        if(game && game.users.includes(req.body.user)) {
             if(game.status == 'open') {
                 console.log('1: able to find the head to head game in DB');
                 game = updateHeadToHeadDocument(game);
@@ -231,16 +231,16 @@ router.route('/update').put((req, res) => {
                     gameInstance = generateGameInstance(game, req.body.user);
                     res.json({msg: 'Document updated', gameInstance: gameInstance});
                 })
-                //.catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
+                .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
             } else {
                 gameInstance = generateGameInstance(game, req.body.user);
                 res.json({msg: 'game is closed', gameInstance: gameInstance});
             }
         } else {
-            res.status(400).json({msg: 'Bad request: request trivia game does not exist or open'});
+            res.status(400).json({msg: 'Bad request: request trivia game does not exist/open, or the given user is not in that trivia'});
         }
         })
-        //.catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
+        .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
 });
 
 // a request to submit trivia question answer to DB
@@ -311,7 +311,7 @@ router.route('/init').post((req, res) => {
                                         answer: trivias[triviaIndex].answer,
                                         options: trivias[triviaIndex].options
                                     },
-                                    responses: [{},{}]
+                                    responses: [{accuracy: false},{accuracy: false}]
                                 }
                                 game.questions.push(curQuestion);
                             }
