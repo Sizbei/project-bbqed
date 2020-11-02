@@ -4,6 +4,7 @@ import '../styling/PostView.css'
 
 
 export default function View() {
+    
     const [username, setUsername] = useState('user3'); 
     const [acs, setAcs] = useState(0); 
     const [content, setContent] = useState('testing123'); 
@@ -15,14 +16,12 @@ export default function View() {
         {username: 'user1', comment: 'blah blah2', acs: 3}, 
     ]); 
     useEffect(() => {
-    
-    console.log('mount it!');
-  }, []);
+        
+      }, [])
 
     const handlePostAgree = () => {
+
         setAgree(!agree);
-        console.log(!agree);
-        console.log("now: " + agree)
     }
     const handlePostDisagree = () => { 
 
