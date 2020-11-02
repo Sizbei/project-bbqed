@@ -6,6 +6,7 @@ const passportConfig = require('../passport');
 let Post = require('../models/post')
 let Comment = require('../models/comment')
 let Profile = require('../models/profile')
+let Acs = require('../models/acs')
 
 router.route('/display/:username/focused').get(async(req, res) => {
     var radarList = await Profile.findOne({username: req.params.username}).then((user) => {
@@ -30,7 +31,15 @@ router.route('/display/:username').get(async(req, res) => {
         for (var j = 0; j < comments.length; j++) {
             let newComment = {}
             newComment._id = comments[j]._id
-            newComment.commenter = comments[j].commenter
+            newComment.commenter.username = comments[j].commenter
+            let image = await Profile.find({username: newComment.commenter.username}, "image").then((user) => {
+                return user.image
+            }).catch((err) => {res.status(400).json('Error ' + err)})
+            newComment.commenter.image = image
+            let acs = await Acs.find({username: newComment.commenter.username}, 'acsTotal.total').then((acsobj) => {
+                return acsobj.acsTotal.total
+            }).catch((err) => {res.status(400).json('Error ' + err)})
+            newComment.commenter.acs = acs
             newComment.likes = comments[j].likes
             newComment.upvoted = comments[j].upvoted.includes(req.params.username);
             newComment.downvoted = comments[j].downvoted.includes(req.params.username);
@@ -41,7 +50,15 @@ router.route('/display/:username').get(async(req, res) => {
         let newPost = {}
         newPost._id = recentPosts[i]._id
         newPost.likes = recentPosts[i].likes
-        newPost.poster = recentPosts[i].poster
+        newPost.poster.username = recentPosts[i].poster
+        let image = await Profile.find({username: newPost.poster.username}, "image").then((user) => {
+            return user.image
+        }).catch((err) => {res.status(400).json('Error ' + err)})
+        newPost.poster.image = image;
+        let acs = await Acs.find({username: newPost.poster.username}, 'acsTotal.total').then((acsobj) => {
+            return acsobj.acsTotal.total
+        }).catch((err) => {res.status(400).json('Error ' + err)})
+        newPost.poster.acs = acs
         newPost.body = recentPosts[i].body
         newPost.upvoted = upvoted
         newPost.downvoted = downvoted
@@ -62,7 +79,15 @@ router.route('/display/:username/:post').get(async(req, res) => {
     for (var j = 0; j < comments.length; j++) {
         let newComment = {}
         newComment._id = comments[j]._id
-        newComment.commenter = comments[j].commenter
+        newComment.commenter.username = comments[j].commenter
+        let image = await Profile.find({username: newComment.commenter.username}, "image").then((user) => {
+            return user.image
+        }).catch((err) => {res.status(400).json('Error ' + err)})
+        newComment.commenter.image = image
+        let acs = await Acs.find({username: newComment.commenter.username}, 'acsTotal.total').then((acsobj) => {
+            return acsobj.acsTotal.total
+        }).catch((err) => {res.status(400).json('Error ' + err)})
+        newComment.commenter.acs = acs
         newComment.likes = comments[j].likes
         newComment.upvoted = comments[j].upvoted.includes(req.params.username);
         newComment.downvoted = comments[j].downvoted.includes(req.params.username);
@@ -73,7 +98,15 @@ router.route('/display/:username/:post').get(async(req, res) => {
     let newPost = {}
     newPost._id = singlePost._id
     newPost.likes = singlePost.likes
-    newPost.poster = singlePost.poster
+    newPost.poster.username = singlePost.poster
+    let image = await Profile.find({username: newPost.poster.username}, "image").then((user) => {
+        return user.image
+    }).catch((err) => {res.status(400).json('Error ' + err)})
+    newPost.poster.image = image;
+    let acs = await Acs.find({username: newPost.poster.username}, 'acsTotal.total').then((acsobj) => {
+        return acsobj.acsTotal.total
+    }).catch((err) => {res.status(400).json('Error ' + err)})
+    newPost.poster.acs = acs
     newPost.body = singlePost.body
     newPost.upvoted = upvoted
     newPost.downvoted = downvoted
