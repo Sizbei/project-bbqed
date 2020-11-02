@@ -24,27 +24,6 @@ router.route('/display/:username').get(async(req, res) => {
     }).catch((err) => {res.status(400).json('Error ' + err)})
     let newPostsList = []
     for (var i = 0; i < recentPosts.length; i++) {
-        let newComments = []
-        let comments = await Comment.find({post: recentPosts[i]._id}, "commenter _id body likes upvoted downvoted").sort({'likes':'desc'}).limit(3).then((comment) => {
-            return comment;
-        }).catch((err) => {res.status(400).json('Error ' + err)})
-        for (var j = 0; j < comments.length; j++) {
-            let newComment = {}
-            newComment._id = comments[j]._id
-            newComment.commenter.username = comments[j].commenter
-            let image = await Profile.find({username: newComment.commenter.username}, "image").then((user) => {
-                return user.image
-            }).catch((err) => {res.status(400).json('Error ' + err)})
-            newComment.commenter.image = image
-            let acs = await Acs.find({username: newComment.commenter.username}, 'acsTotal.total').then((acsobj) => {
-                return acsobj.acsTotal.total
-            }).catch((err) => {res.status(400).json('Error ' + err)})
-            newComment.commenter.acs = acs
-            newComment.likes = comments[j].likes
-            newComment.upvoted = comments[j].upvoted.includes(req.params.username);
-            newComment.downvoted = comments[j].downvoted.includes(req.params.username);
-            newComments[j] = newComment
-        }
         let upvoted = recentPosts[i].upvoted.includes(req.params.username)
         let downvoted = recentPosts[i].downvoted.includes(req.params.username)
         let newPost = {}
@@ -62,7 +41,6 @@ router.route('/display/:username').get(async(req, res) => {
         newPost.body = recentPosts[i].body
         newPost.upvoted = upvoted
         newPost.downvoted = downvoted
-        newPost.comments = newComments
         newPostsList[i] = newPost
     }
     res.json({posts: newPostsList});
@@ -123,7 +101,11 @@ router.route('/addComment').post(async(req, res) => {
         downvoted: []
     })
     newComment.save()
-    .then(() => {res.status(200).json("Created Comment")})
+    .then(async(comment) => {
+        await Post.findByIdAndUpdate(req.body.post, {comments:{$push: comment.id}})
+        .then(() => {res.status(200).json("Created Comment")})
+        .catch((err) => {res.status(400).json('Error: ' + err)})
+    })
     .catch((err) => {res.status(400).json('Error: ' + err)})
 })
 
