@@ -92,8 +92,8 @@ export default function Trivia(props) {
       const fetchInit = {
         method: "post",
         body: JSON.stringify({
-          user1: "user3",
-          user2: "user1"
+          user1: "user1",
+          user2: "user3"
         }),
         headers: {'Content-Type' : 'application/json'}
       }
@@ -113,7 +113,7 @@ export default function Trivia(props) {
         fetch('/trivia/head-to-head/update', fetchUpdate).then(res => res.json())
         .then((updateData) => {
           console.log("got update", updateData);
-          console.log("got update", updateData.gameInstance.currentQuestionIndex);
+          console.log("got update", updateData.gameInstance);
 
           const fetchSubmit = {
             method: "post",
@@ -136,7 +136,7 @@ export default function Trivia(props) {
     
             fetch('/trivia/head-to-head/update', fetchFinalUpdate).then(res => res.json())
             .then((finalData) => {
-              console.log("FINAL DATA", finalData.gameInstance.currentQuestionIndex);
+              console.log("FINAL DATA", finalData.gameInstance);
             })
           })
         })
@@ -166,7 +166,7 @@ export default function Trivia(props) {
     .then((initData) => {
       console.log("got init", initData);
       newState.instance = initData._id
-      newState.stop = "fetch";
+      newState.stop = "getenemyimage";
       setState(newState);
     })
   }
@@ -286,12 +286,46 @@ export default function Trivia(props) {
     console.log("Fetching state...", fetchUpdate);
     fetch('/trivia/head-to-head/update', fetchUpdate).then(res => res.json())
     .then((updateData) => {
+      const data = updateData.gameInstance;
       console.log("got update", updateData);
 
       const newState = {...state}
+      const currentQuestion = data.questions[data.currentQuestionIndex];
+      newState.currentQuestion = currentQuestion.triviaQuestion.question;
+      newState.options = currentQuestion.triviaQuestion.options;
+
+      const list = [] // construct list
+      let questionNumber = 0;
+      data.questions.forEach(e => {
+        const question = e.triviaQuestion.question;
+        const answer = e.triviaQuestion.answer;
+        questionNumber++;
+        
+        const entry = {
+          questionNumber: questionNumber,
+          question: question,
+        }
+
+        if (questionNumber - 1 < data.currentQuestionIndex) { // answers present!
+          const userCorrect = null;
+        }
+        list.push(entry);
+      })
+
+      newState.list = list;
       newState.stop = "nostop";
       setState(newState);
     })
+  }, [state.stop])
+
+  useEffect(() => { // infinite gets test
+    if (!("stop" in state) || state.stop !== "repeat") {
+      return;
+    }
+
+    const newState = {...state}
+    newState.stop = "fetch";
+    setState(newState);
   }, [state.stop])
 
   // Fetch this user's image
@@ -327,10 +361,11 @@ export default function Trivia(props) {
           newState.ppurl.enemy= data.image;
         } else {
           newState.ppurl = {
-            enemy: data.image
+            enemy: data.images
           }
         }
-        console.log("WET ENEMEY URL", newState);
+        console.log("Fetched enemy url");
+        newState.stop = "fetch"; // goto fetch
         setState(newState);
       })
       .catch((error) => {
