@@ -28,7 +28,7 @@ function App() {
       <Header />
       <PublicRoute path="/" exact component={Login} />
       <PrivateRoute path="/TheZone" exact component={TheZone} />
-      <PrivateRoute path="/post" component={Post} />
+      <PrivateRoute path="/TheZone/display" component={Post} />
       <PrivateRoute path="/Trivia" component={Trivia} />
       <PrivateRoute path="/Analysis" component={Analysis} />
       <PrivateRoute path="/PicksAndPredictions" component={PicksAndPredictions} />
