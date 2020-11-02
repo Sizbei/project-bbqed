@@ -23,11 +23,12 @@ const acsUpdate = game => {
     const pointReward = 2;
     if(game.points[0] > game.points[1]) {
         game.acsChange = [pointReward, -pointReward];
-    } if(game.points[0] == game.points[1]) {
+    } else if(game.points[0] == game.points[1]) {
         game.acsChange = [0, 0];
     } else {
         game.acsChange = [-pointReward, pointReward];
     }
+    console.log(game);
     return game;
 }
 
@@ -123,12 +124,60 @@ const updateHeadToHeadDocument = game => {
     return game;
 }
 
-const generateGameInstance = game => {
-    const loopCount = maxQuestionCount - (game.currentQuestionIndex + 1);
-    for(i = 0; i < loopCount; i++) {
-        game.questions.pop();
+const generateGameInstance = (game, user) => {
+    const userIndex = game.users.indexOf(user);
+    let enemyIndex = 0;
+    if(userIndex == 0){
+        enemyIndex = 1;
     }
-    return game;
+
+    let gameInstance = {
+        _id: game._id,
+        status: game.status,
+        users: {
+            user: {
+                username: game.users[userIndex],
+                point: game.points[userIndex],
+                acsChange: null
+            },
+            enemy: {
+                username: game.users[enemyIndex],
+                point: game.points[enemyIndex],
+                acsChange: null
+            }
+        },
+        curQuestionIndex: game.currentQuestionIndex,
+        questions: []
+    }
+
+    // update is acsChange if it is in the game document
+    if(game.acsChange.length != 0) {
+        gameInstance.users.user.acsChange = game.acsChange[userIndex];
+        gameInstance.users.enemy.acsChange = game.acsChange[enemyIndex];
+    }
+
+    for(i = 0; i <= game.currentQuestionIndex; i++) {
+        let question = {
+            triviaQuestion: game.questions[i].triviaQuestion,
+            responses: {
+                user: game.questions[i].responses[userIndex],
+                enemy: game.questions[i].responses[enemyIndex],
+            },
+            startTime: game.questions[i].startTime
+        }
+        // hide information for current question to avoid cheating
+        if(i == game.currentQuestionIndex && game.status == 'open') {
+            question.triviaQuestion.answer = null;
+            console.log(question.responses);
+            if(question.responses['user'].accuracy !== undefined) {
+                question.responses['user'].accuracy = null;
+            }
+            question.responses['enemy'] = null;
+        }
+        gameInstance.questions.push(question);
+    }
+
+    return gameInstance;
 }
 
 //-------------------------------------------------
@@ -145,7 +194,7 @@ router.route('/update').put((req, res) => {
             acs.findOne({username: user})
             .then(userAcs => {
                 const i = game.users.indexOf(user);
-                
+
                 let entry = {
                     category: "Trivia & Games",
                     points: game.acsChange[i],
@@ -179,19 +228,19 @@ router.route('/update').put((req, res) => {
                     } catch (err) {
                         return res.status(500).json({msg: 'Internal service error', err: err});
                     }
-                    gameInstance = generateGameInstance(game);
+                    gameInstance = generateGameInstance(game, req.body.user);
                     res.json({msg: 'Document updated', gameInstance: gameInstance});
                 })
-                .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
+                //.catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
             } else {
-                gameInstance = generateGameInstance(game);
+                gameInstance = generateGameInstance(game, req.body.user);
                 res.json({msg: 'game is closed', gameInstance: gameInstance});
             }
         } else {
             res.status(400).json({msg: 'Bad request: request trivia game does not exist or open'});
         }
         })
-        .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
+        //.catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
 });
 
 // a request to submit trivia question answer to DB
