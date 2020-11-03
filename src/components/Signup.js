@@ -145,8 +145,8 @@ export default function Popup() {
       <div>
         <button className="SignUpBtn" onClick={() => {}}> Sign up </button>
       
-        <div className='popup' onClick={() => setFormState("button")}>
-          <div className='popup_inner' onClick = {(e) => { e.stopPropagation(); }}>
+        <div className='signup-popup' onClick={() => setFormState("button")}>
+          <div className='signup-popup_inner' onClick = {(e) => { e.stopPropagation(); }}>
             <div className="signup-logo-container">
               <img src={logo} className="signup-logo" alt="SportCred" href="the_zone"/>
               <span className="slogan">Start Building Your ACS Score</span>
@@ -243,8 +243,8 @@ export default function Popup() {
       <div>
       <button className="SignUpBtn" onClick={() => {}}> Sign up </button>
     
-      <div className='popup' onClick={() => setFormState("button")}>
-        <div className='popup_inner' onClick = {(e) => { e.stopPropagation(); }}>
+      <div className='signup-popup' onClick={() => setFormState("button")}>
+        <div className='signup-popup_inner' onClick = {(e) => { e.stopPropagation(); }}>
           <div className="signup-logo-container">
             <img src={logo} className="signup-logo" alt="SportCred" href="the_zone"/>
             <span className="slogan">Start Building Your ACS Score</span>
@@ -280,8 +280,8 @@ export default function Popup() {
       <div>
         <button className="SignUpBtn" onClick={() => {}}> Sign up </button>
 
-        <div className='popup' onClick={() => setFormState("button")}>
-        <div className='popup_inner' onClick = {(e) => { e.stopPropagation(); }}>
+        <div className='signup-popup' onClick={() => setFormState("button")}>
+        <div className='signup-popup_inner' onClick = {(e) => { e.stopPropagation(); }}>
           <div className="signup-logo-container">
             <img src={logo} className="signup-logo" alt="SportCred" href="the_zone"/>
             <span className="slogan">Start Building Your ACS Score</span>

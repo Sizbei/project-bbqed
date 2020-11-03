@@ -85,15 +85,19 @@ export default function Queue() {
   }
 
   return(
-  <div>
-    <button onClick={joinQueue}>join queue</button>
-    <br></br>
-    <button onClick={leaveQueue}>leave queue</button>
-    <br></br>
-    <span>{inQueue ? "QUEUE TIME" : "no"}</span>
-    <br></br>
-    <br></br>
-    {waitConfirm ? <button onClick={confirmMatch}>CONFIRM</button> : null}
-  </div>
+
+    <div>
+      <div className='queue-popup'/>
+        <div className='queue-popup_inner'>
+          <button onClick={joinQueue}>join queue</button>
+          <br></br>
+          <button onClick={leaveQueue}>leave queue</button>
+          <br></br>
+          <span>{inQueue ? "QUEUE TIME" : "no"}</span>
+          <br></br>
+          <br></br>
+          {waitConfirm ? <button onClick={confirmMatch}>CONFIRM</button> : null}
+      </div>
+    </div>
   );
 }

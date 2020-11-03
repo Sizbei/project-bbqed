@@ -1,4 +1,4 @@
-.popup {
+.post-popup {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -14,7 +14,7 @@
     background-color: rgba(0,0,0, 0.5);
   }
   
-.popup_inner {
+.post-popup_inner {
     position: absolute;  
     height: 45%;
     width: 25%;

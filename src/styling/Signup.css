@@ -1,4 +1,4 @@
-.popup {
+.signup-popup {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,7 +14,7 @@
   background-color: rgba(0,0,0, 0.5);
 }
 
-.popup_inner {
+.signup-popup_inner {
   padding-left: 6em;
   padding-right: 6em;
   padding-top: 1.5em;

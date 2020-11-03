@@ -53,8 +53,8 @@ export default function InGameTrivia(props) {
 
   return (
       <div>
-          <div className='popup' onClick={() => Hide()} style={visibleJSON}/>
-          <div className='popup_inner' style={visibleJSON}>
+          <div className='post-popup' onClick={() => Hide()} style={visibleJSON}/>
+          <div className='post-popup_inner' style={visibleJSON}>
             <div className="post-header">
               {userHeaderSection}
               {enemyHeaderSection}
