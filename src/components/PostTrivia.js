@@ -61,7 +61,6 @@ export default function InGameTrivia(props) {
 
   const Hide = () => {
       setVisible('hidden');
-      console.log("yay");
   }
 
   return (

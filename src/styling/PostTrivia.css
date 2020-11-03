@@ -29,7 +29,7 @@
     padding-bottom: 1.5em;
     border-radius: 20px;
     background: #313538;
-
+    z-index: 9;
     display: flex;
     flex-direction: column;
 }
@@ -115,6 +115,10 @@
 
 .post-nav-button:hover {
   background-color: #c45d12;
+}
+
+.post-nav-button:focus {
+    outline: none;
 }
 
 .post-nav-button-label {
