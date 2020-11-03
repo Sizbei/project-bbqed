@@ -186,7 +186,12 @@ export default function Trivia(props) {
       newState.chosenOptions = {user: state.options[option], enemy: ""};
       setState(newState);
     } else if (state.mode === "online" && !state.gameOver) {
-      setSelect(option == null ? "" : state.options[option]);
+      try {
+        setSelect(option == null ? "" : state.options[option]);
+      } catch (e) {
+        console.log("error in option select");
+        return;
+      }
     }
   }
 
@@ -411,53 +416,61 @@ export default function Trivia(props) {
     }
 
     const showSolution = (data) => {
-      console.log("Showing solution for ", transitionSpeed);
-      const newState = {...state}
-      
-      // const currentQuestion = data.questions[data.curQuestionIndex];
-      let lastQuestion = data.questions[data.curQuestionIndex - 1];
-      if (data.status == "close") {
-        lastQuestion = data.questions[data.questions.length - 1];
-      }
-
-      // update score
-      newState.score = {user: data.users.user.point, enemy: data.users.enemy.point};
-      newState.acsChange = {user: data.users.user.acsChange, enemy: data.users.enemy.acsChange};
-
-      console.log("GOT DATA", lastQuestion.responses);
-
-      // mark enemy's option
-      console.log("Enemy response", lastQuestion.responses.enemy.answer, lastQuestion.triviaQuestion.answer);
-      newState.chosenOptions["enemy"] = "answer" in lastQuestion.responses.enemy ? lastQuestion.responses.enemy.answer : "";
-      console.log("new chosenoptions", newState.chosenOptions);
-
-      const list = [] // construct list
-      let questionNumber = 0;
-      data.questions.forEach(e => {
-        const question = e.triviaQuestion.question;
-        questionNumber++;
+      try {
+        console.log("Showing solution for ", transitionSpeed);
+        const newState = {...state}
         
-        const entry = {
-          questionNumber: questionNumber,
-          question: question,
+        // const currentQuestion = data.questions[data.curQuestionIndex];
+        let lastQuestion = data.questions[data.curQuestionIndex - 1];
+        if (data.status == "close") {
+          lastQuestion = data.questions[data.questions.length - 1];
         }
-
-        if (questionNumber - 1 < data.curQuestionIndex - 1 || (data.status == "close" && questionNumber <= 11)) { // answers present!
-          const userCorrect = "accuracy" in e.responses.user ? e.responses.user.accuracy : false;
-          const enemyCorrect = (e.responses.enemy != null && "accuracy" in e.responses.enemy) 
-            ? e.responses.enemy.accuracy : false;
-          entry.userCorrect = userCorrect;
-          entry.enemyCorrect = enemyCorrect;
-          list.push(entry);
-        }
-      })
-
-      newState.list = list;
-
-      newState.previousAnswer = lastQuestion.triviaQuestion.answer;
-      newState.stop = "online-getnext";
-      newState.nextData = data;
-      setState(newState)
+  
+        // update score
+        newState.score = {user: data.users.user.point, enemy: data.users.enemy.point};
+        newState.acsChange = {user: data.users.user.acsChange, enemy: data.users.enemy.acsChange};
+  
+        console.log("GOT DATA", lastQuestion.responses);
+  
+        // mark enemy's option
+        console.log("Enemy response", lastQuestion.responses.enemy.answer, lastQuestion.triviaQuestion.answer);
+        newState.chosenOptions["enemy"] = "answer" in lastQuestion.responses.enemy ? lastQuestion.responses.enemy.answer : "";
+        console.log("new chosenoptions", newState.chosenOptions);
+  
+        const list = [] // construct list
+        let questionNumber = 0;
+        data.questions.forEach(e => {
+          const question = e.triviaQuestion.question;
+          questionNumber++;
+          
+          const entry = {
+            questionNumber: questionNumber,
+            question: question,
+          }
+  
+          if (questionNumber - 1 < data.curQuestionIndex || (data.status == "close" && questionNumber <= 11)) { // answers present!
+            const userCorrect = "accuracy" in e.responses.user ? e.responses.user.accuracy : false;
+            const enemyCorrect = (e.responses.enemy != null && "accuracy" in e.responses.enemy) 
+              ? e.responses.enemy.accuracy : false;
+            entry.userCorrect = userCorrect;
+            entry.enemyCorrect = enemyCorrect;
+            list.push(entry);
+          }
+        })
+  
+        newState.list = list;
+  
+        newState.previousAnswer = lastQuestion.triviaQuestion.answer;
+        newState.stop = "online-getnext";
+        newState.nextData = data;
+        setState(newState)
+      } catch (e) {
+        console.log("error");
+        const newState = {...state}
+        newState.stop = "repeat";
+        setState(newState);
+        return;
+      } 
     }
 
     // console.log("Fetching state...", fetchUpdate);
