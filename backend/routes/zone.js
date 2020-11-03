@@ -124,19 +124,19 @@ router.route('/upvote').put(async(req, res) => {
     //Handle Comments
     if (req.body.hasOwnProperty('comment') != 0) {
         if (req.body.upvoted) {
-            await Comment.updateOne({_id: req.body.comment}, {$pull: {upvoted: req.body.username}, $inc: {likes: -1}}, {new:true})
+            await Comment.findByIdAndUpdate({_id: req.body.comment}, {$pull: {upvoted: req.body.username}, $inc: {likes: -1}}, {new:true})
             .then((updated) => {res.status(200).json({upvoted:false, downvoted:false, likes:updated.likes})})
             .catch((err) => {
                 res.status(400).json('Error: ' + err)
             })
         } else if (req.body.downvoted) {
-            await Comment.updateOne({_id: req.body.comment}, {$push: {upvoted: req.body.username}, $inc: {likes: 2}, $pull: {downvoted: req.body.username}}, {new:true})
+            await Comment.findByIdAndUpdate({_id: req.body.comment}, {$push: {upvoted: req.body.username}, $inc: {likes: 2}, $pull: {downvoted: req.body.username}}, {new:true})
             .then((updated) => {res.status(200).json({upvoted:true, downvoted:false, likes:updated.likes})})
             .catch((err) => {
                 res.status(400).json('Error: ' + err)
             })
         } else {
-            await Comment.updateOne({_id: req.body.comment}, {$push: {upvoted: req.body.username}, $inc: {likes: 1}}, {new:true})
+            await Comment.findByIdAndUpdate({_id: req.body.comment}, {$push: {upvoted: req.body.username}, $inc: {likes: 1}}, {new:true})
             .then((updated) => {res.status(200).json({upvoted:true, downvoted:false, likes:updated.likes})})
             .catch((err) => {
                 res.status(400).json('Error: ' + err)
