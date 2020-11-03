@@ -283,6 +283,11 @@ router.route('/submit').post(passport.authenticate('jwt', {session : false}),(re
 // request format: {user: str, enemy: str}
 //router.route('/init').post((req, res) => {
 router.route('/init').post(passport.authenticate('jwt', {session : false}),(req, res) => {
+
+    const shuffleOptions = options => {
+        return options.sort(() => Math.random() - 0.5);
+    }
+
     // try to find an open trivia using the given two usernamas
     headToHeadGame.findOne({users: {$all: [req.body.user, req.body.enemy]}, status: 'open'})
     .then(game => {
@@ -310,7 +315,7 @@ router.route('/init').post(passport.authenticate('jwt', {session : false}),(req,
                                     triviaQuestion: {
                                         question: trivias[triviaIndex].question,
                                         answer: trivias[triviaIndex].answer,
-                                        options: trivias[triviaIndex].options
+                                        options: shuffleOptions(trivias[triviaIndex].options)
                                     },
                                     responses: [{accuracy: false},{accuracy: false}]
                                 }
