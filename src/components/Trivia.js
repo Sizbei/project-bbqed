@@ -424,9 +424,11 @@ export default function Trivia(props) {
       newState.score = {user: data.users.user.point, enemy: data.users.enemy.point};
       newState.acsChange = {user: data.users.user.acsChange, enemy: data.users.enemy.acsChange};
 
+      console.log("GOT DATA", lastQuestion.responses);
+
       // mark enemy's option
       console.log("Enemy response", lastQuestion.responses.enemy.answer, lastQuestion.triviaQuestion.answer);
-      newState.chosenOptions["enemy"] = lastQuestion.responses.enemy.answer;
+      newState.chosenOptions["enemy"] = "answer" in lastQuestion.responses.enemy ? lastQuestion.responses.enemy.answer : "";
       console.log("new chosenoptions", newState.chosenOptions);
 
       const list = [] // construct list

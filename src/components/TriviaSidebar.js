@@ -124,24 +124,39 @@ export default function TriviaSidebar(props) {
   const ppurl = "ppurl" in props ? props.ppurl : {user: "", enemy: ""};
   const nav = mode === "nav";
 
+  const [activeTimers, setActiveTimers] = useState({});
+
   const handleClickOnline = e => {
     e.stopPropagation();
-    handleModeSelect("online");
+    clearInterval(activeTimers);
+    var Timer = setInterval(() => handleModeWithDelay("online", Timer), 1000);
+    setActiveTimers(Timer);
   }
 
   const handleClickSingle = e => {
     e.stopPropagation();  
-    handleModeSelect("singlePlayer");
+    clearInterval(activeTimers);
+    var Timer = setInterval(() => handleModeWithDelay("singlePlayer", Timer), 1000);
+    setActiveTimers(Timer);
   }
 
   const handleClickSend = e => {
     e.stopPropagation();
-    handleModeSelect("send");
+    clearInterval(activeTimers);
+    var Timer = setInterval(() => handleModeWithDelay("send", Timer), 1000);
+    setActiveTimers(Timer);
   }
 
   const handleClickSolo = e => {
     e.stopPropagation();
-    handleModeSelect("solo");
+    clearInterval(activeTimers);
+    var Timer = setInterval(() => handleModeWithDelay("practice", Timer), 1000);
+    setActiveTimers(Timer);
+  }
+
+  const handleModeWithDelay = (mode, timer) => {
+    handleModeSelect(mode);
+    clearInterval(timer);
   }
 
   const QList = <QuestionList {...props} />
