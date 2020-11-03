@@ -137,7 +137,6 @@ export default function InGameTrivia(props) {
       
   return(
       <div className='trivia-background'>
-        {/* <PostTrivia {...props}/> */}
         <div className='left-segment'>
         <div className='timeBox'>
             <label className='time'>{mode != "nav" ? timeValue : null}</label>

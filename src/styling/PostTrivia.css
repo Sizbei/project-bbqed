@@ -40,6 +40,7 @@
   align-items: center;
   justify-content: center;
   justify-content: space-around;
+  font-family: 'CommissionerMedium';
 }
 
 .post-header-block {
@@ -59,6 +60,7 @@
   white-space: nowrap;
   color: white;
   font-size: 1.2vw;
+  
 }
 
 .post-header-acs {
@@ -87,6 +89,7 @@
 .post-header-score {
   color: white;
   font-size: 2.5vw;
+  margin-top: 2%;
   font-weight: 600;
   line-height: 1vw;
 }
@@ -100,8 +103,22 @@
 }
 
 .post-nav-button {
-  /* height: 2vw;
-  width: 5vw; */
+  height: 2vw;
+  width: 5vw;
+  background-color: #e06c16;
+  border-radius: 8px;
+  border: none;
+  margin-left: 1%;
+  margin-right: 1%;
+}
+
+.post-nav-button:hover {
+  background-color: #c45d12;
+}
+
+.post-nav-button-label {
+    color:white;
+    font-family: 'CommissionerMedium';
 }
 
 @font-face {
