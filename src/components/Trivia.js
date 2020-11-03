@@ -384,9 +384,7 @@ export default function Trivia(props) {
       const newState = {...state};
       const nextData = state.nextData;
 
-      // Remove transition state
-      newState.previousAnswer = {};
-      newState.chosenOptions = {user: "", enemy: ""};
+      
 
       if ("questionCount" in nextData.data) { // Game goes on
         Object.keys(nextData.data).forEach((name, val) => { // copy over from nextData.data
@@ -401,6 +399,10 @@ export default function Trivia(props) {
         })
         newState.startTime = Date.parse(nextData.data.time);
       }
+
+      // Remove transition state
+      delete newState.previousAnswer;
+      newState.chosenOptions = {user: "", enemy: ""};
 
       newState.stop = "nostop";
       setState(deepcopy(newState));      
@@ -448,6 +450,7 @@ export default function Trivia(props) {
     
     setTimeout(() => {
       const newState = {...state};
+      delete newState.previousAnswer;
       newState.chosenOptions = {user: "", enemy: ""};
       newState.stop = "online-getnext2";
       setState(newState);

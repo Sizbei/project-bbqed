@@ -60,7 +60,7 @@ export default function Queue(props) {
   
   const confirmMatch = () => {
     console.log("CLICKLED CONFIRMED!", waitConfirm);
-    
+
     axios.post("/trivia/head-to-head/createGame", { username: authContext.user.username, acs: 1 })
       .then(data => {
         console.log("GOT", data);
