@@ -16,8 +16,8 @@
   
 .popup_inner {
     position: absolute;  
-    height: 40%;
-    width: 30%;
+    height: 45%;
+    width: 25%;
     left: 25%;  
     right: 25%;  
     top: 10%;  
@@ -59,6 +59,7 @@
   display: inline-block;
   white-space: nowrap;
   color: white;
+  margin-top: 10%;
   font-size: 1.2vw;
   
 }
@@ -103,13 +104,13 @@
 }
 
 .post-nav-button {
-  height: 2vw;
-  width: 5vw;
+  height: 3vw;
+  width: 8vw;
   background-color: #e06c16;
   border-radius: 8px;
   border: none;
-  margin-left: 1%;
-  margin-right: 1%;
+  margin-left: 2%;
+  margin-right: 2%;
 }
 
 .post-nav-button:hover {
@@ -119,6 +120,7 @@
 .post-nav-button-label {
     color:white;
     font-family: 'CommissionerMedium';
+    font-size: 1vw;
 }
 
 @font-face {

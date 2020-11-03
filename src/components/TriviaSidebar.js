@@ -135,6 +135,7 @@ export default function TriviaSidebar(props) {
   const handleClickOnline = e => {
     e.stopPropagation();
     clearTime();
+    resetCountDown();
     var Timer = setInterval(() => handleModeWithDelay("online", Timer), 1000);
     setActiveTimers(Timer);
   }
@@ -142,6 +143,7 @@ export default function TriviaSidebar(props) {
   const handleClickSingle = e => {
     e.stopPropagation();  
     clearTime();
+    resetCountDown();
     var Countdown = setInterval(() => showCountDown("single", Countdown), 1000);
     var Timer = setInterval(() => handleModeWithDelay("singlePlayer", Timer), 4000);
     setActiveTimers({CountDown: Countdown, Timer: Timer});
@@ -150,6 +152,7 @@ export default function TriviaSidebar(props) {
   const handleClickSend = e => {
     e.stopPropagation();
     clearTime();
+    resetCountDown();
     var Countdown = setInterval(() => showCountDown("send", Countdown), 1000);
     var Timer = setInterval(() => handleModeWithDelay("send", Timer), 4000);
     setActiveTimers({CountDown: Countdown, Timer: Timer});
@@ -158,6 +161,7 @@ export default function TriviaSidebar(props) {
   const handleClickSolo = e => {
     e.stopPropagation();
     clearTime();
+    resetCountDown();
     var Countdown = setInterval(() => showCountDown("practice", Countdown), 1000);
     var Timer = setInterval(() => handleModeWithDelay("practice", Timer), 4000);
     setActiveTimers({CountDown: Countdown, Timer: Timer});
@@ -172,38 +176,44 @@ export default function TriviaSidebar(props) {
   const showCountDown = (mode, timer) => {
     if (mode == "single") {
       NewSingleValue(counter);
-      if (counter > 0) {
+      if (counter > 0)
         counter -= 1;
-      } else {
+      else {
         clearInterval(timer);
+        resetCountDown();
       }
     }
-    if (mode == "send") {
+    else if (mode == "send") {
       NewSendValue(counter);
-      if (counter > 0) {
+      if (counter > 0)
         counter -= 1;
-      } else {
+      else {
         clearInterval(timer);
+        resetCountDown();
       }
     }
-    if (mode == "practice") {
+    else if (mode == "practice") {
       NewPracticeValue(counter);
-      if (counter > 0) {
+      if (counter > 0)
         counter -= 1;
-      } else {
+      else {
         clearInterval(timer);
+        resetCountDown();
       }
     }
   }
 
-  const clearTime = () => {
-    clearInterval(activeTimers.Timer);
-    clearInterval(activeTimers.CountDown);
+  const resetCountDown = () => {
     NewOnlineValue();
     NewSingleValue();
     NewSendValue();
     NewPracticeValue();
     counter = 3;
+  }
+
+  const clearTime = () => {
+    clearInterval(activeTimers.Timer);
+    clearInterval(activeTimers.CountDown);
   }
 
   const QList = <QuestionList {...props} />

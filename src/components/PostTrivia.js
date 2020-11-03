@@ -14,6 +14,11 @@ export default function InGameTrivia(props) {
   const acsChange = "acsChange" in props ? props.acsChange : {user:"none", enemy:"none"};
   const ppurl = "ppurl" in props ? props.ppurl : {user: "", enemy: ""};
   const nav = mode === "nav";
+  const [visible, setVisible] = useState('visible');
+
+  var visibleJSON = {
+      visibility: visible
+  }
 
   const userHeaderSection = (
     <div className="post-header-block post-header-us">
@@ -41,10 +46,15 @@ export default function InGameTrivia(props) {
     </div>
   ) : null;
 
+  const Hide = () => {
+      setVisible('hidden');
+      console.log("yay");
+  }
+
   return (
       <div>
-          <div className='popup'/>
-          <div className='popup_inner'>
+          <div className='popup' onClick={() => Hide()} style={visibleJSON}/>
+          <div className='popup_inner' style={visibleJSON}>
             <div className="post-header">
               {userHeaderSection}
               {enemyHeaderSection}
