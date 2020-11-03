@@ -3,7 +3,7 @@ import axios from 'axios';
 import Header from './Header';
 import {AuthContext} from '../Context/AuthContext';
 import AuthService from '../Services/AuthService';
-import '../styling/Queue.css';
+import '../styling/queue.css';
 
 export default function Queue(props) {
   // const queueActive = "queueActive" in props ? props.queueActive : false;
