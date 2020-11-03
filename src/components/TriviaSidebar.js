@@ -57,7 +57,7 @@ function QuestionListItem(props) {
 function QuestionList(props) {
   const mode = props.mode;
   const list = props.list;
-  const size = mode === "online" ? 11 : 10;
+  const size = (mode === "online" && props.list.length == 11) ? 11 : 10;
 
   let accum = [];
   list.forEach(e => {
@@ -163,7 +163,7 @@ export default function TriviaSidebar(props) {
   const enemyHeaderSection = mode === "online" ? (
     <div className="TSBG-header-block TSBG-header-them">
       <span className="TSBG-header-username">
-        {username.user} &nbsp;
+        {username.enemy} &nbsp;
         <span className="TSBG-header-acs">({acs != null ? acs.enemy : "-"})</span>
         &nbsp;
         <ACSChange change={acsChange.enemy} />

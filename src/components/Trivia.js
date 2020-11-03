@@ -92,13 +92,13 @@ export default function Trivia(props) {
         })
       })
     } else if (mode === "online") {
-      initOnline("user2");
+      initOnline(authContext.user.username == "user1" ? "user3" : "user1");
     } else if (mode === "practice") {
       const fetchInit = {
         method: "post",
         body: JSON.stringify({
           user1: "user3",
-          user2: "user2",
+          user2: "user1",
         }),
         headers: {'Content-Type' : 'application/json'}
       }
@@ -186,7 +186,7 @@ export default function Trivia(props) {
       newState.chosenOptions = {user: state.options[option], enemy: ""};
       setState(newState);
     } else if (state.mode === "online" && !state.gameOver) {
-      setSelect(state.options[option]);
+      setSelect(option == null ? "" : state.options[option]);
     }
   }
 
@@ -414,6 +414,7 @@ export default function Trivia(props) {
       console.log("Showing solution for ", transitionSpeed);
       const newState = {...state}
       
+      // const currentQuestion = data.questions[data.curQuestionIndex];
       let lastQuestion = data.questions[data.curQuestionIndex - 1];
       if (data.status == "close") {
         lastQuestion = data.questions[data.questions.length - 1];
@@ -422,6 +423,11 @@ export default function Trivia(props) {
       // update score
       newState.score = {user: data.users.user.point, enemy: data.users.enemy.point};
       newState.acsChange = {user: data.users.user.acsChange, enemy: data.users.enemy.acsChange};
+
+      // mark enemy's option
+      console.log("Enemy response", lastQuestion.responses.enemy.answer, lastQuestion.triviaQuestion.answer);
+      newState.chosenOptions["enemy"] = lastQuestion.responses.enemy.answer;
+      console.log("new chosenoptions", newState.chosenOptions);
 
       const list = [] // construct list
       let questionNumber = 0;
@@ -434,14 +440,14 @@ export default function Trivia(props) {
           question: question,
         }
 
-        if (questionNumber - 1 < data.curQuestionIndex || (data.status == "close" && questionNumber <= 11)) { // answers present!
+        if (questionNumber - 1 < data.curQuestionIndex - 1 || (data.status == "close" && questionNumber <= 11)) { // answers present!
           const userCorrect = "accuracy" in e.responses.user ? e.responses.user.accuracy : false;
           const enemyCorrect = (e.responses.enemy != null && "accuracy" in e.responses.enemy) 
             ? e.responses.enemy.accuracy : false;
           entry.userCorrect = userCorrect;
           entry.enemyCorrect = enemyCorrect;
+          list.push(entry);
         }
-        list.push(entry);
       })
 
       newState.list = list;
