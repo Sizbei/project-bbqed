@@ -124,15 +124,17 @@ router.route('/createGame').post((req, res) => {
   // res.json(d);
   
   queue.findOneAndUpdate({startTime: {"$ne": null},  "payload.user": req.body.username}, {"payload.accept": true})
-  .then(user => {
+  .then(user => {      
       setIntervals(10, () => queue.findOne({startTime: {"$ne": null},  "payload.user": user.payload.opp, "payload.accept": true}), 1000).then((d) => {
         if (d) {
           // Initialize instance
           res.json(d);
         } else {
           user.startTime = null;
+          user.payload.opp = "";
           user.payload.accept = false;
           user.markModified('startTime');
+          user.markModified('payload.opp');
           user.markModified('payload.accept');
           user.save().then(() => res.json("Match Declined"));
         }

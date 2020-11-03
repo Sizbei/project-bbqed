@@ -69,8 +69,18 @@ export default function Trivia() {
     axios.post("http://localhost:5000/trivia/createGame", { username: authContext.user.username, acs: 1 })
       .then(data => {
         console.log("GOT", data);
+        if (data.data == "Match Declined" || data.data == "not found") {
+          console.log("resume queue");
+          setInQueue(true);
+          setWaitConfirm(false);
+        } else {
+          setInQueue(false);
+          setWaitConfirm(false);
+        }
       }).catch(data => {
         console.log("ERROR in confirming", data);
+        setInQueue(false);
+        setWaitConfirm(false);
       })
   }
 
@@ -83,7 +93,7 @@ export default function Trivia() {
     <span>{inQueue ? "QUEUE TIME" : "no"}</span>
     <br></br>
     <br></br>
-    <button onClick={confirmMatch}>{waitConfirm ? "CONFIRM" : ""} </button>
+    {waitConfirm ? <button onClick={confirmMatch}>{waitConfirm ? "CONFIRM" : ""} </button> : null}
   </div>
   );
 }
