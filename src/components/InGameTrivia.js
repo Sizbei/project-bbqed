@@ -151,7 +151,7 @@ export default function InGameTrivia(props) {
         </div>
         <div className='answers'>
           <div className='leftAnswers'>
-              <div className='answer1Box' onClick={() => handleOptionSelect(0)}> 
+              <div className={'answer1Box' + (chosenOptions.user === options[0] ? ' answer1Box-h' : '')} onClick={() => handleOptionSelect(0)}> 
                   <div className="answer-icons-div">
                     <div className='crown-icon-div'>
                       {previousAnswer === options[0] ? <img className="crown-icon" src={crown}></img> : null}
@@ -165,7 +165,7 @@ export default function InGameTrivia(props) {
                     <label className='answer1'>{options[0]}</label>
                   </div>
               </div>
-              <div className='answer2Box' onClick={() => handleOptionSelect(1)}>
+              <div className={'answer2Box' + (chosenOptions.user === options[1] ? ' answer2Box-h' : '')} onClick={() => handleOptionSelect(1)}>
                   <div className="answer-icons-div">
                     <div className='crown-icon-div'>
                       {previousAnswer === options[1] ? <img className="crown-icon" src={crown}></img> : null}
@@ -181,7 +181,7 @@ export default function InGameTrivia(props) {
               </div>
           </div>
           <div className='rightAnswers'>
-              <div className='answer3Box' onClick={() => handleOptionSelect(2)}>
+              <div className={'answer3Box' + (chosenOptions.user === options[2] ? ' answer3Box-h' : '')} onClick={() => handleOptionSelect(2)}>
                   <div className="answer-icons-div">
                     <div className='crown-icon-div'>
                       {previousAnswer === options[2] ? <img className="crown-icon" src={crown}></img> : null}
@@ -195,7 +195,7 @@ export default function InGameTrivia(props) {
                     <label className='answer3'>{options[2]}</label>
                   </div>
               </div>
-              <div className='answer4Box' onClick={() => handleOptionSelect(3)}>
+              <div className={'answer4Box' + (chosenOptions.user === options[3] ? ' answer4Box-h' : '')} onClick={() => handleOptionSelect(3)}>
                   <div className="answer-icons-div">
                     <div className='crown-icon-div'>
                         {previousAnswer === options[3] ? <img className="crown-icon" src={crown}></img> : null}

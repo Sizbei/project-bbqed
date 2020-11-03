@@ -112,6 +112,10 @@
     background-color: #900a0a;
 }
 
+.answer1Box-h {
+    background-color: #900a0a;
+}
+
 .answer2Box {
     margin-top:3%;
     margin-right:0.75%;
@@ -125,6 +129,10 @@
     background-color: #a27a00;
 }
 
+.answer2Box-h {
+  background-color: #a27a00;
+}
+
 .answer3Box {
     margin-left:0.75%;
     border-radius:6px;
@@ -135,6 +143,10 @@
 
 .answer3Box:hover {
     background-color: #bc4b00;
+}
+
+.answer3Box-h {
+  background-color: #bc4b00;
 }
 
 .answer4Box {
@@ -157,6 +169,10 @@
  
 .answer4Box:hover {
     background-color: #457e04;
+}
+
+.answer4Box-h {
+  background-color: #457e04;
 }
 
 .answer1, .answer2, .answer3, .answer4 {
