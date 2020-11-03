@@ -15,6 +15,116 @@ const questionCount = 10;
 // set the total number of question prepared in one trivia game
 const maxQuestionCount = 11;
 
+router.route('/joinQueue').post((req, res) => {
+  const user = req.body.username;
+  const acs = req.body.acs;
+
+  queue.remove(queue.findOne({"payload.user": user})).exec();
+
+  const join = new queue({
+    startTime: null,
+    endTime: null,
+    createdOn: new Date(),
+    priority: 1,
+    payload: {
+      user: user,
+      acs: acs,
+      opp: "",
+      accept: false
+    }
+  })
+
+  join.save()
+    .then(() => {
+      res.json("Joined queue")
+    })
+    .catch(err => res.status(400).json('Error: ' + err));
+
+});
+
+router.route('/leaveQueue/:username').delete((req, res) => {
+  queue.remove(queue.findOne({"payload.user": req.params.username}))
+    .then(() => res.json("Left queue"))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/findMatch').put((req, res) => {
+
+  queue.findOne({startTime: {"$ne": null}, "payload.user": req.body.username})
+    .then(user => res.json(user.payload.opp))
+    .catch(() => {
+      queue.findOneAndUpdate({startTime: null, "payload.user": {"$ne": req.body.username}}, {startTime: new Date()}, {sort: {createdOn: 1}, new: true}).exec()
+      .then(opp => {
+        console.log(opp.payload.user);
+        queue.findOneAndUpdate({"payload.user": req.body.username}, {startTime: new Date(), "payload.opp": opp.payload.user}).exec()
+        queue.findOneAndUpdate({"payload.user": opp.payload.user}, {"payload.opp": req.body.username}).exec()
+        res.json(opp.payload.user)
+      })
+      .catch(err => res.json("not found"));
+    })
+});
+
+function setIntervals(n, f, t) {
+  var promise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (n == 0) {
+        resolve(false);
+      }
+      
+      f()
+      .then((d) => {
+        if (d != null) {
+          console.log("resolve true");
+          resolve(true);
+        } else {
+          setIntervals(n - 1, f, t).then(d => {
+            resolve(d);
+          })
+        }
+      })
+      .catch(() => {
+        setIntervals(n - 1, f, t).then(d => {
+          resolve(d);
+        })
+      })
+    }, t)
+  })
+  return promise;
+}
+
+router.route('/createGame').post((req, res) => {
+  
+  // const d = await testfunc();
+  // res.json(d);
+  
+  queue.findOneAndUpdate({startTime: {"$ne": null},  "payload.user": req.body.username}, {"payload.accept": true})
+  .then(user => {
+    
+      if(user){
+        setIntervals(10, () => queue.findOne({startTime: {"$ne": null},  "payload.user": user.payload.opp, "payload.accept": true}), 1000).then((d) => {
+          if (d) {
+            // Initialize instance
+            res.json(d);
+          } else {
+            user.startTime = null;
+            user.payload.opp = "";
+            user.payload.accept = false;
+            user.markModified('startTime');
+            user.markModified('payload.opp');
+            user.markModified('payload.accept');
+            user.save().then(() => res.json("Match Declined"));
+          }
+        })
+
+      } else {
+        console.log("Unable to join game");
+        res.json("Unable to join game");
+      }
+      
+    })
+    .catch(err => res.json("Waiting 2"))
+});
+
 //-------------------------------------------------
 // Supporting functions for head-to-head trivia game
 //-------------------------------------------------
