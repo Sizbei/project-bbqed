@@ -18,7 +18,8 @@ router.route('/joinQueue').post((req, res) => {
     payload: {
       user: user,
       acs: acs,
-      opp: ""
+      opp: "",
+      accept: false
     }
   })
 
@@ -53,42 +54,47 @@ router.route('/findMatch').put((req, res) => {
 });
 
 function setIntervals(n, f, t) {
-  if (n == 0) return;
+  if (n == 0) return false;
+
+  console.log("n: ", n);
+
+  if (f()) {
+    return true;
+  }
 
   setTimeout(() => {
-    f();
     setIntervals(n-1, f, t);
   }, t)
 }
 
 router.route('/createGame').post((req, res) => {
-  queue.findOne({startTime: {"$ne": null},  "payload.user": req.body.user})
+  queue.findOne({startTime: {"$ne": null},  "payload.user": req.body.username})
     .then(user => {
-      // console.log("hi");
-      // setTimeout(() => {
-      //   console.log("this happens after 5 seconds");
-      //   setTimeout(() => {
-      //     console.log("this happens after 5 seconds");
-      //     setTimeout(() => {
-      //       console.log("this happens after 5 seconds");
-      //       setTimeout(() => {
-      //         console.log("this happens after 5 seconds");
-      //         setTimeout(() => {
-      //           console.log("this happens after 5 seconds");
-      //         }, 1000)
-      //       }, 1000)
-      //     }, 1000)
-      //   }, 1000)
-      // }, 1000)
 
-      setIntervals(5, () => console.log("this happens after 5 seconds"), 1000);
       
-      
-      
-      
-      res.json("Waiting");
+      user.payload.accept = true;
+      console.log("test: ", user)
+      user.save().then(() => {
+
+        if(setIntervals(100, () => {
+            queue.findOne({startTime: {"$ne": null},  "payload.user": user.payload.opp, "payload.accept": true})
+            .then(() => true)
+            .catch(() => false)
+          }, 1000)) {
+
+          // Initialize instance
+
+        } else {
+
+          user.payload.accept = false;
+          user.save().then(() => res.json("Match Declined")).catch(err => res.json(err));
+
+        }
+
+      })
+
     })
-    .catch(err => res.json("Waiting"))
+    .catch(err => res.json("Waiting 2"))
 });
 
 module.exports = router;
