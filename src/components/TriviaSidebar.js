@@ -128,23 +128,30 @@ export default function TriviaSidebar(props) {
 
   const handleClickOnline = e => {
     e.stopPropagation();
+    clearInterval(activeTimers);
     var Timer = setInterval(() => handleModeWithDelay("online", Timer), 1000);
+    setActiveTimers(Timer);
   }
 
   const handleClickSingle = e => {
     e.stopPropagation();  
+    clearInterval(activeTimers);
     var Timer = setInterval(() => handleModeWithDelay("singlePlayer", Timer), 1000);
+    setActiveTimers(Timer);
   }
 
   const handleClickSend = e => {
     e.stopPropagation();
+    clearInterval(activeTimers);
     var Timer = setInterval(() => handleModeWithDelay("send", Timer), 1000);
+    setActiveTimers(Timer);
   }
 
   const handleClickSolo = e => {
     e.stopPropagation();
+    clearInterval(activeTimers);
     var Timer = setInterval(() => handleModeWithDelay("practice", Timer), 1000);
-
+    setActiveTimers(Timer);
   }
 
   const handleModeWithDelay = (mode, timer) => {
