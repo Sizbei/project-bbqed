@@ -57,11 +57,14 @@
 }
 
 .tzpv-post-comment-container input {
-  height: 5vw;
+  padding-bottom: 5%;
   word-break: break-all;
 }
 .tzpv-post-comment-container button{
   align-self: flex-end;
+}
+.tzpv-comment-agree-disagree {
+  display: flex;
 }
 .tzpv-post-button-agree {
   background-color: #61b305;
@@ -85,43 +88,19 @@
 
 }
 
-@font-face {
-  font-family: 'CommissionerExtraBold';
-  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-ExtraBold.ttf) format('truetype');
+.tzpv-comment-link:hover {
+  text-decoration: underline;
+  color: orange; 
+  cursor: pointer;
 }
 
-@font-face {
-  font-family: 'CommissionerBold';
-  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Bold.ttf) format('truetype');
+.tzpv-comment-link-selected {
+  color: orange; 
+  cursor: pointer;
 }
-
 @font-face {
   font-family: 'CommissionerMedium';
   src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Medium.ttf) format('truetype');
 }
 
-@font-face {
-  font-family: 'CommissionerRegular';
-  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Regular.ttf) format('truetype');
-}
 
-@font-face {
-  font-family: 'CommissionerBlack';
-  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Black.ttf) format('truetype');
-}
-
-@font-face {
-  font-family: 'CommissionerLight';
-  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Light.ttf) format('truetype');
-}
-
-
-@font-face {
-  font-family: 'CommissionerThin';
-  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Thin.ttf) format('truetype');
-}
-
-@font-face {
-  font-family: 'CommissionerSemiBold';
-  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-SemiBold.ttf) format('truetype');
-}

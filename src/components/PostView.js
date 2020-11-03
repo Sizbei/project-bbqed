@@ -18,7 +18,7 @@ export default function View(props) {
     const [content, setContent] = useState(''); 
     const [agree, setAgree] = useState(false); 
     const [disagree, setDisagree] = useState(false); 
-    const [comments, setComments] = useState([]); 
+    const [comments, setComments] = useState([]);
 
     useEffect(() => {
       
@@ -32,8 +32,6 @@ export default function View(props) {
           setAgree(data.posts.upvoted); 
           setDisagree(data.posts.downvoted); 
           setComments(data.posts.comments); 
-          console.log(agree); 
-          console.log(disagree); 
         })
         .catch((error) => {
           console.log(error); 
@@ -61,7 +59,6 @@ export default function View(props) {
           setAgree(data.upvoted);
           setDisagree(data.downvoted); 
           setLikes(data.likes); 
-          console.log(data.likes);
         }) 
         .catch((error) => {
           console.log(error);
@@ -95,11 +92,85 @@ export default function View(props) {
       })  
     }
 
-    const handleCommentAgree = () => {
+    const handleCommentAgree = (data, index) => {
+      
+      const body = {
+        comment: data._id, 
+        username: authContext.user.username, 
+        upvoted: data.upvoted, 
+        downvoted: data.downvoted, 
+      }
+      fetch('/zone/upvote', {
+        method :  "put",
+        body : JSON.stringify(body),
+        headers: {
+            'Content-Type' : 'application/json'
+        }
+      }).then(res => res.json())
+      //axios.post('http://localhost:5000/post/add', body)
+      .then(updatedData => {
+        const updatedEntry = {
+          "_id": data._id, 
+          "commenter": {
+            "username": data.commenter.username, 
+            "image": data.commenter.image,
+            "acs": data.commenter.acs
+          },
+          "body": data.body, 
+          "likes": updatedData.likes, 
+          "upvoted": updatedData.upvoted, 
+          "downvoted": updatedData.downvoted
+        }
+        const newComments = [
+          ...comments.slice(0, index),
+          updatedEntry, 
+          ...comments.slice(index +1) 
+        ]
+        setComments(newComments); 
+      }) 
+      .catch((error) => {
+        console.log(error);
+      })  
       
     }
-    const handleCommentDisagree = () => { 
-      
+    const handleCommentDisagree = (data, index) => { 
+      const body = {
+        comment: data._id, 
+        username: authContext.user.username, 
+        upvoted: data.upvoted, 
+        downvoted: data.downvoted, 
+      }
+      fetch('/zone/downvote', {
+        method :  "put",
+        body : JSON.stringify(body),
+        headers: {
+            'Content-Type' : 'application/json'
+        }
+      }).then(res => res.json())
+      //axios.post('http://localhost:5000/post/add', body)
+      .then(updatedData => {
+        const updatedEntry = {
+          "_id": data._id, 
+          "commenter": {
+            "username": data.commenter.username, 
+            "image": data.commenter.image,
+            "acs": data.commenter.acs
+          },
+          "body": data.body, 
+          "likes": updatedData.likes, 
+          "upvoted": updatedData.upvoted, 
+          "downvoted": updatedData.downvoted
+        }
+        const newComments = [
+          ...comments.slice(0, index),
+          updatedEntry, 
+          ...comments.slice(index +1) 
+        ]
+        setComments(newComments); 
+      }) 
+      .catch((error) => {
+        console.log(error);
+      })  
     }
     const handleChangeCommentBody = (e) => {
       setCommentBody(e.target.value); 
@@ -148,19 +219,20 @@ export default function View(props) {
             <button onClick={handleAddComment}> Post Comment </button> 
         </div>
         <div className="tzpv-comments-container"> 
-            {comments.map(data => {
+            {comments.map((data,index) => {
                 return (
                     <div className="tzpv-comment-container">
+                        <label className="tzpv-comment-like">{data.likes}</label>
                         <div className="tzpv-profile">
                             <label> {data.commenter.username} ({data.commenter.acs})</label>
                             <ProfilePicture scale={0.8} username={data.commenter.username}/>
-                            <div>
-                                <a> Agree </a>
-                                <a> Disagree </a>
+                            <div className="tzpv-comment-agree-disagree">
+                                <a onClick={()=>handleCommentAgree(data, index)}className={data.upvoted? "tzpv-comment-link-selected": "tzpv-comment-link"}> Agree </a>
+                                <a onClick={()=>handleCommentDisagree(data, index)}className={data.downvoted? "tzpv-comment-link-selected": "tzpv-comment-link"}> Disagree </a>
                             </div>      
                         </div>
                         <label>{data.body}</label>
-                        <label>{data.likes}</label>
+                        
 
                     </div>
                 )
