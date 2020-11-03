@@ -5,12 +5,12 @@ import {AuthContext} from '../Context/AuthContext';
 import AuthService from '../Services/AuthService';
 
 export default function Queue() {
-  const [inQueue, setInQueue] = useState(false);
-  const [waitConfirm, setWaitConfirm] = useState(false);
+  const [inQueue, setInQueue] = useState(false); // in queue?
+  const [waitConfirm, setWaitConfirm] = useState(false); // can confirm?
   const authContext = useContext(AuthContext);
 
   const joinQueue = (e) => {
-    axios.post("http://localhost:5000/trivia/joinQueue", { username: authContext.user.username, acs: 1 })
+    axios.post("/trivia/head-to-head/joinQueue", { username: authContext.user.username, acs: 1 })
       .then(data => {
         console.log("GOT", data);
         console.log("joining queue");
@@ -25,7 +25,7 @@ export default function Queue() {
       return;
     }
 
-    axios.put("http://localhost:5000/trivia/findMatch", { username: authContext.user.username, acs: 1 })
+    axios.put("/trivia/head-to-head/findMatch", { username: authContext.user.username, acs: 1 })
       .then(data => {
         if (data.data === "not found") {
           
@@ -55,7 +55,7 @@ export default function Queue() {
     setInQueue(false);
     setWaitConfirm(false);
 
-    axios.delete('http://localhost:5000/trivia/leaveQueue/' + authContext.user.username)
+    axios.delete('/trivia/head-to-head/leaveQueue/' + authContext.user.username)
       .then(data => {
         console.log("Left the queue.");
       }).catch(() => {
@@ -66,7 +66,7 @@ export default function Queue() {
   const confirmMatch = () => {
     console.log("CLICKLED CONFIRMED!", waitConfirm);
 
-    axios.post("http://localhost:5000/trivia/createGame", { username: authContext.user.username, acs: 1 })
+    axios.post("/trivia/head-to-head/createGame", { username: authContext.user.username, acs: 1 })
       .then(data => {
         console.log("GOT", data);
         if (data.data == "Match Declined" || data.data == "not found") {

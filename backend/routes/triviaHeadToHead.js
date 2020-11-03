@@ -389,11 +389,7 @@ router.route('/submit').post(passport.authenticate('jwt', {session : false}),(re
         .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
 });
 
-// init a head-to-head game
-// request format: {user: str, enemy: str}
-//router.route('/init').post((req, res) => {
-router.route('/init').post(passport.authenticate('jwt', {session : false}),(req, res) => {
-
+const init = (req, res) => {
     const shuffleOptions = options => {
         return options.sort(() => Math.random() - 0.5);
     }
@@ -446,6 +442,14 @@ router.route('/init').post(passport.authenticate('jwt', {session : false}),(req,
         .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
     })
     .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
+}
+
+// init a head-to-head game
+// request format: {user: str, enemy: str}
+//router.route('/init').post((req, res) => {
+router.route('/init').post(passport.authenticate('jwt', {session : false}),(req, res) => {
+
+    init(req, res);
 })
 
 module.exports = router;
