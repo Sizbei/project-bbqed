@@ -67,32 +67,72 @@ function setIntervals(n, f, t) {
   }, t)
 }
 
-router.route('/createGame').post((req, res) => {
-  queue.findOne({startTime: {"$ne": null},  "payload.user": req.body.username})
-    .then(user => {
+function testfunc2() {
+  var promise = new Promise((resolve, reject) => {
+    console.log("wait 2");
+    setTimeout(() => {
+      resolve(true);
+    }, 5000)
+  })
+  return promise;
+}
 
-      
-      user.payload.accept = true;
-      console.log("test: ", user)
-      user.save().then(() => {
-
-        if(setIntervals(100, () => {
-            queue.findOne({startTime: {"$ne": null},  "payload.user": user.payload.opp, "payload.accept": true})
-            .then(() => true)
-            .catch(() => false)
-          }, 1000)) {
-
-          // Initialize instance
-
-        } else {
-
-          user.payload.accept = false;
-          user.save().then(() => res.json("Match Declined")).catch(err => res.json(err));
-
-        }
-
+function testfunc() {
+  var promise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      // resolve(true);
+      console.log("wait 1");
+      testfunc2().then(d => {
+        resolve(d);
       })
+    }, 5000)
+  })
+  return promise;
+}
 
+function setIntervals(n, f, t) {
+  var promise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (n == 0) {
+        resolve(false);
+      }
+      
+      f()
+      .then((d) => {
+        if (d != null) {
+          console.log("resolve true");
+          resolve(true);
+        } else {
+          setIntervals(n - 1, f, t).then(d => {
+            resolve(d);
+          })
+        }
+      })
+      .catch(() => {
+        setIntervals(n - 1, f, t).then(d => {
+          resolve(d);
+        })
+      })
+    }, t)
+  })
+  return promise;
+}
+
+router.route('/createGame').post((req, res) => {
+  
+  // const d = await testfunc();
+  // res.json(d);
+  
+  queue.findOneAndUpdate({startTime: {"$ne": null},  "payload.user": req.body.username}, {"payload.accept": true})
+  .then(user => {
+      setIntervals(10, () => queue.findOne({startTime: {"$ne": null},  "payload.user": user.payload.opp, "payload.accept": true}), 1000).then((d) => {
+        if (d) {
+          res.json(d);
+        } else {
+        user.payload.accept = false;
+        user.save().then(() => res.json("Match Declined")).catch(err => res.json(err));
+        }
+      })
     })
     .catch(err => res.json("Waiting 2"))
 });
