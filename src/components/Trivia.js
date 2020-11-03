@@ -251,6 +251,7 @@ export default function Trivia(props) {
     
     newState.currentQuestion = currentQuestion.triviaQuestion.question;
     newState.options = currentQuestion.triviaQuestion.options;
+    newState.questionCount = data.curQuestionIndex + 1;
 
     const list = [] // construct list
     let questionNumber = 0;
@@ -456,7 +457,7 @@ export default function Trivia(props) {
     .then((updateData) => {
       const data = updateData.gameInstance;
       const currentQuestion = data.questions[data.curQuestionIndex];
-      console.log("got update", updateData);
+      // console.log("got update");
 
 
       // is it a new question? play the transition. 
@@ -519,7 +520,7 @@ export default function Trivia(props) {
 
   // Render on change of state
   useEffect(() => {
-    let nextTriviaPage = <InGameTrivia {...state} handleModeSelect={handleModeSelect} handleOptionSelect={handleOptionSelect}/>;
+    let nextTriviaPage = <InGameTrivia {...state} handleModeSelect={handleModeSelect} select={select} handleOptionSelect={handleOptionSelect}/>;
     setTriviaPage(nextTriviaPage);
   }, [state]);
 

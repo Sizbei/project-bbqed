@@ -104,9 +104,9 @@ export default function InGameTrivia(props) {
     NewTimeValue(10);
   }
 
-  // Stop timers when props.stopTimers === "stop"
+  // Stop timers
   useEffect(() => {
-    if (!("stop" in props) || props.stop === "nostop") {
+    if (!("stop" in props) || props.stop === "nostop" || (props.mode === "online" && props.select === null)) {
       return;
     }
 
@@ -123,7 +123,7 @@ export default function InGameTrivia(props) {
     if (!("questionCount" in props)) {
       return;
     }
-
+    console.log("questionCount", props.questionCount);
     stopTimers();
     reset();
     const newActiveTimers = triviaClockTick();
