@@ -15,37 +15,42 @@ const questionCount = 10;
 // set the total number of question prepared in one trivia game
 const maxQuestionCount = 11;
 
+/*-------------FUNCTIONS FOR THE QUEUE)-----------------------*/
 router.route('/joinQueue').post((req, res) => {
   const user = req.body.username;
   const acs = req.body.acs;
 
-  queue.remove(queue.findOne({"payload.user": user})).exec();
-
-  const join = new queue({
-    startTime: null,
-    endTime: null,
-    createdOn: new Date(),
-    priority: 1,
-    payload: {
-      user: user,
-      acs: acs,
-      opp: "",
-      accept: false
-    }
-  })
-
-  join.save()
+  queue.remove(queue.find({"payload.user": req.params.username}))
     .then(() => {
-      res.json("Joined queue")
+      const join = new queue({
+        startTime: null,
+        endTime: null,
+        createdOn: new Date(),
+        priority: 1,
+        payload: {
+          user: user,
+          acs: acs,
+          opp: "",
+          accept: false
+        }
+      })
+    
+      join.save()
+        .then(() => {
+          res.json("Joined queue")
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
     })
-    .catch(err => res.status(400).json('Error: ' + err));
+    .catch(err => res.status(400).json('Error leaving queue: ' + err));
+
+
 
 });
 
 router.route('/leaveQueue/:username').delete((req, res) => {
-  queue.remove(queue.findOne({"payload.user": req.params.username}))
-    .then(() => res.json("Left queue"))
-    .catch(err => res.status(400).json('Error: ' + err));
+  queue.remove(queue.find({"payload.user": req.params.username}))
+  .then(() => res.json("Left queue"))
+  .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.route('/findMatch').put((req, res) => {

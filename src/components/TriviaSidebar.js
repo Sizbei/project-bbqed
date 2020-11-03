@@ -138,8 +138,6 @@ export default function TriviaSidebar(props) {
       return props.initialACS;
     }
   })();
-
-  console.log(acs);
   
   const [activeTimers, setActiveTimers] = useState({});
   const [onlineTime, NewOnlineValue] = useState();
