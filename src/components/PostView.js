@@ -24,7 +24,6 @@ export default function View(props) {
       
         fetch(path).then(res => res.json())
         .then(data => {
-          console.log("Data: " + data.posts.poster);
           setUsername(data.posts.poster.username); 
           setAcs(data.posts.poster.acs); 
           setLikes(data.posts.likes); 
@@ -203,15 +202,16 @@ export default function View(props) {
             <div className="tzpv-user-info">
                 <ProfilePicture username = {username}/>
                 <label> {username} ({acs})  </label>
-
+                <div className="tzpv-likes"> <label> {likes} </label></div>
             </div>
             <div className="tzpv-post-info"> 
             <p> {content} </p>
-            <label> {likes} </label>
+            
             </div>
         </div>
         <div className="tzpv-post-buttons"> 
             <button onClick={handlePostAgree} className={agree ? "tzpv-post-button-agree-selected" :"tzpv-post-button-agree" }>   Agree  </button>
+           
             <button onClick={handlePostDisagree} className={disagree? "tzpv-post-button-disagree-selected" : "tzpv-post-button-disagree" }> Disagree </button>
         </div>
         <div className="tzpv-post-comment-container">
@@ -219,6 +219,7 @@ export default function View(props) {
             <button onClick={handleAddComment}> Post Comment </button> 
         </div>
         <div className="tzpv-comments-container"> 
+          <h2> Comments ({comments.length})</h2>
             {comments.map((data,index) => {
                 return (
                     <div className="tzpv-comment-container">
@@ -231,9 +232,7 @@ export default function View(props) {
                                 <a onClick={()=>handleCommentDisagree(data, index)}className={data.downvoted? "tzpv-comment-link-selected": "tzpv-comment-link"}> Disagree </a>
                             </div>      
                         </div>
-                        <label>{data.body}</label>
-                        
-
+                        <p> {data.body} </p>
                     </div>
                 )
             })}
