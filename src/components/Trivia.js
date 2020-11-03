@@ -338,6 +338,7 @@ export default function Trivia(props) {
 
       // Remove transition state
       newState.previousAnswer = {};
+      newState.chosenOptions = {user: "", enemy: ""};
 
       if ("questionCount" in nextData.data) { // Game goes on
         Object.keys(nextData.data).forEach((name, val) => { // copy over from nextData.data
@@ -391,13 +392,27 @@ export default function Trivia(props) {
     }
   }, [state.stop])
 
-  // goto the next question for online play
+  // clear some state, transition to online-getnext2
   useEffect(() => {
     if (!("stop" in state) || state.stop !== "online-getnext") {
       return;
     }
     
-    setTimeout(() => {transitionNext(state.nextData)}, transitionSpeed);
+    setTimeout(() => {
+      const newState = {...state};
+      newState.chosenOptions = {user: "", enemy: ""};
+      newState.stop = "online-getnext2";
+      setState(newState);
+    }, transitionSpeed);
+  }, [state.stop])
+
+  // goto the next question for online play
+  useEffect(() => {
+    if (!("stop" in state) || state.stop !== "online-getnext2") {
+      return;
+    }
+    
+    transitionNext(state.nextData);
   }, [state.stop])
 
   // For multiplayer, fetch the state, transition to "repeat"
