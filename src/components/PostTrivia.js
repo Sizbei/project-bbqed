@@ -19,7 +19,7 @@ export default function InGameTrivia(props) {
     <div className="post-header-block post-header-us">
       <span className="post-header-username">
         {username.user} &nbsp;
-        <span className="post-header-acs">({acs.user})</span>
+        <span className="post-header-acs">({acs != null ? acs.user : "-"})</span>
         &nbsp;
         <ACSChange change={acsChange.user} />
       </span>
@@ -32,7 +32,7 @@ export default function InGameTrivia(props) {
     <div className="post-header-block post-header-them">
       <span className="post-header-username">
         {username.enemy} &nbsp;
-        <span className="post-header-acs">({acs.enemy})</span>
+        <span className="post-header-acs">({acs != null ? acs.enemy : "-"})</span>
         &nbsp;
         <ACSChange change={acsChange.enemy} />
       </span>

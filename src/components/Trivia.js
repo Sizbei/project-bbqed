@@ -230,6 +230,12 @@ export default function Trivia(props) {
 
     newState.gameOver = data.status != "open"; 
 
+    if (newState.gameOver) {
+      newState.stop = "online-done";
+      setState(newState);
+      return;
+    }
+
     // Remove previous transition data
     delete newState.nextData;
     delete newState.previousAnswer;
@@ -351,7 +357,7 @@ export default function Trivia(props) {
       return;
     }
     
-    setState(deepcopy(initialState));
+    setState(JSON.parse(JSON.stringify(initialState)));
   }, [state])
 
   // an infinite loop for online play
@@ -402,8 +408,36 @@ export default function Trivia(props) {
 
     const showSolution = (data) => {
       console.log("Showing solution for ", transitionSpeed);
-      const lastQuestion = data.questions[data.curQuestionIndex - 1]
       const newState = {...state}
+      
+      let lastQuestion = data.questions[data.curQuestionIndex - 1];
+      if (data.status == "close") {
+        lastQuestion = data.questions[data.questions.length - 1];
+      }
+
+
+      const list = [] // construct list
+      let questionNumber = 0;
+      data.questions.forEach(e => {
+        const question = e.triviaQuestion.question;
+        questionNumber++;
+        
+        const entry = {
+          questionNumber: questionNumber,
+          question: question,
+        }
+
+        if (questionNumber - 1 < data.curQuestionIndex || (data.status == "close" && questionNumber <= 11)) { // answers present!
+          const userCorrect = "accuracy" in e.responses.user ? e.responses.user.accuracy : false;
+          const enemyCorrect = (e.responses.enemy != null && "accuracy" in e.responses.enemy) 
+            ? e.responses.enemy.accuracy : false;
+          entry.userCorrect = userCorrect;
+          entry.enemyCorrect = enemyCorrect;
+        }
+        list.push(entry);
+      })
+
+      newState.list = list;
 
       newState.previousAnswer = lastQuestion.triviaQuestion.answer;
       newState.stop = "online-getnext";
@@ -416,11 +450,11 @@ export default function Trivia(props) {
     .then((updateData) => {
       const data = updateData.gameInstance;
       const currentQuestion = data.questions[data.curQuestionIndex];
-      // console.log("got update", updateData);
+      console.log("got update", updateData);
 
 
       // is it a new question? play the transition. 
-      if ("currentQuestion" in state && state.currentQuestion != currentQuestion.triviaQuestion.question) {
+      if ("currentQuestion" in state && state.currentQuestion != currentQuestion.triviaQuestion.question || data.status == "close") {
         console.log("--------------NEW QUESTION IS HERE-------------")
         showSolution(data);
         // setTimeout(() => transitionNext(data), transitionSpeed); // display next question after some time
