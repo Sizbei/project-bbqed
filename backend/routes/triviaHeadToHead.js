@@ -104,7 +104,14 @@ router.route('/createGame').post((req, res) => {
         setIntervals(10, () => queue.findOne({startTime: {"$ne": null},  "payload.user": user.payload.opp, "payload.accept": true}), 1000).then((d) => {
           if (d) {
             // Initialize instance
-            res.json(d);
+            const initReq = {
+              body: {
+                user: req.body.username,
+                enemy: user.payload.opp
+              }
+            }
+            
+            init(initReq, res);
           } else {
             user.startTime = null;
             user.payload.opp = "";
@@ -390,6 +397,7 @@ router.route('/submit').post(passport.authenticate('jwt', {session : false}),(re
 });
 
 const init = (req, res) => {
+  console.log("initiating trivia game");
     const shuffleOptions = options => {
         return options.sort(() => Math.random() - 0.5);
     }
@@ -448,7 +456,6 @@ const init = (req, res) => {
 // request format: {user: str, enemy: str}
 //router.route('/init').post((req, res) => {
 router.route('/init').post(passport.authenticate('jwt', {session : false}),(req, res) => {
-
     init(req, res);
 })
 

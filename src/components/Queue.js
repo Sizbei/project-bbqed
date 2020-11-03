@@ -93,7 +93,7 @@ export default function Queue() {
     <span>{inQueue ? "QUEUE TIME" : "no"}</span>
     <br></br>
     <br></br>
-    {waitConfirm ? <button onClick={confirmMatch}>{waitConfirm ? "CONFIRM" : ""} </button> : null}
+    {waitConfirm ? <button onClick={confirmMatch}>CONFIRM</button> : null}
   </div>
   );
 }
