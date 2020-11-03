@@ -151,7 +151,7 @@ export default function TriviaSidebar(props) {
     <div className="TSBG-header-block TSBG-header-us">
       <span className="TSBG-header-username">
         {username.user} &nbsp;
-        <span className="TSBG-header-acs">({acs.user})</span>
+        <span className="TSBG-header-acs">({"user" in acs ? acs.user : ""})</span>
         &nbsp;
         <ACSChange change={acsChange.user} />
       </span>
@@ -165,7 +165,7 @@ export default function TriviaSidebar(props) {
     <div className="TSBG-header-block TSBG-header-them">
       <span className="TSBG-header-username">
         {username.enemy} &nbsp;
-        <span className="TSBG-header-acs">({acs.enemy})</span>
+        <span className="TSBG-header-acs">({"enemy" in acs ? acs.enemy : ""})</span>
         &nbsp;
         <ACSChange change={acsChange.enemy} />
       </span>
