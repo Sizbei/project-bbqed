@@ -169,7 +169,6 @@ export default function Popup() {
               <ErrorMessage flag={usernameExists} text="This username already exists." />
               <ErrorMessage flag={usernameIllegal} text='Illegal username.' />
               {errors.username && <span className="error-message">This field is required.</span>}
-
               <input type="password" className="signup-input-field" placeholder="Password" name="password" ref={ register({ required: true }) } />
               {errors.password && <span className="error-message">This field is required.</span>}
 
