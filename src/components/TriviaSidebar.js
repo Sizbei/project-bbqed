@@ -125,38 +125,85 @@ export default function TriviaSidebar(props) {
   const nav = mode === "nav";
 
   const [activeTimers, setActiveTimers] = useState({});
+  const [onlineTime, NewOnlineValue] = useState();
+  const [singleTime, NewSingleValue] = useState();
+  const [sendTime, NewSendValue] = useState();
+  const [practiceTime, NewPracticeValue] = useState();
+
+  var counter = 3;
 
   const handleClickOnline = e => {
     e.stopPropagation();
-    clearInterval(activeTimers);
+    clearTime();
     var Timer = setInterval(() => handleModeWithDelay("online", Timer), 1000);
     setActiveTimers(Timer);
   }
 
   const handleClickSingle = e => {
     e.stopPropagation();  
-    clearInterval(activeTimers);
-    var Timer = setInterval(() => handleModeWithDelay("singlePlayer", Timer), 1000);
-    setActiveTimers(Timer);
+    clearTime();
+    var Countdown = setInterval(() => showCountDown("single", Countdown), 1000);
+    var Timer = setInterval(() => handleModeWithDelay("singlePlayer", Timer), 4000);
+    setActiveTimers({CountDown: Countdown, Timer: Timer});
   }
 
   const handleClickSend = e => {
     e.stopPropagation();
-    clearInterval(activeTimers);
-    var Timer = setInterval(() => handleModeWithDelay("send", Timer), 1000);
-    setActiveTimers(Timer);
+    clearTime();
+    var Countdown = setInterval(() => showCountDown("send", Countdown), 1000);
+    var Timer = setInterval(() => handleModeWithDelay("send", Timer), 4000);
+    setActiveTimers({CountDown: Countdown, Timer: Timer});
   }
 
   const handleClickSolo = e => {
     e.stopPropagation();
-    clearInterval(activeTimers);
-    var Timer = setInterval(() => handleModeWithDelay("practice", Timer), 1000);
-    setActiveTimers(Timer);
+    clearTime();
+    var Countdown = setInterval(() => showCountDown("practice", Countdown), 1000);
+    var Timer = setInterval(() => handleModeWithDelay("practice", Timer), 4000);
+    setActiveTimers({CountDown: Countdown, Timer: Timer});
+
   }
 
   const handleModeWithDelay = (mode, timer) => {
     handleModeSelect(mode);
     clearInterval(timer);
+  }
+
+  const showCountDown = (mode, timer) => {
+    if (mode == "single") {
+      NewSingleValue(counter);
+      if (counter > 0) {
+        counter -= 1;
+      } else {
+        clearInterval(timer);
+      }
+    }
+    if (mode == "send") {
+      NewSendValue(counter);
+      if (counter > 0) {
+        counter -= 1;
+      } else {
+        clearInterval(timer);
+      }
+    }
+    if (mode == "practice") {
+      NewPracticeValue(counter);
+      if (counter > 0) {
+        counter -= 1;
+      } else {
+        clearInterval(timer);
+      }
+    }
+  }
+
+  const clearTime = () => {
+    clearInterval(activeTimers.Timer);
+    clearInterval(activeTimers.CountDown);
+    NewOnlineValue();
+    NewSingleValue();
+    NewSendValue();
+    NewPracticeValue();
+    counter = 3;
   }
 
   const QList = <QuestionList {...props} />
@@ -211,18 +258,22 @@ export default function TriviaSidebar(props) {
           <div className="TSB-direct-item" onClick={handleClickOnline}>
             <div className="TSB-direct-icon TSB-direct-icon-online"></div>
             <span className="TSB-direct-text">Play Online</span>
+            <span className="TSB-direct-timer">{onlineTime}</span>
           </div>
           <div className="TSB-direct-item" onClick={handleClickSingle}>
             <div className="TSB-direct-icon TSB-direct-icon-single"></div>
             <span className="TSB-direct-text">Single Player</span>
+            <span className="TSB-direct-timer">{singleTime}</span>
           </div>
           <div className="TSB-direct-item" onClick={handleClickSend}>
             <div className="TSB-direct-icon TSB-direct-icon-send"></div>
             <span className="TSB-direct-text">Send a Challenge</span>
+            <span className="TSB-direct-timer">{sendTime}</span>
           </div>
           <div className="TSB-direct-item" onClick={handleClickSolo}>
             <div className="TSB-direct-icon TSB-direct-icon-solo"></div>
             <span className="TSB-direct-text">Practice</span>
+            <span className="TSB-direct-timer">{practiceTime}</span>
           </div>
         </div>
       </div>  
