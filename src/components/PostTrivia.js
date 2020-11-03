@@ -9,11 +9,24 @@ export default function InGameTrivia(props) {
   const list = props.list;
   const mode = props.mode;
   const username = props.username;
-  const acs = props.gameOver ? props.finalACS : 
-    ("initialACS" in props ? props.initialACS : {user:"", enemy:""});
   const acsChange = "acsChange" in props ? props.acsChange : {user:"none", enemy:"none"};
   const ppurl = "ppurl" in props ? props.ppurl : {user: "", enemy: ""};
   const nav = mode === "nav";
+  const acs = (function() {    
+    if (props.gameOver) {
+      if ("finalACS" in props) {
+        return props.finalACS;
+      } else {
+        return {
+          user: props.initialACS.user + acsChange.user,
+          enemy: props.initialACS.enemy + acsChange.enemy
+        }
+      }
+    } else {
+      return props.initialACS;
+    }
+  })();
+  
   const [visible, setVisible] = useState('visible');
 
   var visibleJSON = {

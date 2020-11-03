@@ -209,6 +209,14 @@ export default function Trivia(props) {
     fetch('/trivia/head-to-head/update', fetchUpdate).then(res => res.json())
     .then((updateData) => {
       console.log(updateData);
+      newState.initialACS = {
+        user: updateData.gameInstance.users.user.initAcs,
+        enemy: updateData.gameInstance.users.enemy.initAcs,
+      }
+      newState.score = {
+        user: updateData.gameInstance.users.user.point,
+        enemy: updateData.gameInstance.users.enemy.point
+      }
       newState.username["enemy"] = updateData.gameInstance.users.enemy.username;
       console.log("BEFORE UPDATE", newState);
       newState.stop = "getenemyimage";
@@ -532,6 +540,14 @@ export default function Trivia(props) {
     fetch('/trivia/head-to-head/update', fetchUpdate).then(res => res.json())
     .then((updateData) => {
       const data = updateData.gameInstance;
+      if (!("questions" in data) || !("curQuestionIndex" in data)) {
+        console.log("error in update");
+        const newState = {...state};
+        newState.stop = "repeat";
+        setState(newState);
+        return;
+      }
+
       const currentQuestion = data.questions[data.curQuestionIndex];
       // console.log("got update");
 
