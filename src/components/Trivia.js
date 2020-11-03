@@ -40,7 +40,10 @@ export default function Trivia(props) {
   const transitionSpeed = 2000;
 
   const handleModeSelect = req => {
-    const newState = deepcopy(initialState);
+    const newState = deepcopy(JSON.parse(JSON.stringify(initialState)));
+
+    console.log("new state at mode select", newState)
+    console.log("select state", select);
 
     let mode = req;
     if (req === "playAgain") {
@@ -147,7 +150,7 @@ export default function Trivia(props) {
   }
 
   const initOnline = (enemy) => {
-    const newState = deepcopy(initialState);
+    const newState = JSON.parse(JSON.stringify(initialState));
     newState.mode = "online";
     newState.list = [];
     newState.username["enemy"] = enemy;
@@ -414,7 +417,7 @@ export default function Trivia(props) {
       if (data.status == "close") {
         lastQuestion = data.questions[data.questions.length - 1];
       }
-      
+
       // update score
       newState.score = {user: data.users.user.point, enemy: data.users.enemy.point};
       newState.acsChange = {user: data.users.user.acsChange, enemy: data.users.enemy.acsChange};
