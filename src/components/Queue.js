@@ -3,8 +3,12 @@ import axios from 'axios';
 import Header from './Header';
 import {AuthContext} from '../Context/AuthContext';
 import AuthService from '../Services/AuthService';
+import '../styling/Queue.css';
 
-export default function Queue() {
+export default function Queue(props) {
+  // const queueActive = "queueActive" in props ? props.queueActive : false;
+  // console.log(props);
+  const handleMatchId = props.handleMatchId;
   const [inQueue, setInQueue] = useState(false); // in queue?
   const [waitConfirm, setWaitConfirm] = useState(false); // can confirm?
   const authContext = useContext(AuthContext);
@@ -31,7 +35,7 @@ export default function Queue() {
           
         } else {  
           console.log("data", data);
-          console.log("done", data.data.user);
+          // console.log("done", data.data.user);
           setInQueue(false);
           setWaitConfirm(true)
         }
@@ -39,15 +43,6 @@ export default function Queue() {
         console.log("error");
       })
   }
-
-  useEffect(() => {
-    if (inQueue) {
-      const interval = setInterval(() => {
-        findMatch();
-      }, 200);
-      return () => clearInterval(interval);
-    }
-  }, [inQueue])
 
   const leaveQueue = (e) => {
     console.log("Toggle off.");
@@ -69,13 +64,14 @@ export default function Queue() {
     axios.post("/trivia/head-to-head/createGame", { username: authContext.user.username, acs: 1 })
       .then(data => {
         console.log("GOT", data);
-        if (data.data == "Match Declined" || data.data == "not found") {
+        if (data.data == "Match Declined" || data.data == "not found" || data.data == "Unable to join game" || !("_id" in data.data)) {
           console.log("resume queue");
           setInQueue(true);
           setWaitConfirm(false);
         } else {
           setInQueue(false);
           setWaitConfirm(false);
+          handleMatchId(data.data._id);
         }
       }).catch(data => {
         console.log("ERROR in confirming", data);
@@ -84,8 +80,23 @@ export default function Queue() {
       })
   }
 
-  return(
+  // while in queue, keep checking
+  useEffect(() => {
+    if (inQueue) {
+      const interval = setInterval(() => {
+        findMatch();
+      }, 200);
+      return () => clearInterval(interval);
+    }
+  }, [inQueue])
 
+  // when component mounted, enter queue
+  useEffect(() => {
+    joinQueue();
+    return leaveQueue();
+  }, [])
+
+  return(
     <div>
       <div className='queue-popup'/>
         <div className='queue-popup_inner'>

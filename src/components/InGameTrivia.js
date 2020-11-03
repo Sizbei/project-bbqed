@@ -148,8 +148,6 @@ export default function InGameTrivia(props) {
     }
   }
 
-  console.log("boxclassname", boxClassName(0), chosenOptions.user);
-
   return(
       <div className='trivia-background'>
         <div className='left-segment'>

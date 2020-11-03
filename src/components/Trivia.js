@@ -5,6 +5,7 @@ import InGameTrivia from './InGameTrivia';
 import {AuthContext} from '../Context/AuthContext';
 import AuthService from '../Services/AuthService';
 import TriviaSidebar from './TriviaSidebar';
+import Queue from './Queue';
 
 /* State.
   state = {
@@ -33,6 +34,7 @@ export default function Trivia(props) {
     score: {},
     acsChange: {},
     instance: null,
+    queueActive: false,
   });
 
   const [state, setState] = useState(JSON.parse(JSON.stringify(initialState)));
@@ -92,7 +94,13 @@ export default function Trivia(props) {
         })
       })
     } else if (mode === "online") {
-      initOnline(authContext.user.username == "user1" ? "user3" : "user1");
+      // enter queue 
+      const newState = JSON.parse(JSON.stringify(initialState));
+      newState.queueActive = true;
+      newState.stop = "queue";
+      setState(newState);
+
+      // initOnline(authContext.user.username == "user1" ? "user3" : "user1");
     } else if (mode === "practice") {
       const fetchInit = {
         method: "post",
@@ -171,6 +179,38 @@ export default function Trivia(props) {
     .then((initData) => {
       console.log("got init", initData);
       newState.instance = initData._id
+      newState.stop = "getenemyimage";
+      setState(newState);
+    })
+  }
+
+  const handleMatchId = (matchId) => {
+    console.log("Got matchId", handleMatchId);
+    const newState = JSON.parse(JSON.stringify(initialState));
+    newState.mode = "online";
+    newState.list = [];
+    // newState.username["enemy"] = enemy;
+    newState.score = {"user": 0, "enemy": 0};
+    newState.acsChange = {}
+    newState.gameOver = false;
+
+    newState.instance = matchId;
+    
+    const fetchUpdate = {
+      method: "put",
+      body: JSON.stringify({
+        _id: matchId,
+        user: authContext.user.username
+      }),
+      headers: {'Content-Type' : 'application/json'}
+    }
+    
+    // console.log("Fetching state...", fetchUpdate);
+    fetch('/trivia/head-to-head/update', fetchUpdate).then(res => res.json())
+    .then((updateData) => {
+      console.log(updateData);
+      newState.username["enemy"] = updateData.gameInstance.users.enemy.username;
+      console.log("BEFORE UPDATE", newState);
       newState.stop = "getenemyimage";
       setState(newState);
     })
@@ -421,15 +461,6 @@ export default function Trivia(props) {
       return;
     }
 
-    const fetchUpdate = {
-      method: "put",
-      body: JSON.stringify({
-        _id: state.instance,
-        user: authContext.user.username
-      }),
-      headers: {'Content-Type' : 'application/json'}
-    }
-
     const showSolution = (data) => {
       try {
         console.log("Showing solution for ", transitionSpeed);
@@ -486,6 +517,15 @@ export default function Trivia(props) {
         setState(newState);
         return;
       } 
+    }
+
+    const fetchUpdate = {
+      method: "put",
+      body: JSON.stringify({
+        _id: state.instance,
+        user: authContext.user.username
+      }),
+      headers: {'Content-Type' : 'application/json'}
     }
 
     // console.log("Fetching state...", fetchUpdate);
@@ -563,6 +603,7 @@ export default function Trivia(props) {
   return(
     <div>
       {triviaPage}
+      {state.queueActive ? <Queue handleMatchId={handleMatchId} {...state} /> : null}
     </div>
   );
 }
