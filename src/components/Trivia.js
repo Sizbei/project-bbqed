@@ -35,7 +35,7 @@ export default function Trivia(props) {
     instance: null,
   });
 
-  const [state, setState] = useState(deepcopy(initialState));
+  const [state, setState] = useState(JSON.parse(JSON.stringify(initialState)));
   const [select, setSelect] = useState(null);
   const transitionSpeed = 2000;
 
@@ -414,7 +414,10 @@ export default function Trivia(props) {
       if (data.status == "close") {
         lastQuestion = data.questions[data.questions.length - 1];
       }
-
+      
+      // update score
+      newState.score = {user: data.users.user.point, enemy: data.users.enemy.point};
+      newState.acsChange = {user: data.users.user.acsChange, enemy: data.users.enemy.acsChange};
 
       const list = [] // construct list
       let questionNumber = 0;
@@ -476,7 +479,7 @@ export default function Trivia(props) {
             user: data.image
           }
         }
-        setInitialState(deepcopy(newState));
+        setInitialState(JSON.parse(JSON.stringify(newState)));
         setState(newState);
       })
       .catch((error) => {
