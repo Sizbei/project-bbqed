@@ -100,31 +100,29 @@ router.route('/createGame').post((req, res) => {
   // const d = await testfunc();
   // res.json(d);
   
-  queue.findOneAndUpdate({startTime: {"$ne": null},  "payload.user": req.body.username}, {endTime: new Date(), "payload.accept": true})
+  queue.findOneAndUpdate({startTime: {"$ne": null},  "payload.user": req.body.username}, {endTime: new Date(), "payload.accept": true}, {new: true})
   .then(user => {
     
       if(user){
         setIntervals(20, () => queue.findOne({startTime: {"$ne": null},  "payload.user": user.payload.opp, "payload.accept": true}), 500).then((d) => {
           if (d) {
-
             // Initialize instance
             const initReq = {
               body: {
                 user: req.body.username,
                 enemy: user.payload.opp
               }
-            }
-            
-            console.log("initialize");
-            
+            }            
 
-            queue.find({"payload.user": user.payload.opp})
-            .then(opp => {
-                
+            queue.findOne({"payload.user": user.payload.opp})
+            .then(opp => {              
                 if(user.endTime < opp.endTime){
                     init(initReq, res);
                 } else {
-                    setTimeout(() => init(initReq, res), 2000);
+                    setIntervals(1000, () => headToHeadGame.findOne({users: {$all: [user.payload.opp, req.body.username]}, status: 'open'}), 50)
+                    .then(() => {
+                      init(initReq, res)
+                    })
                 }
                 
             }).then(() => queue.remove(queue.findOne({"payload.user": user.payload.opp})).exec())
@@ -418,6 +416,8 @@ router.route('/submit').post(passport.authenticate('jwt', {session : false}),(re
         .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
 });
 
+// init a head-to-head game
+// request format: {user: str, enemy: str}
 const init = (req, res) => {
   console.log("initiating trivia game");
     const shuffleOptions = options => {
@@ -474,11 +474,5 @@ const init = (req, res) => {
     .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
 }
 
-// init a head-to-head game
-// request format: {user: str, enemy: str}
-//router.route('/init').post((req, res) => {
-router.route('/init').post(passport.authenticate('jwt', {session : false}),(req, res) => {
-    init(req, res);
-})
 
 module.exports = router;
