@@ -3,6 +3,7 @@ import '../styling/TheZone.css';
 import PostPopup from './ProfilePostPopup';
 import { AuthContext } from '../Context/AuthContext';
 import ProfilePicture from './ProfilePicture'
+import { Link } from 'react-router-dom';
 
 
 
@@ -120,6 +121,7 @@ export default function TheZone(props) {
     }
    
     
+
     const togglePostPopup = () => {
 
     }
@@ -143,10 +145,15 @@ export default function TheZone(props) {
                                 <div className="tzone-likes"> <label> {data.likes} </label></div>
                             </div>
                             <div className="tzone-post-info">
-                                <p> {data.body} </p>
-
+                                
+                                <Link to={"/theZone/display/" + (data._id)} className="tzone-link">
+                                    <p> {data.body} </p>
+                                </Link>
                             </div>
-
+                            
+                            
+                            
+                            
                             <div className="tzone-post-buttons">
                                 <a onClick={() => handlePostAgree(data, index)} className={data.agree ? "tzone-post-button-agree-selected" : "tzone-post-button-agree"}> Agree </a>
                                 <a onClick={() => handlePostDisagree(data, index)} className={data.disagree ? "tzone-post-button-disagree-selected" : "tzone-post-button-disagree"}> Disagree </a>
