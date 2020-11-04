@@ -101,10 +101,6 @@ export default function Queue(props) {
     <div>
       <div className='queue-popup' onClick={() => {leaveQueue(); handleCloseQueue();}} />
         <div className='queue-popup_inner'>
-          <button onClick={joinQueue}>join queue</button>
-          <br></br>
-          <button onClick={leaveQueue}>leave queue</button>
-          <br></br>
           <span>{inQueue ? "QUEUE TIME" : "no"}</span>
           <br></br>
           <br></br>
