@@ -21,7 +21,7 @@ const joinQueue = (req, res) => {
   const user = req.body.username;
   const acs = req.body.acs;
 
-  queue.remove(queue.find({"payload.user": req.params.username}))
+  queue.remove(queue.find({"payload.user": req.params.username}).exec()).exec()
     .then(() => {
       const join = new queue({
         startTime: null,
@@ -49,7 +49,7 @@ router.route('/joinQueue').post((req, res) => {
   const user = req.body.username;
   const acs = req.body.acs;
 
-  queue.remove(queue.find({"payload.user": req.params.username}))
+  queue.remove(queue.find({"payload.user": req.params.username})).exec()
     .then(() => {
       const join = new queue({
         startTime: null,
@@ -84,11 +84,11 @@ router.route('/findMatch').put((req, res) => {
   queue.findOne({startTime: {"$ne": null}, "payload.user": req.body.username})
     .then(user => res.json(user.payload.opp))
     .catch(() => {
-      queue.findOneAndUpdate({startTime: null, "payload.user": {"$ne": req.body.username}}, {startTime: new Date()}, {sort: {createdOn: 1}, new: true}).exec()
+      queue.findOneAndUpdate({startTime: null, "payload.user": {"$ne": req.body.username}, "payload.accept": false}, {startTime: new Date()}, {sort: {createdOn: 1}, new: true})
       .then(opp => {
         console.log(opp.payload.user);
-        queue.findOneAndUpdate({"payload.user": req.body.username}, {startTime: new Date(), "payload.opp": opp.payload.user}).exec()
-        queue.findOneAndUpdate({"payload.user": opp.payload.user}, {"payload.opp": req.body.username}).exec()
+        queue.findOneAndUpdate({"payload.user": req.body.username}, {startTime: new Date(), "payload.opp": opp.payload.user}, {new: true}).then(test => console.log("test 1: ", test))
+        queue.findOneAndUpdate({"payload.user": opp.payload.user}, {"payload.opp": req.body.username}, {new: true}).then(test => console.log("test 2: ", test))
         res.json(opp.payload.user)
       })
       .catch(err => res.json("not found"));
@@ -132,8 +132,9 @@ router.route('/createGame').post((req, res) => {
   .then(user => {
     
       if(user){
-        setIntervals(10, () => queue.findOne({startTime: {"$ne": null},  "payload.user": user.payload.opp, "payload.accept": true}), 1000).then((d) => {
+        setIntervals(20, () => queue.findOne({startTime: {"$ne": null},  "payload.user": user.payload.opp, "payload.accept": true}), 500).then((d) => {
           if (d) {
+
             // Initialize instance
             const initReq = {
               body: {
@@ -143,24 +144,24 @@ router.route('/createGame').post((req, res) => {
             }
             
             console.log("initialize");
-            queue.remove(queue.findOne({"payload.user": req.params.username})).exec();
+            queue.remove(queue.findOne({"payload.user": user.payload.opp})).exec();
             init(initReq, res)
           } else {
-            // user.startTime = null;
-            // user.payload.opp = "";
-            // user.payload.accept = false;
-            // user.markModified('startTime');
-            // user.markModified('payload.opp');
-            // user.markModified('payload.accept');
-            // user.save().then(() => res.json("Match Declined"));
+            user.startTime = null;
+            user.payload.opp = "";
+            user.payload.accept = false;
+            user.markModified('startTime');
+            user.markModified('payload.opp');
+            user.markModified('payload.accept');
+            user.save().then(() => res.json("Match Declined"));
             console.log("Match declined.");
-            joinQueue(req, res);
+            //joinQueue(req, res);
           }
         })
       } else {
         console.log("Unable to join game");
         res.json("Unable to join game");
-        joinQueue(req, res);
+        //joinQueue(req, res);
       }
       
     })

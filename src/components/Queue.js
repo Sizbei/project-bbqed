@@ -94,7 +94,7 @@ export default function Queue(props) {
   // when component mounted, enter queue
   useEffect(() => {
     joinQueue();
-    return leaveQueue();
+    //return leaveQueue();
   }, [])
 
   return(
@@ -108,7 +108,7 @@ export default function Queue(props) {
           <span>{inQueue ? "QUEUE TIME" : "no"}</span>
           <br></br>
           <br></br>
-          {waitConfirm ? <button onClick={confirmMatch}>CONFIRM</button> : null}
+          {(waitConfirm && !inQueue) ? <button onClick={confirmMatch}>CONFIRM</button> : null}
       </div>
     </div>
   );
