@@ -3,6 +3,8 @@ const instance = require('../models/soloTriviaInstance');
 const trivia = require('../models/trivia');
 const acs = require('../models/acs');
 
+const numQuestions = 2;
+
 router.route('/create').post((req, res) => {
 
   const user = req.body.username;
@@ -106,7 +108,7 @@ router.route('/next').put((req, res) => {
             game.points += 1;
             game.correct += 1;
             game.save().then(() => {
-              if (game.questionIds.length < 10) {
+              if (game.questionIds.length < numQuestions) {
                 sendRandom("correct", response.answer)
               } else {
                 sendDone("correct", response.answer)
@@ -115,7 +117,7 @@ router.route('/next').put((req, res) => {
           } else {
             game.points -= 1;
             game.save().then(() => {
-              if (game.questionIds.length < 10) {
+              if (game.questionIds.length < numQuestions) {
                 sendRandom("wrong", response.answer)
               } else {
                 sendDone("wrong", response.answer)

@@ -15,7 +15,36 @@ const questionCount = 10;
 // set the total number of question prepared in one trivia game
 const maxQuestionCount = 11;
 
-/*-------------FUNCTIONS FOR THE QUEUE)-----------------------*/
+/*-------------FUNCTIONS FOR THE QUEUE-----------------------*/
+
+const joinQueue = (req, res) => {
+  const user = req.body.username;
+  const acs = req.body.acs;
+
+  queue.remove(queue.find({"payload.user": req.params.username}))
+    .then(() => {
+      const join = new queue({
+        startTime: null,
+        endTime: null,
+        createdOn: new Date(),
+        priority: 1,
+        payload: {
+          user: user,
+          acs: acs,
+          opp: "",
+          accept: false
+        }
+      })
+    
+      join.save()
+        .then(() => {
+          res.json("Joined queue")
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
+    })
+    .catch(err => res.status(400).json('Error leaving queue: ' + err));
+}
+
 router.route('/joinQueue').post((req, res) => {
   const user = req.body.username;
   const acs = req.body.acs;
@@ -42,9 +71,6 @@ router.route('/joinQueue').post((req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
     })
     .catch(err => res.status(400).json('Error leaving queue: ' + err));
-
-
-
 });
 
 router.route('/leaveQueue/:username').delete((req, res) => {
@@ -116,21 +142,25 @@ router.route('/createGame').post((req, res) => {
               }
             }
             
-            init(initReq, res);
+            console.log("initialize");
+            queue.remove(queue.findOne({"payload.user": req.params.username})).exec();
+            init(initReq, res)
           } else {
-            user.startTime = null;
-            user.payload.opp = "";
-            user.payload.accept = false;
-            user.markModified('startTime');
-            user.markModified('payload.opp');
-            user.markModified('payload.accept');
-            user.save().then(() => res.json("Match Declined"));
+            // user.startTime = null;
+            // user.payload.opp = "";
+            // user.payload.accept = false;
+            // user.markModified('startTime');
+            // user.markModified('payload.opp');
+            // user.markModified('payload.accept');
+            // user.save().then(() => res.json("Match Declined"));
+            console.log("Match declined.");
+            joinQueue(req, res);
           }
         })
-
       } else {
         console.log("Unable to join game");
         res.json("Unable to join game");
+        joinQueue(req, res);
       }
       
     })
