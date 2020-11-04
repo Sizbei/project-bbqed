@@ -34,10 +34,12 @@ export default function PostTrivia(props) {
       visibility: visible
   }
 
+  const handleClickName = (user) => {window.open('/profile/' + user)}
+
   const userHeaderSection = (
     <div className="post-header-block post-header-us">
       <span className="post-header-username">
-        {username.user} &nbsp;
+        <span onClick={() => handleClickName(username.user)}>{username.user}</span> &nbsp;
         <span className="post-header-acs">({acs != null ? acs.user : "-"})</span>
         &nbsp;
         <ACSChange change={acsChange.user} />
@@ -50,7 +52,7 @@ export default function PostTrivia(props) {
   const enemyHeaderSection = mode === "online" ? (
     <div className="post-header-block post-header-them">
       <span className="post-header-username">
-        {username.enemy} &nbsp;
+        <span onClick={() => handleClickName(username.enemy)}>{username.enemy}</span> &nbsp;
         <span className="post-header-acs">({acs != null ? acs.enemy : "-"})</span>
         &nbsp;
         <ACSChange change={acsChange.enemy} />

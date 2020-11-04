@@ -233,11 +233,12 @@ export default function TriviaSidebar(props) {
 
   const QList = <QuestionList {...props} />
 
+  const handleClickName = (user) => {window.open('/profile/' + user)}
 
   const userHeaderSection = (
     <div className="TSBG-header-block TSBG-header-us">
       <span className="TSBG-header-username">
-        {username.user} &nbsp;
+        <span onClick={() => handleClickName(username.user)}>{username.user}</span> &nbsp;
         <span className="TSBG-header-acs">({acs != null ? acs.user : "-"})</span>
         &nbsp;
         <ACSChange change={acsChange.user} />
@@ -250,7 +251,7 @@ export default function TriviaSidebar(props) {
   const enemyHeaderSection = mode === "online" ? (
     <div className="TSBG-header-block TSBG-header-them">
       <span className="TSBG-header-username">
-        {username.enemy} &nbsp;
+        <span onClick={() => handleClickName(username.enemy)}>{username.enemy}</span> &nbsp;
         <span className="TSBG-header-acs">({acs != null ? acs.enemy : "-"})</span>
         &nbsp;
         <ACSChange change={acsChange.enemy} />
