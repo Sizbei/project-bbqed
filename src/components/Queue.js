@@ -8,6 +8,7 @@ import '../styling/queue.css';
 export default function Queue(props) {
   // const queueActive = "queueActive" in props ? props.queueActive : false;
   // console.log(props);
+  const handleCloseQueue = props.handleCloseQueue;
   const handleMatchId = props.handleMatchId;
   const [inQueue, setInQueue] = useState(false); // in queue?
   const [waitConfirm, setWaitConfirm] = useState(false); // can confirm?
@@ -98,7 +99,7 @@ export default function Queue(props) {
 
   return(
     <div>
-      <div className='queue-popup'/>
+      <div className='queue-popup' onClick={() => {leaveQueue(); handleCloseQueue();}} />
         <div className='queue-popup_inner'>
           <button onClick={joinQueue}>join queue</button>
           <br></br>

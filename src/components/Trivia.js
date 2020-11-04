@@ -157,6 +157,11 @@ export default function Trivia(props) {
     }
   }
 
+  const handleCloseQueue = () => {
+    const newState = JSON.parse(JSON.stringify(initialState));
+    setState(newState);
+  }
+
   const initOnline = (enemy) => {
     const newState = JSON.parse(JSON.stringify(initialState));
     newState.mode = "online";
@@ -622,7 +627,7 @@ export default function Trivia(props) {
   return(
     <div>
       {triviaPage}
-      {state.queueActive ? <Queue handleMatchId={handleMatchId} {...state} /> : null}
+      {state.queueActive ? <Queue handleCloseQueue={handleCloseQueue} handleMatchId={handleMatchId} {...state} /> : null}
     </div>
   );
 }

@@ -38,8 +38,6 @@ export default function InGameTrivia(props) {
       return "none";
     }
   })();
-
-  console.log(winner);
   
   const [tickValue, NewTickValue] = useState(0);
   const [opacityValue, NewOpacityValue] = useState(100);
