@@ -158,6 +158,10 @@ export default function Trivia(props) {
   }
 
   const handleCloseQueue = () => {
+    if (state.stop != "queue") { // do not overwrite state
+      return;
+    }
+
     const newState = JSON.parse(JSON.stringify(initialState));
     setState(newState);
   }
