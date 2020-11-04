@@ -89,11 +89,6 @@ export default function InGameTrivia(props) {
             else if (tick >= 60 && flashOn)
                 opacity += 7.5;
         }
-        else {
-            NewTickValue(100);
-            timerOn = false;
-            clearInterval(Timer);
-        }
     }
     function triggerCountDown() {
       if (counter == 0) {
@@ -132,7 +127,8 @@ export default function InGameTrivia(props) {
     }
 
     stopTimers();
-
+    NewTickValue(100);
+    
     if (props.stop === "toNav") {
       reset();
     }
