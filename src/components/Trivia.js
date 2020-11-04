@@ -553,26 +553,24 @@ export default function Trivia(props) {
     // console.log("Fetching state...", fetchUpdate);
     fetch('/trivia/head-to-head/update', fetchUpdate).then(res => res.json())
     .then((updateData) => {
-      const data = updateData.gameInstance;
-      if (!("questions" in data) || !("curQuestionIndex" in data)) {
+      try {
+        const data = updateData.gameInstance;
+        const currentQuestion = data.questions[data.curQuestionIndex];
+  
+        // is it a new question? play the transition. 
+        if ("currentQuestion" in state && state.currentQuestion != currentQuestion.triviaQuestion.question || data.status == "close") {
+          console.log("--------------NEW QUESTION IS HERE-------------")
+          showSolution(data);
+          // setTimeout(() => transitionNext(data), transitionSpeed); // display next question after some time
+        } else {
+          transitionNext(data);
+        }
+      } catch (e) {
         console.log("error in update");
         const newState = {...state};
         newState.stop = "repeat";
         setState(newState);
         return;
-      }
-
-      const currentQuestion = data.questions[data.curQuestionIndex];
-      // console.log("got update");
-
-
-      // is it a new question? play the transition. 
-      if ("currentQuestion" in state && state.currentQuestion != currentQuestion.triviaQuestion.question || data.status == "close") {
-        console.log("--------------NEW QUESTION IS HERE-------------")
-        showSolution(data);
-        // setTimeout(() => transitionNext(data), transitionSpeed); // display next question after some time
-      } else {
-        transitionNext(data);
       }
     })
   }, [state.stop])
