@@ -4,21 +4,7 @@ import '../styling/EditProfile.css'
 import '../styling/toastr.min.css'
 import {AuthContext} from '../Context/AuthContext';
 
-import ImageSelect from './ImageSelect'
-
-
-function ErrorMessage(props) {
-  const flag = props.flag;
-  const text = props.text;
-
-  if (flag) {
-    return <span className="error-message"> {text} </span>;
-  } else {
-    return <span className="error-message"> <br></br> </span>;
-  }
-} 
-
-export default class EditProfile extends Component {
+export default class EditAccount extends Component {
     static contextType = AuthContext;
 
     constructor(props) {
@@ -29,11 +15,6 @@ export default class EditProfile extends Component {
         this.onChangeAbout = this.onChangeAbout.bind(this);
         this.onBlur = this.onBlur.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
-        this.handleImageLoad = this.handleImageLoad.bind(this);
-        this.handleImageError = this.handleImageError.bind(this);
-        this.urlChangeHandler = this.urlChangeHandler.bind(this);
-        this.handleImageSubmit = this.handleImageSubmit.bind(this);
-        this.handleImageSelectData = this.handleImageSelectData.bind(this);
 
         //variables
         this.state = {
@@ -71,18 +52,6 @@ export default class EditProfile extends Component {
           nextImage: data.image
         })
 
-        fetch('/teams').then(res => res.json())
-        //axios.get('http://localhost:5000/teams/')
-        .then(teams => {
-            this.setState({
-              imageSelect: <ImageSelect btntext="Submit!" data={teams} width={6} 
-              selected={data.interest} updateOnClick={true} 
-              maxTeams={9}
-              onSubmit={this.handleImageSelectData} onBlurHandler={this.onBlur} 
-              noButton={true}/>
-            })
-          }
-        ); 
       })
       .catch((error) => {
         console.log(error);
@@ -160,67 +129,8 @@ export default class EditProfile extends Component {
       })
 
     }
-
-    urlChangeHandler = (e) => {
-      const url = e.target.value;
-      this.setState({
-        nextImage: url,
-        imgInputValue: url,
-        showImageSubmit: false
-      })
-
-      if (url === "" || url === this.state.image) {
-        this.setState({
-          imageNoError: true
-        })
-      }
-    }
-
-    handleImageLoad = () => { 
-      if (this.state.nextImage != this.state.image) {
-        this.setState({ 
-          imageNoError: true,
-          showImageSubmit: true
-        })
-      }
-    }
-
-    handleImageError = (e) => {      
-      if (this.state.imgInputValue === "" || this.imgInputValue === this.state.image) {
-        this.setState({imageNoError: true})
-      } else {
-        this.setState({
-          imageNoError: false
-        })
-      }
-
-      this.setState({
-        showImageSubmit: false,
-        nextImage: this.state.image
-      })
-    }
-
-    handleImageSubmit = (e) => {
-      this.setState({
-        image: this.state.nextImage, 
-        showImageSubmit: false
-      }, () => this.onSubmit())
-    }
-
-    handleImageSelectData = (d) => {
-      this.setState({
-        interest: d
-      }, () => this.onSubmit())
-    }
     
     render(){
-      let imgSubmitBtn;
-
-      if (this.state.showImageSubmit) {
-        imgSubmitBtn = <button className="image-submit" onClick={this.handleImageSubmit}>Update</button>
-      } else {
-        imgSubmitBtn = null;
-      }
       
       return (
         <div className="editprofile-container">
@@ -228,38 +138,17 @@ export default class EditProfile extends Component {
               
               <div className="info"> 
               <h1 className="editProfile-h1"> {'Profile Settings'} </h1> 
-                  <div className="editPP-container">
-                    <h2 className="editProfile-h2">Profile Picture</h2>
-                    <div className="editPP-photo-container">
-                      <div className="preview">
-                        <div className="registration-photo">
-                          <img style={{ display: this.state.showImageSubmit ? "block" : "none" }} src={this.state.nextImage} key={"one-" + this.state.nextImage} className="registration-user-given-photo" alt="" onError={this.handleImageError} onLoad={this.handleImageLoad} />
-                          <img style={{ display: this.state.showImageSubmit ? "none" : "block" }} src={this.state.image} key={"two-" + this.state.image} className="registration-user-given-photo" alt="" />                     
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* <label>Profile Picture URL: </label> */}
-                    <div className="editPP-input-container">
-                      <input className="editPP-input-field" placeholder="Photo link" type="text" name="url" onChange={this.urlChangeHandler} value={this.imgInputValue}/>
-                      {imgSubmitBtn}
-                    </div>
-                    <ErrorMessage flag={!this.state.imageNoError} text="*Improper url." />
-                  </div>
 
                   <hr className="settings-hr"></hr>
-                  <h2 className="editProfile-h2">Status (optional)</h2>
+                  <h2 className="editProfile-h2">Email</h2>
                   <input type="text" placeholder="Status (optional)" id="timer" className="status-edit" maxLength="30" onBlur={this.onBlur} onChange={this.onChangeStatus} value={this.state.status}></input>
                   <label className="characters">Characters remaining: {this.state.statusCharacters}</label>
                   
                   <hr className="settings-hr"></hr>
-                  <h2 className="editProfile-h2"> About (optional)</h2>
+                  <h2 className="editProfile-h2"> Password</h2>
                   <textarea type="text" placeholder="About (optional)" id="timer" className="about-edit" maxLength="300" onBlur={this.onBlur} onChange={this.onChangeAbout} value={this.state.about}></textarea>
                   <label className="characters">Characters remaining: {this.state.aboutCharacters}</label>
-                  
-                  <hr className="settings-hr"></hr>
-                  <h2 className="title">Favorite Teams</h2>
-                  {this.state.imageSelect}
+
               </div>
           </div>
           
