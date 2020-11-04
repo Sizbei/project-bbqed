@@ -55,13 +55,7 @@ export default function InGameTrivia(props) {
     opacity: opacityValue + "%"
   }
 
-  //example for 10 second: 
-  //onClick={() => triviaClockTick(10, 0.04, 100, 0)}
-  //example for 14 second:
-  //onClick={() => triviaClockTick(14, 0.03, 100, 0)}
   const triviaClockTick = (timeAllotted=10, tickSpeed=0.042, setOpacity=100, setTick=0) => {
-    var divTimeLeft = document.getElementsByClassName('clockTick');
-    var divClock = document.getElementsByClassName('clock');
         timerOn = true;
     var flashOn = true;
     var tick = setTick;
@@ -128,7 +122,7 @@ export default function InGameTrivia(props) {
 
     stopTimers();
     NewTickValue(100);
-    
+
     if (props.stop === "toNav") {
       reset();
     }
@@ -143,7 +137,13 @@ export default function InGameTrivia(props) {
     console.log("questionCount", props.questionCount);
     stopTimers();
     reset();
-    const newActiveTimers = triviaClockTick();
+    var newActiveTimers;
+    if ("singlePlayer".localeCompare(mode) == 0) {
+        newActiveTimers = triviaClockTick(14, 0.032, 100, 0);
+    }
+    else {
+        newActiveTimers = triviaClockTick();
+    }
     setActiveTimers(newActiveTimers);
 
     return () => {
