@@ -6,7 +6,7 @@ import icon from '../res/images/puzzle-piece.png'
 import ProfilePicture from './ProfilePicture';
 
 function QuestionPreviewText(props) {
-  const max = 60;
+  const max = 56;
   const ellipses = props.text.length > max;
   let text = props.text.substring(0, max);
   while (text.length > 0 && text[text.length - 1] === ' ') {
