@@ -17,39 +17,11 @@ const maxQuestionCount = 11;
 
 /*-------------FUNCTIONS FOR THE QUEUE-----------------------*/
 
-const joinQueue = (req, res) => {
-  const user = req.body.username;
-  const acs = req.body.acs;
-
-  queue.remove(queue.find({"payload.user": req.params.username}).exec()).exec()
-    .then(() => {
-      const join = new queue({
-        startTime: null,
-        endTime: null,
-        createdOn: new Date(),
-        priority: 1,
-        payload: {
-          user: user,
-          acs: acs,
-          opp: "",
-          accept: false
-        }
-      })
-    
-      join.save()
-        .then(() => {
-          res.json("Joined queue")
-        })
-        .catch(err => res.status(400).json('Error: ' + err));
-    })
-    .catch(err => res.status(400).json('Error leaving queue: ' + err));
-}
-
 router.route('/joinQueue').post((req, res) => {
   const user = req.body.username;
   const acs = req.body.acs;
 
-  queue.remove(queue.find({"payload.user": req.params.username})).exec()
+  queue.remove({"payload.user": req.params.username}).exec()
     .then(() => {
       const join = new queue({
         startTime: null,
@@ -128,7 +100,7 @@ router.route('/createGame').post((req, res) => {
   // const d = await testfunc();
   // res.json(d);
   
-  queue.findOneAndUpdate({startTime: {"$ne": null},  "payload.user": req.body.username}, {"payload.accept": true})
+  queue.findOneAndUpdate({startTime: {"$ne": null},  "payload.user": req.body.username}, {endTime: new Date(), "payload.accept": true})
   .then(user => {
     
       if(user){
@@ -144,13 +116,27 @@ router.route('/createGame').post((req, res) => {
             }
             
             console.log("initialize");
-            queue.remove(queue.findOne({"payload.user": user.payload.opp})).exec();
-            init(initReq, res)
+            
+
+            queue.find({"payload.user": user.payload.opp})
+            .then(opp => {
+                
+                if(user.endTime < opp.endTime){
+                    init(initReq, res);
+                } else {
+                    setTimeout(() => init(initReq, res), 1000);
+                }
+                
+            }).then(() => queue.remove(queue.findOne({"payload.user": user.payload.opp})).exec())
+            
+                
           } else {
             user.startTime = null;
+            user.endTime = null;
             user.payload.opp = "";
             user.payload.accept = false;
             user.markModified('startTime');
+            user.markModified('endTime');
             user.markModified('payload.opp');
             user.markModified('payload.accept');
             user.save().then(() => res.json("Match Declined"));
