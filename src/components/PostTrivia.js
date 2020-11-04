@@ -102,7 +102,7 @@ function ACSChange(props) {
     )
   } else if (change == 0) {
     return (
-      <span className={"post-header-acschange-zero"}>+-0</span>
+      <span className={"post-header-acschange-zero"}>+0</span>
     )
   } else {
     return (
