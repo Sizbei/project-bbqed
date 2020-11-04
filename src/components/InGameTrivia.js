@@ -55,13 +55,7 @@ export default function InGameTrivia(props) {
     opacity: opacityValue + "%"
   }
 
-  //example for 10 second: 
-  //onClick={() => triviaClockTick(10, 0.04, 100, 0)}
-  //example for 14 second:
-  //onClick={() => triviaClockTick(14, 0.03, 100, 0)}
   const triviaClockTick = (timeAllotted=10, tickSpeed=0.042, setOpacity=100, setTick=0) => {
-    var divTimeLeft = document.getElementsByClassName('clockTick');
-    var divClock = document.getElementsByClassName('clock');
         timerOn = true;
     var flashOn = true;
     var tick = setTick;
@@ -88,11 +82,6 @@ export default function InGameTrivia(props) {
                 opacity -= 3;
             else if (tick >= 60 && flashOn)
                 opacity += 7.5;
-        }
-        else {
-            NewTickValue(100);
-            timerOn = false;
-            clearInterval(Timer);
         }
     }
     function triggerCountDown() {
@@ -132,6 +121,10 @@ export default function InGameTrivia(props) {
     }
 
     stopTimers();
+    NewTickValue(100);
+    if ("online".localeCompare(mode) == 0) {
+        NewTimeValue("Waiting for other User...");
+    }
 
     if (props.stop === "toNav") {
       reset();
@@ -147,7 +140,13 @@ export default function InGameTrivia(props) {
     console.log("questionCount", props.questionCount);
     stopTimers();
     reset();
-    const newActiveTimers = triviaClockTick();
+    var newActiveTimers;
+    if ("singlePlayer".localeCompare(mode) == 0) {
+        newActiveTimers = triviaClockTick(14, 0.032, 100, 0);
+    }
+    else {
+        newActiveTimers = triviaClockTick(10, 0.042, 100, 0);
+    }
     setActiveTimers(newActiveTimers);
 
     return () => {
@@ -265,7 +264,7 @@ export default function InGameTrivia(props) {
         </div>
 
         {showNavButtons ? (
-          <div className="post-nav">
+          <div className="post-nav-trivia">
             <button className="post-nav-button" onClick={() => handleModeSelect("playAgain")}>
               <label className="post-nav-button-label">Play Again</label>
             </button>

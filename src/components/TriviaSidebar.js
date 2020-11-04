@@ -291,7 +291,7 @@ export default function TriviaSidebar(props) {
             <span className="TSB-direct-text">Single Player</span>
             <span className="TSB-direct-timer">{singleTime}</span>
           </div>
-          <div className="TSB-direct-item" onClick={handleClickSend}>
+          {/* <div className="TSB-direct-item" onClick={handleClickSend}>
             <div className="TSB-direct-icon TSB-direct-icon-send"></div>
             <span className="TSB-direct-text">Send a Challenge</span>
             <span className="TSB-direct-timer">{sendTime}</span>
@@ -300,30 +300,52 @@ export default function TriviaSidebar(props) {
             <div className="TSB-direct-icon TSB-direct-icon-solo"></div>
             <span className="TSB-direct-text">Practice</span>
             <span className="TSB-direct-timer">{practiceTime}</span>
-          </div>
+          </div> */}
         </div>
+        <div className="TSB-temporaryDiv"></div>
       </div>  
     )
   } else {
-    return (
-      <div className="TSB-div">
-        <div className="TSBG-header">
-          {userHeaderSection}
-          {enemyHeaderSection}
-          <span style={{color: "white"}}> Winner: {props.winner} </span>
-        </div>
-        
-        <div className="TSBG-list">
-          <div className="TSBG-list-icons-div">
-            <div className="TSBG-list-icons">
-              {userListIcon}
-              {enemyListIcon}
-            </div>
+    if("online".localeCompare(mode) == 0){
+      return (
+        <div className="TSB-div">
+          <div className="TSBG-header">
+            {userHeaderSection}
+            {enemyHeaderSection}
+            <span style={{color: "white"}}> Winner: {props.winner} </span>
           </div>
           
-          {QList}
+          <div className="TSBG-list">
+            <div className="TSBG-list-icons-div">
+              <div className="TSBG-list-icons">
+                {userListIcon}
+                {enemyListIcon}
+              </div>
+            </div>
+            
+            {QList}
+          </div>
         </div>
-      </div>
-    )
+      )
+    }
+    else {
+      return (
+      <div className="TSB-div">
+          <div className="TSBG-header">
+            {userHeaderSection}
+          </div>
+          
+          <div className="TSBG-list">
+            <div className="TSBG-list-icons-div">
+              <div className="TSBG-list-icons">
+                {userListIcon}
+              </div>
+            </div>
+
+            {QList}
+          </div>
+        </div>
+      )
+    }
   }
 }

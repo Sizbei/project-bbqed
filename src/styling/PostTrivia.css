@@ -95,6 +95,15 @@
   line-height: 1vw;
 }
 
+.post-nav-trivia {
+  width: 90%;
+  margin-top: 3vw;
+  margin-left: 8%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .post-nav {
   margin-top: 4vw;
   display: flex;
