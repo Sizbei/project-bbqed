@@ -9,11 +9,163 @@ const jwt = require('jsonwebtoken');
 const passportConfig = require('../passport');
 
 // set the time limit for each trivia question, unit in sec
-const timeLimit = 12;
+const timeLimit = 14;
 // set the total number of question in one regular trivia
 const questionCount = 10;
 // set the total number of question prepared in one trivia game
 const maxQuestionCount = 11;
+
+/*-------------FUNCTIONS FOR THE QUEUE-----------------------*/
+
+const joinQueue = (req, res) => {
+  const user = req.body.username;
+  const acs = req.body.acs;
+
+  queue.remove(queue.find({"payload.user": req.params.username}))
+    .then(() => {
+      const join = new queue({
+        startTime: null,
+        endTime: null,
+        createdOn: new Date(),
+        priority: 1,
+        payload: {
+          user: user,
+          acs: acs,
+          opp: "",
+          accept: false
+        }
+      })
+    
+      join.save()
+        .then(() => {
+          res.json("Joined queue")
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
+    })
+    .catch(err => res.status(400).json('Error leaving queue: ' + err));
+}
+
+router.route('/joinQueue').post((req, res) => {
+  const user = req.body.username;
+  const acs = req.body.acs;
+
+  queue.remove(queue.find({"payload.user": req.params.username}))
+    .then(() => {
+      const join = new queue({
+        startTime: null,
+        endTime: null,
+        createdOn: new Date(),
+        priority: 1,
+        payload: {
+          user: user,
+          acs: acs,
+          opp: "",
+          accept: false
+        }
+      })
+    
+      join.save()
+        .then(() => {
+          res.json("Joined queue")
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
+    })
+    .catch(err => res.status(400).json('Error leaving queue: ' + err));
+});
+
+router.route('/leaveQueue/:username').delete((req, res) => {
+  queue.remove(queue.find({"payload.user": req.params.username}))
+  .then(() => res.json("Left queue"))
+  .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/findMatch').put((req, res) => {
+
+  queue.findOne({startTime: {"$ne": null}, "payload.user": req.body.username})
+    .then(user => res.json(user.payload.opp))
+    .catch(() => {
+      queue.findOneAndUpdate({startTime: null, "payload.user": {"$ne": req.body.username}}, {startTime: new Date()}, {sort: {createdOn: 1}, new: true}).exec()
+      .then(opp => {
+        console.log(opp.payload.user);
+        queue.findOneAndUpdate({"payload.user": req.body.username}, {startTime: new Date(), "payload.opp": opp.payload.user}).exec()
+        queue.findOneAndUpdate({"payload.user": opp.payload.user}, {"payload.opp": req.body.username}).exec()
+        res.json(opp.payload.user)
+      })
+      .catch(err => res.json("not found"));
+    })
+});
+
+function setIntervals(n, f, t) {
+  var promise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (n == 0) {
+        resolve(false);
+      }
+      
+      f()
+      .then((d) => {
+        if (d != null) {
+          console.log("resolve true");
+          resolve(true);
+        } else {
+          setIntervals(n - 1, f, t).then(d => {
+            resolve(d);
+          })
+        }
+      })
+      .catch(() => {
+        setIntervals(n - 1, f, t).then(d => {
+          resolve(d);
+        })
+      })
+    }, t)
+  })
+  return promise;
+}
+
+router.route('/createGame').post((req, res) => {
+  
+  // const d = await testfunc();
+  // res.json(d);
+  
+  queue.findOneAndUpdate({startTime: {"$ne": null},  "payload.user": req.body.username}, {"payload.accept": true})
+  .then(user => {
+    
+      if(user){
+        setIntervals(10, () => queue.findOne({startTime: {"$ne": null},  "payload.user": user.payload.opp, "payload.accept": true}), 1000).then((d) => {
+          if (d) {
+            // Initialize instance
+            const initReq = {
+              body: {
+                user: req.body.username,
+                enemy: user.payload.opp
+              }
+            }
+            
+            console.log("initialize");
+            queue.remove(queue.findOne({"payload.user": req.params.username})).exec();
+            init(initReq, res)
+          } else {
+            // user.startTime = null;
+            // user.payload.opp = "";
+            // user.payload.accept = false;
+            // user.markModified('startTime');
+            // user.markModified('payload.opp');
+            // user.markModified('payload.accept');
+            // user.save().then(() => res.json("Match Declined"));
+            console.log("Match declined.");
+            joinQueue(req, res);
+          }
+        })
+      } else {
+        console.log("Unable to join game");
+        res.json("Unable to join game");
+        joinQueue(req, res);
+      }
+      
+    })
+    .catch(err => res.json("Waiting 2"))
+});
 
 //-------------------------------------------------
 // Supporting functions for head-to-head trivia game
@@ -279,11 +431,8 @@ router.route('/submit').post(passport.authenticate('jwt', {session : false}),(re
         .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
 });
 
-// init a head-to-head game
-// request format: {user: str, enemy: str}
-//router.route('/init').post((req, res) => {
-router.route('/init').post(passport.authenticate('jwt', {session : false}),(req, res) => {
-
+const init = (req, res) => {
+  console.log("initiating trivia game");
     const shuffleOptions = options => {
         return options.sort(() => Math.random() - 0.5);
     }
@@ -336,6 +485,13 @@ router.route('/init').post(passport.authenticate('jwt', {session : false}),(req,
         .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
     })
     .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
+}
+
+// init a head-to-head game
+// request format: {user: str, enemy: str}
+//router.route('/init').post((req, res) => {
+router.route('/init').post(passport.authenticate('jwt', {session : false}),(req, res) => {
+    init(req, res);
 })
 
 module.exports = router;

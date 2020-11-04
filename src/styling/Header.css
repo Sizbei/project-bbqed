@@ -166,7 +166,7 @@
   background-color: #495157;
 }
 
-.optionsButtons:focus {
+.optionsButtons:focus, .optionsButtonsBotEnd:focus, .optionsButtonsTopEnd:focus {
   outline: none;
 }
 

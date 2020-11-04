@@ -4,16 +4,16 @@ import Header from './Header';
 import  '../styling/InGameTrivia.css';
 import TriviaSidebar from './TriviaSidebar';
 import ProfilePicture from './ProfilePicture';
-import { convertCompilerOptionsFromJson } from 'typescript';
 import crown from '../res/images/crowns.png'
 import PostTrivia from './PostTrivia'
 
 export default function InGameTrivia(props) {
   const mode = props.mode;
   const previousAnswer = props.previousAnswer;
+  // console.log("previous answer", previousAnswer, props);
   const handleOptionSelect = props.handleOptionSelect;
   const handleModeSelect = props.handleModeSelect;
-  const chosenOptions = "chosenOptions" in props ? props.chosenOptions : {user: 1, enemy: 2};
+  const chosenOptions = "chosenOptions" in props ? props.chosenOptions : {user: "", enemy: ""};
   let currentQuestion = '\u00A0'; // initialize with space to preserve spacing
   let options = ['\u00A0', '\u00A0', '\u00A0', '\u00A0'];
   if (mode == "singlePlayer" || mode == "online") {
@@ -21,6 +21,24 @@ export default function InGameTrivia(props) {
     options = "options" in props ? props.options : options;
   }
 
+  const winner = (function() {
+    if (props.mode != "online") {
+      return "not applicable";
+    }
+    
+    if (props.gameOver) {
+      if (props.score.user > props.score.enemy) {
+        return "user";
+      } else if (props.score.user == props.score.enemy) {
+        return "tie";
+      } else {
+        return "enemy";
+      }
+    } else {
+      return "none";
+    }
+  })();
+  
   const [tickValue, NewTickValue] = useState(0);
   const [opacityValue, NewOpacityValue] = useState(100);
   const [timeValue, NewTimeValue] = useState(10);
@@ -104,9 +122,9 @@ export default function InGameTrivia(props) {
     NewTimeValue(10);
   }
 
-  // Stop timers when props.stopTimers === "stop"
+  // Stop timers
   useEffect(() => {
-    if (!("stop" in props) || props.stop === "nostop") {
+    if (!("stop" in props) || props.stop === "nostop" || (props.mode === "online" && props.select === null)) {
       return;
     }
 
@@ -123,7 +141,7 @@ export default function InGameTrivia(props) {
     if (!("questionCount" in props)) {
       return;
     }
-
+    console.log("questionCount", props.questionCount);
     stopTimers();
     reset();
     const newActiveTimers = triviaClockTick();
@@ -134,10 +152,22 @@ export default function InGameTrivia(props) {
       clearInterval(newActiveTimers.clockInterval);
     }
   }, [props.questionCount])
-      
+
+  
+  const boxClassName = (index) => {
+    const base = "answer" + (index + 1) + "Box";
+    
+    if (chosenOptions.user === options[index]) {
+      return (chosenOptions.user === options[index] ? base + '-hover' : '')
+    } else if (chosenOptions.user === "") {
+      return base;
+    } else { // aka wrong answer
+      return base + "-nohover"
+    }
+  }
+
   return(
       <div className='trivia-background'>
-        {/* <PostTrivia {...props}/> */}
         <div className='left-segment'>
         <div className='timeBox'>
             <label className='time'>{mode != "nav" ? timeValue : null}</label>
@@ -152,24 +182,28 @@ export default function InGameTrivia(props) {
         </div>
         <div className='answers'>
           <div className='leftAnswers'>
-              <div className='answer1Box' onClick={() => handleOptionSelect(0)}> 
+              <div className={boxClassName(0)} onClick={() => handleOptionSelect(0)}> 
                   <div className="answer-icons-div">
+                    <div className='crown-icon-div'>
+                      {previousAnswer === options[0] ? <img className="crown-icon" src={crown}></img> : null}
+                    </div>
                     <div className="answer-icons">
-                      {previousAnswer === options[0] ? <img className="answer-icon" src={crown}></img> : null}
                       {chosenOptions.user === options[0] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
-                      {chosenOptions.enemy === options[0] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                      {chosenOptions.enemy === options[0] ? <img className="answer-icon" src={props.ppurl.enemy}></img> : null}
                     </div>
                   </div>
                   <div className='answer-div'>
                     <label className='answer1'>{options[0]}</label>
                   </div>
               </div>
-              <div className='answer2Box' onClick={() => handleOptionSelect(1)}>
+              <div className={boxClassName(1)} onClick={() => handleOptionSelect(1)}>
                   <div className="answer-icons-div">
+                    <div className='crown-icon-div'>
+                      {previousAnswer === options[1] ? <img className="crown-icon" src={crown}></img> : null}
+                    </div>
                     <div className="answer-icons">
-                      {previousAnswer === options[1] ? <img className="answer-icon" src={crown}></img> : null}
                       {chosenOptions.user === options[1] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
-                      {chosenOptions.enemy === options[1] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                      {chosenOptions.enemy === options[1] ? <img className="answer-icon" src={props.ppurl.enemy}></img> : null}
                     </div>
                   </div>
                   <div className='answer-div'>
@@ -178,24 +212,28 @@ export default function InGameTrivia(props) {
               </div>
           </div>
           <div className='rightAnswers'>
-              <div className='answer3Box' onClick={() => handleOptionSelect(2)}>
+              <div className={boxClassName(2)} onClick={() => handleOptionSelect(2)}>
                   <div className="answer-icons-div">
+                    <div className='crown-icon-div'>
+                      {previousAnswer === options[2] ? <img className="crown-icon" src={crown}></img> : null}
+                    </div>
                     <div className="answer-icons">
-                      {previousAnswer === options[2] ? <img className="answer-icon" src={crown}></img> : null}
                       {chosenOptions.user === options[2] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
-                      {chosenOptions.enemy === options[2] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                      {chosenOptions.enemy === options[2] ? <img className="answer-icon" src={props.ppurl.enemy}></img> : null}
                     </div>
                   </div>
                   <div className='answer-div'>
                     <label className='answer3'>{options[2]}</label>
                   </div>
               </div>
-              <div className='answer4Box' onClick={() => handleOptionSelect(3)}>
+              <div className={boxClassName(3)} onClick={() => handleOptionSelect(3)}>
                   <div className="answer-icons-div">
+                    <div className='crown-icon-div'>
+                        {previousAnswer === options[3] ? <img className="crown-icon" src={crown}></img> : null}
+                    </div>
                     <div className="answer-icons">
-                      {previousAnswer === options[3] ? <img className="answer-icon" src={crown}></img> : null}
                       {chosenOptions.user === options[3] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
-                      {chosenOptions.enemy === options[3] ? <img className="answer-icon" src={props.ppurl.user}></img> : null}
+                      {chosenOptions.enemy === options[3] ? <img className="answer-icon" src={props.ppurl.enemy}></img> : null}
                     </div>
                   </div>
                   <div className='answer-div'>
@@ -207,7 +245,7 @@ export default function InGameTrivia(props) {
       </div>
 
     <div className='right-segment'>
-      <TriviaSidebar {...props} handleModeSelect={handleModeSelect}/>
+      <TriviaSidebar {...props} handleModeSelect={handleModeSelect} winner={winner} />
     </div>
     
     {"gameOver" in props && props.gameOver ? (

@@ -9,17 +9,35 @@ export default function InGameTrivia(props) {
   const list = props.list;
   const mode = props.mode;
   const username = props.username;
-  const acs = props.gameOver ? props.finalACS : 
-    ("initialACS" in props ? props.initialACS : {user:"", enemy:""});
   const acsChange = "acsChange" in props ? props.acsChange : {user:"none", enemy:"none"};
   const ppurl = "ppurl" in props ? props.ppurl : {user: "", enemy: ""};
   const nav = mode === "nav";
+  const acs = (function() {    
+    if (props.gameOver) {
+      if ("finalACS" in props) {
+        return props.finalACS;
+      } else {
+        return {
+          user: props.initialACS.user + acsChange.user,
+          enemy: props.initialACS.enemy + acsChange.enemy
+        }
+      }
+    } else {
+      return props.initialACS;
+    }
+  })();
+  
+  const [visible, setVisible] = useState('visible');
+
+  var visibleJSON = {
+      visibility: visible
+  }
 
   const userHeaderSection = (
     <div className="post-header-block post-header-us">
       <span className="post-header-username">
         {username.user} &nbsp;
-        <span className="post-header-acs">({acs.user})</span>
+        <span className="post-header-acs">({acs != null ? acs.user : "-"})</span>
         &nbsp;
         <ACSChange change={acsChange.user} />
       </span>
@@ -32,7 +50,7 @@ export default function InGameTrivia(props) {
     <div className="post-header-block post-header-them">
       <span className="post-header-username">
         {username.enemy} &nbsp;
-        <span className="post-header-acs">({acs.enemy})</span>
+        <span className="post-header-acs">({acs != null ? acs.enemy : "-"})</span>
         &nbsp;
         <ACSChange change={acsChange.enemy} />
       </span>
@@ -41,10 +59,14 @@ export default function InGameTrivia(props) {
     </div>
   ) : null;
 
+  const Hide = () => {
+      setVisible('hidden');
+  }
+
   return (
       <div>
-          <div className='popup'/>
-          <div className='popup_inner'>
+          <div className='post-popup' onClick={() => Hide()} style={visibleJSON}/>
+          <div className='post-popup_inner' style={visibleJSON}>
             <div className="post-header">
               {userHeaderSection}
               {enemyHeaderSection}
@@ -80,7 +102,7 @@ function ACSChange(props) {
     )
   } else if (change == 0) {
     return (
-      <span className={"post-header-acschange-zero"}>+-0</span>
+      <span className={"post-header-acschange-zero"}>+0</span>
     )
   } else {
     return (

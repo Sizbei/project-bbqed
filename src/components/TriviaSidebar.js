@@ -6,7 +6,7 @@ import icon from '../res/images/puzzle-piece.png'
 import ProfilePicture from './ProfilePicture';
 
 function QuestionPreviewText(props) {
-  const max = 60;
+  const max = 56;
   const ellipses = props.text.length > max;
   let text = props.text.substring(0, max);
   while (text.length > 0 && text[text.length - 1] === ' ') {
@@ -57,7 +57,7 @@ function QuestionListItem(props) {
 function QuestionList(props) {
   const mode = props.mode;
   const list = props.list;
-  const size = mode === "online" && list.length == 11 ? 11 : 10;
+  const size = (mode === "online" && props.list.length == 11) ? 11 : 10;
 
   let accum = [];
   list.forEach(e => {
@@ -118,30 +118,117 @@ export default function TriviaSidebar(props) {
   const list = props.list;
   const mode = props.mode;
   const username = props.username;
-  const acs = props.gameOver ? props.finalACS : 
-    ("initialACS" in props ? props.initialACS : {user:"", enemy:""});
   const acsChange = "acsChange" in props ? props.acsChange : {user:"none", enemy:"none"};
   const ppurl = "ppurl" in props ? props.ppurl : {user: "", enemy: ""};
   const nav = mode === "nav";
+  // const acs = props.gameOver ? props.finalACS : 
+  //   ("initialACS" in props ? props.initialACS : {user:"", enemy:""});
+  
+  const acs = (function() {    
+    if (props.gameOver) {
+      if ("finalACS" in props) {
+        return props.finalACS;
+      } else {
+        return {
+          user: props.initialACS.user + acsChange.user,
+          enemy: props.initialACS.enemy + acsChange.enemy
+        }
+      }
+    } else {
+      return props.initialACS;
+    }
+  })();
+  
+  const [activeTimers, setActiveTimers] = useState({});
+  const [onlineTime, NewOnlineValue] = useState();
+  const [singleTime, NewSingleValue] = useState();
+  const [sendTime, NewSendValue] = useState();
+  const [practiceTime, NewPracticeValue] = useState();
+
+  var counter = 3;
 
   const handleClickOnline = e => {
     e.stopPropagation();
-    handleModeSelect("online");
+    clearTime();
+    resetCountDown();
+    var Timer = setInterval(() => handleModeWithDelay("online", Timer), 1000);
+    setActiveTimers(Timer);
   }
 
   const handleClickSingle = e => {
     e.stopPropagation();  
-    handleModeSelect("singlePlayer");
+    clearTime();
+    resetCountDown();
+    var Countdown = setInterval(() => showCountDown("single", Countdown), 1000);
+    var Timer = setInterval(() => handleModeWithDelay("singlePlayer", Timer), 4000);
+    setActiveTimers({CountDown: Countdown, Timer: Timer});
   }
 
   const handleClickSend = e => {
     e.stopPropagation();
-    handleModeSelect("send");
+    clearTime();
+    resetCountDown();
+    var Countdown = setInterval(() => showCountDown("send", Countdown), 1000);
+    var Timer = setInterval(() => handleModeWithDelay("send", Timer), 4000);
+    setActiveTimers({CountDown: Countdown, Timer: Timer});
   }
 
   const handleClickSolo = e => {
     e.stopPropagation();
-    handleModeSelect("practice");
+    clearTime();
+    resetCountDown();
+    var Countdown = setInterval(() => showCountDown("practice", Countdown), 1000);
+    var Timer = setInterval(() => handleModeWithDelay("practice", Timer), 4000);
+    setActiveTimers({CountDown: Countdown, Timer: Timer});
+
+  }
+
+  const handleModeWithDelay = (mode, timer) => {
+    handleModeSelect(mode);
+    clearInterval(timer);
+  }
+
+  const showCountDown = (mode, timer) => {
+    if (mode == "single") {
+      NewSingleValue(counter);
+      if (counter > 0)
+        counter -= 1;
+      else {
+        clearInterval(timer);
+        resetCountDown();
+      }
+    }
+    else if (mode == "send") {
+      NewSendValue(counter);
+      if (counter > 0)
+        counter -= 1;
+      else {
+        clearInterval(timer);
+        resetCountDown();
+      }
+    }
+    else if (mode == "practice") {
+      NewPracticeValue(counter);
+      if (counter > 0)
+        counter -= 1;
+      else {
+        clearInterval(timer);
+        resetCountDown();
+      }
+    }
+  }
+
+  const resetCountDown = () => {
+    NewOnlineValue();
+    NewSingleValue();
+    NewSendValue();
+    NewPracticeValue();
+    counter = 3;
+  }
+
+  const clearTime = () => {
+    clearInterval(activeTimers.Timer);
+    clearInterval(activeTimers.CountDown);
   }
 
   const QList = <QuestionList {...props} />
@@ -151,7 +238,7 @@ export default function TriviaSidebar(props) {
     <div className="TSBG-header-block TSBG-header-us">
       <span className="TSBG-header-username">
         {username.user} &nbsp;
-        <span className="TSBG-header-acs">({"user" in acs ? acs.user : ""})</span>
+        <span className="TSBG-header-acs">({acs != null ? acs.user : "-"})</span>
         &nbsp;
         <ACSChange change={acsChange.user} />
       </span>
@@ -160,12 +247,11 @@ export default function TriviaSidebar(props) {
     </div>
   );
 
-
   const enemyHeaderSection = mode === "online" ? (
     <div className="TSBG-header-block TSBG-header-them">
       <span className="TSBG-header-username">
         {username.enemy} &nbsp;
-        <span className="TSBG-header-acs">({"enemy" in acs ? acs.enemy : ""})</span>
+        <span className="TSBG-header-acs">({acs != null ? acs.enemy : "-"})</span>
         &nbsp;
         <ACSChange change={acsChange.enemy} />
       </span>
@@ -197,18 +283,22 @@ export default function TriviaSidebar(props) {
           <div className="TSB-direct-item" onClick={handleClickOnline}>
             <div className="TSB-direct-icon TSB-direct-icon-online"></div>
             <span className="TSB-direct-text">Play Online</span>
+            <span className="TSB-direct-timer">{onlineTime}</span>
           </div>
           <div className="TSB-direct-item" onClick={handleClickSingle}>
             <div className="TSB-direct-icon TSB-direct-icon-single"></div>
             <span className="TSB-direct-text">Single Player</span>
+            <span className="TSB-direct-timer">{singleTime}</span>
           </div>
           <div className="TSB-direct-item" onClick={handleClickSend}>
             <div className="TSB-direct-icon TSB-direct-icon-send"></div>
             <span className="TSB-direct-text">Send a Challenge</span>
+            <span className="TSB-direct-timer">{sendTime}</span>
           </div>
           <div className="TSB-direct-item" onClick={handleClickSolo}>
             <div className="TSB-direct-icon TSB-direct-icon-solo"></div>
             <span className="TSB-direct-text">Practice</span>
+            <span className="TSB-direct-timer">{practiceTime}</span>
           </div>
         </div>
       </div>  
@@ -219,6 +309,7 @@ export default function TriviaSidebar(props) {
         <div className="TSBG-header">
           {userHeaderSection}
           {enemyHeaderSection}
+          <span style={{color: "white"}}> Winner: {props.winner} </span>
         </div>
         
         <div className="TSBG-list">

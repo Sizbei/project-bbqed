@@ -1,4 +1,4 @@
-.popup {
+.post-popup {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -14,10 +14,10 @@
     background-color: rgba(0,0,0, 0.5);
   }
   
-.popup_inner {
+.post-popup_inner {
     position: absolute;  
-    height: 40%;
-    width: 30%;
+    height: 45%;
+    width: 25%;
     left: 25%;  
     right: 25%;  
     top: 10%;  
@@ -29,7 +29,7 @@
     padding-bottom: 1.5em;
     border-radius: 20px;
     background: #313538;
-
+    z-index: 9;
     display: flex;
     flex-direction: column;
 }
@@ -40,6 +40,7 @@
   align-items: center;
   justify-content: center;
   justify-content: space-around;
+  font-family: 'CommissionerMedium';
 }
 
 .post-header-block {
@@ -58,7 +59,9 @@
   display: inline-block;
   white-space: nowrap;
   color: white;
+  margin-top: 10%;
   font-size: 1.2vw;
+  
 }
 
 .post-header-acs {
@@ -87,6 +90,7 @@
 .post-header-score {
   color: white;
   font-size: 2.5vw;
+  margin-top: 2%;
   font-weight: 600;
   line-height: 1vw;
 }
@@ -100,8 +104,27 @@
 }
 
 .post-nav-button {
-  /* height: 2vw;
-  width: 5vw; */
+  height: 3vw;
+  width: 8vw;
+  background-color: #e06c16;
+  border-radius: 8px;
+  border: none;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+
+.post-nav-button:hover {
+  background-color: #c45d12;
+}
+
+.post-nav-button:focus {
+    outline: none;
+}
+
+.post-nav-button-label {
+    color:white;
+    font-family: 'CommissionerMedium';
+    font-size: 1vw;
 }
 
 @font-face {
