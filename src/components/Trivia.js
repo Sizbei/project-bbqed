@@ -407,13 +407,15 @@ export default function Trivia(props) {
           question: nextData.data.currentQuestion,
         })
         newState.startTime = Date.parse(nextData.data.time);
+        newState.stop = "nostop";
+      } else {
+        newState.stop = "single-done"; 
       }
 
       // Remove transition state
       delete newState.previousAnswer;
       newState.chosenOptions = {user: "", enemy: ""};
 
-      newState.stop = "nostop";
       setState(deepcopy(newState));      
     }
 

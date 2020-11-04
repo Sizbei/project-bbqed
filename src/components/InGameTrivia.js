@@ -8,12 +8,17 @@ import crown from '../res/images/crowns.png'
 import PostTrivia from './PostTrivia'
 
 export default function InGameTrivia(props) {
+  console.log(props.stop);
   const mode = props.mode;
   const previousAnswer = props.previousAnswer;
   // console.log("previous answer", previousAnswer, props);
   const handleOptionSelect = props.handleOptionSelect;
   const handleModeSelect = props.handleModeSelect;
   const chosenOptions = "chosenOptions" in props ? props.chosenOptions : {user: "", enemy: ""};
+  const endState = "gameOver" in props && props.gameOver && (props.stop == "single-done" || props.stop == "online-done"); // show nav buttons?
+  const [showNavPopup, setShowNavPopup] = useState(false);
+  const showNavButtons = endState && !showNavPopup;
+
   let currentQuestion = '\u00A0'; // initialize with space to preserve spacing
   let options = ['\u00A0', '\u00A0', '\u00A0', '\u00A0'];
   if (mode == "singlePlayer" || mode == "online") {
@@ -166,6 +171,24 @@ export default function InGameTrivia(props) {
     }
   }
 
+  const handleClosePostTrivia = () => {
+    setShowNavPopup(false);
+  }
+
+  // show post trivia on finalState = true
+  useEffect(() => {
+    if (endState) {
+      setShowNavPopup(true);
+    } else {
+      setShowNavPopup(false);
+    }
+  }, [endState])
+
+  // // reset showNavPopup on change
+  // useEffect(() => {
+  //   setShowNavPopup(false);     
+  // }, [props.stop])
+
   return(
       <div className='trivia-background'>
         <div className='left-segment'>
@@ -242,15 +265,31 @@ export default function InGameTrivia(props) {
               </div>
           </div>
         </div>
+
+        {showNavButtons ? (
+          <div className="post-nav">
+            <button className="post-nav-button" onClick={() => handleModeSelect("playAgain")}>
+              <label className="post-nav-button-label">Play Again</label>
+            </button>
+            {mode !== "singlePlayer" ? (
+              <button className="post-nav-button" onClick={() => handleModeSelect("rematch")}>
+                <label className="post-nav-button-label">Rematch</label>
+              </button>
+            ) : null}
+            <button className="post-nav-button" onClick={() => handleModeSelect("nav")}>
+              <label className="post-nav-button-label">Select Mode</label>
+            </button>
+          </div>
+        ) : null}
       </div>
 
     <div className='right-segment'>
       <TriviaSidebar {...props} handleModeSelect={handleModeSelect} winner={winner} />
     </div>
     
-    {"gameOver" in props && props.gameOver ? (
+    {showNavPopup ? (
       <div className="post-trivia-div">
-        <PostTrivia {...props} />
+        <PostTrivia handleClosePostTrivia={handleClosePostTrivia} {...props} />
       </div>
     ) : null}
     

@@ -3,7 +3,8 @@ import axios from 'axios';
 import  '../styling/PostTrivia.css';
 import ProfilePicture from './ProfilePicture'
 
-export default function InGameTrivia(props) {
+export default function PostTrivia(props) {
+  const handleClosePostTrivia = props.handleClosePostTrivia;
   const handleModeSelect = props.handleModeSelect;
   const score = "score" in props ? props.score : {user:0, enemy:0};
   const list = props.list;
@@ -60,7 +61,9 @@ export default function InGameTrivia(props) {
   ) : null;
 
   const Hide = () => {
+      console.log("Closing post trivia...");
       setVisible('hidden');
+      handleClosePostTrivia();
   }
 
   return (

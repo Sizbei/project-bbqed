@@ -38,7 +38,7 @@ export default function Queue(props) {
           console.log("data", data);
           // console.log("done", data.data.user);
           setInQueue(false);
-          setWaitConfirm(true)
+          setWaitConfirm(true);
         }
       }).catch(() => {
         console.log("error");
