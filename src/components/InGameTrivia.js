@@ -265,7 +265,7 @@ export default function InGameTrivia(props) {
         </div>
 
         {showNavButtons ? (
-          <div className="post-nav">
+          <div className="post-nav-trivia">
             <button className="post-nav-button" onClick={() => handleModeSelect("playAgain")}>
               <label className="post-nav-button-label">Play Again</label>
             </button>
