@@ -41,7 +41,7 @@ export default function TheZone(props) {
     const handlePostAgree = (data, index) => {
 
         const body = {
-            comment: data._id,
+            post: data._id,
             username: authContext.user.username,
             upvoted: data.upvoted,
             downvoted: data.downvoted,
@@ -58,9 +58,9 @@ export default function TheZone(props) {
                 const updatedEntry = {
                     "_id": data._id,
                     "poster": {
-                        "username": data.commenter.username,
-                        "image": data.commenter.image,
-                        "acs": data.commenter.acs
+                        "username": data.poster.username,
+                        "image": data.poster.image,
+                        "acs": data.poster.acs
                     },
                     "body": data.body,
                     "likes": updatedData.likes,
