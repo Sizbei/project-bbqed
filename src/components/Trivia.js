@@ -26,7 +26,7 @@ export default function Trivia(props) {
   const authContext = useContext(AuthContext);
   const [initialState, setInitialState] = useState({  // still gets modified by one useEffect() to get urls
     mode:"nav", 
-    username:{user: authContext.user.username},
+    username:{user: authContext.user.username, enemy: ""},
     ppurl: {user: "", enemy: ""},
     stop: "nostop",
     showPostScreen: false,
@@ -602,6 +602,10 @@ export default function Trivia(props) {
 
   // Fetch the enemy's image
   useEffect(() => {
+    if (!("stop" in state) || state.stop !== "getenemyimage") {
+      return;
+    }
+
     if (!("username" in state) || !("enemy" in state.username) || state.username.enemy == "") {
       return;
     }
@@ -623,7 +627,7 @@ export default function Trivia(props) {
       .catch((error) => {
         console.log(error);
       })
-  }, [JSON.stringify(state.username)])
+  }, [state.stop])
 
   const [triviaPage, setTriviaPage] = useState(null);
 
