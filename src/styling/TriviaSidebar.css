@@ -46,6 +46,10 @@
   align-items: center;
 }
 
+.TSB-temporaryDiv {
+  margin-top: 11vw;
+}
+
 .TSB-direct-item {
   margin-bottom: 0.5263157vw;
   display: flex;

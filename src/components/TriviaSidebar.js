@@ -290,7 +290,7 @@ export default function TriviaSidebar(props) {
             <span className="TSB-direct-text">Single Player</span>
             <span className="TSB-direct-timer">{singleTime}</span>
           </div>
-          <div className="TSB-direct-item" onClick={handleClickSend}>
+          {/* <div className="TSB-direct-item" onClick={handleClickSend}>
             <div className="TSB-direct-icon TSB-direct-icon-send"></div>
             <span className="TSB-direct-text">Send a Challenge</span>
             <span className="TSB-direct-timer">{sendTime}</span>
@@ -299,8 +299,9 @@ export default function TriviaSidebar(props) {
             <div className="TSB-direct-icon TSB-direct-icon-solo"></div>
             <span className="TSB-direct-text">Practice</span>
             <span className="TSB-direct-timer">{practiceTime}</span>
-          </div>
+          </div> */}
         </div>
+        <div className="TSB-temporaryDiv"></div>
       </div>  
     )
   } else {
