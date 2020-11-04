@@ -566,6 +566,7 @@ export default function Trivia(props) {
           transitionNext(data);
         }
       } catch (e) {
+        // TODO possible bug if the game is just over, infinite loop for data and never goes to post nav screen
         console.log("error in update");
         const newState = {...state};
         newState.stop = "repeat";
