@@ -101,10 +101,8 @@ export default function Queue(props) {
     <div>
       <div className='queue-popup' onClick={() => {leaveQueue(); handleCloseQueue();}} />
         <div className='queue-popup_inner'>
-          <span>{inQueue ? "QUEUE TIME" : "no"}</span>
-          <br></br>
-          <br></br>
-          {(waitConfirm && !inQueue) ? <button onClick={confirmMatch}>CONFIRM</button> : null}
+          {/* <span>{inQueue ? "QUEUE TIME" : "no"}</span> */}
+          {(waitConfirm && !inQueue) ? <button className="queue-Confirm" onClick={confirmMatch}>CONFIRM</button> : null}
       </div>
     </div>
   );
