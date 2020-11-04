@@ -383,7 +383,7 @@ export default function Trivia(props) {
     }).catch(e => {
       console.log("some error", e);
     })
-  }, [state])
+  }, [state.stop])
 
   // A transition from transition-showsolution to displaying the next question
   useEffect(() => { 
@@ -424,7 +424,7 @@ export default function Trivia(props) {
     }
 
     setTimeout(showNextQuestion, transitionSpeed);
-  }, [state])
+  }, [state.stop])
 
   // Transition from anywhere to nav screen
   useEffect(() => {
@@ -433,7 +433,7 @@ export default function Trivia(props) {
     }
     
     setState(JSON.parse(JSON.stringify(initialState)));
-  }, [state])
+  }, [state.stop])
 
   // an infinite loop for online play
   useEffect(() => {
@@ -537,7 +537,7 @@ export default function Trivia(props) {
         newState.nextData = data;
         setState(newState)
       } catch (e) {
-        console.log("error");
+        console.log("error", state);
         const newState = {...state}
         newState.stop = "repeat";
         setState(newState);
@@ -554,10 +554,11 @@ export default function Trivia(props) {
       headers: {'Content-Type' : 'application/json'}
     }
 
-    // console.log("Fetching state...", fetchUpdate);
+    
     fetch('/trivia/head-to-head/update', fetchUpdate).then(res => res.json())
     .then((updateData) => {
       try {
+        console.log("got...", updateData);
         const data = updateData.gameInstance;
         const currentQuestion = data.questions[data.curQuestionIndex];
   
