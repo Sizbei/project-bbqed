@@ -3,7 +3,7 @@ const instance = require('../models/soloTriviaInstance');
 const trivia = require('../models/trivia');
 const acs = require('../models/acs');
 
-const numQuestions = 2;
+const numQuestions = 10;
 
 router.route('/create').post((req, res) => {
 

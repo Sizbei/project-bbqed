@@ -42,9 +42,6 @@ export default function Trivia(props) {
   const transitionSpeed = 2000;
 
   const handleModeSelect = req => {
-    const newState = deepcopy(JSON.parse(JSON.stringify(initialState)));
-
-    console.log("new state at mode select", newState)
     console.log("select state", select);
 
     let mode = req;
@@ -55,9 +52,11 @@ export default function Trivia(props) {
 
     /*-----handle navigation--------*/
     if (mode === "nav") {
+      const newState = deepcopy(JSON.parse(JSON.stringify(initialState)));
       newState.stop = "toNav";
       setState(newState);
     } else if (mode === "singlePlayer") {
+      const newState = deepcopy(JSON.parse(JSON.stringify(initialState)));
       newState.mode = mode;
       newState.lists = [];
       newState.score = {"user": 0};
@@ -95,13 +94,16 @@ export default function Trivia(props) {
       })
     } else if (mode === "online") {
       // enter queue 
-      const newState = JSON.parse(JSON.stringify(initialState));
+      const newState = {...state};
       newState.queueActive = true;
+      newState.lastStop = state.stop;
       newState.stop = "queue";
+      console.log("Set new state for online", newState);
       setState(newState);
 
       // initOnline(authContext.user.username == "user1" ? "user3" : "user1");
     } else if (mode === "practice") {
+      const newState = deepcopy(JSON.parse(JSON.stringify(initialState)));
       const fetchInit = {
         method: "post",
         body: JSON.stringify({
@@ -162,7 +164,9 @@ export default function Trivia(props) {
       return;
     }
 
-    const newState = JSON.parse(JSON.stringify(initialState));
+    const newState = {...state};
+    newState.queueActive = false;
+    newState.stop = state.lastStop;
     setState(newState);
   }
 
@@ -194,7 +198,7 @@ export default function Trivia(props) {
   }
 
   const handleMatchId = (matchId) => {
-    console.log("Got matchId", handleMatchId);
+    console.log("Got matchId", matchId);
     const newState = JSON.parse(JSON.stringify(initialState));
     newState.mode = "online";
     newState.list = [];
@@ -498,7 +502,7 @@ export default function Trivia(props) {
         newState.score = {user: data.users.user.point, enemy: data.users.enemy.point};
         newState.acsChange = {user: data.users.user.acsChange, enemy: data.users.enemy.acsChange};
   
-        console.log("GOT DATA", lastQuestion.responses);
+        console.log("GOT DATA", data);
   
         // mark enemy's option
         console.log("Enemy response", lastQuestion.responses.enemy.answer, lastQuestion.triviaQuestion.answer);

@@ -8,10 +8,8 @@ import crown from '../res/images/crowns.png'
 import PostTrivia from './PostTrivia'
 
 export default function InGameTrivia(props) {
-  console.log(props.stop);
   const mode = props.mode;
   const previousAnswer = props.previousAnswer;
-  // console.log("previous answer", previousAnswer, props);
   const handleOptionSelect = props.handleOptionSelect;
   const handleModeSelect = props.handleModeSelect;
   const chosenOptions = "chosenOptions" in props ? props.chosenOptions : {user: "", enemy: ""};

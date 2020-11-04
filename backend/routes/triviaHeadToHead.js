@@ -13,7 +13,7 @@ const timeLimit = 14;
 // set the total number of question in one regular trivia
 const questionCount = 10;
 // set the total number of question prepared in one trivia game
-const maxQuestionCount = 11;
+const maxQuestionCount = questionCount + 1;
 
 /*-------------FUNCTIONS FOR THE QUEUE-----------------------*/
 
