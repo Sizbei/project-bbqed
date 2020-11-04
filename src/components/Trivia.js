@@ -100,62 +100,8 @@ export default function Trivia(props) {
       newState.stop = "queue";
       console.log("Set new state for online", newState);
       setState(newState);
-
-      // initOnline(authContext.user.username == "user1" ? "user3" : "user1");
     } else if (mode === "practice") {
-      const newState = deepcopy(JSON.parse(JSON.stringify(initialState)));
-      const fetchInit = {
-        method: "post",
-        body: JSON.stringify({
-          user1: "user3",
-          user2: "user1",
-        }),
-        headers: {'Content-Type' : 'application/json'}
-      }
-
-      console.log("Request online init", fetchInit);
-      fetch('/trivia/head-to-head/init', fetchInit).then(res => res.json())
-      .then((initData) => {
-        console.log("got init", initData);
-
-        const fetchUpdate = {
-          method: "put",
-          body: JSON.stringify({_id: initData._id}),
-          headers: {'Content-Type' : 'application/json'}
-        }
-
-        console.log("Request update", fetchUpdate);
-        fetch('/trivia/head-to-head/update', fetchUpdate).then(res => res.json())
-        .then((updateData) => {
-          console.log("got update", updateData);
-          console.log("got update", updateData.gameInstance);
-
-          const fetchSubmit = {
-            method: "post",
-            body: JSON.stringify({
-              _id: initData._id,
-              username: "user3",
-              answer: "blah blah blah",
-            }),
-            headers: {'Content-Type' : 'application/json'}
-          }
-          fetch('/trivia/head-to-head/submit', fetchSubmit).then(res => res.json())
-          .then((updateSubmit) => {
-            console.log("got submit data", updateSubmit);
-
-            const fetchFinalUpdate = {
-              method: "put",
-              body: JSON.stringify({_id: initData._id}),
-              headers: {'Content-Type' : 'application/json'}
-            }
-    
-            fetch('/trivia/head-to-head/update', fetchFinalUpdate).then(res => res.json())
-            .then((finalData) => {
-              console.log("FINAL DATA", finalData.gameInstance);
-            })
-          })
-        })
-      })
+      // TODO
     }
   }
 
@@ -235,6 +181,9 @@ export default function Trivia(props) {
       newState.stop = "getenemyimage";
       setState(newState);
     })
+    .catch(() => {
+      repeat();
+    })
   }
 
   const handleOptionSelect = option => {
@@ -290,6 +239,15 @@ export default function Trivia(props) {
       setSelect(null);
       setState(newState);
     })
+    .catch(() => {
+      repeat();
+    })
+  }
+
+  const repeat = () => {
+    const newState = {...state};
+    newState.stop = "repeat";
+    setState(newState);
   }
 
   // Transition to the next question for online play
@@ -573,11 +531,12 @@ export default function Trivia(props) {
       } catch (e) {
         // TODO possible bug if the game is just over, infinite loop for data and never goes to post nav screen
         console.log("error in update");
-        const newState = {...state};
-        newState.stop = "repeat";
-        setState(newState);
+        repeat();
         return;
       }
+    })
+    .catch(() => {
+      repeat();
     })
   }, [state.stop])
 

@@ -124,7 +124,7 @@ router.route('/createGame').post((req, res) => {
                 if(user.endTime < opp.endTime){
                     init(initReq, res);
                 } else {
-                    setTimeout(() => init(initReq, res), 1000);
+                    setTimeout(() => init(initReq, res), 2000);
                 }
                 
             }).then(() => queue.remove(queue.findOne({"payload.user": user.payload.opp})).exec())
