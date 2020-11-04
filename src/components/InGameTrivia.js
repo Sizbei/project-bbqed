@@ -122,6 +122,9 @@ export default function InGameTrivia(props) {
 
     stopTimers();
     NewTickValue(100);
+    if ("online".localeCompare(mode) == 0) {
+        NewTimeValue("Waiting for other User...");
+    }
 
     if (props.stop === "toNav") {
       reset();
@@ -142,7 +145,7 @@ export default function InGameTrivia(props) {
         newActiveTimers = triviaClockTick(14, 0.032, 100, 0);
     }
     else {
-        newActiveTimers = triviaClockTick();
+        newActiveTimers = triviaClockTick(10, 0.042, 100, 0);
     }
     setActiveTimers(newActiveTimers);
 

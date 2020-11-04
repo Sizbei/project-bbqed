@@ -305,25 +305,46 @@ export default function TriviaSidebar(props) {
       </div>  
     )
   } else {
-    return (
-      <div className="TSB-div">
-        <div className="TSBG-header">
-          {userHeaderSection}
-          {enemyHeaderSection}
-          <span style={{color: "white"}}> Winner: {props.winner} </span>
-        </div>
-        
-        <div className="TSBG-list">
-          <div className="TSBG-list-icons-div">
-            <div className="TSBG-list-icons">
-              {userListIcon}
-              {enemyListIcon}
-            </div>
+    if("online".localeCompare(mode) == 0){
+      return (
+        <div className="TSB-div">
+          <div className="TSBG-header">
+            {userHeaderSection}
+            {enemyHeaderSection}
+            <span style={{color: "white"}}> Winner: {props.winner} </span>
           </div>
           
-          {QList}
+          <div className="TSBG-list">
+            <div className="TSBG-list-icons-div">
+              <div className="TSBG-list-icons">
+                {userListIcon}
+                {enemyListIcon}
+              </div>
+            </div>
+            
+            {QList}
+          </div>
         </div>
-      </div>
-    )
+      )
+    }
+    else {
+      return (
+      <div className="TSB-div">
+          <div className="TSBG-header">
+            {userHeaderSection}
+          </div>
+          
+          <div className="TSBG-list">
+            <div className="TSBG-list-icons-div">
+              <div className="TSBG-list-icons">
+                {userListIcon}
+              </div>
+            </div>
+
+            {QList}
+          </div>
+        </div>
+      )
+    }
   }
 }
