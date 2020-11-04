@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 const passportConfig = require('../passport');
 
 // set the time limit for each trivia question, unit in sec
-const timeLimit = 5;
+const timeLimit = 12;
 // set the total number of question in one regular trivia
 const questionCount = 10;
 // set the total number of question prepared in one trivia game
