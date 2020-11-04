@@ -1,11 +1,14 @@
 .tzone-page{
   width:100%;
   height: 100%; 
-  overflow: auto; 
   background-color: #222629;
-  background-size: cover;
   font-family: 'CommissionerMedium';
-  padding-top: 30px;
+  padding-top: 20px;
+  padding-bottom: 50px;
+  position: fixed;
+  margin: auto;
+  overflow: auto;
+  z-index: -1;
 }
 
 /****************************** Create Post CSS **************************************/
@@ -31,6 +34,7 @@
   display: flex;
   margin-bottom: 16px;
   padding: 8px;
+ 
 
 }
 
@@ -48,10 +52,10 @@
   background-color: grey; 
   padding: 0% 3%;
   padding-top: 2%; 
-  width: 100%;
+  width: 93%;
   font-size: 1.3vw; 
   font-family: 'CommissionerMedium';
-  margin: auto;
+  
 }
 
 /******************************* Single Post CSS *************************************/

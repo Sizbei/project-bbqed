@@ -17,30 +17,34 @@ export default function TheZone(props) {
     const [content, setContent] = useState('');
     const [agree, setAgree] = useState(false);
     const [disagree, setDisagree] = useState(false);
-
+    const [posts, setPosts] = useState([]);
 
     useEffect(() => {
         fetch(path).then(res => res.json())
             .then(data => {
+                setPosts(data.posts);
                 setUsername(data.posts.poster.username);
                 setAcs(data.posts.poster.acs);
                 setLikes(data.posts.likes);
                 setContent(data.posts.body);
                 setAgree(data.posts.upvoted);
                 setDisagree(data.posts.downvoted);
-
+                
+                
             })
             .catch((error) => {
                 console.log(error);
             })
     }, [])
 
-    const handlePostAgree = () => {
+   
+    const handlePostAgree = (data, index) => {
+
         const body = {
-            post: postId,
+            comment: data._id,
             username: authContext.user.username,
-            upvoted: agree,
-            downvoted: disagree,
+            upvoted: data.upvoted,
+            downvoted: data.downvoted,
         }
         fetch('/zone/upvote', {
             method: "put",
@@ -50,22 +54,37 @@ export default function TheZone(props) {
             }
         }).then(res => res.json())
             //axios.post('http://localhost:5000/post/add', body)
-            .then(data => {
-                setAgree(data.upvoted);
-                setDisagree(data.downvoted);
-                setLikes(data.likes);
+            .then(updatedData => {
+                const updatedEntry = {
+                    "_id": data._id,
+                    "poster": {
+                        "username": data.commenter.username,
+                        "image": data.commenter.image,
+                        "acs": data.commenter.acs
+                    },
+                    "body": data.body,
+                    "likes": updatedData.likes,
+                    "upvoted": updatedData.upvoted,
+                    "downvoted": updatedData.downvoted
+                }
+                const newPosts = [
+                    ...posts.slice(0, index),
+                    updatedEntry,
+                    ...posts.slice(index + 1)
+                ]
+                setPosts(newPosts);
             })
             .catch((error) => {
                 console.log(error);
             })
-    }
 
-    const handlePostDisagree = () => {
+    }
+    const handlePostDisagree = (data, index) => {
         const body = {
-            post: postId,
+            post: data._id,
             username: authContext.user.username,
-            upvoted: agree,
-            downvoted: disagree,
+            upvoted: data.upvoted,
+            downvoted: data.downvoted,
         }
         fetch('/zone/downvote', {
             method: "put",
@@ -75,16 +94,31 @@ export default function TheZone(props) {
             }
         }).then(res => res.json())
             //axios.post('http://localhost:5000/post/add', body)
-            .then(data => {
-                setDisagree(data.downvoted);
-                setAgree(data.upvoted);
-                setLikes(data.likes);
+            .then(updatedData => {
+                const updatedEntry = {
+                    "_id": data._id,
+                    "poster": {
+                        "username": data.poster.username,
+                        "image": data.poster.image,
+                        "acs": data.poster.acs
+                    },
+                    "body": data.body,
+                    "likes": updatedData.likes,
+                    "upvoted": updatedData.upvoted,
+                    "downvoted": updatedData.downvoted
+                }
+                const newPosts = [
+                    ...posts.slice(0, index),
+                    updatedEntry,
+                    ...posts.slice(index + 1)
+                ]
+                setPosts(newPosts);
             })
             .catch((error) => {
                 console.log(error);
             })
     }
-
+   
     
     const togglePostPopup = () => {
 
@@ -99,22 +133,31 @@ export default function TheZone(props) {
 
                 </div>
 
-                <div className="tzone-post-container">
-                    <div className="tzone-user-info">
-                        <ProfilePicture username={username} />
-                        <label> {username} ({acs})  </label>
-                        <div className="tzone-likes"> <label> {likes} </label></div>
-                    </div>
-                    <div className="tzone-post-info">
-                        <p> {content} </p>
+                <h2> Posts ({posts.length})</h2>
+                {posts.map((data, index) => {
+                    return (
+                        <div className="tzone-post-container">
+                            <div className="tzone-user-info">
+                                <ProfilePicture username={data.poster.username} />
+                                <label> {data.poster.username} ({data.poster.acs})  </label>
+                                <div className="tzone-likes"> <label> {data.likes} </label></div>
+                            </div>
+                            <div className="tzone-post-info">
+                                <p> {data.body} </p>
 
-                    </div>
-                </div>
-                <div className="tzone-post-buttons">
-                    <button onClick={handlePostAgree} className={agree ? "tzone-post-button-agree-selected" : "tzone-post-button-agree"}>   Agree  </button>
+                            </div>
 
-                    <button onClick={handlePostDisagree} className={disagree ? "tzone-post-button-disagree-selected" : "tzone-post-button-disagree"}> Disagree </button>
-                </div>
+                            <div className="tzone-post-buttons">
+                                <a onClick={() => handlePostAgree(data, index)} className={data.agree ? "tzone-post-button-agree-selected" : "tzone-post-button-agree"}> Agree </a>
+                                <a onClick={() => handlePostDisagree(data, index)} className={data.disagree ? "tzone-post-button-disagree-selected" : "tzone-post-button-disagree"}> Disagree </a>
+                            </div>
+                            
+                            
+                        </div>
+                    )
+                })}
+            
+                   
 
             </div>
 
