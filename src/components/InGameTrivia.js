@@ -4,7 +4,6 @@ import Header from './Header';
 import  '../styling/InGameTrivia.css';
 import TriviaSidebar from './TriviaSidebar';
 import ProfilePicture from './ProfilePicture';
-import { convertCompilerOptionsFromJson } from 'typescript';
 import crown from '../res/images/crowns.png'
 import PostTrivia from './PostTrivia'
 
@@ -22,6 +21,26 @@ export default function InGameTrivia(props) {
     options = "options" in props ? props.options : options;
   }
 
+  const winner = (function() {
+    if (props.mode != "online") {
+      return "not applicable";
+    }
+    
+    if (props.gameOver) {
+      if (props.score.user > props.score.enemy) {
+        return "user";
+      } else if (props.score.user == props.score.enemy) {
+        return "tie";
+      } else {
+        return "enemy";
+      }
+    } else {
+      return "none";
+    }
+  })();
+
+  console.log(winner);
+  
   const [tickValue, NewTickValue] = useState(0);
   const [opacityValue, NewOpacityValue] = useState(100);
   const [timeValue, NewTimeValue] = useState(10);
@@ -228,7 +247,7 @@ export default function InGameTrivia(props) {
       </div>
 
     <div className='right-segment'>
-      <TriviaSidebar {...props} handleModeSelect={handleModeSelect}/>
+      <TriviaSidebar {...props} handleModeSelect={handleModeSelect} winner={winner} />
     </div>
     
     {"gameOver" in props && props.gameOver ? (
