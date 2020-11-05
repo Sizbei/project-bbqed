@@ -136,12 +136,9 @@ export default function TheZone(props) {
                 <div class="tzone-post-body">
                     <button class="tzone-create-post-btn" onClick={togglePostPopup}>  {"What's on your mind, " + (authContext.user.username) + "?"}
                     </button>
-
                 </div>
 
-
-
-                <h2> Posts ({posts.length})</h2>
+                <div className= "tzone-post-number"> Posts ({posts.length})</div>
                 {posts.map((data, index) => {
                     return (
                         <div class="tzone-">

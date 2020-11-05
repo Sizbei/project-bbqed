@@ -75,11 +75,21 @@
 .tzone-profile-link {
   text-decoration: none;
   color: white;
-
 }
 
 .tzone-profile-link:hover {
   color: lightgrey;
+}
+
+.tzone-post-number { 
+  color: white;
+  font-size: 1.3vw; 
+  font-family: 'CommissionerMedium';
+  padding-bottom: 20px;
+}
+
+.tzone-overall-container{
+  text-decoration: none;
 }
 /******************************* Single Post CSS *************************************/
 .tzone-user-info {
@@ -90,7 +100,7 @@
 .tzone-post-info {
   color: white; 
   padding-bottom: 4px; 
-  padding-left: 0%;
+  padding-left: 0%; 
 }
 
 .tzone-post-buttons {
