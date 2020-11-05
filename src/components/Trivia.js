@@ -5,6 +5,7 @@ import InGameTrivia from './InGameTrivia';
 import {AuthContext} from '../Context/AuthContext';
 import AuthService from '../Services/AuthService';
 import TriviaSidebar from './TriviaSidebar';
+import Queue from './Queue';
 
 /* State.
   state = {
@@ -22,10 +23,15 @@ import TriviaSidebar from './TriviaSidebar';
 */
 
 export default function Trivia(props) {
+
+  const testLog = () => {
+    console.log("TEST TEST TESTES");
+  }
+  
   const authContext = useContext(AuthContext);
   const [initialState, setInitialState] = useState({  // still gets modified by one useEffect() to get urls
     mode:"nav", 
-    username:{user: authContext.user.username},
+    username:{user: authContext.user.username, enemy: ""},
     ppurl: {user: "", enemy: ""},
     stop: "nostop",
     showPostScreen: false,
@@ -33,6 +39,7 @@ export default function Trivia(props) {
     score: {},
     acsChange: {},
     instance: null,
+    queueActive: false,
   });
 
   const [state, setState] = useState(JSON.parse(JSON.stringify(initialState)));
@@ -40,9 +47,6 @@ export default function Trivia(props) {
   const transitionSpeed = 2000;
 
   const handleModeSelect = req => {
-    const newState = deepcopy(JSON.parse(JSON.stringify(initialState)));
-
-    console.log("new state at mode select", newState)
     console.log("select state", select);
 
     let mode = req;
@@ -53,9 +57,11 @@ export default function Trivia(props) {
 
     /*-----handle navigation--------*/
     if (mode === "nav") {
+      const newState = deepcopy(JSON.parse(JSON.stringify(initialState)));
       newState.stop = "toNav";
       setState(newState);
     } else if (mode === "singlePlayer") {
+      const newState = deepcopy(JSON.parse(JSON.stringify(initialState)));
       newState.mode = mode;
       newState.lists = [];
       newState.score = {"user": 0};
@@ -92,61 +98,27 @@ export default function Trivia(props) {
         })
       })
     } else if (mode === "online") {
-      initOnline("user2");
+      // enter queue 
+      const newState = {...state};
+      newState.queueActive = true;
+      newState.lastStop = state.stop;
+      newState.stop = "queue";
+      console.log("Set new state for online", newState);
+      setState(newState);
     } else if (mode === "practice") {
-      const fetchInit = {
-        method: "post",
-        body: JSON.stringify({
-          user1: "user3",
-          user2: "user2",
-        }),
-        headers: {'Content-Type' : 'application/json'}
-      }
-
-      console.log("Request online init", fetchInit);
-      fetch('/trivia/head-to-head/init', fetchInit).then(res => res.json())
-      .then((initData) => {
-        console.log("got init", initData);
-
-        const fetchUpdate = {
-          method: "put",
-          body: JSON.stringify({_id: initData._id}),
-          headers: {'Content-Type' : 'application/json'}
-        }
-
-        console.log("Request update", fetchUpdate);
-        fetch('/trivia/head-to-head/update', fetchUpdate).then(res => res.json())
-        .then((updateData) => {
-          console.log("got update", updateData);
-          console.log("got update", updateData.gameInstance);
-
-          const fetchSubmit = {
-            method: "post",
-            body: JSON.stringify({
-              _id: initData._id,
-              username: "user3",
-              answer: "blah blah blah",
-            }),
-            headers: {'Content-Type' : 'application/json'}
-          }
-          fetch('/trivia/head-to-head/submit', fetchSubmit).then(res => res.json())
-          .then((updateSubmit) => {
-            console.log("got submit data", updateSubmit);
-
-            const fetchFinalUpdate = {
-              method: "put",
-              body: JSON.stringify({_id: initData._id}),
-              headers: {'Content-Type' : 'application/json'}
-            }
-    
-            fetch('/trivia/head-to-head/update', fetchFinalUpdate).then(res => res.json())
-            .then((finalData) => {
-              console.log("FINAL DATA", finalData.gameInstance);
-            })
-          })
-        })
-      })
+      // TODO
     }
+  }
+
+  const handleCloseQueue = () => {
+    if (state.stop != "queue") { // do not overwrite state
+      return;
+    }
+
+    const newState = {...state};
+    newState.queueActive = false;
+    newState.stop = state.lastStop;
+    setState(newState);
   }
 
   const initOnline = (enemy) => {
@@ -176,6 +148,49 @@ export default function Trivia(props) {
     })
   }
 
+  const handleMatchId = (matchId) => {
+    console.log("Got matchId", matchId);
+    const newState = JSON.parse(JSON.stringify(initialState));
+    newState.mode = "online";
+    newState.list = [];
+    // newState.username["enemy"] = enemy;
+    newState.score = {"user": 0, "enemy": 0};
+    newState.acsChange = {}
+    newState.gameOver = false;
+
+    newState.instance = matchId;
+    
+    const fetchUpdate = {
+      method: "put",
+      body: JSON.stringify({
+        _id: matchId,
+        user: authContext.user.username
+      }),
+      headers: {'Content-Type' : 'application/json'}
+    }
+    
+    // console.log("Fetching state...", fetchUpdate);
+    fetch('/trivia/head-to-head/update', fetchUpdate).then(res => res.json())
+    .then((updateData) => {
+      console.log(updateData);
+      newState.initialACS = {
+        user: updateData.gameInstance.users.user.initAcs,
+        enemy: updateData.gameInstance.users.enemy.initAcs,
+      }
+      newState.score = {
+        user: updateData.gameInstance.users.user.point,
+        enemy: updateData.gameInstance.users.enemy.point
+      }
+      newState.username["enemy"] = updateData.gameInstance.users.enemy.username;
+      console.log("BEFORE UPDATE", newState);
+      newState.stop = "getenemyimage";
+      setState(newState);
+    })
+    .catch(() => {
+      repeat();
+    })
+  }
+
   const handleOptionSelect = option => {
     console.log(option);
 
@@ -186,7 +201,12 @@ export default function Trivia(props) {
       newState.chosenOptions = {user: state.options[option], enemy: ""};
       setState(newState);
     } else if (state.mode === "online" && !state.gameOver) {
-      setSelect(state.options[option]);
+      try {
+        setSelect(option == null ? "" : state.options[option]);
+      } catch (e) {
+        console.log("error in option select");
+        return;
+      }
     }
   }
 
@@ -224,6 +244,15 @@ export default function Trivia(props) {
       setSelect(null);
       setState(newState);
     })
+    .catch(() => {
+      repeat();
+    })
+  }
+
+  const repeat = () => {
+    const newState = {...state};
+    newState.stop = "repeat";
+    setState(newState);
   }
 
   // Transition to the next question for online play
@@ -317,7 +346,7 @@ export default function Trivia(props) {
     }).catch(e => {
       console.log("some error", e);
     })
-  }, [state])
+  }, [state.stop])
 
   // A transition from transition-showsolution to displaying the next question
   useEffect(() => { 
@@ -331,8 +360,7 @@ export default function Trivia(props) {
       const newState = {...state};
       const nextData = state.nextData;
 
-      // Remove transition state
-      newState.previousAnswer = {};
+      
 
       if ("questionCount" in nextData.data) { // Game goes on
         Object.keys(nextData.data).forEach((name, val) => { // copy over from nextData.data
@@ -346,14 +374,20 @@ export default function Trivia(props) {
           question: nextData.data.currentQuestion,
         })
         newState.startTime = Date.parse(nextData.data.time);
+        newState.stop = "nostop";
+      } else {
+        newState.stop = "single-done"; 
       }
 
-      newState.stop = "nostop";
+      // Remove transition state
+      delete newState.previousAnswer;
+      newState.chosenOptions = {user: "", enemy: ""};
+
       setState(deepcopy(newState));      
     }
 
     setTimeout(showNextQuestion, transitionSpeed);
-  }, [state])
+  }, [state.stop])
 
   // Transition from anywhere to nav screen
   useEffect(() => {
@@ -362,7 +396,7 @@ export default function Trivia(props) {
     }
     
     setState(JSON.parse(JSON.stringify(initialState)));
-  }, [state])
+  }, [state.stop])
 
   // an infinite loop for online play
   useEffect(() => {
@@ -386,19 +420,92 @@ export default function Trivia(props) {
     }
   }, [state.stop])
 
-  // goto the next question for online play
+  // clear some state, transition to online-getnext2
   useEffect(() => {
     if (!("stop" in state) || state.stop !== "online-getnext") {
       return;
     }
     
-    setTimeout(() => {transitionNext(state.nextData)}, transitionSpeed);
+    setTimeout(() => {
+      const newState = {...state};
+      delete newState.previousAnswer;
+      newState.chosenOptions = {user: "", enemy: ""};
+      newState.stop = "online-getnext2";
+      setState(newState);
+    }, transitionSpeed);
+  }, [state.stop])
+
+  // goto the next question for online play
+  useEffect(() => {
+    if (!("stop" in state) || state.stop !== "online-getnext2") {
+      return;
+    }
+    
+    transitionNext(state.nextData);
   }, [state.stop])
 
   // For multiplayer, fetch the state, transition to "repeat"
   useEffect(() => {
     if (!("stop" in state) || state.stop !== "fetch") {
       return;
+    }
+
+    const showSolution = (data) => {
+      try {
+        console.log("Showing solution for ", transitionSpeed);
+        const newState = {...state}
+        
+        // const currentQuestion = data.questions[data.curQuestionIndex];
+        let lastQuestion = data.questions[data.curQuestionIndex - 1];
+        if (data.status == "close") {
+          lastQuestion = data.questions[data.questions.length - 1];
+        }
+  
+        // update score
+        newState.score = {user: data.users.user.point, enemy: data.users.enemy.point};
+        newState.acsChange = {user: data.users.user.acsChange, enemy: data.users.enemy.acsChange};
+  
+        console.log("GOT DATA", data);
+  
+        // mark enemy's option
+        console.log("Enemy response", lastQuestion.responses.enemy.answer, lastQuestion.triviaQuestion.answer);
+        newState.chosenOptions["enemy"] = "answer" in lastQuestion.responses.enemy ? lastQuestion.responses.enemy.answer : "";
+        console.log("new chosenoptions", newState.chosenOptions);
+  
+        const list = [] // construct list
+        let questionNumber = 0;
+        data.questions.forEach(e => {
+          const question = e.triviaQuestion.question;
+          questionNumber++;
+          
+          const entry = {
+            questionNumber: questionNumber,
+            question: question,
+          }
+  
+          if (questionNumber - 1 < data.curQuestionIndex || (data.status == "close" && questionNumber <= 11)) { // answers present!
+            const userCorrect = "accuracy" in e.responses.user ? e.responses.user.accuracy : false;
+            const enemyCorrect = (e.responses.enemy != null && "accuracy" in e.responses.enemy) 
+              ? e.responses.enemy.accuracy : false;
+            entry.userCorrect = userCorrect;
+            entry.enemyCorrect = enemyCorrect;
+            list.push(entry);
+          }
+        })
+  
+        newState.list = list;
+  
+        newState.previousAnswer = lastQuestion.triviaQuestion.answer;
+        newState.stop = "online-getnext";
+        newState.nextData = data;
+        setState(newState)
+      } catch (e) {
+        console.log("error", state);
+        const newState = {...state}
+        newState.stop = "repeat";
+        setState(newState);
+        return;
+      } 
     }
 
     const fetchUpdate = {
@@ -410,64 +517,31 @@ export default function Trivia(props) {
       headers: {'Content-Type' : 'application/json'}
     }
 
-    const showSolution = (data) => {
-      console.log("Showing solution for ", transitionSpeed);
-      const newState = {...state}
-      
-      let lastQuestion = data.questions[data.curQuestionIndex - 1];
-      if (data.status == "close") {
-        lastQuestion = data.questions[data.questions.length - 1];
-      }
-
-      // update score
-      newState.score = {user: data.users.user.point, enemy: data.users.enemy.point};
-      newState.acsChange = {user: data.users.user.acsChange, enemy: data.users.enemy.acsChange};
-
-      const list = [] // construct list
-      let questionNumber = 0;
-      data.questions.forEach(e => {
-        const question = e.triviaQuestion.question;
-        questionNumber++;
-        
-        const entry = {
-          questionNumber: questionNumber,
-          question: question,
-        }
-
-        if (questionNumber - 1 < data.curQuestionIndex || (data.status == "close" && questionNumber <= 11)) { // answers present!
-          const userCorrect = "accuracy" in e.responses.user ? e.responses.user.accuracy : false;
-          const enemyCorrect = (e.responses.enemy != null && "accuracy" in e.responses.enemy) 
-            ? e.responses.enemy.accuracy : false;
-          entry.userCorrect = userCorrect;
-          entry.enemyCorrect = enemyCorrect;
-        }
-        list.push(entry);
-      })
-
-      newState.list = list;
-
-      newState.previousAnswer = lastQuestion.triviaQuestion.answer;
-      newState.stop = "online-getnext";
-      newState.nextData = data;
-      setState(newState)
-    }
-
-    // console.log("Fetching state...", fetchUpdate);
+    
     fetch('/trivia/head-to-head/update', fetchUpdate).then(res => res.json())
     .then((updateData) => {
-      const data = updateData.gameInstance;
-      const currentQuestion = data.questions[data.curQuestionIndex];
-      // console.log("got update");
-
-
-      // is it a new question? play the transition. 
-      if ("currentQuestion" in state && state.currentQuestion != currentQuestion.triviaQuestion.question || data.status == "close") {
-        console.log("--------------NEW QUESTION IS HERE-------------")
-        showSolution(data);
-        // setTimeout(() => transitionNext(data), transitionSpeed); // display next question after some time
-      } else {
-        transitionNext(data);
+      try {
+        console.log("got...", updateData);
+        const data = updateData.gameInstance;
+        const currentQuestion = data.questions[data.curQuestionIndex];
+  
+        // is it a new question? play the transition. 
+        if ("currentQuestion" in state && state.currentQuestion != currentQuestion.triviaQuestion.question || data.status == "close") {
+          console.log("--------------NEW QUESTION IS HERE-------------")
+          showSolution(data);
+          // setTimeout(() => transitionNext(data), transitionSpeed); // display next question after some time
+        } else {
+          transitionNext(data);
+        }
+      } catch (e) {
+        // TODO possible bug if the game is just over, infinite loop for data and never goes to post nav screen
+        console.log("error in update");
+        repeat();
+        return;
       }
+    })
+    .catch(() => {
+      repeat();
     })
   }, [state.stop])
 
@@ -493,6 +567,10 @@ export default function Trivia(props) {
 
   // Fetch the enemy's image
   useEffect(() => {
+    if (!("stop" in state) || state.stop !== "getenemyimage") {
+      return;
+    }
+
     if (!("username" in state) || !("enemy" in state.username) || state.username.enemy == "") {
       return;
     }
@@ -514,7 +592,7 @@ export default function Trivia(props) {
       .catch((error) => {
         console.log(error);
       })
-  }, [JSON.stringify(state.username)])
+  }, [state.stop])
 
   const [triviaPage, setTriviaPage] = useState(null);
 
@@ -527,6 +605,7 @@ export default function Trivia(props) {
   return(
     <div>
       {triviaPage}
+      {state.queueActive ? <Queue handleCloseQueue={handleCloseQueue} handleMatchId={handleMatchId} {...state} /> : null}
     </div>
   );
 }

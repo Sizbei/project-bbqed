@@ -1,4 +1,4 @@
-.popup {
+.post-popup {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -14,10 +14,10 @@
     background-color: rgba(0,0,0, 0.5);
   }
   
-.popup_inner {
+.post-popup_inner {
     position: absolute;  
     height: 40%;
-    width: 30%;
+    width: 25%;
     left: 25%;  
     right: 25%;  
     top: 10%;  
@@ -27,23 +27,25 @@
     padding-right: 6em;
     padding-top: 1.5em;
     padding-bottom: 1.5em;
-    border-radius: 20px;
+    border-radius: 1.05263157895vw;
     background: #313538;
-
+    z-index: 9;
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }
 
 .post-header {
-  height: 60%;
+  height: 40%;
   display: flex;
   align-items: center;
   justify-content: center;
   justify-content: space-around;
+  font-family: 'CommissionerMedium';
 }
 
 .post-header-block {
-  margin-top: 1%; 
+  margin-top: 5%; 
   width: 30%;
   display: flex;
   flex-direction: column;
@@ -58,7 +60,9 @@
   display: inline-block;
   white-space: nowrap;
   color: white;
+  margin-top: 10%;
   font-size: 1.2vw;
+  
 }
 
 .post-header-acs {
@@ -87,12 +91,47 @@
 .post-header-score {
   color: white;
   font-size: 2.5vw;
+  margin-top: 2%;
   font-weight: 600;
   line-height: 1vw;
 }
 
-.post-nav {
+.post-nav-trivia {
+  width: 90%;
+  margin-top: 3vw;
+  margin-left: 8%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.post-winner {
   margin-top: 4vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.post-win {
+  font-size: 2vw;
+  font-family: 'CommissionerMedium';
+  color: green;
+}
+
+.post-tie {
+  font-size: 2vw;
+  font-family: 'CommissionerMedium';
+  color: white;
+}
+
+.post-loss {
+  font-size: 2vw;
+  font-family: 'CommissionerMedium';
+  color: crimson;
+}
+
+.post-nav {
+  margin-top: 2vw;
   display: flex;
   display: flex;
   align-items: center;
@@ -100,8 +139,27 @@
 }
 
 .post-nav-button {
-  /* height: 2vw;
-  width: 5vw; */
+  height: 3vw;
+  width: 8vw;
+  background-color: #e06c16;
+  border-radius: 0.42105263157vw;
+  border: none;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+
+.post-nav-button:hover {
+  background-color: #c45d12;
+}
+
+.post-nav-button:focus {
+    outline: none;
+}
+
+.post-nav-button-label {
+    color:white;
+    font-family: 'CommissionerMedium';
+    font-size: 1vw;
 }
 
 @font-face {

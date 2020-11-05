@@ -9,11 +9,148 @@ const jwt = require('jsonwebtoken');
 const passportConfig = require('../passport');
 
 // set the time limit for each trivia question, unit in sec
-const timeLimit = 5;
+const timeLimit = 14;
 // set the total number of question in one regular trivia
 const questionCount = 10;
 // set the total number of question prepared in one trivia game
-const maxQuestionCount = 11;
+const maxQuestionCount = questionCount + 1;
+
+/*-------------FUNCTIONS FOR THE QUEUE-----------------------*/
+
+router.route('/joinQueue').post((req, res) => {
+  const user = req.body.username;
+  const acs = req.body.acs;
+
+  queue.remove({"payload.user": req.params.username}).exec()
+    .then(() => {
+      const join = new queue({
+        startTime: null,
+        endTime: null,
+        createdOn: new Date(),
+        priority: 1,
+        payload: {
+          user: user,
+          acs: acs,
+          opp: "",
+          accept: false
+        }
+      })
+    
+      join.save()
+        .then(() => {
+          res.json("Joined queue")
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
+    })
+    .catch(err => res.status(400).json('Error leaving queue: ' + err));
+});
+
+router.route('/leaveQueue/:username').delete((req, res) => {
+  queue.remove(queue.find({"payload.user": req.params.username}))
+  .then(() => res.json("Left queue"))
+  .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/findMatch').put((req, res) => {
+
+  queue.findOne({startTime: {"$ne": null}, "payload.user": req.body.username})
+    .then(user => res.json(user.payload.opp))
+    .catch(() => {
+      queue.findOneAndUpdate({startTime: null, "payload.user": {"$ne": req.body.username}, "payload.accept": false}, {startTime: new Date()}, {sort: {createdOn: 1}, new: true})
+      .then(opp => {
+        console.log(opp.payload.user);
+        queue.findOneAndUpdate({"payload.user": req.body.username}, {startTime: new Date(), "payload.opp": opp.payload.user}, {new: true}).then(test => console.log("test 1: ", test))
+        queue.findOneAndUpdate({"payload.user": opp.payload.user}, {"payload.opp": req.body.username}, {new: true}).then(test => console.log("test 2: ", test))
+        res.json(opp.payload.user)
+      })
+      .catch(err => res.json("not found"));
+    })
+});
+
+function setIntervals(n, f, t) {
+  var promise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (n == 0) {
+        resolve(false);
+      }
+      
+      f()
+      .then((d) => {
+        if (d != null) {
+          console.log("resolve true");
+          resolve(true);
+        } else {
+          setIntervals(n - 1, f, t).then(d => {
+            resolve(d);
+          })
+        }
+      })
+      .catch(() => {
+        setIntervals(n - 1, f, t).then(d => {
+          resolve(d);
+        })
+      })
+    }, t)
+  })
+  return promise;
+}
+
+router.route('/createGame').post((req, res) => {
+  
+  // const d = await testfunc();
+  // res.json(d);
+  
+  queue.findOneAndUpdate({startTime: {"$ne": null},  "payload.user": req.body.username}, {endTime: new Date(), "payload.accept": true}, {new: true})
+  .then(user => {
+    
+      if(user){
+        setIntervals(20, () => queue.findOne({startTime: {"$ne": null},  "payload.user": user.payload.opp, "payload.accept": true}), 500).then((d) => {
+          if (d) {
+            // Initialize instance
+            const initReq = {
+              body: {
+                user: req.body.username,
+                enemy: user.payload.opp
+              }
+            }            
+
+            queue.findOne({"payload.user": user.payload.opp})
+            .then(opp => {              
+                if(user.endTime < opp.endTime){
+                    init(initReq, res);
+                } else {
+                    setIntervals(1000, () => headToHeadGame.findOne({users: {$all: [user.payload.opp, req.body.username]}, status: 'open'}), 50)
+                    .then(() => {
+                      init(initReq, res)
+                    })
+                }
+                
+            }).then(() => queue.remove(queue.findOne({"payload.user": user.payload.opp})).exec())
+            
+                
+          } else {
+            user.startTime = null;
+            user.endTime = null;
+            user.payload.opp = "";
+            user.payload.accept = false;
+            user.markModified('startTime');
+            user.markModified('endTime');
+            user.markModified('payload.opp');
+            user.markModified('payload.accept');
+            user.save().then(() => res.json("Match Declined"));
+            console.log("Match declined.");
+            //joinQueue(req, res);
+          }
+        })
+      } else {
+        console.log("Unable to join game");
+        res.json("Unable to join game");
+        //joinQueue(req, res);
+      }
+      
+    })
+    .catch(err => res.json("Waiting 2"))
+});
 
 //-------------------------------------------------
 // Supporting functions for head-to-head trivia game
@@ -281,8 +418,12 @@ router.route('/submit').post(passport.authenticate('jwt', {session : false}),(re
 
 // init a head-to-head game
 // request format: {user: str, enemy: str}
-//router.route('/init').post((req, res) => {
-router.route('/init').post(passport.authenticate('jwt', {session : false}),(req, res) => {
+const init = (req, res) => {
+  console.log("initiating trivia game");
+    const shuffleOptions = options => {
+        return options.sort(() => Math.random() - 0.5);
+    }
+
     // try to find an open trivia using the given two usernamas
     headToHeadGame.findOne({users: {$all: [req.body.user, req.body.enemy]}, status: 'open'})
     .then(game => {
@@ -310,7 +451,7 @@ router.route('/init').post(passport.authenticate('jwt', {session : false}),(req,
                                     triviaQuestion: {
                                         question: trivias[triviaIndex].question,
                                         answer: trivias[triviaIndex].answer,
-                                        options: trivias[triviaIndex].options
+                                        options: shuffleOptions(trivias[triviaIndex].options)
                                     },
                                     responses: [{accuracy: false},{accuracy: false}]
                                 }
@@ -331,6 +472,7 @@ router.route('/init').post(passport.authenticate('jwt', {session : false}),(req,
         .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
     })
     .catch(err => res.status(500).json({msg: 'Internal service error', err: err}));
-})
+}
+
 
 module.exports = router;
