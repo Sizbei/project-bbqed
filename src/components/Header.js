@@ -28,16 +28,16 @@ function Navbar() {
   return (
     <ul className="navbar">
       <li className="navbar-item">
-      <Link to="/" className="nav-link">The Zone</Link>
+        <Link to="/" className="nav-link">The Zone</Link>
       </li>
       <li className="navbar-item">
-      <Link to="/trivia" className="nav-link">Trivia</Link>
+        <Link to={{pathname: "/trivia", key: Math.random(), state: {applied: true}}} key={Math.random()} className="nav-link">Trivia</Link>
       </li>
       <li className="navbar-item">
-      <Link to="/analysis" className="nav-link">Analysis</Link>
+        <Link to="/analysis" className="nav-link">Analysis</Link>
       </li>
       <li className="navbar-item">
-      <Link to="/picksandpredictions" className="nav-link">Picks/Predictions</Link>
+        <Link to="/picksandpredictions" className="nav-link">Picks/Predictions</Link>
       </li>
     </ul>
   );

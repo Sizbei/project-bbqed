@@ -186,11 +186,13 @@ export default function InGameTrivia(props) {
   //   setShowNavPopup(false);     
   // }, [props.stop])
 
+  const timeClassName = timeValue == "Waiting for other User..." ? "trivia-wait" : "time"
+
   return(
       <div className='trivia-background'>
         <div className='left-segment'>
         <div className='timeBox'>
-            <label className='time'>{mode != "nav" ? timeValue : null}</label>
+            <label className={timeClassName}>{mode != "nav" ? timeValue : null}</label>
         </div>
         <div className='clockRed'>
             <div className='clockTick' style={tickJSON}></div>
@@ -286,7 +288,7 @@ export default function InGameTrivia(props) {
     
     {showNavPopup ? (
       <div className="post-trivia-div">
-        <PostTrivia handleClosePostTrivia={handleClosePostTrivia} {...props} />
+        <PostTrivia handleClosePostTrivia={handleClosePostTrivia} {...props} winner={winner} />
       </div>
     ) : null}
     
