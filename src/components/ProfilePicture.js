@@ -1,7 +1,6 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import '../styling/ProfilePicture.css';
-import {AuthContext} from '../Context/AuthContext';
 
 // Renders a profile picture with the sportcred logo around it
 // As props, give EITHER a username or a url
@@ -16,15 +15,13 @@ import {AuthContext} from '../Context/AuthContext';
 // Optionally, provide an onClick handler to fire when the user clicks the image
 
 export default function ProfilePicture(props) {
-  const authContext = useContext(AuthContext);
   const urlExists = "url" in props;
   const usernameExists = "username" in props;
   const username = "username" in props ? props.username : "";
   const scale = "scale" in props ? props.scale : 1.0;
   const abs = "abs" in props ? props.abs : false;
   const handleClick = "onClick" in props ? props.onClick : () => {
-    console.log(authContext.user.username);
-    window.open('/profile/' + authContext.user.username);}
+    window.open('/profile/' + username);}
   const disableBorder = "disableBorder" in props ? props.disableBorder : false;
 
   const [url, setUrl] = useState(urlExists ? props.url : "");
