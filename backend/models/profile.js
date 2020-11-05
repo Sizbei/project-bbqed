@@ -35,9 +35,11 @@ const profileSchema = new Schema({
     required: false,
     unique: false,
     trim: true,
+  },
+  radarList: {
+    type: [String],
+    unique: false
   }
-  
-  
 }, {
   timestamps: true,
 });

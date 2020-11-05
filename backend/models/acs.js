@@ -5,9 +5,9 @@ const Schema = mongoose.Schema;
 const acsSchema = new Schema({
 
   username: {
-    type: String,
-    required: true,
-    unique: true
+    type:String,
+    unique:true,
+    required:true
   },
 
   acsHistory: [{
@@ -41,7 +41,7 @@ const acsSchema = new Schema({
       required: true,
       default: 0
     },
-    picksPrediciton: {
+    picksPrediction: {
       type: Number,
       required: true,
       default: 0
