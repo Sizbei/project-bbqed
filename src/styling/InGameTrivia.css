@@ -356,8 +356,9 @@
 }
 
 .crown-icon {
-    width: 3.47895vw;   
-    height: 3.47895vw;
+    width: 5vw;   
+    height: 5vw;
+    margin-bottom:3%;
     border-radius: 50%; 
 }
 
