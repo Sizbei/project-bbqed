@@ -46,6 +46,11 @@
   font-weight: 650;
 } 
 
+.SignUpBtn:hover {
+    color: #c8651b;
+    cursor:pointer;
+}
+
 .SignUpBtn:focus {
   outline: none;
 }
