@@ -160,7 +160,8 @@ export default function TriviaSidebar(props) {
     clearTime();
     resetCountDown();
     var Countdown = setInterval(() => showCountDown("single", Countdown), 1000);
-    var Timer = setInterval(() => handleModeWithDelay("singlePlayer", Timer), 4000);
+    showCountDown("single", Countdown)
+    var Timer = setInterval(() => handleModeWithDelay("singlePlayer", Timer), 3000);
     setActiveTimers({CountDown: Countdown, Timer: Timer});
   }
 
@@ -169,7 +170,8 @@ export default function TriviaSidebar(props) {
     clearTime();
     resetCountDown();
     var Countdown = setInterval(() => showCountDown("send", Countdown), 1000);
-    var Timer = setInterval(() => handleModeWithDelay("send", Timer), 4000);
+    showCountDown("send", Countdown)
+    var Timer = setInterval(() => handleModeWithDelay("send", Timer), 3000);
     setActiveTimers({CountDown: Countdown, Timer: Timer});
   }
 
@@ -178,9 +180,9 @@ export default function TriviaSidebar(props) {
     clearTime();
     resetCountDown();
     var Countdown = setInterval(() => showCountDown("practice", Countdown), 1000);
-    var Timer = setInterval(() => handleModeWithDelay("practice", Timer), 4000);
+    showCountDown("practice", Countdown)
+    var Timer = setInterval(() => handleModeWithDelay("practice", Timer), 3000);
     setActiveTimers({CountDown: Countdown, Timer: Timer});
-
   }
 
   const handleModeWithDelay = (mode, timer) => {
