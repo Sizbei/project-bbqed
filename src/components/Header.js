@@ -39,9 +39,6 @@ function Navbar() {
       <li className="navbar-item">
       <Link to="/picksandpredictions" className="nav-link">Picks/Predictions</Link>
       </li>
-      <li className="navbar-item">
-      <Link to="/registration" className="nav-link">Registration</Link>
-      </li>
     </ul>
   );
 }
@@ -90,12 +87,17 @@ function OptionsMenu() {
     history.push("/settings/profile");
   }
 
+  const navigateToCitations = () => {
+    history.push("/citations");
+  }
+
   return (
     <div className="options">
       <button className="optionsMenu" />
           <div className="optionsContent">
-          <button className="optionsButtons" onClick={navigateToSettings}>Settings</button>
-          <button className="optionsButtons" onClick={LogOut}>Log Out</button>
+          <button className="optionsButtonsTopEnd" onClick={navigateToSettings}>Settings</button>
+          <button className="optionsButtons" onClick={navigateToCitations}>Citations</button>
+          <button className="optionsButtonsBotEnd" onClick={LogOut}>Log Out</button>
         </div>
     </div>
   );
