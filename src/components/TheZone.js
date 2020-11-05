@@ -138,28 +138,33 @@ export default function TheZone(props) {
                 <h2> Posts ({posts.length})</h2>
                 {posts.map((data, index) => {
                     return (
-                        <div className="tzone-post-container">
-                            <div className="tzone-user-info">
-                                <ProfilePicture username={data.poster.username} />
-                                <label> {data.poster.username} ({data.poster.acs})  </label>
-                                <div className="tzone-likes"> <label> {data.likes} </label></div>
-                            </div>
-                            <div className="tzone-post-info">
+                        <div class="tzone-">
+                            <div className="tzone-post-container">
+
+                                <div className="tzone-user-info">
+                                    <Link to={'/profile/' + data.poster.username} className="tzone-profile-link">
+                                    <ProfilePicture username={data.poster.username} />
+                                    </Link>
+                                    
+                                    <label> <Link to={'/profile/' + data.poster.username} className="tzone-profile-link">{data.poster.username} ({data.poster.acs})  
+                                    </Link>
+                                    </label>
+                                    
+                                    <div className="tzone-likes"> <label> {data.likes} </label></div>
+                                </div>
+                                <div className="tzone-post-info">
                                 
-                                <Link to={"/theZone/display/" + (data._id)} className="tzone-link">
-                                    <p> {data.body} </p>
-                                </Link>
-                            </div>
-                            
-                            
-                            
-                            
-                            <div className="tzone-post-buttons">
+                                    <Link to={"/theZone/display/" + (data._id)} className="tzone-link">
+                                        <p> {data.body} </p>
+                                    </Link>
+                                </div> 
+                           
+                        </div>
+                        <div className="tzone-post-buttons">
                                 <a onClick={() => handlePostAgree(data, index)} className={data.agree ? "tzone-post-button-agree-selected" : "tzone-post-button-agree"}> Agree </a>
                                 <a onClick={() => handlePostDisagree(data, index)} className={data.disagree ? "tzone-post-button-disagree-selected" : "tzone-post-button-disagree"}> Disagree </a>
-                            </div>
-                            
-                            
+                        </div>
+
                         </div>
                     )
                 })}
