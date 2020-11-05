@@ -87,7 +87,7 @@ function OptionsMenu() {
   }
 
   const navigateToSettings = () => {
-    history.push("/settings/profile");
+    history.push("/settings/account");
   }
 
   return (
