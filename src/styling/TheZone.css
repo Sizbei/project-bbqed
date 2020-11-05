@@ -75,7 +75,11 @@
 .tzone-profile-link {
   text-decoration: none;
   color: white;
-  text-decoration: none;
+
+}
+
+.tzone-profile-link:hover {
+  color: lightgrey;
 }
 /******************************* Single Post CSS *************************************/
 .tzone-user-info {
