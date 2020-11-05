@@ -521,6 +521,14 @@ export default function Trivia(props) {
         const data = updateData.gameInstance;
         const currentQuestion = data.questions[data.curQuestionIndex];
   
+        // is it the first question? Wait.
+        if (data.curQuestionIndex == 0) {
+          setTimeout(() => {
+            transitionNext(data);
+          }, Math.max(0, 1000 - (new Date() - Date.parse(currentQuestion.startTime))))
+          return;
+        }
+
         // is it a new question? play the transition. 
         if ("currentQuestion" in state && state.currentQuestion != currentQuestion.triviaQuestion.question || data.status == "close") {
           console.log("--------------NEW QUESTION IS HERE-------------")
