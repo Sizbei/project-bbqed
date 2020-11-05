@@ -20,6 +20,8 @@ export default function TheZone(props) {
     const [disagree, setDisagree] = useState(false);
     const [posts, setPosts] = useState([]);
 
+    const [showPostPopup, setPostPopup] = useState(false);
+
     useEffect(() => {
         fetch(path).then(res => res.json())
             .then(data => {
@@ -38,6 +40,9 @@ export default function TheZone(props) {
             })
     }, [])
 
+    const togglePostPopup = () => {
+       setPostPopup(!showPostPopup);
+    }
    
     const handlePostAgree = (data, index) => {
 
@@ -54,7 +59,6 @@ export default function TheZone(props) {
                 'Content-Type': 'application/json'
             }
         }).then(res => res.json())
-            //axios.post('http://localhost:5000/post/add', body)
             .then(updatedData => {
                 const updatedEntry = {
                     "_id": data._id,
@@ -119,21 +123,23 @@ export default function TheZone(props) {
                 console.log(error);
             })
     }
-   
+
     
-
-    const togglePostPopup = () => {
-
-    }
-
     return (
         <div class="tzone-page">
             
             <div class= "tzone-all-posts"> 
-                <div class="tzone-post-body">   
-                    <input type="text" class="tzone-create-post" onClick={togglePostPopup} placeholder="Create Post"></input>
+                {showPostPopup ? <PostPopup closePopup={togglePostPopup} />
+                    : null
+                }
+
+                <div class="tzone-post-body">
+                    <button class="tzone-create-post-btn" onClick={togglePostPopup}>  {"What's on your mind, " + (authContext.user.username) + "?"}
+                    </button>
 
                 </div>
+
+
 
                 <h2> Posts ({posts.length})</h2>
                 {posts.map((data, index) => {
@@ -168,13 +174,13 @@ export default function TheZone(props) {
                         </div>
                     )
                 })}
-            
-                   
+
 
             </div>
-
+            
             
         </div>
     )
 }
+
 

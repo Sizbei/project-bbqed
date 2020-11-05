@@ -9,7 +9,7 @@ let Profile = require('../models/profile')
 let Acs = require('../models/acs')
 const mongoose = require('mongoose');
 
-router.route('/display/:username/focused').get(async(req, res) => {
+router.route('/display/:username/focused').get(passport.authenticate('jwt', { session: false }), async(req, res) => {
     var radarList = await Profile.findOne({username: req.params.username}).then((user) => {
         return user.radarList;
     });
@@ -19,7 +19,7 @@ router.route('/display/:username/focused').get(async(req, res) => {
     console.log(post);
 });
 
-router.route('/display/:username').get(async(req, res) => {
+router.route('/display/:username').get(passport.authenticate('jwt', { session: false }), async(req, res) => {
     let recentPosts = await Post.find({}, "likes _id poster body upvoted downvoted" ).sort({'createdAt':'desc'}).limit(10).then(async (post) => {
         return post
     }).catch((err) => {res.status(400).json('Error ' + err)})
@@ -48,7 +48,7 @@ router.route('/display/:username').get(async(req, res) => {
     res.json({posts: newPostsList});
 })
 
-router.route('/display/:username/:post').get(async(req, res) => {
+router.route('/display/:username/:post').get(passport.authenticate('jwt', { session: false }), async(req, res) => {
     let singlePost = await Post.findById(req.params.post).then(async (post) => {
         return post
     }).catch((err) => {res.status(400).json('Error ' + err)})
@@ -97,7 +97,7 @@ router.route('/display/:username/:post').get(async(req, res) => {
     res.json({posts: newPost});
 })
 
-router.route('/addComment').post(async(req, res) => {
+router.route('/addComment').post(passport.authenticate('jwt', { session: false }), async(req, res) => {
     const newComment = new Comment({
         commenter: req.body.commenter,
         post: req.body.post,
@@ -120,7 +120,7 @@ router.route('/addComment').post(async(req, res) => {
     .catch((err) => {res.status(400).json('Error: ' + err)})
 })
 
-router.route('/upvote').put(async(req, res) => {
+router.route('/upvote').put(passport.authenticate('jwt', { session: false }), async(req, res) => {
     //Handle Comments
     if (req.body.hasOwnProperty('comment') != 0) {
         if (req.body.upvoted) {
@@ -168,7 +168,7 @@ router.route('/upvote').put(async(req, res) => {
     }
 })
 
-router.route('/downvote').put(async(req, res) => {
+router.route('/downvote').put(passport.authenticate('jwt', { session: false }), async(req, res) => {
     //Handle Comments
     if (req.body.hasOwnProperty('comment') != 0) {
         if (req.body.upvoted) {
