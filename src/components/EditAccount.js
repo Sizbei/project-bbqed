@@ -6,6 +6,7 @@ import {AuthContext} from '../Context/AuthContext';
 import AuthService from '../Services/AuthService';
 import UpdateEmail from "./UpdateEmail"
 import UpdatePassword from "./UpdatePassword"
+import DeactivateAccount from "./DeactivateAccount"
 
 export default function EditAccount() {
 
@@ -48,7 +49,7 @@ export default function EditAccount() {
                 <UpdatePassword />
               </div>
 
-              <button className="deactivate-button" onClick={() => {}}>Deactivate Account</button>
+              <DeactivateAccount />
 
 
           </div>

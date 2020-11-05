@@ -273,3 +273,9 @@
   font-weight: 650;
   float: right;
 }
+
+.deactivate-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
