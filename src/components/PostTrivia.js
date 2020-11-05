@@ -125,11 +125,6 @@ export default function PostTrivia(props) {
               <button className="post-nav-button" onClick={() => handleModeSelect("playAgain")}>
                 <label className="post-nav-button-label">Play Again</label>
               </button>
-              {mode !== "singlePlayer" ? (
-                <button className="post-nav-button" onClick={() => handleModeSelect("rematch")}>
-                  <label className="post-nav-button-label">Rematch</label>
-                </button>
-              ) : null}
               <button className="post-nav-button" onClick={() => handleModeSelect("nav")}>
                 <label className="post-nav-button-label">Select Mode</label>
               </button>
