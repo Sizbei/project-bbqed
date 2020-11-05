@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, useHistory} from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from 'axios';
 import {AuthContext} from '../Context/AuthContext';
+import AuthService from '../Services/AuthService';
 
 import '../styling/Settings.css';
 
@@ -33,7 +34,6 @@ export default function Popup() {
 
   const confirmForm = data => {
     
-
     fetch('/settings/account/verifypass/' + authContext.user.username + '/' + data.password).then(res => res.json())
     .then(async res => {
         setPassState(res.verified);
@@ -48,11 +48,15 @@ export default function Popup() {
 
   const finalForm = data => {
 
-    fetch('/settings/account/deactivate/' + authContext.user.username, {
+    const username = authContext.user.username;
+
+    logOut();
+    
+    fetch('/settings/account/deactivate/' + username, {
       method: 'DELETE',
     })
     .then(res => res.json())
-    .then(res => logOut)
+    .then(res => res.json())
     
   }
 
