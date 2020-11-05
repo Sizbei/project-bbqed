@@ -4,7 +4,7 @@
     width:100%;
     height:100%;
     background-color: #222629;
-    padding-bottom: 50px;
+    padding-bottom: 2.63157894737vw;
 }
  
 .left-segment {
@@ -37,7 +37,7 @@
     height: 1%;
     background-color: red;
     margin: 3% 2% 0% 8%;
-    border-radius: 5px;
+    border-radius: 0.26315789473vw;
 }
 
 .clock {
@@ -45,7 +45,7 @@
     height: 100%;
     opacity: 30%;
     background-color: white;
-    border-radius: 5px;
+    border-radius: 0.26315789473vw;
 }
 
 .clockTick {
@@ -58,7 +58,7 @@
 }
 
 .questionBox {
-    border-radius: 15px;
+    border-radius: 0.78947368421vw;
     margin:1% 2% 0% 8%;
     /* padding:5%; */
     height: 10vw;
@@ -101,7 +101,7 @@
 }
  
 .answer1Box {
-    border-radius:6px;
+    border-radius: 0.31578947368vw;
     margin-right:0.75%;
     height: 6vw;
     position: relative;
@@ -113,7 +113,7 @@
 }
 
 .answer1Box-nohover {
-  border-radius:6px;
+  border-radius: 0.31578947368vw;
   margin-right:0.75%;
   height: 6vw;
   position: relative;
@@ -121,7 +121,7 @@
 }
 
 .answer1Box-hover {
-  border-radius:6px;
+  border-radius: 0.31578947368vw;
   margin-right:0.75%;
   height: 6vw;
   position: relative;
@@ -131,7 +131,7 @@
 .answer2Box {
     margin-top:3%;
     margin-right:0.75%;
-    border-radius:6px;
+    border-radius: 0.31578947368vw;
     height: 6vw;
     position: relative;
     background-color:#f4b800;
@@ -144,7 +144,7 @@
 .answer2Box-nohover {
   margin-top:3%;
   margin-right:0.75%;
-  border-radius:6px;
+  border-radius: 0.31578947368vw;
   height: 6vw;
   position: relative;
   background-color:#f4b800;
@@ -153,7 +153,7 @@
 .answer2Box-hover {
   margin-top:3%;
   margin-right:0.75%;
-  border-radius:6px;
+  border-radius: 0.31578947368vw;
   height: 6vw;
   position: relative;
   background-color: #a27a00;
@@ -161,7 +161,7 @@
 
 .answer3Box {
     margin-left:0.75%;
-    border-radius:6px;
+    border-radius: 0.31578947368vw;
     height: 6vw;
     position: relative;
     background-color:#ff6600;
@@ -173,7 +173,7 @@
 
 .answer3Box-nohover {
   margin-left:0.75%;
-  border-radius:6px;
+  border-radius: 0.31578947368vw;
   height: 6vw;
   position: relative;
   background-color:#ff6600;
@@ -181,7 +181,7 @@
 
 .answer3Box-hover {
   margin-left:0.75%;
-  border-radius:6px;
+  border-radius: 0.31578947368vw;
   height: 6vw;
   position: relative;
   background-color: #bc4b00;
@@ -190,7 +190,7 @@
 .answer4Box {
     margin-left:0.75%;
     margin-top:3%;
-    border-radius:6px;
+    border-radius: 0.31578947368vw;
     height: 6vw;
     position: relative;
     background-color:#61b305;
@@ -212,7 +212,7 @@
 .answer4Box-nohover {
   margin-left:0.75%;
   margin-top:3%;
-  border-radius:6px;
+  border-radius: 0.31578947368vw;
   height: 6vw;
   position: relative;
   background-color:#61b305;
@@ -221,7 +221,7 @@
 .answer4Box-hover {
   margin-left:0.75%;
   margin-top:3%;
-  border-radius:6px;
+  border-radius: 0.31578947368vw;
   height: 6vw;
   position: relative;
   background-color: #457e04;
@@ -241,15 +241,15 @@
 .history {
     margin-left:7%;
     margin-top:5%;
-    border-radius:10px;
+    border-radius: 0.52631578947vw;
     height:80%;
     width:85%;
     background-color: #565656;
 }
  
 .info {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    border-top-left-radius: 0.52631578947vw;
+    border-top-right-radius: 0.52631578947vw;
     height:20%;
     padding:0.5%;
     background-color:#404040;
@@ -257,13 +257,13 @@
  
 .triviaType {
     font-family:'CommissionerMedium';
-    font-size: calc(20px + 6 * ((100vh - 200px) / 400));
+    font-size: calc(1.05263157895vw + 6 * ((100vh - 10.5263157895vw) / 400));
     margin: 5% 0% 5% -20%;
 }
  
 .historyText {
     font-family:'CommissionerMedium';
-    font-size: calc(8px + 5 * ((100vh - 200px) / 500));;
+    font-size: calc(0.42105263157vw + 5 * ((100vh - 10.5263157895vw) / 500));;
     margin: 2% 0% 0% -15%;
 }
  

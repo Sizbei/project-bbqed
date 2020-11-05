@@ -27,7 +27,7 @@
     padding-right: 6em;
     padding-top: 1.5em;
     padding-bottom: 1.5em;
-    border-radius: 20px;
+    border-radius: 1.05263157895vw;
     background: #313538;
     z-index: 9;
     display: flex;
@@ -116,7 +116,7 @@
   height: 3vw;
   width: 8vw;
   background-color: #e06c16;
-  border-radius: 8px;
+  border-radius: 0.42105263157vw;
   border: none;
   margin-left: 2%;
   margin-right: 2%;
