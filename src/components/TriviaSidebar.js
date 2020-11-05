@@ -103,7 +103,7 @@ function ACSChange(props) {
     )
   } else if (change == 0) {
     return (
-      <span className={"TSBG-header-acschange-zero"}>+-0</span>
+      <span className={"TSBG-header-acschange-zero"}>+0</span>
     )
   } else {
     return (
