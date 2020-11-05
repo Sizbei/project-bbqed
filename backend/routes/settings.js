@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const passportConfig = require('../passport');
 let Profile = require('../models/profile');
 let User = require('../models/user');
+let Acs = require('../models/acs');
 
 router.route('/profile/:username').get(passport.authenticate('jwt', {session : false}),(req, res) => {
   Profile.findOne({username: req.params.username})
@@ -65,6 +66,17 @@ router.route('/account/update/email').put(passport.authenticate('jwt', {session 
 router.route('/account/update/password').put(passport.authenticate('jwt', {session : false}),(req, res) => {
   User.findOneAndUpdate({username: req.body.username}, {password: req.body.password})
   .then(() => res.json("Password updated"))
+  .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/account/deactivate/:username').delete(passport.authenticate('jwt', {session : false}),(req, res) => {
+  User.findOneAndRemove({username: req.params.username})
+  .then(() => {
+    Profile.findOneAndRemove({username: req.params.username})
+    .then(() => {
+      Acs.findOneAndRemove({username: req.params.username})
+    })
+  })
   .catch(err => res.status(400).json('Error: ' + err));
 });
 
