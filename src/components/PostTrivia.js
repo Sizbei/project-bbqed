@@ -68,6 +68,50 @@ export default function PostTrivia(props) {
       handleClosePostTrivia();
   }
 
+  const winnerText = (function() {
+    if (props.winner == "user") {
+      return "win";
+    } else if (props.winner == "tie") {
+      return "tie";
+    } else if (props.winner == "enemy") {
+      return "loss";
+    } else {
+      return props.winner;
+    }
+  })();
+
+  // const winnerDiv = props.mode == "online" ? (
+  //   <div className="post-winner"> 
+  //     <label className={"post-" + winnerText}>{(function() {
+  //       if (winnerText == "win") {
+  //         return "VICTORY";
+  //       } else if (winnerText == "tie") {
+  //         return "TIE";
+  //       } else {
+  //         return "DEFEAT";
+  //       }
+  //     })()}</label>
+  //   </div>
+  // ) : null;
+
+  const winnerDiv = (
+    <div className="post-winner"> 
+      {props.mode == "online" ? (
+        <label className={"post-" + winnerText}>{(function() {
+          if (winnerText == "win") {
+            return "VICTORY";
+          } else if (winnerText == "tie") {
+            return "TIE";
+          } else {
+            return "DEFEAT";
+          }
+        })()}</label>
+      ) : null}
+    </div>
+  )
+
+  console.log(props, winnerText);
+
   return (
       <div>
           <div className='post-popup' onClick={() => Hide()} style={visibleJSON}/>
@@ -76,6 +120,7 @@ export default function PostTrivia(props) {
               {userHeaderSection}
               {enemyHeaderSection}
             </div>
+            {winnerDiv}
             <div className="post-nav">
               <button className="post-nav-button" onClick={() => handleModeSelect("playAgain")}>
                 <label className="post-nav-button-label">Play Again</label>

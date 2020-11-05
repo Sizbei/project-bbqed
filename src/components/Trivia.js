@@ -23,6 +23,11 @@ import Queue from './Queue';
 */
 
 export default function Trivia(props) {
+
+  const testLog = () => {
+    console.log("TEST TEST TESTES");
+  }
+  
   const authContext = useContext(AuthContext);
   const [initialState, setInitialState] = useState({  // still gets modified by one useEffect() to get urls
     mode:"nav", 

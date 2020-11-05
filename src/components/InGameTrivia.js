@@ -55,34 +55,34 @@ export default function InGameTrivia(props) {
     opacity: opacityValue + "%"
   }
 
-  const triviaClockTick = (timeAllotted=10, tickSpeed=0.042, setOpacity=100, setTick=0) => {
-        timerOn = true;
+  const triviaClockTick = (timeAllotted=10, setOpacity=100, setTick=0) => {
+    timerOn = true;
     var flashOn = true;
     var tick = setTick;
     var opacity = setOpacity;
     var counter = timeAllotted;
     NewTimeValue(counter);
+    const start = new Date();
     var Timer = setInterval(() => triggerTicker(), 1);
     const clockInterval = setInterval(() => triggerCountDown(), 1000);
     function triggerTicker() {
-        if (timerOn) {
-            tick += tickSpeed;
-            // This is 10 seconds, 14 seconds has a tickRate of 0.03 (Make this a variable)
-            NewTickValue(tick);
-            if (opacity > 100) 
-                opacity = 100;
-            if (opacity < 0)
-                opacity = 0;
-            NewOpacityValue(opacity);
-            if (Math.trunc(tick) % 4 == 0)
-                flashOn = true;
-            else
-                flashOn = false;
-            if (tick >= 60 && !flashOn)
-                opacity -= 3;
-            else if (tick >= 60 && flashOn)
-                opacity += 7.5;
-        }
+      if (timerOn) {
+          tick = 100 * (new Date() - start) / (timeAllotted * 1000);
+          NewTickValue(tick);
+          if (opacity > 100) 
+              opacity = 100;
+          if (opacity < 0)
+              opacity = 0;
+          NewOpacityValue(opacity);
+          if (Math.trunc(tick) % 4 == 0)
+              flashOn = true;
+          else
+              flashOn = false;
+          if (tick >= 60 && !flashOn)
+              opacity -= 0.6;
+          else if (tick >= 60 && flashOn)
+              opacity += 1.5;
+      }
     }
     function triggerCountDown() {
       if (counter == 0) {
@@ -142,10 +142,10 @@ export default function InGameTrivia(props) {
     reset();
     var newActiveTimers;
     if ("singlePlayer".localeCompare(mode) == 0) {
-        newActiveTimers = triviaClockTick(14, 0.03, 100, 0);
+        newActiveTimers = triviaClockTick(14, 100, 0);
     }
     else {
-        newActiveTimers = triviaClockTick(10, 0.042, 100, 0);
+        newActiveTimers = triviaClockTick(10, 100, 0);
     }
     setActiveTimers(newActiveTimers);
 
@@ -186,11 +186,13 @@ export default function InGameTrivia(props) {
   //   setShowNavPopup(false);     
   // }, [props.stop])
 
+  const timeClassName = timeValue == "Waiting for other User..." ? "trivia-wait" : "time"
+
   return(
       <div className='trivia-background'>
         <div className='left-segment'>
         <div className='timeBox'>
-            <label className='time'>{mode != "nav" ? timeValue : null}</label>
+            <label className={timeClassName}>{mode != "nav" ? timeValue : null}</label>
         </div>
         <div className='clockRed'>
             <div className='clockTick' style={tickJSON}></div>
@@ -286,7 +288,7 @@ export default function InGameTrivia(props) {
     
     {showNavPopup ? (
       <div className="post-trivia-div">
-        <PostTrivia handleClosePostTrivia={handleClosePostTrivia} {...props} />
+        <PostTrivia handleClosePostTrivia={handleClosePostTrivia} {...props} winner={winner} />
       </div>
     ) : null}
     
