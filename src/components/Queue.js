@@ -62,6 +62,8 @@ export default function Queue(props) {
   const confirmMatch = () => {
     console.log("CLICKLED CONFIRMED!", waitConfirm);
 
+    var text = document.getElementsByClassName('queue-text');
+    text[0].innerHTML = "Match Accepted!";
     axios.post("/trivia/head-to-head/createGame", { username: authContext.user.username, acs: 1 })
       .then(data => {
         console.log("GOT", data);
@@ -101,8 +103,9 @@ export default function Queue(props) {
     <div>
       <div className='queue-popup' onClick={() => {leaveQueue(); handleCloseQueue();}} />
         <div className='queue-popup_inner'>
-          {/* <span>{inQueue ? "QUEUE TIME" : "no"}</span> */}
-          {(waitConfirm && !inQueue) ? <button className="queue-Confirm" onClick={confirmMatch}>CONFIRM</button> : null}
+          <label className='queue-text'>{inQueue ? "Finding Opponent..." : "Match Found!"}</label>
+          <br></br>
+          {(waitConfirm && !inQueue) ? <button className="queue-Confirm" onClick={confirmMatch}>ACCEPT</button> : null}
       </div>
     </div>
   );

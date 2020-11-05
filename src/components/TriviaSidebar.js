@@ -312,7 +312,7 @@ export default function TriviaSidebar(props) {
           <div className="TSBG-header">
             {userHeaderSection}
             {enemyHeaderSection}
-            <span style={{color: "white"}}> Winner: {props.winner} </span>
+            {/* <span style={{color: "white"}}> Winner: {props.winner} </span> */}
           </div>
           
           <div className="TSBG-list">

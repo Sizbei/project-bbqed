@@ -42,7 +42,8 @@
   color:white;
   border-radius: 8px;
   border: none;
-  font-family: 'CommissionerMedium'
+  font-family: 'CommissionerMedium';
+  font-size: 1vw;
 }
 
 
@@ -54,8 +55,10 @@
     outline: none;
 }
 
-.label {
+.queue-text {
   color: white;
+  font-family: 'CommissionerMedium';
+  font-size: 2vw;
 }
 
 @font-face {

@@ -142,7 +142,7 @@ export default function InGameTrivia(props) {
     reset();
     var newActiveTimers;
     if ("singlePlayer".localeCompare(mode) == 0) {
-        newActiveTimers = triviaClockTick(14, 0.032, 100, 0);
+        newActiveTimers = triviaClockTick(14, 0.03, 100, 0);
     }
     else {
         newActiveTimers = triviaClockTick(10, 0.042, 100, 0);
