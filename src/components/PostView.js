@@ -2,6 +2,7 @@ import React, {useState,  useEffect, useContext} from "react"
 import ProfilePicture from './ProfilePicture'
 import '../styling/PostView.css'
 import {AuthContext} from '../Context/AuthContext';
+import { Link } from 'react-router-dom';
 /*
  {username: 'user4', comment: 'blah blah', acs: 23}, 
         {username: 'user2', comment: 'blah blah1', acs: 22}, 
@@ -200,8 +201,11 @@ export default function View(props) {
       <div className="tzpv-container">
         <div className="tzpv-post-container">
             <div className="tzpv-user-info">
+            <Link to={'/profile/' + authContext.user.username} className="tzpv-profile-link">
                 <ProfilePicture username = {username}/>
-                <label> {username} ({acs})  </label>
+                </Link>
+            <label> <Link to={'/profile/' + authContext.user.username} className="tzpv-profile-link"> {username} ({acs})
+             </Link> </label>
                 <div className="tzpv-likes"> <label> {likes} </label></div>
             </div>
             <div className="tzpv-post-info"> 
@@ -218,6 +222,7 @@ export default function View(props) {
             <input type="text" name="comment-body" onChange={handleChangeCommentBody}/>
             <button onClick={handleAddComment}> Post Comment </button> 
         </div>
+
         <div className="tzpv-comments-container"> 
           <h2> Comments ({comments.length})</h2>
             {comments.map((data,index) => {
@@ -225,8 +230,10 @@ export default function View(props) {
                     <div className="tzpv-comment-container">
                         <label className="tzpv-comment-like">{data.likes}</label>
                         <div className="tzpv-profile">
-                            <label> {data.commenter.username} ({data.commenter.acs})</label>
-                            <ProfilePicture scale={0.8} username={data.commenter.username}/>
+                      <label> <Link to={'/profile/' + data.commenter.username} className="tzpv-profile-link">
+                        {data.commenter.username} ({data.commenter.acs}) </Link> </label>
+                      <Link to={'/profile/' + data.commenter.username} className="tzpv-profile-link">
+                            <ProfilePicture scale={0.8} username={data.commenter.username}/> </Link>
                             <div className="tzpv-comment-agree-disagree">
                                 <a onClick={()=>handleCommentAgree(data, index)}className={data.upvoted? "tzpv-comment-link-selected": "tzpv-comment-link"}> Agree </a>
                                 <a onClick={()=>handleCommentDisagree(data, index)}className={data.downvoted? "tzpv-comment-link-selected": "tzpv-comment-link"}> Disagree </a>

@@ -154,8 +154,8 @@ export default function TheZone(props) {
                                     </label>
                                     
                                     <div className="tzone-likes"> <label> {data.likes} </label></div>
-                                </div>
-                                <div className="tzone-post-info">
+                                    </div>
+                                    <div className="tzone-post-info">
                                 
                                     <Link to={"/theZone/display/" + (data._id)} className="tzone-link">
                                         <p> {data.body} </p>

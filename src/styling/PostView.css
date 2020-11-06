@@ -133,7 +133,6 @@
   border-color: transparent;
 }
 
-
 .tzpv-post-comment-container button{
   font-size: 1vw; 
   font-family: 'CommissionerMedium';
@@ -145,6 +144,7 @@
   align-self: flex-end;
   border-color: transparent;
 }
+
 .tzpv-post-comment-container button:hover {
   color: #ff7e1f; 
   background-color: white; 
@@ -173,8 +173,9 @@
 .tzpv-comment-link, .tzpv-comment-link-selected { 
   margin-left: 4%;
 }  
+
 .tzpv-comment-link:hover {
-  text-decoration: underline;
+  text-decoration: underline; 
   color: #ff7e1f; 
   cursor: pointer;
 }
@@ -182,6 +183,15 @@
 .tzpv-comment-link-selected {
   color: #ff7e1f; 
   cursor: pointer;
+}
+
+.tzpv-profile-link {
+  text-decoration: none;
+  color: white;
+}
+
+.tzpv-profile-link:hover {
+  color: lightgrey;
 }
 
 @font-face {
