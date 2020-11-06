@@ -27,39 +27,45 @@ export default function Popup() {
 
   const authContext = useContext(AuthContext);
 
-  const submitForm = async data => {
+  const submitForm = data => {
     
     fetch('/settings/account/verifypass/' + authContext.user.username + '/' + data.old).then(res => res.json())
-    .then(async res => {
-        await setOldState(res.verified);
+    .then(passRes => {
+        setOldState(passRes.verified);
+
+        const passLength = data.new.length > 3;
+        setNewState(passLength);
+
+        const sameEmail = data.new === data.confirm;
+        setConfirmState(sameEmail);
+
+        const updatedInfo = {
+          username: authContext.user.username,
+          password: data.new,
+        }
+    
+        if(passRes.verified && passLength && sameEmail){
+          
+          fetch('/settings/account/update/password', {
+            method :  "put",
+            body : JSON.stringify(updatedInfo),
+            headers: {
+                'Content-Type' : 'application/json'
+            }
+          }).then(res => res.json())
+          .then(res => res.json())
+          .catch((error) => {
+            console.log(error);
+          })
+    
+          setFormState("button")
+    
+        }
+
       }
     );
 
-    await setNewState(data.new.length > 3);
-    await setConfirmState(data.new === data.confirm);
-
-    const updatedInfo = {
-      username: authContext.user.username,
-      password: data.new,
-    }
-
-    if(verifyOld && verifyNew && verifyConfirm){
-      
-      fetch('/settings/account/update/password', {
-        method :  "put",
-        body : JSON.stringify(updatedInfo),
-        headers: {
-            'Content-Type' : 'application/json'
-        }
-      }).then(res => res.json())
-      .then(res => res.json())
-      .catch((error) => {
-        console.log(error);
-      })
-
-      setFormState("button")
-
-    }
+    
 
   }
 
@@ -79,9 +85,9 @@ export default function Popup() {
             <form className="form" onSubmit={handleSubmit(submitForm)}>
               <input type="password" name="old" placeholder="CURRENT PASSWORD" autoComplete="off" className="current-password pop-input" ref={register({required: true })} maxLength="30" ></input>
               {(verifyOld == false) ? <span className="warning">Incorrect password</span> : null}
-              <input type="text" name="new" placeholder="NEW PASSWORD" autoComplete="off" className="new-email pop-input" ref={register({required: true })} maxLength="30" ></input>
+              <input type="password" name="new" placeholder="NEW PASSWORD" autoComplete="off" className="new-email pop-input" ref={register({required: true })} maxLength="30" ></input>
               {(verifyNew == false) ? <span className="warning">Password must be at least 4 characters</span> : null}
-              <input type="text" name="confirm" placeholder="CONFIRM NEW PASSWORD" autoComplete="off" className="new-email pop-input" ref={register({required: true })} maxLength="30" ></input>
+              <input type="password" name="confirm" placeholder="CONFIRM NEW PASSWORD" autoComplete="off" className="new-email pop-input" ref={register({required: true })} maxLength="30" ></input>
               {(verifyConfirm == false) ? <span className="warning">Passwords do not match</span> : null}
 
               <input type="submit" className="submit" value="Save" /> 
