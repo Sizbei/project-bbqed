@@ -34,10 +34,11 @@ export default function Popup(props) {
         .then(emailRes => {
 
             const emailVertified = (emailRes.verified === "dne") && validateEmail(data.email);
+            
             if(!validateEmail(data.email)){
               setEmailState("invalid");
             } else {
-              setEmailState(emailVertified);
+              setEmailState(emailRes.verified);
             }
 
             const sameEmail = data.email === data.confirmEmail;
@@ -89,20 +90,17 @@ export default function Popup(props) {
             <hr className="settings-hr"></hr>
 
             <form className="form" onSubmit={handleSubmit(submitForm)}>
+              
               <input type="password" name="password" placeholder="CURRENT PASSWORD" autoComplete="off" className="current-password pop-input" ref={register({required: true })} maxLength="30" required></input>
               {(verifyPass == false) ? <span className="warning">Incorrect password</span> : null}
               <input type="text" name="email" placeholder="NEW EMAIL" autoComplete="off" className="new-email pop-input" ref={register({required: true})} maxLength="30" required></input>
-              {(verifyEmail === "exist" || verifyEmail === "invalid") ? <span className="warning">{verifyEmail === "exist" ? "Email already in use" : "Please enter a valid email address"}</span> : null}
+              {(verifyEmail === "exist") ? (<span className="warning">Email already in use</span>) : (verifyEmail === "invalid" ? <span className="warning">Please enter a valid email address</span> : null)}
               <input type="text" name="confirmEmail" placeholder="CONFIRM EMAIL" autoComplete="off" className="new-email pop-input" ref={register({required: true})} maxLength="30" required></input>
               {(verifyEmailSame == false) ? <span className="warning">Emails do not match</span> : null}
-
+              
               <input type="submit" className="submit" value="Save" /> 
-
             </form>
-
-
           </div>
-
         </div>
       </div>      
       

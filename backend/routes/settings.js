@@ -49,7 +49,7 @@ router.route('/account/emailexist/:username/:email').get(passport.authenticate('
   User.findOne({email: req.params.email})
     .then(user => {
       if(user){
-        res.json({verified: "exit"})
+        res.json({verified: "exist"})
       } else {
         res.json({verified: "dne"})
       }
