@@ -411,12 +411,9 @@ export default function Trivia(props) {
       processOptionSelect();
     } else {
       // Otherwise go fetch again
-      const timeOut = setTimeout(() => {
-        const newState = {...state};
-        newState.stop = "fetch";
-        newState.timeOut = timeOut;
-        setState(newState);
-      }, 100);
+      const newState = {...state};
+      newState.stop = "fetch";
+      setState(newState);
     }
   }, [state.stop])
 
@@ -425,6 +422,8 @@ export default function Trivia(props) {
     if (!("stop" in state) || state.stop !== "online-getnext") {
       return;
     }
+
+    const wait = state.status == "close" ? transitionSpeed : Math.max(0, transitionSpeed - (new Date() - state.startTime));
     
     setTimeout(() => {
       const newState = {...state};
@@ -432,7 +431,7 @@ export default function Trivia(props) {
       newState.chosenOptions = {user: "", enemy: ""};
       newState.stop = "online-getnext2";
       setState(newState);
-    }, transitionSpeed);
+    }, wait);
   }, [state.stop])
 
   // goto the next question for online play
@@ -460,7 +459,8 @@ export default function Trivia(props) {
         if (data.status == "close") {
           lastQuestion = data.questions[data.questions.length - 1];
         }
-  
+        newState.startTime = Date.parse(data.questions[data.curQuestionIndex].startTime);
+        
         // update score
         newState.score = {user: data.users.user.point, enemy: data.users.enemy.point};
         newState.acsChange = {user: data.users.user.acsChange, enemy: data.users.enemy.acsChange};
@@ -496,6 +496,7 @@ export default function Trivia(props) {
         newState.list = list;
   
         newState.previousAnswer = lastQuestion.triviaQuestion.answer;
+        newState.status = data.status;
         newState.stop = "online-getnext";
         newState.nextData = data;
         setState(newState)
@@ -525,6 +526,14 @@ export default function Trivia(props) {
         const data = updateData.gameInstance;
         const currentQuestion = data.questions[data.curQuestionIndex];
   
+        // is it the first question? Wait.
+        if (data.curQuestionIndex == 0) {
+          setTimeout(() => {
+            transitionNext(data);
+          }, Math.max(0, 1000 - (new Date() - Date.parse(currentQuestion.startTime))))
+          return;
+        }
+
         // is it a new question? play the transition. 
         if ("currentQuestion" in state && state.currentQuestion != currentQuestion.triviaQuestion.question || data.status == "close") {
           console.log("--------------NEW QUESTION IS HERE-------------")

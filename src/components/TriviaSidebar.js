@@ -245,7 +245,7 @@ export default function TriviaSidebar(props) {
         &nbsp;
         <ACSChange change={acsChange.user} />
       </span>
-      <ProfilePicture scale={1.5} url={ppurl.user} />
+      <ProfilePicture scale={1.5} url={ppurl.user} username={username.user}/>
       <label className="TSBG-header-score">{score.user}</label>
     </div>
   );
@@ -258,7 +258,7 @@ export default function TriviaSidebar(props) {
         &nbsp;
         <ACSChange change={acsChange.enemy} />
       </span>
-      <ProfilePicture scale={1.5} url={ppurl.enemy} />
+      <ProfilePicture scale={1.5} url={ppurl.enemy} username={username.enemy}/>
       <label className="TSBG-header-score">{score.enemy}</label>
     </div>
   ) : null;

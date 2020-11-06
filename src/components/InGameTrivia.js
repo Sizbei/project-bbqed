@@ -14,8 +14,8 @@ export default function InGameTrivia(props) {
   const handleModeSelect = props.handleModeSelect;
   const chosenOptions = "chosenOptions" in props ? props.chosenOptions : {user: "", enemy: ""};
   const endState = "gameOver" in props && props.gameOver && (props.stop == "single-done" || props.stop == "online-done"); // show nav buttons?
-  const [showNavPopup, setShowNavPopup] = useState(false);
-  const showNavButtons = endState && !showNavPopup;
+  const [hideNavPopup, setHideNavPopup] = useState(false);
+  const showNavButtons = endState && hideNavPopup;
 
   let currentQuestion = '\u00A0'; // initialize with space to preserve spacing
   let options = ['\u00A0', '\u00A0', '\u00A0', '\u00A0'];
@@ -169,22 +169,17 @@ export default function InGameTrivia(props) {
   }
 
   const handleClosePostTrivia = () => {
-    setShowNavPopup(false);
+    setHideNavPopup(true);
   }
 
   // show post trivia on finalState = true
   useEffect(() => {
     if (endState) {
-      setShowNavPopup(true);
+      setHideNavPopup(false);
     } else {
-      setShowNavPopup(false);
+      setHideNavPopup(true);
     }
   }, [endState])
-
-  // // reset showNavPopup on change
-  // useEffect(() => {
-  //   setShowNavPopup(false);     
-  // }, [props.stop])
 
   const timeClassName = timeValue == "Waiting for other User..." ? "trivia-wait" : "time"
 
@@ -270,11 +265,6 @@ export default function InGameTrivia(props) {
             <button className="post-nav-button" onClick={() => handleModeSelect("playAgain")}>
               <label className="post-nav-button-label">Play Again</label>
             </button>
-            {mode !== "singlePlayer" ? (
-              <button className="post-nav-button" onClick={() => handleModeSelect("rematch")}>
-                <label className="post-nav-button-label">Rematch</label>
-              </button>
-            ) : null}
             <button className="post-nav-button" onClick={() => handleModeSelect("nav")}>
               <label className="post-nav-button-label">Select Mode</label>
             </button>
@@ -286,7 +276,7 @@ export default function InGameTrivia(props) {
       <TriviaSidebar {...props} handleModeSelect={handleModeSelect} winner={winner} />
     </div>
     
-    {showNavPopup ? (
+    {endState && !hideNavPopup ? (
       <div className="post-trivia-div">
         <PostTrivia handleClosePostTrivia={handleClosePostTrivia} {...props} winner={winner} />
       </div>

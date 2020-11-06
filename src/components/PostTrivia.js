@@ -44,7 +44,7 @@ export default function PostTrivia(props) {
         &nbsp;
         <ACSChange change={acsChange.user} />
       </span>
-      <ProfilePicture scale={1.5} url={ppurl.user} />
+      <ProfilePicture scale={1.5} url={ppurl.user} username={username.user}/>
       <label className="post-header-score">{score.user}</label>
     </div>
   );
@@ -57,7 +57,7 @@ export default function PostTrivia(props) {
         &nbsp;
         <ACSChange change={acsChange.enemy} />
       </span>
-      <ProfilePicture scale={1.5} url={ppurl.enemy} />
+      <ProfilePicture scale={1.5} url={ppurl.enemy} username={username.enemy}/>
       <label className="post-header-score">{score.enemy}</label>
     </div>
   ) : null;
@@ -125,11 +125,6 @@ export default function PostTrivia(props) {
               <button className="post-nav-button" onClick={() => handleModeSelect("playAgain")}>
                 <label className="post-nav-button-label">Play Again</label>
               </button>
-              {mode !== "singlePlayer" ? (
-                <button className="post-nav-button" onClick={() => handleModeSelect("rematch")}>
-                  <label className="post-nav-button-label">Rematch</label>
-                </button>
-              ) : null}
               <button className="post-nav-button" onClick={() => handleModeSelect("nav")}>
                 <label className="post-nav-button-label">Select Mode</label>
               </button>
