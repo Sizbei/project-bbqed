@@ -48,8 +48,6 @@ export default function Popup(props) {
               email: data.email,
             }
         
-            console.log(verifyPass, verifyEmail, verifyEmailSame)
-        
             if(passRes.verified && emailVertified && sameEmail){
         
               fetch('/settings/account/update/email', {
