@@ -192,7 +192,7 @@ export default function View(props) {
         window.location.reload(); 
       }) 
       .catch((error) => {
-        console.log(error);
+        console.log(error); 
       })
     }
   return (
