@@ -123,6 +123,7 @@
 /************ CSS POST COMMENT **********/ 
 .tzpv-post-comment-container input {
   padding-bottom: 10%;
+  margin-bottom: 10px;
   word-break: break-all;
   border-radius: 8px;
   color: grey;

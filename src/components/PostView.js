@@ -222,7 +222,6 @@ export default function View(props) {
             <input type="text" name="comment-body" onChange={handleChangeCommentBody}/>
             <button onClick={handleAddComment}> Post Comment </button> 
         </div>
-
         <div className="tzpv-comments-container"> 
           <h2> Comments ({comments.length})</h2>
             {comments.map((data,index) => {
@@ -244,6 +243,7 @@ export default function View(props) {
                 )
             })}
         </div>
+        
       </div>
   </div>
   )
