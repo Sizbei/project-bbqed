@@ -49,9 +49,9 @@ router.route('/account/emailexist/:username/:email').get(passport.authenticate('
   User.findOne({email: req.params.email})
     .then(user => {
       if(user){
-        res.json({verified: "dne"})
+        res.json({verified: "exit"})
       } else {
-        res.json({verified: "exist"})
+        res.json({verified: "dne"})
       }
     })
     .catch(err => res.status(400).json('Error: ' + err));
