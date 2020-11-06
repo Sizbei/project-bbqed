@@ -42,6 +42,12 @@ app.use('/teams', teamsRouter);
 const postRouter = require('./routes/post');
 app.use('/post', postRouter)
 
+const soloTriviaRouter = require('./routes/triviaSolo');
+app.use('/trivia/solo', soloTriviaRouter)
+
+const headToHeadTriviaRouter = require('./routes/triviaHeadToHead');
+app.use('/trivia/head-to-head', headToHeadTriviaRouter)
+
 const zoneRouter = require('./routes/zone');
 app.use('/zone', zoneRouter)
 

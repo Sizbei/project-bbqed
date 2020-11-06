@@ -155,13 +155,11 @@ export default function TheZone(props) {
                                     
                                     <div className="tzone-likes"> <label> {data.likes} </label></div>
                                     </div>
-                                    <div className="tzone-post-info">
-                                
+                                    <div className="tzone-post-info">      
                                     <Link to={"/theZone/display/" + (data._id)} className="tzone-link">
                                         <p> {data.body} </p>
                                     </Link>
                                 </div> 
-                           
                         </div>
                         <div className="tzone-post-buttons">
                                 <a onClick={() => handlePostAgree(data, index)} className={data.agree ? "tzone-post-button-agree-selected" : "tzone-post-button-agree"}> Agree </a>
@@ -171,11 +169,7 @@ export default function TheZone(props) {
                         </div>
                     )
                 })}
-
-
             </div>
-            
-            
         </div>
     )
 }
