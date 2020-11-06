@@ -101,10 +101,13 @@
   width: 3vw; 
   height: 3vw; 
   border-radius: 50%;
-  margin-left: 60%;
+  margin-left: 50%;
+  text-align: center
 }
 .tzpv-likes label { 
-  margin-left: 10%;
+  margin:auto;
+  padding-top: 13px;
+
 }
 /************ CSS POST COMMENT **********/ 
 .tzpv-post-comment-container input {
