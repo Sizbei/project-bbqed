@@ -141,7 +141,7 @@ export default function TheZone(props) {
                 <div className= "tzone-post-number"> Posts ({posts.length})</div>
                 {posts.map((data, index) => {
                     return (
-                        <div class="tzone-">
+                        <div class="tzone-overall-container">
                             <div className="tzone-post-container">
 
                                 <div className="tzone-user-info">
@@ -154,14 +154,12 @@ export default function TheZone(props) {
                                     </label>
                                     
                                     <div className="tzone-likes"> <label> {data.likes} </label></div>
-                                </div>
-                                <div className="tzone-post-info">
-                                
+                                    </div>
+                                    <div className="tzone-post-info">      
                                     <Link to={"/theZone/display/" + (data._id)} className="tzone-link">
                                         <p> {data.body} </p>
                                     </Link>
                                 </div> 
-                           
                         </div>
                         <div className="tzone-post-buttons">
                                 <a onClick={() => handlePostAgree(data, index)} className={data.agree ? "tzone-post-button-agree-selected" : "tzone-post-button-agree"}> Agree </a>
@@ -171,11 +169,7 @@ export default function TheZone(props) {
                         </div>
                     )
                 })}
-
-
             </div>
-            
-            
         </div>
     )
 }
