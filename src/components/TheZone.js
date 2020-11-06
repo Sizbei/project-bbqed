@@ -141,7 +141,7 @@ export default function TheZone(props) {
                 <div className= "tzone-post-number"> Posts ({posts.length})</div>
                 {posts.map((data, index) => {
                     return (
-                        <div class="tzone-">
+                        <div class="tzone-overall-container">
                             <div className="tzone-post-container">
 
                                 <div className="tzone-user-info">
