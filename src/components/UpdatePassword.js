@@ -65,8 +65,6 @@ export default function Popup() {
       }
     );
 
-    
-
   }
 
   if (formState === "button") {
@@ -89,7 +87,6 @@ export default function Popup() {
               {(verifyNew == false) ? <span className="warning">Password must be at least 4 characters</span> : null}
               <input type="password" name="confirm" placeholder="CONFIRM NEW PASSWORD" autoComplete="off" className="new-email pop-input" ref={register({required: true })} maxLength="30" ></input>
               {(verifyConfirm == false) ? <span className="warning">Passwords do not match</span> : null}
-
               <input type="submit" className="submit" value="Save" /> 
 
             </form>

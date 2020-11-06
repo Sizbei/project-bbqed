@@ -208,7 +208,7 @@
   background: #313538;
 }
 
-.pop-input, .missing-input {
+.pop-input {
    
   border-color:white;
   border-style: solid; 
@@ -223,10 +223,6 @@
   font-size: 15px;
   margin-top: 40px;
   
-}
-
-.missing-input {
-  border: 1px solid #ff0000
 }
 
 .warning {
