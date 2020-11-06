@@ -33,7 +33,7 @@ export default function EditAccount() {
     <div className="account-container">
       <div className="settings-container-mid"> 
           
-          <div className="info"> 
+          <div className="information-container"> 
           <h1 className="settings-h1"> {'Account Settings'} </h1> 
 
               <hr className="settings-hr"></hr>

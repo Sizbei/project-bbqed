@@ -24,29 +24,31 @@ export default function Popup(props) {
 
   const authContext = useContext(AuthContext);
 
-  const submitForm = async data => {
+  const submitForm = data => {
 
     fetch('/settings/account/verifypass/' + authContext.user.username + '/' + data.password).then(res => res.json())
-    .then(res => {
-        setPassState(res.verified);
+    .then(passRes => {
+        setPassState(passRes.verified);
 
-        fetch('/settings/account/verifyemail/' + authContext.user.username + '/' + data.email).then(res => res.json())
-        .then(async res => {
-            setEmailState(res.verified)
+        fetch('/settings/account/emailexist/' + authContext.user.username + '/' + data.email).then(res => res.json())
+        .then(emailRes => {
+
+            const emailVertified = (emailRes.verified === "dne") && validateEmail(data.email);
             if(!validateEmail(data.email)){
-              setEmailState(false);
+              setEmailState("invalid");
+            } else {
+              setEmailState(emailVertified);
             }
 
-            await setEmailSameState(data.email === data.confirmEmail);
+            const sameEmail = data.email === data.confirmEmail;
+            setEmailSameState(sameEmail);
 
             const updatedInfo = {
               username: authContext.user.username,
               email: data.email,
             }
         
-            console.log(verifyPass, verifyEmail, verifyEmailSame)
-        
-            if(verifyPass && verifyEmail && verifyEmailSame){
+            if(passRes.verified && emailVertified && sameEmail){
         
               fetch('/settings/account/update/email', {
                 method :  "put",
@@ -90,7 +92,7 @@ export default function Popup(props) {
               <input type="password" name="password" placeholder="CURRENT PASSWORD" autoComplete="off" className="current-password pop-input" ref={register({required: true })} maxLength="30" required></input>
               {(verifyPass == false) ? <span className="warning">Incorrect password</span> : null}
               <input type="text" name="email" placeholder="NEW EMAIL" autoComplete="off" className="new-email pop-input" ref={register({required: true})} maxLength="30" required></input>
-              {(verifyEmail == false) ? <span className="warning">Please Enter a valid email address</span> : null}
+              {(verifyEmail === "exist" || verifyEmail === "invalid") ? <span className="warning">{verifyEmail === "exist" ? "Email already in use" : "Please enter a valid email address"}</span> : null}
               <input type="text" name="confirmEmail" placeholder="CONFIRM EMAIL" autoComplete="off" className="new-email pop-input" ref={register({required: true})} maxLength="30" required></input>
               {(verifyEmailSame == false) ? <span className="warning">Emails do not match</span> : null}
 

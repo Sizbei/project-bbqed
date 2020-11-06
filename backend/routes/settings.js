@@ -45,13 +45,13 @@ router.route('/account/verifypass/:username/:password').get(passport.authenticat
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/account/verifyemail/:username/:email').get(passport.authenticate('jwt', {session : false}),(req, res) => {
+router.route('/account/emailexist/:username/:email').get(passport.authenticate('jwt', {session : false}),(req, res) => {
   User.findOne({email: req.params.email})
     .then(user => {
       if(user){
-        res.json({verified: false})
+        res.json({verified: "exit"})
       } else {
-        res.json({verified: true})
+        res.json({verified: "dne"})
       }
     })
     .catch(err => res.status(400).json('Error: ' + err));
