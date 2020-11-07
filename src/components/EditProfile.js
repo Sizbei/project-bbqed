@@ -226,7 +226,7 @@ export default class EditProfile extends Component {
         <div className="profile-container">
           <div className="settings-container-mid"> 
               
-              <div className="info"> 
+              <div className="information-container"> 
               <h1 className="editProfile-h1"> {'Profile Settings'} </h1> 
                   <div className="editPP-container">
                     <h2 className="editProfile-h2">Profile Picture</h2>

@@ -299,6 +299,12 @@ export default function Trivia(props) {
           ? e.responses.enemy.accuracy : false;
         entry.userCorrect = userCorrect;
         entry.enemyCorrect = enemyCorrect;
+
+        if (e.responses.user.responseTime > e.responses.enemy.responseTime) {
+          entry.userCorrect = false;
+        } else {
+          entry.enemyCorrect = false;
+        }
       }
       list.push(entry);
     })
