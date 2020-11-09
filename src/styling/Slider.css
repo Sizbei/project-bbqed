@@ -1,0 +1,35 @@
+.slider-container {
+  position: relative;
+
+  /* background-color: red; */
+}
+
+.slider-arrow {
+  width: 0; 
+  height: 0; 
+  margin-left: auto;
+  margin-right: 19%;
+  transform: rotate(270deg);
+}
+
+.slider-arrow-container {
+  position: absolute;
+  background-color: blue;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+}
+
+.slider-mouse-container {
+  position: absolute;
+  /* background-color: green; */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider {
+  background-image: url('../res/ACSBorder.png');
+  background-size: contain;
+}
