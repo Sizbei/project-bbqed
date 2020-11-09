@@ -8,7 +8,12 @@ import '../styling/Slider.css';
 export default function Slider(props) {
   const scale = "scale" in props? props.scale : 1.0;
   const [angle, setAngle] = useState(180);
+  const [color, setColor] = useState("red");
   const sliderContainerSize = 9;
+  const minDeg = 24;
+  const maxDeg = 334.5;
+  const tickSize = 10;
+  const tickAngle = (maxDeg - minDeg) / (100 / tickSize);
 
   const mod = (n, m) => {
     return ((n % m) + m) % m;
@@ -24,6 +29,11 @@ export default function Slider(props) {
     return 180 * r / Math.PI;
   }
 
+  // transform a degree measure into a tick from 0 to 100
+  const getTick = deg => {
+    return tickSize * Math.round((deg - minDeg) / tickAngle);
+  }
+
   const updatePosition = e => {
     e.stopPropagation();
     const target = e.currentTarget.getBoundingClientRect();
@@ -32,7 +42,15 @@ export default function Slider(props) {
     const theta = getAngle(x, y);
 
     console.log(x, y, "radian:", theta, "deg:", radToDegree(theta))
-    setAngle(radToDegree(theta));
+    let deg = radToDegree(theta);
+    deg = Math.max(deg, minDeg);
+    deg = Math.min(deg, maxDeg);
+
+    // round degree to the nearest tick
+    const tick = getTick(deg);
+    deg = minDeg + tickAngle * tick / tickSize;
+    console.log("tick:", getTick(deg));
+    setAngle(deg);
   }
 
   const submit = e => {
@@ -41,16 +59,13 @@ export default function Slider(props) {
   }
 
   const sliderContainerStyle = {
-    
-    // width: 5 * scale + "vw",
-    // height: 5 * scale + "vw"
+
   }
   
   const sliderArrowStyle = {
     borderLeft: 0.4 * scale + "vw solid transparent",
     borderRight: 0.4 * scale + "vw solid transparent",
-    borderBottom: 0.8 * scale + "vw solid red",
-    // marginRight: 0.9 * scale + "vw",
+    borderBottom: 0.8 * scale + "vw solid " + color,
   }
 
   const sliderArrowContainerStyle = {
@@ -70,6 +85,11 @@ export default function Slider(props) {
     marginLeft: 0.3 * scale + "vw",
   }
 
+  const percentStyle = {
+    color: color,
+    fontSize: 0.9 * scale + "vw",
+  }
+
   return (
     <div className="slider-container" style={sliderContainerStyle}>
       <div className="slider-arrow-container" style={sliderArrowContainerStyle}>
@@ -78,7 +98,9 @@ export default function Slider(props) {
       </div>
       <div className="slider-mouse-container" onMouseMove={updatePosition} onMouseDown={submit} style={sliderMouseContainerStyle}>
         <div className="slider" style={sliderStyle}>
-
+          <label className="slider-percent" style={percentStyle}>
+            {getTick(angle)}%
+          </label>
         </div>
       </div>
     </div>
