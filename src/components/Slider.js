@@ -6,14 +6,25 @@ import AuthService from '../Services/AuthService';
 import '../styling/Slider.css';
 
 export default function Slider(props) {
-  const scale = "scale" in props? props.scale : 1.0;
+  const scale = "scale" in props? props.scale : 5.0;
   const [angle, setAngle] = useState(180);
-  const [color, setColor] = useState("red");
   const sliderContainerSize = 9;
   const minDeg = 24;
   const maxDeg = 334.5;
-  const tickSize = 10;
+  const tickSize = 1;
   const tickAngle = (maxDeg - minDeg) / (100 / tickSize);
+  const colors = [
+    [72.8, "#FE140B"],
+    [89.2, "#FE2210"],
+    [104.7, "#FB7D3D"],
+    [126.3, "#FA994A"],
+    [138.27, "#FAAA53"],
+    [163.7, "#F9CD63"],
+    [179, "#F8DD6B"],
+    [217.2, "#D9DC59"],
+    [270.3, "#61B305"],
+  ]
+  const interpolate = require('color-interpolate');
 
   const mod = (n, m) => {
     return ((n % m) + m) % m;
@@ -41,7 +52,7 @@ export default function Slider(props) {
     const y = -2 * ((e.clientY - target.top) / target.height - 0.5);
     const theta = getAngle(x, y);
 
-    console.log(x, y, "radian:", theta, "deg:", radToDegree(theta))
+    // console.log(x, y, "radian:", theta, "deg:", radToDegree(theta))
     let deg = radToDegree(theta);
     deg = Math.max(deg, minDeg);
     deg = Math.min(deg, maxDeg);
@@ -49,7 +60,6 @@ export default function Slider(props) {
     // round degree to the nearest tick
     const tick = getTick(deg);
     deg = minDeg + tickAngle * tick / tickSize;
-    console.log("tick:", getTick(deg));
     setAngle(deg);
   }
 
@@ -57,6 +67,52 @@ export default function Slider(props) {
     e.stopPropagation();
     console.log("Clicked!");
   }
+
+  // Map a set of degree measures to a color
+  // Then search for closest color
+  // TODO interpolate?
+  const color = (function() {
+    let best;
+    let bestDist = 1 << 16;
+
+    colors.forEach((v) => {
+      const d = Math.abs(v[0] - angle);
+      if (d < bestDist) {
+        bestDist = d;
+        best = v;
+      }
+    })
+
+    let secondBest;
+    let secondBestDist = 1 << 16;
+    colors.forEach((v) => {
+      if (v == best) return;
+
+      const d = Math.abs(v[0] - angle);
+      if (d < secondBestDist) {
+        secondBestDist = d;
+        secondBest = v;
+      }
+    })
+
+    // do interpolation...
+    const lower = (function() {
+      if (best[0] <= secondBest[0]) {
+        return best;
+      } else {
+        return secondBest;
+      }
+    }());
+    const upper = lower[0] == best[0] ? secondBest : best;
+
+    if (lower[0] <= angle && angle <= upper[0]) {
+      const colormap = interpolate([lower[1], upper[1]]);
+      const point = (angle - lower[0]) / (upper[0] - lower[0]);
+      // console.log("interpolate", colormap(point), point, lower, upper, angle);
+      return colormap(point);
+    }
+    return best[1];
+  }())
 
   const sliderContainerStyle = {
 
