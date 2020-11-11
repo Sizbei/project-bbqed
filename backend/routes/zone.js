@@ -216,4 +216,31 @@ router.route('/downvote').put(passport.authenticate('jwt', { session: false }), 
     }
 })
 
+router.route('/display/:username/reportedPosts/:page').get(async(req, res) => {
+    let page = req.params.page
+    let totalReports = Post.count({"reported.0":{"$exists":true}})
+    let recentPosts = await Post.find({"reported.0":{"$exists":true}}, "likes _id poster body reported totalReports")
+    .sort({'totalReports':'desc'})
+    .skip(10*page)
+    .limit(10)
+    .then((posts) => {
+        return posts
+    }).catch((err) => {res.status(400).json('Error ' + err)})
+    let newPostsList = []
+    for (var i = 0; i < recentPosts.length; i++) {
+        let newPost = {}
+        newPost._id = recentPosts[i]._id
+        newPost.totalReports = recentPosts[i].totalReports
+    }
+    res.json({posts: newPostsList, totalReports:totalReports});
+})
+
+router.route('/display/:username/reportedPosts')
+
+router.route('display/:username/reported').delete(async(req, res) => {
+    await Post.deleteOne({_id: req.body.id}).then(() => {
+        res.status(400).json("Deleted")
+    }).catch((err) => {res.status(400).json('Error ' + err)})
+})
+
 module.exports = router;
