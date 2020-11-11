@@ -105,19 +105,20 @@
   border-width: 5px;
 
 }
-.tzpv-likes { 
+.tzpvlikes { 
   background-color: #ff7e1f; 
   font-size: 1vw; 
   width: 3vw; 
   height: 3vw; 
+  line-height: 2.7vw;
   border-radius: 50%;
   margin-left: 50%;
-  text-align: center
-  
+  text-align: center;
+  color: white;
+  font-family: 'CommissionerMedium';
 }
 .tzpv-likes label { 
-  margin:auto;
-  padding-top: 13px;
+  margin: auto;
 }
 /************ CSS POST COMMENT **********/ 
 .tzpv-post-comment-container input {
