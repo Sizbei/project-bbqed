@@ -8,22 +8,20 @@ import '../styling/Slider.css';
 export default function Slider(props) {
   const scale = "scale" in props? props.scale : 1.0;
   const [lock, setLock] = useState(false);
+  const [done, setDone] = useState(false);
   const [angle, setAngle] = useState(180);
+  const [prevAngle, setPrevAngle] = useState(null);
   const sliderContainerSize = 9;
-  const minDeg = 24;
-  const maxDeg = 334.5;
+  const minDeg = 25.15;
+  const maxDeg = 335.8;
   const tickSize = 1;
   const tickAngle = (maxDeg - minDeg) / (100 / tickSize);
   const colors = [
-    [72.8, "#FE140B"],
-    [89.2, "#FE2210"],
-    [104.7, "#FB7D3D"],
-    [126.3, "#FA994A"],
-    [138.27, "#FAAA53"],
-    [163.7, "#F9CD63"],
-    [179, "#F8DD6B"],
-    [217.2, "#D9DC59"],
-    [270.3, "#61B305"],
+    [87.7, "#61B305"],
+    [134.7, "#C8D64E"],
+    [182.4, "#F8DB6B"],
+    [229.2, "#FAAD54"],
+    [285.8, "#FF0905"],
   ]
   const interpolate = require('color-interpolate');
 
@@ -45,10 +43,14 @@ export default function Slider(props) {
   const getTick = deg => {
     return tickSize * Math.round((deg - minDeg) / tickAngle);
   }
+  
+  const invert = tick => {
+    return 100 - tick;
+  }
 
   const updatePosition = e => {
     e.stopPropagation();
-    if (lock) {
+    if (lock || done) {
       return;
     }
 
@@ -57,7 +59,7 @@ export default function Slider(props) {
     const y = -2 * ((e.clientY - target.top) / target.height - 0.5);
     const theta = getAngle(x, y);
 
-    // console.log(x, y, "radian:", theta, "deg:", radToDegree(theta))
+    console.log(x, y, "radian:", theta, "deg:", radToDegree(theta))
     let deg = radToDegree(theta);
     deg = Math.max(deg, minDeg);
     deg = Math.min(deg, maxDeg);
@@ -71,13 +73,29 @@ export default function Slider(props) {
   const submit = e => {
     e.stopPropagation();
     console.log("Clicked!");
-    setLock(true);
+    setPrevAngle(angle);
+    setDone(true);
+  }
+
+  const handleMouseEnter = e => {
+    e.stopPropagation();
+    if (lock) {
+      return;
+    }
+
+    setDone(false);
+  }
+
+  const handleMouseOut = e => {
+    e.stopPropagation();
+    console.log("Mouse out!");
+    setAngle(prevAngle);
   }
 
   // Map a set of degree measures to a color
   // Then search for closest color
   // TODO interpolate?
-  const color = (function() {
+  const getColor = angle => {
     let best;
     let bestDist = 1 << 16;
 
@@ -118,7 +136,10 @@ export default function Slider(props) {
       return colormap(point);
     }
     return best[1];
-  }())
+  }
+
+  const color = getColor(angle);
+  const prevColor = getColor(prevAngle);
 
   const sliderContainerStyle = {
 
@@ -134,6 +155,19 @@ export default function Slider(props) {
     width: sliderContainerSize * scale + "vw",
     height: sliderContainerSize * scale + "vw",
     transform: "rotate(" + -angle + "deg)",
+  }
+
+  const sliderArrowGhostStyle = {
+    borderLeft: 0.4 * scale + "vw solid transparent",
+    borderRight: 0.4 * scale + "vw solid transparent",
+    borderBottom: 0.8 * scale + "vw solid " + prevColor,
+  }
+
+  const sliderArrowGhostContainerStyle = {
+    width: sliderContainerSize * scale + "vw",
+    height: sliderContainerSize * scale + "vw",
+    transform: "rotate(" + -prevAngle + "deg)",
+    visibility: prevAngle == null ? "hidden" : "visible",
   }
 
   const sliderMouseContainerStyle = {
@@ -158,10 +192,15 @@ export default function Slider(props) {
         <div className="slider-arrow" style={sliderArrowStyle}>
         </div>
       </div>
-      <div className="slider-mouse-container" onMouseMove={updatePosition} onMouseDown={submit} style={sliderMouseContainerStyle}>
+      <div className="slider-arrow-ghost-container" style={sliderArrowGhostContainerStyle}>
+        <div className="slider-arrow-ghost" style={sliderArrowGhostStyle}>
+        </div>
+      </div>
+      <div className="slider-mouse-container" onMouseMove={updatePosition} onMouseDown={submit} 
+        onMouseEnter={handleMouseEnter} onMouseOut={handleMouseOut} style={sliderMouseContainerStyle}>
         <div className="slider" style={sliderStyle}>
           <label className="slider-percent" style={percentStyle}>
-            {getTick(angle)}%
+            {invert(getTick(angle))}%
           </label>
         </div>
       </div>
