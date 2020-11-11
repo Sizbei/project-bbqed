@@ -218,8 +218,10 @@ router.route('/downvote').put(passport.authenticate('jwt', { session: false }), 
 
 router.route('/display/:username/reportedPosts/:page').get(async(req, res) => {
     let page = req.params.page
-    let totalReports = Post.count({"reported.0":{"$exists":true}})
-    let recentPosts = await Post.find({"reported.0":{"$exists":true}}, "likes _id poster body reported totalReports")
+    let reports = await Post.count({totalReports:{$gt:0}}).then((total) => {
+        return total
+    }).catch((err) => {res.status(400).json('Error ' + err)})
+    let recentPosts = await Post.find({totalReports:{$gt:0}}, "_id poster reported totalReports")
     .sort({'totalReports':'desc'})
     .skip(10*page)
     .limit(10)
@@ -231,14 +233,17 @@ router.route('/display/:username/reportedPosts/:page').get(async(req, res) => {
         let newPost = {}
         newPost._id = recentPosts[i]._id
         newPost.totalReports = recentPosts[i].totalReports
+        newPostsList[i] = newPost
     }
-    res.json({posts: newPostsList, totalReports:totalReports});
+    res.json({posts: newPostsList, reports:reports});
 })
 
-router.route('/display/:username/reportedComments').get(async(req, res) => {
+router.route('/display/:username/reportedComments/:page').get(async(req, res) => {
     let page = req.params.page
-    let totalReports = Comment.count({"reported.0":{"$exists":true}})
-    let recentComments = await Comment.find({"reported.0":{"$exists":true}}, "likes _id Commenter body reported totalReports")
+    let reports = await Comment.count({totalReports:{$gt:0}}).then((total) => {
+        return total
+    }).catch((err) => {res.status(400).json('Error ' + err)})
+    let recentComments = await Comment.find({totalReports:{$gt:0}}, "_id post commenter reported totalReports")
     .sort({'totalReports':'desc'})
     .skip(10*page)
     .limit(10)
@@ -249,15 +254,36 @@ router.route('/display/:username/reportedComments').get(async(req, res) => {
     for (var i = 0; i < recentComments.length; i++) {
         let newComment = {}
         newComment._id = recentComments[i]._id
-        newComment.totalReports = recentComments[i].totalReports
+        newComment.post = recentComments[i].post
+        newComment.reports = recentComments[i].totalReports
+        newComment[i] = newComment
     }
-    res.json({Comments: newCommentsList, totalReports:totalReports});
+    res.json({comments: newCommentsList, reports:reports});
 })
 
-router.route('display/:username/reported').delete(async(req, res) => {
+router.route('/display/:username/deletePost').delete(async(req, res) => {
     await Post.deleteOne({_id: req.body.id}).then(() => {
-        res.status(400).json("Deleted")
+        res.status(200).json("Deleted")
     }).catch((err) => {res.status(400).json('Error ' + err)})
 })
+
+router.route('/display/:username/deleteComment').delete(async(req, res) => {
+    await Comment.deleteOne({_id: req.body.id}).then(() => {
+        res.status(200).json("Deleted")
+    }).catch((err) => {res.status(400).json('Error ' + err)})
+})
+
+router.route('/display/clearPost').post(async(req, res) => {
+    await Post.updateOne({_id: req.body.id}, {$set:{reported:[], totalReports:0}}).then(() => {
+        res.status(200).json("cleared")
+    }).catch((err) => {res.status(400).json('Error ' + err)})
+})
+
+router.route('/display/clearComment').post(async(req, res) => {
+    await Comment.updateOne({_id: req.body.id}, {$set:{reported:[], totalReports:0}}).then(() => {
+        res.status(200).json("Cleared")
+    }).catch((err) => {res.status(400).json('Error ' + err)})
+})
+
 
 module.exports = router;
