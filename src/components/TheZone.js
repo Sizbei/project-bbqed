@@ -148,19 +148,23 @@ export default function TheZone(props) {
                                     <Link to={'/profile/' + data.poster.username} className="tzone-profile-link">
                                     <ProfilePicture username={data.poster.username} />
                                     </Link>
-                                    
+                                   
                                     <label> <Link to={'/profile/' + data.poster.username} className="tzone-profile-link">{data.poster.username} ({data.poster.acs})  
                                     </Link>
                                     </label>
                                     
                                     <div className="tzone-likes"> <label> {data.likes} </label></div>
                                     </div>
+
+                                    <button className="tzone-report-btn" >{"Report Post"}</button>
+
                                     <div className="tzone-post-info">      
                                     <Link to={"/theZone/display/" + (data._id)} className="tzone-link">
                                         <p> {data.body} </p>
                                     </Link>
-                                </div> 
-                        </div>
+
+                                    </div> 
+                                 </div>
                         <div className="tzone-post-buttons">
                                 <a onClick={() => handlePostAgree(data, index)} className={data.agree ? "tzone-post-button-agree-selected" : "tzone-post-button-agree"}> Agree </a>
                                 <a onClick={() => handlePostDisagree(data, index)} className={data.disagree ? "tzone-post-button-disagree-selected" : "tzone-post-button-disagree"}> Disagree </a>

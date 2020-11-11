@@ -42,7 +42,24 @@
   padding: 8px;
 }
 
+/****************************** Report Post CSS **************************************/
+.tzone-report-btn{
+  background-color: grey;
+  border-radius: 8px;
+  border: 1px solid;
+  color: white;
+  display: flex;
+  font-size: 1.3vw;
+  font-family: 'CommissionerMedium';
+  text-align: center;
+  width: 140px;
+}
 
+
+.tzone-report-btn: hover{
+  background-color: lightgrey;
+  
+}
 
 /**************************** Display Post Related ***********************************/
 
