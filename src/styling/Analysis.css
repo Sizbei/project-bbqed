@@ -62,7 +62,7 @@ body {
 }
 
 .tier-div{
-  margin: 5px 5px 5px 5px;
+  margin: 7px 5px 5px 5px;
   padding: 5px 5px 5px 5px;
   border-radius: 8px;
   border: 1px solid;
@@ -109,11 +109,12 @@ body {
   font-size: 0.8vw;
   margin-left: 5px;
   padding-top: 2px;
+  padding-right: 2px;
 
 }
 
 .analysis-question {
-  margin: 5px 5px 5px 5px;
+  margin: 7px 5px 5px 5px;
   padding: 5px 5px 5px 5px;
   font-size: 0.8vw;
   font-family: 'CommissionerMedium';
