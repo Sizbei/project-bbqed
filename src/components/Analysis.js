@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState, useContext} from 'react';
+import React, {Component, useEffect, useState, useContext, cloneElement} from 'react';
 import ReactPaginate from 'react-paginate';
 import '../styling/Analysis.css';
 import axios from 'axios';
@@ -9,12 +9,15 @@ import { Pagination } from '@material-ui/lab';
 export default function Analysis() {
   
   const [currentTierPosts, setCurrentTierPosts] = useState(1);
-  const [otherTierPosts, setOtherTierPosts] = useState(5);
+  const [otherTierPosts, setOtherTierPosts] = useState(3);
   const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    handlePageChange()
+  },[page]);
 
   const handlePageChange = (event, value) => {
     setPage(value);
-
   };
 
   return(
@@ -30,19 +33,19 @@ export default function Analysis() {
               <label className="analysis-category-label">In Progress (Current ACS tier)</label>
             </div>
 
-            {Array.from(Array(currentTierPosts)).map((x, index) => <AnalysisPost key={index} type={"current"}/>)}
+            {Array.from(Array(currentTierPosts)).map((x, index) => <AnalysisPost post={page} type={"current"}/>)}
 
             <div className="analysis-category-div">
               <label className="analysis-category-label">In Progress (Other ACS tiers)</label>
             </div>
 
-            {Array.from(Array(otherTierPosts)).map((x, index) => <AnalysisPost key={index} type={"other"}/>)}
+            {Array.from(Array(otherTierPosts)).map((x, index) => <AnalysisPost post={index} type={"other"}/>)}
 
             <div className="analysis-category-div">
               <label className="analysis-category-label">Past Debates and Analysis</label>
             </div>
 
-            {Array.from(Array(10)).map((x, index) => <AnalysisPost key={index + (page-1) * 10} type={"past"}/>)}
+            {Array.from(Array(10)).map((x, index) => <AnalysisPost post={page} type={"past"}/>)}
 
             <div className="analysis-pagination">
               <Pagination count={10} color="primary" onChange={handlePageChange} />
