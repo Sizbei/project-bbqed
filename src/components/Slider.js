@@ -6,7 +6,8 @@ import AuthService from '../Services/AuthService';
 import '../styling/Slider.css';
 
 export default function Slider(props) {
-  const scale = "scale" in props? props.scale : 5.0;
+  const scale = "scale" in props? props.scale : 1.0;
+  const [lock, setLock] = useState(false);
   const [angle, setAngle] = useState(180);
   const sliderContainerSize = 9;
   const minDeg = 24;
@@ -47,6 +48,10 @@ export default function Slider(props) {
 
   const updatePosition = e => {
     e.stopPropagation();
+    if (lock) {
+      return;
+    }
+
     const target = e.currentTarget.getBoundingClientRect();
     const x = 2 * ((e.clientX - target.left) / target.width - 0.5);
     const y = -2 * ((e.clientY - target.top) / target.height - 0.5);
@@ -66,6 +71,7 @@ export default function Slider(props) {
   const submit = e => {
     e.stopPropagation();
     console.log("Clicked!");
+    setLock(true);
   }
 
   // Map a set of degree measures to a color
