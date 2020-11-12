@@ -262,28 +262,27 @@ router.route('/display/:username/reportedComments/:page').get(async(req, res) =>
 })
 
 router.route('/display/:username/deletePost').delete(async(req, res) => {
-    await Post.deleteOne({_id: req.body.id}).then(() => {
+    await Post.deleteOne({_id: req.body._id}).then(() => {
         res.status(200).json("Deleted")
     }).catch((err) => {res.status(400).json('Error ' + err)})
 })
 
 router.route('/display/:username/deleteComment').delete(async(req, res) => {
-    await Comment.deleteOne({_id: req.body.id}).then(() => {
+    await Comment.deleteOne({_id: req.body._id}).then(() => {
         res.status(200).json("Deleted")
     }).catch((err) => {res.status(400).json('Error ' + err)})
 })
 
 router.route('/display/clearPost').post(async(req, res) => {
-    await Post.updateOne({_id: req.body.id}, {$set:{reported:[], totalReports:0}}).then(() => {
+    await Post.updateOne({_id: req.body._id}, {$set:{reported:[], totalReports:0}}).then(() => {
         res.status(200).json("cleared")
     }).catch((err) => {res.status(400).json('Error ' + err)})
 })
 
 router.route('/display/clearComment').post(async(req, res) => {
-    await Comment.updateOne({_id: req.body.id}, {$set:{reported:[], totalReports:0}}).then(() => {
+    await Comment.updateOne({_id: req.body._id}, {$set:{reported:[], totalReports:0}}).then(() => {
         res.status(200).json("Cleared")
     }).catch((err) => {res.status(400).json('Error ' + err)})
 })
-
 
 module.exports = router;
