@@ -20,13 +20,14 @@ router.route('/display/:username/focused').get(passport.authenticate('jwt', { se
 });
 
 router.route('/display/:username').get(passport.authenticate('jwt', { session: false }), async(req, res) => {
-    let recentPosts = await Post.find({}, "likes _id poster body upvoted downvoted" ).sort({'createdAt':'desc'}).limit(10).then(async (post) => {
+    let recentPosts = await Post.find({}, "likes _id poster body upvoted downvoted reported" ).sort({'createdAt':'desc'}).limit(10).then(async (post) => {
         return post
     }).catch((err) => {res.status(400).json('Error ' + err)})
     let newPostsList = []
     for (var i = 0; i < recentPosts.length; i++) {
         let upvoted = recentPosts[i].upvoted.includes(req.params.username)
         let downvoted = recentPosts[i].downvoted.includes(req.params.username)
+        let reported = recentPosts[i].reported.includes(req.params.username)
         let newPost = {}
         newPost._id = recentPosts[i]._id
         newPost.likes = recentPosts[i].likes
@@ -43,6 +44,7 @@ router.route('/display/:username').get(passport.authenticate('jwt', { session: f
         newPost.body = recentPosts[i].body
         newPost.upvoted = upvoted
         newPost.downvoted = downvoted
+        newPost.reported = reported
         newPostsList[i] = newPost
     }
     res.json({posts: newPostsList});
@@ -53,7 +55,7 @@ router.route('/display/:username/:post').get(passport.authenticate('jwt', { sess
         return post
     }).catch((err) => {res.status(400).json('Error ' + err)})
     let newComments = []
-    let comments = await Comment.find({post: req.params.post}, "commenter _id body likes upvoted downvoted").sort({'likes':'desc', 'createdAt': 'desc'}).then((comment) => {
+    let comments = await Comment.find({post: req.params.post}, "commenter _id body likes upvoted downvoted reported").sort({'likes':'desc', 'createdAt': 'desc'}).then((comment) => {
         return comment;
     }).catch((err) => {res.status(400).json('Error ' + err)})
     for (var j = 0; j < comments.length; j++) {
@@ -73,10 +75,12 @@ router.route('/display/:username/:post').get(passport.authenticate('jwt', { sess
         newComment.body = comments[j].body
         newComment.upvoted = comments[j].upvoted.includes(req.params.username);
         newComment.downvoted = comments[j].downvoted.includes(req.params.username);
+        newComment.reported = comments[j].reported.includes(req.params.username)
         newComments[j] = newComment
     }
     let upvoted = singlePost.upvoted.includes(req.params.username)
     let downvoted = singlePost.downvoted.includes(req.params.username)
+    let reported = singlePost.reported.includes(req.params.username)
     let newPost = {}
     newPost._id = singlePost._id
     newPost.likes = singlePost.likes
@@ -94,6 +98,7 @@ router.route('/display/:username/:post').get(passport.authenticate('jwt', { sess
     newPost.upvoted = upvoted
     newPost.downvoted = downvoted
     newPost.comments = newComments
+    newPost.reported = reported
     res.json({posts: newPost});
 })
 
@@ -214,6 +219,22 @@ router.route('/downvote').put(passport.authenticate('jwt', { session: false }), 
     } else {
         res.status(400).json('Missing Post or Comment Id')
     }
+})
+
+router.route("/reportPost").post(async(req, res) => {
+    await Post.updateOne({_id: req.body.post}, {$push:{reported:req.body.user}, $inc:{totalReports:1}}).then(() =>{
+        res.status(200).json('Reported!')
+    }).catch((err) => {
+        res.status(400).json('Error: ' + err)
+    })
+})
+
+router.route("/reportComment").post(async(req, res) => {
+    await Comment.updateOne({_id: req.body.comment}, {$push:{reported:req.body.user}, $inc:{totalReports:1}}).then(() =>{
+        res.status(200).json('Reported!')
+    }).catch((err) => {
+        res.status(400).json('Error: ' + err)
+    })
 })
 
 module.exports = router;
