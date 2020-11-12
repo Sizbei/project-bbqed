@@ -147,6 +147,17 @@
     font-family: "CommissionerMedium";
   }
 
+  .left-user-info {
+    height: 60%;
+    width: 80%;
+    float:left;
+  }
+
+  .right-user-info {
+    height: 60%;
+    width: 20%;
+    float:left;
+  }
 
   @font-face {
     font-family: 'CommissionerMedium';

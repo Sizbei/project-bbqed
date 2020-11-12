@@ -43,13 +43,14 @@ export default function Analysis(props) {
               <div className="insertSlider"/>
             </div>
             <div className="analysis-user">
-              <label className="analysis-username">Username</label>
-              <label> </label>
-              <label className="analysis-ACS">543</label>
-              <label> </label>
-
-              <label className="analysis-time-ago">6 hours ago</label>
-              <br></br>
+              <div className="left-user-info">
+                <label className="analysis-username">Username</label>
+                <label>  </label>
+                <label className="analysis-ACS">(543)</label>
+              </div>
+              <div className="right-user-info">
+                <label className="analysis-time-ago">6 hours ago</label>
+              </div>
               <label className="analysis-additional-comment">Sample additional comment</label>
             </div>
           
