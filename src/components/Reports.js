@@ -1,10 +1,12 @@
 
-import React, {useContext, useEffect, setState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {AuthContext} from '../Context/AuthContext';
 import { HashLink as Link } from 'react-router-hash-link';
+import "../styling/Reports.css"
 
 function Reports(props){ 
   const reports = props.reports;
+  const type = props.type; 
 
   const deleteReport = (reportId) => { 
 
@@ -20,12 +22,12 @@ function Reports(props){
     {
       reports.map((data) => {
         return (
-          <div>
-            <h1> This {data.type} has been reported </h1> 
-            <label>id: <Link to={data.type === "post" ? "/theZone/display/" + "5f9ef5615edae35730410775#5fa0723232c66f2fbc57227e" : null}>{data.id}</Link> </label>
-            <label> {data.count} </label>
-            <button onClick={()=> deleteReport(data.reportId)}> Close Report </button>
-            <button onClick={()=> {data.type === "post" ? deletePost(data.id) : deleteComment(data.id)}}> Delete {data.type} </button>
+          <div className="reports-post-background">
+            <h3> This {type} has been reported </h3> 
+            <label> {data.totalReports} </label>
+            <label>id: <Link to={type === "post" ? "/theZone/display/" + data._id : "/theZone/display/" + data.post + "#" + data._id}>{data._id}</Link> </label>
+            <button onClick={()=> {type === "post" ? deleteReport(data._id): deleteReport(data.post)}}> Close Report </button>
+            <button onClick={()=> {type === "post" ? deletePost(data._id) : deleteComment(data._id)}}> Delete {type} </button>
           </div>
         )
       })
@@ -35,21 +37,70 @@ function Reports(props){
   )
 }
 export default function Report() { 
-  //const [reports, setReports] = setState([]); 
+  const [reportList, setReportList] = useState([]); 
+  const [currentPage, setCurrentPage] = useState(0);
+  const authContext = useContext(AuthContext); 
+  const [type, setType] = useState("post"); 
+  /*
   const dummyData = [
-    {reportId: 1, type: "post" , id: "5f9ef5615edae35730410775", count: 20}, 
-    {reportId: 2, type: "post" , id: "5fa616657602a8956000bb75", count: 10}, 
-    {reportId: 3, type: "post" , id: "5fa4bf66333241970c61e7e9", count: 1}
+    {reportId: 1, type: "post" , _id: "5f9ef5615edae35730410775", reports: 20}, 
+    {reportId: 2, type: "post" , _id: "5fa616657602a8956000bb75", reports: 10}, 
+    {reportId: 3, type: "post" , _id: "5fa4bf66333241970c61e7e9", reports: 1}
   ];
-  useEffect(() =>  {
+  */
+ 
+  const onChangeSelect = (e) => {
+    console.log(e.target.value);
+    if (e.target.value === "Posts") { 
+      setType("post"); 
+      window.location.reload(); 
+    }
     
-  }, [])
-  return (
-    <div>
-      <h1> Reports </h1>
-      <div>
+    else if (e.target.value === "Comments") {
+      setType("comment"); 
+      window.location.reload(); 
+    }
+    
+  }
+  
+  const handlePosts=  () => {
+    fetch("/zone/display/" + authContext.user.username + "/reportedPosts/" + currentPage).then(response => response.json()) 
+    .then( data => {
+      setReportList(data.posts); 
+      
+    })
+  }
 
-        <Reports reports={dummyData}/>
+  const handleComment = () => { 
+    fetch("/zone/display/" + authContext.user.username + "/reportedComments/" + currentPage).then(response => response.json()) 
+    .then (data => {
+
+    })
+  }
+  useEffect( () =>  {
+    if (type === "post") {
+      handlePosts(); 
+    }
+    else if (type === "comment") {
+      
+    }
+  }, [])
+  //
+  return (
+    <div className="reports-background">
+      <div className="reports-container" >
+        <div>
+          <h1> Reports </h1>
+          <div>
+            <select onChange={onChangeSelect}>
+              <option> Posts </option>
+              <option> Comments </option>
+            </select>
+          </div>
+          <div>
+          <Reports reports={reportList} type={type}/>
+          </div>
+        </div>
       </div>
     </div>
   )

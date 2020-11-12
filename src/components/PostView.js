@@ -25,6 +25,7 @@ export default function View(props) {
       
         fetch(path).then(res => res.json())
         .then(data => {
+          console.log(data); 
           setUsername(data.posts.poster.username); 
           setAcs(data.posts.poster.acs); 
           setLikes(data.posts.likes); 
