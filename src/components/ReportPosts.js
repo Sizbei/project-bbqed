@@ -28,7 +28,7 @@ function Pagination(props) {
 }
 
 
-export default function Report() { 
+export default function Report(props) { 
   const [reportList, setReportList] = useState([]); 
   const [currentPage, setCurrentPage] = useState(0);
   const authContext = useContext(AuthContext); 
@@ -43,18 +43,15 @@ export default function Report() {
     
     else if (e.target.value === "Comments") {
       setType("comment"); 
+      props.history.push('/reports/comment');
       window.location.reload(); 
     }
     
   }
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
-    if (type === "post") {
-      handlePosts(); 
-    }
-    else if (type === "comment") {
-      handleComment(); 
-    }
+    handlePosts(); 
+
   } 
   const handlePosts=  () => {
     fetch("/zone/display/" + authContext.user.username + "/reportedPosts/" + currentPage).then(response => response.json()) 
@@ -64,20 +61,10 @@ export default function Report() {
     })
   }
 
-  const handleComment = () => { 
-    fetch("/zone/display/" + authContext.user.username + "/reportedComments/" + currentPage).then(response => response.json()) 
-    .then (data => {
-      setReportList(data.comments);
-    })
-  }
   useEffect( () =>  {
-    console.log(type); 
-    if (type === "post") {
-      handlePosts(); 
-    }
-    else if (type === "comment") {
-      handleComment(); 
-    }
+
+    handlePosts(); 
+    
   }, [])
   //
   return (
@@ -85,7 +72,7 @@ export default function Report() {
       <div className="reports-container" >
         <div>
           <h1> Reports </h1>
-          <div>
+          <div className="reports-selection">
             <select onChange={onChangeSelect}>
               <option> Posts </option>
               <option> Comments </option>

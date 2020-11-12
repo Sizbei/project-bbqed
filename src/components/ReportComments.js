@@ -27,21 +27,17 @@ function Pagination(props) {
 }
 
 
-export default function Report() { 
+export default function Report(props) { 
   const [reportList, setReportList] = useState([]); 
   const [currentPage, setCurrentPage] = useState(0);
   const authContext = useContext(AuthContext); 
-  const [type, setType] = useState("post"); 
+  const [type, setType] = useState("comment"); 
 
   const onChangeSelect = (e) => {
     console.log(e.target.value);
     if (e.target.value === "Posts") { 
       setType("post"); 
-      window.location.reload(); 
-    }
-    
-    else if (e.target.value === "Comments") {
-      setType("comment"); 
+      props.history.push('/reports/post');
       window.location.reload(); 
     }
     
@@ -68,9 +64,9 @@ export default function Report() {
       <div className="reports-container" >
         <div>
           <h1> Reports </h1>
-          <div>
-            <select onChange={onChangeSelect}>
-              <option> Posts </option>
+          <div className="reports-selection">
+            <select value={"Comments"} onChange={onChangeSelect}>
+              <option> Posts  </option>
               <option> Comments </option>
             </select>
           </div>

@@ -21,3 +21,10 @@
  
 }
 
+.reports-selection select{
+  height: 3vw;
+  width: 10vw;  
+  background-color: #747474; 
+  Border: none; 
+
+}
