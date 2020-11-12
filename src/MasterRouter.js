@@ -16,7 +16,8 @@ import Settings from "./components/Settings"
 import Header from "./components/Header"
 import Citations from "./components/Citations"
 import Queue from "./components/Queue"
-import Reports from "./components/Reports"
+import ReportPost from "./components/ReportPosts"
+import ReportComment from "./components/ReportComments"
 
 function App() {
   //example of using authContext in function
@@ -31,7 +32,8 @@ function App() {
       <PublicRoute path="/" exact component={Login} />
       <PrivateRoute path="/TheZone" exact component={TheZone} />
       <PrivateRoute path="/TheZone/display" component={Post} />
-      <PrivateRoute path= "/Reports" component={Reports}/>
+      <PrivateRoute path= "/Reports/post" component={ReportPost}/>
+      <PrivateRoute path= "/Reports/comment" component={ReportComment}/>
       <PrivateRoute path="/Trivia" component={Trivia} />
       <PrivateRoute path="/Analysis" component={Analysis} />
       <PrivateRoute path="/PicksAndPredictions" component={PicksAndPredictions} />
