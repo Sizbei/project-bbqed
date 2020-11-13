@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const analysisPostSchema = new Schema({
 
     analysis: {
-        type: [mongoose.Schema.Types.ObjectId],
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'analysis'
     },
     user: {
@@ -17,7 +17,35 @@ const analysisPostSchema = new Schema({
         unique: false,
         required: true,
     },
-
+    averageScore: {
+        type: Number,
+        unique: false,
+        required: true,
+    },
+    scoreCount: {
+        type: Number,
+        unique: false,
+        required: true,
+    },
+    scoreCounts: {
+        type: [Number],
+        unique: false,
+        required: true,
+    },
+    scoreHistory: [
+        {
+            user: {
+                type: String,
+                unique: false,
+                required: true,
+            },
+            score: {
+                type: Number,
+                unique: false,
+                required: true,
+            }
+        }
+    ]
 },{
     timestamps: true,
 })
