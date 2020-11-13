@@ -8,10 +8,12 @@ export default function Reports(props){
   const type = props.type; 
   const authContext = useContext(AuthContext);
   const deleteReportPost = (postId) => { 
+    //alert('deleting report post');
+    //console.log(postId); 
     const body = {
       _id: postId, 
     }
-    fetch('/display/clearPost', {
+    fetch('/zone/display/clearPost', {
       method :  "post",
       body : JSON.stringify(body),
       headers: {
@@ -24,12 +26,15 @@ export default function Reports(props){
     .catch((error) => {
       console.log(error);
     })
+    
   }
   const deleteReportComment = (commentId) => {
+    //alert('deleting report comment');
+  
     const body = {
       _id: commentId, 
     }
-    fetch('/display/clearComment', {
+    fetch('/zone/display/clearComment', {
       method :  "post",
       body : JSON.stringify(body),
       headers: {
@@ -42,12 +47,15 @@ export default function Reports(props){
     .catch((error) => {
       console.log(error);
     })
+    
   }
   const deletePost = (postId) => {
+   // alert('deleting post');
+    
     const body = {
       _id: postId, 
     }
-    fetch('/display/' + authContext.user.username +'/deletePost', {
+    fetch('/zone/display/' + authContext.user.username +'/deletePost', {
       method :  "delete",
       body : JSON.stringify(body),
       headers: {
@@ -60,12 +68,15 @@ export default function Reports(props){
     .catch((error) => {
       console.log(error);
     })
+    
   }
   const deleteComment = (commentId) => {
+    //alert('deleting comment');
+    
     const body = {
       _id: commentId, 
     }
-    fetch('/display/' + authContext.user.username +'/deleteComment', {
+    fetch('/zone/display/' + authContext.user.username +'/deleteComment', {
       method :  "delete",
       body : JSON.stringify(body),
       headers: {
@@ -78,6 +89,7 @@ export default function Reports(props){
     .catch((error) => {
       console.log(error);
     })
+    
   }
   return (
     <div>
