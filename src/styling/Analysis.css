@@ -115,7 +115,7 @@
   }
 
   .analysis-user {
-      height: 50px;
+      height: 2.6316vw;
       width: 75%;
       margin-left: 5%;
     float:left;
@@ -128,21 +128,34 @@
 }
 
   .analysis-username {
+    font-size: 0.85vw;
     color:white;
     font-family: "CommissionerMedium";
   }
 
+  .analysis-ACS-div {
+    margin-left: 0.6vw;
+  }
+
   .analysis-ACS {
+    font-size: 0.85vw;
     color:#747474;
     font-family: "CommissionerMedium";
   }
+
+  .analysis-histogram {
+    margin-left: 0.6vw;
+  }
   
   .analysis-time-ago {
+    margin-left: auto;
+    font-size: 0.85vw;
     color:white;
     font-family: "CommissionerMedium";
   }
 
   .analysis-additional-comment {
+    font-size: 0.85vw;
     color:white;
     font-family: "CommissionerMedium";
   }
@@ -150,13 +163,7 @@
   .left-user-info {
     height: 60%;
     width: 80%;
-    float:left;
-  }
-
-  .right-user-info {
-    height: 60%;
-    width: 20%;
-    float:left;
+    display: flex;
   }
 
   @font-face {
