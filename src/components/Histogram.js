@@ -19,11 +19,19 @@ export default function Histogram(props) {
     }
     return false;
   }());
+
+  // squash
+  if (nonZero) {
+    const sum = data.reduce((total, num) => total + num, 0);
+    for (let i = 0; i < data.length; i++) {
+      data[i] /= sum;
+    }
+  }
   
   const totalmul = (function() {
     let s = 0;
 
-    for (let i = -100; i <= 100; i++) {
+    for (let i = -100; i <= 200; i++) {
       s += Math.pow(r, k * Math.pow(i, 2))
     }
     console.log("total mul", s);
@@ -45,17 +53,19 @@ export default function Histogram(props) {
     data.forEach((_, i) => {
       total += data[i] * Math.pow(r, k * Math.pow(i - j, 2));
     })
-    return total * multiplier[j];
+    return (total * multiplier[j]).toFixed(6);
   })
 
   console.log("transform", transform);
   
-  // const test = [[0, 0], [1, 2], [2, 0]];
-  
+  // set the min x axis
+  const append = transform.concat([Math.min(...transform) / 1.003]);
+
   const lineGraphProps = {
-    data: transform,
+    data: append,
     smoothing: 0,
-    height: '109.5%',
+    height: '109.5%', // hide overflow y
+    width: '101.04%', // hide overflow x (from append)
     accent: 'palevioletred',
     fillBelow: 'rgba(200,67,23,0.1)',
   };
