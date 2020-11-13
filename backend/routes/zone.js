@@ -274,7 +274,6 @@ router.route('/display/:username/deleteComment').delete(async(req, res) => {
 })
 
 router.route('/display/clearPost').post(async(req, res) => {
-    console.log(req.body._id); 
     await Post.updateOne({_id: req.body._id}, {$set:{reported:[], totalReports:0}}).then(() => {
         res.status(200).json("cleared")
     }).catch((err) => {res.status(400).json('Error ' + err)})
