@@ -51,6 +51,9 @@ app.use('/trivia/head-to-head', headToHeadTriviaRouter)
 const zoneRouter = require('./routes/zone');
 app.use('/zone', zoneRouter)
 
+const analysisRouter = require('./routes/analysis');
+app.use('/analysis', analysisRouter)
+
 //App is now listening for calls
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
