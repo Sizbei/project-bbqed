@@ -87,7 +87,7 @@ export default function Reports(props){
           <div className="reports-body-container">
             <div className="reports-body-header-container"> 
               <h3> This {type} has been reported </h3> 
-              <h5> Reported {data.totalReports} time(s) </h5>
+              <h5> Reported {type === "post" ? data.totalReports: data.reports} time(s) </h5>
             </div>
             <label>id: <Link to={type === "post" ? "/theZone/display/" + data._id : "/theZone/display/" + data.post + "#" + data._id}>{data._id}</Link> </label>
             <div className="reports-buttons">

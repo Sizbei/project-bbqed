@@ -27,7 +27,7 @@ export default function Report(props) {
     .then (data => {
       setReportList(data.comments);
       setTotalNumber(data.reports); 
-      //console.log(data); 
+      console.log(data); 
     })
   }
   useEffect( () =>  {
@@ -47,7 +47,14 @@ export default function Report(props) {
           </div>
           <div>
           <Reports reports={reportList} type={type}/>
-          <Pagination totalPages={Math.ceil(totalNumber/10)} onPageChange={(e, d) => setCurrentPage(d.activePage)} activePage={currentPage}/>
+          <Pagination 
+          color="primary" 
+          size="large" 
+          shape="rounded" 
+          totalPages={Math.ceil(totalNumber/10)} 
+          onPageChange={(e, d) => setCurrentPage(d.activePage)} 
+          activePage={currentPage}
+          />
           </div>
         </div>
       </div>

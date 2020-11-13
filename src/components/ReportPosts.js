@@ -54,7 +54,7 @@ export default function Report(props) {
           </div>
           <div>
           <Reports reports={reportList} type={type}/>
-          <Pagination totalPages={Math.ceil(totalNumber/10)} onPageChange={(e, d) => setCurrentPage(d.activePage)} activePage={currentPage}/>   
+          <Pagination shape="rounded"totalPages={Math.ceil(totalNumber/10)} onPageChange={(e, d) => setCurrentPage(d.activePage)} activePage={currentPage}/>   
           </div>
         </div>
       </div>
