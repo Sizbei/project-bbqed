@@ -247,8 +247,8 @@ router.route('/display/:username/reportedComments/:page').get(async(req, res) =>
     .sort({'totalReports':'desc'})
     .skip(10*page)
     .limit(10)
-    .then((Comments) => {
-        return Comments
+    .then((comments) => {
+        return comments
     }).catch((err) => {res.status(400).json('Error ' + err)})
     let newCommentsList = []
     for (var i = 0; i < recentComments.length; i++) {
@@ -256,7 +256,7 @@ router.route('/display/:username/reportedComments/:page').get(async(req, res) =>
         newComment._id = recentComments[i]._id
         newComment.post = recentComments[i].post
         newComment.reports = recentComments[i].totalReports
-        newComment[i] = newComment
+        newCommentsList[i] = newComment
     }
     res.json({comments: newCommentsList, reports:reports});
 })
