@@ -1,37 +1,16 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {AuthContext} from '../Context/AuthContext';
+import { Pagination } from 'semantic-ui-react';
 import Reports from './Reports'
 import "../styling/Reports.css"
-
-function Pagination(props) {
-  const pageNumbers = []; 
-  for(let i = 1; i <= Math.ceil(props.totalPosts/props.postsPerPage); i++) {
-      pageNumbers.push(i); 
-  }
-  
-  return (
-      <nav> 
-          <ul className="reports-pagination"> 
-              {pageNumbers.map(number => ( 
-                <div className='reports-page-box'>
-                    <button key={number} onClick={()=>props.paginate(number)} > 
-                    {number}
-                    </button>
-                </div>
-                
-
-              ))}
-          </ul>
-      </nav>
-  )
-}
 
 
 export default function Report(props) { 
   const [reportList, setReportList] = useState([]); 
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const authContext = useContext(AuthContext); 
   const [type, setType] = useState("comment"); 
+  const [totalNumber, setTotalNumber] = useState(0); 
 
   const onChangeSelect = (e) => {
     console.log(e.target.value);
@@ -42,22 +21,18 @@ export default function Report(props) {
     }
     
   }
-  const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    handleComment(); 
 
-  } 
-
-
-  const handleComment = () => { 
-    fetch("/zone/display/" + authContext.user.username + "/reportedComments/" + currentPage).then(response => response.json()) 
+  const handleComments = (page) => { 
+    fetch("/zone/display/" + authContext.user.username + "/reportedComments/" + page).then(response => response.json()) 
     .then (data => {
       setReportList(data.comments);
+      setTotalNumber(data.reports); 
+      //console.log(data); 
     })
   }
   useEffect( () =>  {
-      handleComment(); 
-  }, [])
+    handleComments(currentPage - 1); 
+  }, [currentPage])
   //
   return (
     <div className="reports-background">
@@ -72,6 +47,7 @@ export default function Report(props) {
           </div>
           <div>
           <Reports reports={reportList} type={type}/>
+          <Pagination totalPages={Math.ceil(totalNumber/10)} onPageChange={(e, d) => setCurrentPage(d.activePage)} activePage={currentPage}/>
           </div>
         </div>
       </div>

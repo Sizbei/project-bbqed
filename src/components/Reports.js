@@ -84,12 +84,16 @@ export default function Reports(props){
     {
       reports.map((data) => {
         return (
-          <div className="reports-post-background">
-            <h3> This {type} has been reported </h3> 
-            <label> {data.totalReports} </label>
+          <div className="reports-body-container">
+            <div className="reports-body-header-container"> 
+              <h3> This {type} has been reported </h3> 
+              <h5> Reported {data.totalReports} time(s) </h5>
+            </div>
             <label>id: <Link to={type === "post" ? "/theZone/display/" + data._id : "/theZone/display/" + data.post + "#" + data._id}>{data._id}</Link> </label>
-            <button onClick={()=> {type === "post" ? deleteReportPost(data._id): deleteReportComment(data._id)}}> Close Report </button>
-            <button onClick={()=> {type === "post" ? deletePost(data._id) : deleteComment(data._id)}}> Delete {type} </button>
+            <div className="reports-buttons">
+              <button onClick={()=> {type === "post" ? deleteReportPost(data._id): deleteReportComment(data._id)}}> Close Report </button>
+              <button onClick={()=> {type === "post" ? deletePost(data._id) : deleteComment(data._id)}}> Delete {type} </button>
+            </div> 
           </div>
         )
       })
