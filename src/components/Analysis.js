@@ -1,61 +1,92 @@
-import React, {Component, useEffect, useState, useContext, cloneElement} from 'react';
-import ReactPaginate from 'react-paginate';
-import '../styling/Analysis.css';
+import React, {useEffect, useContext, useState} from 'react';
 import axios from 'axios';
 import Header from './Header';
-import AnalysisPost from "./AnalysisPost"
-import { Pagination } from '@material-ui/lab';
+import {AuthContext} from '../Context/AuthContext';
+import '../styling/Analysis.css'
 
-export default function Analysis() {
-  
-  const [currentTierPosts, setCurrentTierPosts] = useState(1);
-  const [otherTierPosts, setOtherTierPosts] = useState(3);
-  const [page, setPage] = useState(1);
+export default function Analysis(props) {
+   
+  const authContext = useContext(AuthContext);
+  const [formState, setFormState] = useState("discussion");
+  const [tier, setTier] = useState("Analyst");
+  const [response, setResponse] = useState("");
+  const [question, setQuestion] = useState("Sample Question to be Answered");
+  const [debates, setDebates] = useState([]);
 
   useEffect(() => {
-    handlePageChange()
-  },[page]);
+    //Find out if the user had already answered the question and set new form state
+    setFormState("discussion");
 
-  const handlePageChange = (event, value) => {
-    setPage(value);
-  };
+    //Get user's tier and set tier
+    //setTier();
+    //setDebates();
+  })
 
-  return(
-
-    <body>
-        <div className="analysis-page">
-
-          <div className="analysis-container">
-
-            <h1 className="analysis-title">Debates and Analysis</h1>
-
-            <div className="analysis-category-div">
-              <label className="analysis-category-label">In Progress (Current ACS tier)</label>
+  if (formState === "discussion") {
+    return(
+    <div className='analysis-background'>
+      <div className="analysis-header">
+        <span>
+          <label className="analysis-question-header">Daily Question </label>
+          <label className="analysis-question-difficulty">{tier}</label>
+        </span>
+        <label className="analysis-question-text">Sample question to be answered</label>
+        </div>
+        <div className="analysis-question-image">
+          {/* Insert image here; div used as a placeholder  */}
+          <div className="sample-div"/>
+        </div>
+        <div className="analysis-comments"> 
+      
+        <div>
+            <div className="analysis-slider">
+              <div className="insertSlider"/>
             </div>
-
-            {Array.from(Array(currentTierPosts)).map((x, index) => <AnalysisPost post={page} type={"current"}/>)}
-
-            <div className="analysis-category-div">
-              <label className="analysis-category-label">In Progress (Other ACS tiers)</label>
+            <div className="analysis-user">
+              <div className="left-user-info">
+                <label className="analysis-username">Username</label>
+                <label>  </label>
+                <label className="analysis-ACS">(543)</label>
+              </div>
+              <div className="right-user-info">
+                <label className="analysis-time-ago">6 hours ago</label>
+              </div>
+              <label className="analysis-additional-comment">Sample additional comment</label>
             </div>
-
-            {Array.from(Array(otherTierPosts)).map((x, index) => <AnalysisPost post={index} type={"other"}/>)}
-
-            <div className="analysis-category-div">
-              <label className="analysis-category-label">Past Debates and Analysis</label>
-            </div>
-
-            {Array.from(Array(10)).map((x, index) => <AnalysisPost post={page} type={"past"}/>)}
-
-            <div className="analysis-pagination">
-              <Pagination count={10} color="primary" onChange={handlePageChange} />
-            </div>
-            
-
-          </div>
+          
+          
+        </div>
+       
+        {debates.map((data, index) => {
+          return (
+              <div>
+              </div>
+          )
+      })}
       </div>
-    </body>
-    
-  );
-    
-}
+  </div>
+    );
+  } 
+  else if (formState === "dailyQuestion") {
+    return(
+      <div className='analysis-background'>
+        <div className="analysis-header">
+        <span>
+          <label className="analysis-question-header">Daily Question </label>
+          <label className="analysis-question-difficulty">{tier}</label>
+        </span>
+        <label className="analysis-question-text">{question}</label>
+        </div>
+        <div className="analysis-question-image">
+          {/* Insert image here; div used as a placeholder  */}
+          <div className="sample-div"/>
+        </div>
+        <div className='analysis-response'>
+          <label className='analysis-response-header'>Your Response</label>
+          <textarea type="text" className="analysis-response-input" maxLength="1000"></textarea>
+          <button className='analysis-response-submit'>Submit</button>
+        </div>
+      </div>
+      );
+  }
+} 
