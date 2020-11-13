@@ -53,7 +53,8 @@ const generateAnalysisResponse = (analysis, curTime) => {
     return response
 }
 
-router.route('/current/:username').get(async (req, res) => {
+//router.route('/current/:username').get(async (req, res) => {
+router.route('/current/:username').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
     try{
         const tier= await getTier(req.params.username);
         if (tier) {
@@ -102,7 +103,8 @@ router.route('/current/:username').get(async (req, res) => {
     }
 })
 
-router.route('/past/:limit').get(async (req, res) => {
+//router.route('/past/:limit').get(async (req, res) => {
+router.route('/past/:limit').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
     try {
         if(req.params.limit > 0) {
             let response = [];
