@@ -1,7 +1,6 @@
 //Start every route with these lines - connects with model
 const router = require('express').Router();
 let analysis = require('../models/analysis');
-let analysisQuestion = require('../models/analysisquestion');
 let acs = require('../models/acs');
 
 const passport = require('passport');
