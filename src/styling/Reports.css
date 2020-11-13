@@ -67,5 +67,29 @@
   border: none;   
   height:2vw;  
   width: 8vw;
+  font-size: 0.9vw; 
+  background-color: #222629;
+  color: white; 
+  border-color: white;
+  border-style: solid; 
+  font-family: 'CommissionerBold';
+}
+.reports-buttons button:hover{ 
+  color: #222629;
+  background-color: white; 
   cursor: pointer; 
+}
+.MuiPagination-ul Button{ 
+  color: white; 
+  font-family: 'CommissionerBold';
+}
+
+@font-face {
+  font-family: 'CommissionerMedium';
+  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Medium.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'CommissionerBold';
+  src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Bold.ttf) format('truetype');
 }

@@ -1,9 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {AuthContext} from '../Context/AuthContext';
-import { Pagination } from 'semantic-ui-react';
+import Pagination from "@material-ui/lab/Pagination"
 import Reports from './Reports'
 import "../styling/Reports.css"
-
 
 export default function Report(props) { 
   const [reportList, setReportList] = useState([]); 
@@ -11,6 +10,7 @@ export default function Report(props) {
   const authContext = useContext(AuthContext); 
   const [type, setType] = useState("comment"); 
   const [totalNumber, setTotalNumber] = useState(0); 
+
 
   const onChangeSelect = (e) => {
     console.log(e.target.value);
@@ -21,13 +21,24 @@ export default function Report(props) {
     }
     
   }
-
-  const handleComments = (page) => { 
-    fetch("/zone/display/" + authContext.user.username + "/reportedComments/" + page).then(response => response.json()) 
+  const handlePageChange = (event, newPage) => {
+    setCurrentPage(newPage); 
+  }
+  
+  //count={10} color="primary" onChange={handlePageChange}
+  /*color="primary" 
+          size="large" 
+          shape="rounded" 
+          totalPages={Math.ceil(totalNumber/10)} 
+          onPageChange={(e, d) => setCurrentPage(d.activePage)} 
+          activePage={currentPage}
+          */
+  const handleComments = async (page) => { 
+    await fetch("/zone/display/" + authContext.user.username + "/reportedComments/" + page).then(response => response.json()) 
     .then (data => {
       setReportList(data.comments);
       setTotalNumber(data.reports); 
-      console.log(data); 
+      //console.log(data); 
     })
   }
   useEffect( () =>  {
@@ -45,16 +56,9 @@ export default function Report(props) {
               <option> Comments </option>
             </select>
           </div>
-          <div>
+          <div className ="reports-full-body-container">
           <Reports reports={reportList} type={type}/>
-          <Pagination 
-          color="primary" 
-          size="large" 
-          shape="rounded" 
-          totalPages={Math.ceil(totalNumber/10)} 
-          onPageChange={(e, d) => setCurrentPage(d.activePage)} 
-          activePage={currentPage}
-          />
+          <Pagination className="MuiPagination-ul" color="primary" count={Math.ceil(totalNumber/10)} onChange={handlePageChange} />
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 
 import React, {useContext, useEffect, useState} from 'react';
-import { Pagination } from 'semantic-ui-react';
 import {AuthContext} from '../Context/AuthContext';
+import Pagination from "@material-ui/lab/Pagination";
 import Reports from './Reports';
 import "../styling/Reports.css";
 
@@ -26,7 +26,10 @@ export default function Report(props) {
     }
     
   }
-
+  const handlePageChange = (event, newPage) => {
+    setCurrentPage(newPage); 
+  }
+  
   const handlePosts=  async (page) => {
     await fetch("/zone/display/" + authContext.user.username + "/reportedPosts/" + page).then(response => response.json()) 
     .then( data => {
@@ -40,7 +43,7 @@ export default function Report(props) {
     handlePosts(currentPage - 1); 
     
   }, [currentPage])
-  //
+  //<Pagination shape="rounded"totalPages={Math.ceil(totalNumber/10)} onPageChange={(e, d) => setCurrentPage(d.activePage)} activePage={currentPage}/>   
   return (
     <div className="reports-background">
       <div className="reports-container" >
@@ -54,7 +57,7 @@ export default function Report(props) {
           </div>
           <div>
           <Reports reports={reportList} type={type}/>
-          <Pagination shape="rounded"totalPages={Math.ceil(totalNumber/10)} onPageChange={(e, d) => setCurrentPage(d.activePage)} activePage={currentPage}/>   
+          <Pagination className="MuiPagination-ul" color="primary" count={Math.ceil(totalNumber/10)} onChange={handlePageChange} />
           </div>
         </div>
       </div>
