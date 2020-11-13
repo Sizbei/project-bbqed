@@ -44,6 +44,7 @@ const compareTime = (stopTime, curTime) => {
 
 const generateAnalysisResponse = (analysis, curTime) => {
     let response = {
+        _id: analysis._id,
         question: analysis.question,
         tier: analysis.tier,
     }
