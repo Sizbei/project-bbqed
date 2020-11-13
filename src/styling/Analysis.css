@@ -61,6 +61,12 @@
     align-items: center;
 }
 
+.analysis-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+}
+
 .analysis-response {
     margin-top: 1%;
     display: flex;
@@ -115,10 +121,12 @@
   }
 
   .analysis-user {
-      height: 2.6316vw;
-      width: 75%;
-      margin-left: 5%;
+    height: 2.6316vw;
+    width: 75%;
+    margin-left: 5%;
     float:left;
+    display: flex; 
+    flex-direction: column;
   }
 
   .analysis-slider {
@@ -134,10 +142,10 @@
   }
 
   .analysis-ACS-div {
-    margin-left: 0.6vw;
   }
 
   .analysis-ACS {
+    margin-left: 0.6vw;
     font-size: 0.85vw;
     color:#747474;
     font-family: "CommissionerMedium";

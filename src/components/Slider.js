@@ -5,12 +5,12 @@ import {AuthContext} from '../Context/AuthContext';
 import AuthService from '../Services/AuthService';
 import '../styling/Slider.css';
 
-export default function Slider(props) {
+export default function Sliderr(props) {
   const scale = "scale" in props? props.scale : 1.0;
   const [lock, setLock] = useState(false);
   const [done, setDone] = useState(false);
   const [angle, setAngle] = useState(180);
-  const [prevAngle, setPrevAngle] = useState(null);
+  const [prevAngle, setPrevAngle] = useState(180);
   const sliderContainerSize = 9;
   const minDeg = 25.15;
   const maxDeg = 335.8;

@@ -27,6 +27,10 @@ export default function Analysis(props) {
   const sampleHistogramData = Array(101).fill(0).map((el, i) => i*i + (100-i)*(100-i));
   sampleHistogramData[55] = 50*50*30;
 
+  const sampleHistogramData2 = Array(101).fill(0).map((el, i) => (i-60) * (i-60) + Math.pow(1.1, i));
+
+  const sampleHistogramData3 = Array(101).fill(0).map((el, i) => 10);
+
   if (formState === "discussion") {
     return(
     <div className='analysis-background'>
@@ -43,27 +47,14 @@ export default function Analysis(props) {
         </div>
         <div className="analysis-comments"> 
       
-        <div>
-            <div className="analysis-slider">
-              <Slider scale={0.7}/>
-            </div>
-            <div className="analysis-user">
-              <div className="left-user-info">
-                <label className="analysis-username">Username</label>
-                <div className="analysis-ACS-div">
-                  <label className="analysis-ACS">(543)</label>
-                </div>
-                <div className="analysis-histogram">
-                  <Histogram data={sampleHistogramData} xScale={0.4} yScale={0.2}/>
-                </div>
-                <label className="analysis-time-ago">6 hours ago</label>
-              </div>
-              <label className="analysis-additional-comment">Sample additional comment</label>
-            </div>
-          
-          
+        <div className="analysis-posts">
+          <VotePost username="Username" acs={543} timeAgo={"6 hours ago"} 
+            scoreData={sampleHistogramData} content={"A controversial post..."} />
+        
+          <VotePost username="Username" acs={543} timeAgo={"6 hours ago"} 
+              scoreData={sampleHistogramData2} content={"Not controversial at all."} />
         </div>
-       
+
         {debates.map((data, index) => {
           return (
               <div>
@@ -97,3 +88,32 @@ export default function Analysis(props) {
       );
   }
 } 
+
+function VotePost(props) {
+  const username = props.username;
+  const acs = props.acs;
+  const timeAgo = props.timeAgo;
+  const scoreData = props.scoreData;
+  const content = props.content;
+
+  return (
+    <div>
+      <div className="analysis-slider">
+        <Slider scale={0.7}/>
+      </div>
+      <div className="analysis-user">
+        <div className="left-user-info">
+          <label className="analysis-username">{username}</label>
+          <label className="analysis-ACS">({acs})</label>
+          {/* <div className="analysis-ACS-div">
+          </div> */}
+          <div className="analysis-histogram">
+            <Histogram data={scoreData} xScale={0.4} yScale={0.2}/>
+          </div>
+          <label className="analysis-time-ago">{timeAgo}</label>
+        </div>
+        <label className="analysis-additional-comment">{content}</label>
+      </div>
+    </div>
+  )
+}
