@@ -56,8 +56,10 @@ const generateAnalysisResponse = (analysis, curTime) => {
 
 //router.route('/current/:username').get(async (req, res) => {
 router.route('/current/:username').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
+    //const username = req.params.username;
+    const username = req.user.username;
     try{
-        const tier= await getTier(req.params.username);
+        const tier= await getTier(username);
         if (tier) {
             let response = {
                 currentAcsTier: [],
@@ -74,21 +76,21 @@ router.route('/current/:username').get(passport.authenticate('jwt', {session : f
                     }
                 }
                 // check if user has been assigned with a analysis question
-                if(curTierAnalyses[0].users.includes(req.params.username)) {
+                if(curTierAnalyses[0].users.includes(username)) {
                     response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[0], curTime));
                     response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[1], curTime));
-                } else if (curTierAnalyses[1].users.includes(req.params.username)) {
+                } else if (curTierAnalyses[1].users.includes(username)) {
                     response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[1], curTime));
                     response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[0], curTime));
                 } else {
                     // if not add user to one of the questions
                     if(curTierAnalyses[0].users.length <= curTierAnalyses[1].users.length) {
-                        curTierAnalyses[0].users.push(req.params.username);
+                        curTierAnalyses[0].users.push(username);
                         curTierAnalyses[0].save();
                         response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[0], curTime));
                         response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[1], curTime));
                     } else {
-                        curTierAnalyses[1].users.push(req.params.username);
+                        curTierAnalyses[1].users.push(username);
                         curTierAnalyses[1].save();
                         response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[1], curTime));
                         response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[0], curTime));
