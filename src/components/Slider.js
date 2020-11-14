@@ -8,6 +8,7 @@ import '../styling/Slider.css';
 export default function Sliderr(props) {
   const scale = "scale" in props? props.scale : 1.0;
   const [lock, setLock] = useState(false);
+  const [focus, setFocus] = useState(false);
   const [done, setDone] = useState(false);
   const [angle, setAngle] = useState(180);
   const [prevAngle, setPrevAngle] = useState(180);
@@ -79,16 +80,19 @@ export default function Sliderr(props) {
 
   const handleMouseEnter = e => {
     e.stopPropagation();
+    setFocus(true);
+    
     if (lock) {
       return;
     }
-
+    
     setDone(false);
   }
 
-  const handleMouseOut = e => {
+  const handleMouseLeave = e => {
     e.stopPropagation();
     console.log("Mouse out!");
+    setFocus(false);
     setAngle(prevAngle);
   }
 
@@ -142,7 +146,6 @@ export default function Sliderr(props) {
   const prevColor = getColor(prevAngle);
 
   const sliderContainerStyle = {
-
   }
   
   const sliderArrowStyle = {
@@ -172,7 +175,8 @@ export default function Sliderr(props) {
 
   const sliderMouseContainerStyle = {
     width: sliderContainerSize * scale + "vw",
-    height: sliderContainerSize * scale + "vw"
+    height: sliderContainerSize * scale + "vw",
+    zIndex: focus ? 1 : 0,
   }
 
   const sliderStyle = {
@@ -197,7 +201,7 @@ export default function Sliderr(props) {
         </div>
       </div>
       <div className="slider-mouse-container" onMouseMove={updatePosition} onMouseDown={submit} 
-        onMouseEnter={handleMouseEnter} onMouseOut={handleMouseOut} style={sliderMouseContainerStyle}>
+        onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} style={sliderMouseContainerStyle}>
         <div className="slider" style={sliderStyle}>
           <label className="slider-percent" style={percentStyle}>
             {invert(getTick(angle))}%

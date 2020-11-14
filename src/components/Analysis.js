@@ -53,6 +53,9 @@ export default function Analysis(props) {
         
           <VotePost username="Username" acs={543} timeAgo={"6 hours ago"} 
               scoreData={sampleHistogramData2} content={"Not controversial at all."} />
+
+          <VotePost username="Username" acs={543} timeAgo={"6 hours ago"} 
+              scoreData={Array(101).fill(0)} content={"No votes yet."} />
         </div>
 
         {debates.map((data, index) => {

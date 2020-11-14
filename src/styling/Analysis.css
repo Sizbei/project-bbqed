@@ -64,7 +64,7 @@
 .analysis-posts {
   display: flex;
   flex-direction: column;
-  gap: 2vh;
+  gap: 2.5vh;
 }
 
 .analysis-response {
@@ -170,8 +170,9 @@
 
   .left-user-info {
     height: 60%;
-    width: 80%;
+    width: 100%;
     display: flex;
+    align-items: center;
   }
 
   @font-face {
