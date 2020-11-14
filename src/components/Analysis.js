@@ -24,7 +24,7 @@ export default function Analysis(props) {
     //setDebates();
   })
 
-  const sampleHistogramData = Array(101).fill(0).map((el, i) => i*i + (100-i)*(100-i));
+  const sampleHistogramData = Array(101).fill(0).map((el, i) => i*i + (100-i)*(100-i) - 2 * 50 * 50);
   sampleHistogramData[55] = 50*50*30;
 
   const sampleHistogramData2 = Array(101).fill(0).map((el, i) => (i-60) * (i-60) + Math.pow(1.1, i));
@@ -96,13 +96,22 @@ function VotePost(props) {
   const username = props.username;
   const acs = props.acs;
   const timeAgo = props.timeAgo;
-  const scoreData = props.scoreData;
+  const [scoreData, setScoreData] = useState(props.scoreData);
   const content = props.content;
+
+  const handleVote = (score) => {
+    console.log("GOT", score);
+    console.log(scoreData[score]);
+    const newScoreData = Array(101).fill(0).map((el, i) => scoreData[i]);
+    newScoreData[score] += 1;
+    console.log("NEW SCORE DATA", newScoreData);
+    setScoreData(newScoreData);
+  }
 
   return (
     <div>
       <div className="analysis-slider">
-        <Slider scale={0.7}/>
+        <Slider scale={0.7} onSubmit={handleVote}/>
       </div>
       <div className="analysis-user">
         <div className="left-user-info">

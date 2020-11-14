@@ -6,7 +6,8 @@ import AuthService from '../Services/AuthService';
 import '../styling/Slider.css';
 
 export default function Sliderr(props) {
-  const scale = "scale" in props? props.scale : 1.0;
+  const scale = "scale" in props ? props.scale : 1.0;
+  const onSubmit = "onSubmit" in props ? props.onSubmit : () => {}
   const [lock, setLock] = useState(false);
   const [focus, setFocus] = useState(false);
   const [done, setDone] = useState(false);
@@ -51,7 +52,7 @@ export default function Sliderr(props) {
 
   const updatePosition = e => {
     e.stopPropagation();
-    if (lock || done) {
+    if (lock) {
       return;
     }
 
@@ -76,6 +77,7 @@ export default function Sliderr(props) {
     console.log("Clicked!");
     setPrevAngle(angle);
     setDone(true);
+    onSubmit(invert(getTick(angle)));
   }
 
   const handleMouseEnter = e => {

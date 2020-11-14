@@ -3,7 +3,7 @@ import '../styling/Histogram.css';
 import LineGraph from 'react-line-graph'
 
 export default function Histogram(props) {
-  const data = props.data;
+  const data = Array(props.data.length).fill(0).map((el, i) => props.data[i]);
   const xScale = "xScale" in props ? props.xScale : 1.0;
   const yScale = "yScale" in props ? props.yScale : 1.0;
   
@@ -59,13 +59,14 @@ export default function Histogram(props) {
   console.log("transform", transform);
   
   // set the min x axis
-  const append = transform.concat([Math.min(...transform) / 1.003]);
+  // const append = transform.concat([Math.min(...transform) / 1.05]);
+  const append = transform.concat([0, 1.3 * Math.max(...transform)]);
 
   const lineGraphProps = {
     data: append,
     smoothing: 0,
     height: '109.5%', // hide overflow y
-    width: '102.36%', // hide overflow x (from append)
+    width: '105.36%', // hide overflow x (from append)
     accent: 'palevioletred',
     fillBelow: 'rgba(200,67,23,0.1)',
   };
