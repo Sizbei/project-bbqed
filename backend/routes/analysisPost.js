@@ -10,8 +10,8 @@ const passportConfig = require('../passport');
 const { findById } = require('../models/acs');
 
 // request body: {_id: str, username: str, post: str}
-router.route('/').put(async (req, res) => {
-//router.route('/').put(passport.authenticate('jwt', { session: false }), async (req, res) => {
+//router.route('/').put(async (req, res) => {
+router.route('/').put(passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         let cur_analysis = await analysis.findById({_id: req.body._id}).then(analysis => {return analysis});
         const cur_user = await user.findOne({username: req.body.username}).then(user => {return user});
@@ -40,7 +40,8 @@ router.route('/').put(async (req, res) => {
     }
 });
 
-router.route('/:id/:username?').get((req, res) => {
+//router.route('/:id/:username?').get((req, res) => {
+router.route('/:id/:username?').get(passport.authenticate('jwt', { session: false }), (req, res) => {
     analysisPost.find({analysis: req.params.id}).sort({"createdAt": "desc"}).then(posts => {
         let user_posts = [];
         let other_posts = [];
@@ -61,7 +62,8 @@ router.route('/:id/:username?').get((req, res) => {
     }).catch(err => res.status(400).json({msg: "Bad request", err: err}));
 });
 
-router.route('/random/:id/:limit').get(async (req, res) => {
+//router.route('/random/:id/:limit').get((req, res) => {
+router.route('/random/:id/:limit').get(passport.authenticate('jwt', { session: false }), (req, res) => {
     analysisPost.find({analysis: req.params.id}).sort({"scoreCount": "asc", "createdAt": "asc"}).limit(parseInt(req.params.limit)).then(posts => {
         let random_posts = [];
         for(index in posts) {
