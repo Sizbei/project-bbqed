@@ -9,16 +9,17 @@ const jwt = require('jsonwebtoken');
 const passportConfig = require('../passport');
 const { findById } = require('../models/acs');
 
-// request body: {_id: str, username: str, post: str}
+// request body: {_id: str, post: str}
 //router.route('/').put(async (req, res) => {
 router.route('/').put(passport.authenticate('jwt', { session: false }), async (req, res) => {
+    //const username = req.body.username;
+    const username = req.user.username;
     try {
         let cur_analysis = await analysis.findById({_id: req.body._id}).then(analysis => {return analysis});
-        const cur_user = await user.findOne({username: req.body.username}).then(user => {return user});
-        if(cur_analysis && cur_analysis.status == "open" && cur_user && cur_analysis.users.includes(req.body.username) && req.body.post && req.body.post.length !== 0) {
+        if(cur_analysis && cur_analysis.status == "open" && cur_analysis.users.includes(req.body.username) && req.body.post && req.body.post.length !== 0) {
             let cur_post = new analysisPost({
                 analysis: cur_analysis,
-                user: req.body.username,
+                user: username,
                 response: req.body.post,
                 averageScore: 0,
                 scoreCount: 0,
@@ -41,7 +42,9 @@ router.route('/').put(passport.authenticate('jwt', { session: false }), async (r
 });
 
 //router.route('/:id/:username?').get((req, res) => {
-router.route('/:id/:username?').get(passport.authenticate('jwt', { session: false }), (req, res) => {
+router.route('/:id').get(passport.authenticate('jwt', { session: false }), (req, res) => {
+    //const username = req.params.username;
+    const username = req.user.username;
     analysisPost.find({analysis: req.params.id}).sort({"createdAt": "desc"}).then(posts => {
         let user_posts = [];
         let other_posts = [];
@@ -52,7 +55,7 @@ router.route('/:id/:username?').get(passport.authenticate('jwt', { session: fals
                 content: posts[index].response,
                 averageScore: posts[index].averageScore
             }
-            if(cur_post.user == req.params.username) {
+            if(cur_post.user == username) {
                 user_posts.push(cur_post);
             } else {
                 other_posts.push(cur_post);
