@@ -7,7 +7,6 @@ let user = require('../models/user');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const passportConfig = require('../passport');
-const { findById } = require('../models/acs');
 
 // request body: {_id: str, username: str, post: str}
 router.route('/').put(async (req, res) => {
@@ -75,6 +74,53 @@ router.route('/random/:id/:limit').get(async (req, res) => {
         }
         res.json({posts: random_posts});
     }).catch(err => res.status(400).json({msg: "Bad request", err: err}));
+});
+
+const findScoreHistory = (username, score_history) => {
+    for(index in score_history) {
+        if(score_history[index].user == username) {
+            return index;
+        }
+    }
+    return null;
+}
+
+// request body: {_id: str, score: int}
+//router.route('/score').put(async (req, res) => {
+router.route('/').put(passport.authenticate('jwt', { session: false }), async (req, res) => {
+    const username = req.user.username;
+    //const username = req.body.username;
+    let cur_post = await analysisPost.findById({_id: req.body._id}).then(post => {return post})
+        .catch(err => res.status(400).json({msg: "Bad request", err: err}));
+    if(cur_post && req.body.score >= 0 && req.body.score <=100 && Number.isInteger(req.body.score)) {
+        let cur_analysis = await analysis.findById({_id: cur_post.analysis}).then(analysis => {return analysis})
+            .catch(err => res.status(500).json({msg: "Internal service err", err: err}));
+        if(cur_post.user != username && cur_analysis.users.includes(username)) {
+            let cur_score_index = findScoreHistory(username, cur_post.scoreHistory);
+            if(cur_score_index) {
+                const init_score = cur_post.scoreHistory[cur_score_index].score;
+                cur_post.scoreHistory[cur_score_index].score = req.body.score;
+                cur_post.averageScore = (cur_post.averageScore * cur_post.scoreCount + req.body.score - init_score)/(cur_post.scoreCount);
+                cur_post.scoreCounts.set(req.body.score, cur_post.scoreCounts[req.body.score] + 1);
+                cur_post.scoreCounts.set(init_score, cur_post.scoreCounts[init_score] - 1);
+            } else {
+                const new_score = {
+                    user: username,
+                    score: req.body.score
+                }
+                cur_post.scoreHistory.push(new_score);
+                cur_post.averageScore = (cur_post.averageScore * cur_post.scoreCount + req.body.score)/(cur_post.scoreCount + 1);
+                cur_post.scoreCount += 1;
+                cur_post.scoreCounts.set(req.body.score, cur_post.scoreCounts[req.body.score] + 1);
+            }
+            cur_post.save().then(res.json({msg: "Score is posted."}))
+                .catch(err => res.status(500).json({msg: "Internal service err", err: err}))
+        } else {
+            res.status(400).json({msg: "Bad request: current user cannot score this post"});
+        }
+    } else {
+        res.status(400).json({msg: "Bad request: request body contain incorrect information."});
+    }
 });
 
 module.exports = router;
