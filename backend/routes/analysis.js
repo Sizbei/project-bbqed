@@ -32,15 +32,15 @@ const getTier = async (username) => {
     return tier
 }
 
-const compareTime = (stopTime, curTime) => {
-    let hours = Math.floor((stopTime - curTime)/(1000*60*60));
-    let minutes = Math.floor((stopTime - curTime - hours*1000*60*60)/(1000*60)) + 1;
-    if(minutes == 60) {
-        hours += 1;
-        minutes = 0;
-    }
-    return hours + "h " + minutes + "m"
-}
+//const compareTime = (stopTime, curTime) => {
+//    let hours = Math.floor((stopTime - curTime)/(1000*60*60));
+//    let minutes = Math.floor((stopTime - curTime - hours*1000*60*60)/(1000*60)) + 1;
+//    if(minutes == 60) {
+//        hours += 1;
+//        minutes = 0;
+//    }
+//    return hours + "h " + minutes + "m"
+//}
 
 const generateAnalysisResponse = (analysis, curTime) => {
     let response = {
@@ -49,13 +49,13 @@ const generateAnalysisResponse = (analysis, curTime) => {
         tier: analysis.tier,
     }
     if(curTime <= analysis.endTime) {
-        response.closesIn = compareTime(analysis.endTime, curTime);
+        response.closesIn = analysis.endTime;
     }
     return response
 }
 
 //router.route('/current/:username').get(async (req, res) => {
-router.route('/current/:username').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
+router.route('/current').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
     //const username = req.params.username;
     const username = req.user.username;
     try{
@@ -106,19 +106,19 @@ router.route('/current/:username').get(passport.authenticate('jwt', {session : f
     }
 })
 
-//router.route('/past/:limit').get(async (req, res) => {
-router.route('/past/:limit').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
+//router.route('/past/:start/:limit').get(async (req, res) => {
+router.route('/past/:start/:limit').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
     try {
-        if(req.params.limit > 0) {
+        if(req.params.limit > 0 && req.params.start >= 0) {
             let response = [];
-            await analysis.find({status: "close"}).sort({"startTime": "desc", "tier": "asc", "question": "asc"}).limit(parseInt(req.params.limit)).then(analyses => {
-                for(index in analyses) {
+            await analysis.find({status: "close"}).sort({"startTime": "desc", "tier": "asc", "question": "asc"}).limit(parseInt(req.params.limit) + parseInt(req.params.start)).then(analyses => {
+                for(let index = parseInt(req.params.start); index < analyses.length; index ++ ) {
                     response.push(generateAnalysisResponse(analyses[index]));
                 }
             });
             res.json({analyses: response})
         } else {
-            res.status(400).json({msg: "Bad request: limit cannot be zero and negative"});
+            res.status(400).json({msg: "Bad request: incorect information in url"});
         }
     } catch(err) {
         res.status(500).json({msg: "Internal service error."});
