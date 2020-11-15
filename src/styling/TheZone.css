@@ -28,6 +28,7 @@
   border-radius: 8px;
   padding-bottom: 30px;
 }
+
 .tzone-create-post-btn:hover {
     background-color: lightgrey;
     cursor:pointer;
@@ -56,8 +57,9 @@
 }
 
 
-.tzone-report-btn: hover{
+.tzone-report-btn:hover{
   background-color: lightgrey;
+  cursor: pointer;
   
 }
 
@@ -137,6 +139,7 @@
   border-radius: 8px;  
   cursor: pointer; 
   font-family: 'CommissionerMedium';
+  text-align: center;
 }
 .tzone-comment-agree-disagree {
   display: flex;

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import '../styling/TheZone.css';
 import PostPopup from './ProfilePostPopup';
+import ReportPopup from './TheZoneReportPopup';
 import { AuthContext } from '../Context/AuthContext';
 import ProfilePicture from './ProfilePicture'
 import { Link } from 'react-router-dom';
@@ -20,7 +21,9 @@ export default function TheZone(props) {
     const [disagree, setDisagree] = useState(false);
     const [posts, setPosts] = useState([]);
 
+   
     const [showPostPopup, setPostPopup] = useState(false);
+    const [showReportPopup, setReportPopup] = useState(false);
 
     useEffect(() => {
         fetch(path).then(res => res.json())
@@ -42,6 +45,10 @@ export default function TheZone(props) {
 
     const togglePostPopup = () => {
        setPostPopup(!showPostPopup);
+    }
+
+    const toggleReportPopup = () => {
+        setReportPopup(!showReportPopup);
     }
    
     const handlePostAgree = (data, index) => {
@@ -133,6 +140,9 @@ export default function TheZone(props) {
                     : null
                 }
 
+                {showReportPopup ? <ReportPopup closePopup={toggleReportPopup} />
+                    : null
+                }
                 <div class="tzone-post-body">
                     <button class="tzone-create-post-btn" onClick={togglePostPopup}>  {"What's on your mind, " + (authContext.user.username) + "?"}
                     </button>
@@ -150,14 +160,15 @@ export default function TheZone(props) {
                                     </Link>
                                    
                                     <label> <Link to={'/profile/' + data.poster.username} className="tzone-profile-link">{data.poster.username} ({data.poster.acs})  
-                                    </Link>
-                                    </label>
+                                    </Link></label>
+
+                                    
                                     
                                     <div className="tzone-likes"> <label> {data.likes} </label></div>
                                     </div>
-
-                                    <button className="tzone-report-btn" >{"Report Post"}</button>
-
+                                <button className="tzone-report-btn" onClick={toggleReportPopup}>{"Report Post"}</button>
+                                    
+                                    
                                     <div className="tzone-post-info">      
                                     <Link to={"/theZone/display/" + (data._id)} className="tzone-link">
                                         <p> {data.body} </p>
