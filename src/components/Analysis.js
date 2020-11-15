@@ -39,6 +39,7 @@ export default function Analysis() {
     setPage(value);
   };
 
+
   return(
 
     <body>
@@ -49,22 +50,22 @@ export default function Analysis() {
             <h1 className="analysis-title">Debates and Analysis</h1>
 
             <div className="analysis-category-div">
-              <label className="analysis-category-label">In Progress (Current ACS tier)</label>
+              <label className="analysis-category-label">In Progress (Open)</label>
             </div>
 
-            {Array.from(Array(currentTierPosts.length)).map((x, index) => <AnalysisPost post={currentTierPosts[index]}/>)}
+            {currentTierPosts.length > 0 && Array.from(Array(currentTierPosts.length)).map((x, index) => <AnalysisPost post={currentTierPosts[index]}/>)}
 
             <div className="analysis-category-div">
-              <label className="analysis-category-label">In Progress (Other ACS tiers)</label>
+              <label className="analysis-category-label">In Progress (Locked)</label>
             </div>
 
-            {Array.from(Array(otherTierPosts.length)).map((x, index) => <AnalysisPost post={otherTierPosts[index]}/>)}
+            {otherTierPosts.length > 0 && Array.from(Array(otherTierPosts.length)).map((x, index) => <AnalysisPost post={otherTierPosts[index]}/>)}
 
             <div className="analysis-category-div">
               <label className="analysis-category-label">Past Debates and Analysis</label>
             </div>
 
-            {Array.from(Array(pastTierPosts.length)).map((x, index) => <AnalysisPost post={pastTierPosts[index]}/>)}
+            {pastTierPosts.length > 0 && Array.from(Array(pastTierPosts.length)).map((x, index) => <AnalysisPost post={pastTierPosts[index]}/>)}
 
             <div className="analysis-pagination">
               <Pagination count={10} color="primary" onChange={handlePageChange} />
