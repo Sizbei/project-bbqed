@@ -14,36 +14,13 @@ export default function AnalysisPost(props) {
 
 
   useEffect(() => {
+    
+    try {
 
-    if(type === "current"){
-      setTier("Expert Analyst");
-    }
+      setTier(post.tier)
 
-    if(type === "other"){
-      const r = (post + 1) % 3;
-      if(r == 0){
-        setTier("Fanalyst");
-      } else if(r == 2){
-        setTier("Analyst");
-      } else if(r == 1){
-        setTier("Pro Analyst");
-      } 
-    }
+    } catch(err) {}
 
-    if(type === "past"){
-      setPost(props.post);
-      console.log(post)
-      const r = (Math.floor(Math.random() * 4) + 1) % 4;
-      if(r == 0){
-        setTier("Expert Analyst");
-      } else if(r == 1){
-        setTier("Pro Analyst");
-      } else if(r == 2){
-        setTier("Analyst");
-      } else if(r == 3){
-        setTier("Fanalyst");
-      }
-    }
 
   }, [props.post]);
 
