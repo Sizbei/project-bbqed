@@ -42,8 +42,9 @@ class ReportPopup extends React.Component {
     }
     else {
       fetch('/zone/reportPost', {
-        method: "reportPost",
+        reportedTotal: this.reportedTotal + 1,
         reported: true,
+
       }).then(res => res.json())
         //axios.post('http://localhost:5000/post/add', body)
         .then(data => {
@@ -64,18 +65,19 @@ class ReportPopup extends React.Component {
   render() {  
   return (  
   <div className='tzrp-popup' onClick={this.props.closePopup}>
-      <div className='profile-post-popup-content' onClick = {(e) => { e.stopPropagation(); }}>
-      
+      <div className='tzrp-post-popup-content' onClick = {(e) => { e.stopPropagation(); }}>
+    
       {this.state.done ? 
-        <div className="profile-popup-content"> 
+        <div className="tzrp-popup-content"> 
           <h1> Post Reported! </h1>
         </div>
       :
-      <div className="profile-popup-content"> 
+      <div className="tzrp-popup-content"> 
         <h1> Would you like to report this post? </h1>
-
-        <button className="profile-popup-submit-button" onClick={this.handleSubmit}> Report </button>
-         
+        <div className="tzone-post-buttons">
+        <button className="tzrp-popup-close-button" onClick={this.props.closePopup}> Cancel </button>
+        <button className="tzrp-popup-submit-button" onClick={this.handleSubmit}> Report </button>
+        </div>
       </div>
       
       }
