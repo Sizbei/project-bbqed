@@ -119,8 +119,8 @@ router.route('/score').put(passport.authenticate('jwt', { session: false }), asy
     }
 });
 
-router.route('/score/histogram/:id').get(async (req, res) => {
-//router.route('/score/histogram/:id').get(passport.authenticate('jwt', { session: false }), async (req, res) => {
+//router.route('/score/histogram/:id').get(async (req, res) => {
+router.route('/score/histogram/:id').get(passport.authenticate('jwt', { session: false }), async (req, res) => {
     analysisPost.findById({_id: req.params.id}).then(post => {
         if(post) {
             res.json({historgram: post.scoreCounts});
