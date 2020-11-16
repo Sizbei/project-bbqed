@@ -8,30 +8,27 @@ import Header from './Header';
 export default function AnalysisPost(props) {
 
   const type = props.type;
-
   const [tier, setTier] = useState("");
-
   const [post, setPost] = useState(props.post);
-
+  const [endTime, setEndTime] = useState("")
   let history = useHistory(); 
 
   useEffect(() => {
     
     try {
 
-      setTier(post.tier)
       setPost(props.post);
+      setTier(post.tier);
+      setEndTime(post.closesIn);
 
     } catch(err) {
-      console.log("pepega")
     }
 
 
-  }, [props.post]);
+  }, [props.post, endTime]);
 
 
   const handlePostClick = (event, value) => {
-    console.log(post)
     history.push("/analysis/" + post._id)
   };
 
@@ -43,11 +40,11 @@ export default function AnalysisPost(props) {
                           (tier === 'Pro Analyst' ? 'pro-analyst-div' : 
                           (tier === 'Analyst' ? 'analyst-div' : 
                           (tier === 'Fanalyst' ? 'fanalyst-div' : '')))} tier-div`} >{tier}</div>
-        <div className="analysis-question">Insert the debate and analysis question here</div>
+        <div className="analysis-question">{post.question}</div>
       </div>
 
       
-      {type !== "past" ? <div className="time-left">
+      {post.closesIn ? <div className="time-left">
         <AccessTimeIcon />
         <div className="time">
           Closes in: &ensp; 14h 28m
