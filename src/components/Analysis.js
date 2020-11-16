@@ -16,23 +16,22 @@ export default function Analysis() {
   const authContext = useContext(AuthContext);
 
   useEffect(() => {
-    handlePageChange()
+    handlePageChange();
+    setPage(page);
 
-    fetch('/analysis/current/' + authContext.user.username).then(res => res.json())
+    fetch('/analysis/current/').then(res => res.json())
     .then(current => {
+      console.log(current)
       setCurrentTierPosts(current.analyses.currentAcsTier);
       setOtherTierPosts(current.analyses.otherAcsTiers);
     })
 
-    fetch('/analysis/past/10').then(res => res.json())
+    fetch('/analysis/past/'+ ((page-1)*10).toString() + '/10').then(res => res.json())
     .then(past => {
-      console.log(past)
       setPastTierPosts(past.analyses)
     })
 
-
   },[page]);
-
 
 
   const handlePageChange = (event, value) => {
