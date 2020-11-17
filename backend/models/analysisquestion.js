@@ -8,6 +8,13 @@ const analysisQuestionSchema = new Schema({
         unique: false,
         required: true,
     },
+    image: {
+        type: String,
+        required: false,
+        unique: false,
+        trim: true,
+        default: "https://png.pngtree.com/svg/20161027/631929649c.svg" 
+    },
     tier: {
         type: String,
         unique: false,

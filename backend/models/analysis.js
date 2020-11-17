@@ -8,11 +8,17 @@ const analysisSchema = new Schema({
         unique: false,
         required: true,
     },
+    image: {
+        type: String,
+        required: false,
+        unique: false,
+        trim: true,
+    },
     status: {
         type: String,
         unique: false,
         required: true,
-        enum : ['open','close'],
+        enum : ['open','close','pend'],
     },
     tier: {
         type: String,

@@ -18,6 +18,15 @@ const findScoreHistory = (username, score_history) => {
     return -1;
 }
 
+const isPostExist = (username, posts) => {
+    for(i in posts) {
+        if(posts[i].user == username) {
+            return false;
+        }
+    }
+    return true;
+}
+
 // request body: {_id: str, post: str}
 //router.route('/').put(async (req, res) => {
 router.route('/').put(passport.authenticate('jwt', { session: false }), async (req, res) => {
@@ -26,22 +35,27 @@ router.route('/').put(passport.authenticate('jwt', { session: false }), async (r
     try {
         let cur_analysis = await analysis.findById({_id: req.body._id}).then(analysis => {return analysis});
         if(cur_analysis && cur_analysis.status == "open" && cur_analysis.users.includes(req.body.username) && req.body.post && req.body.post.length !== 0) {
-            let cur_post = new analysisPost({
-                analysis: cur_analysis,
-                user: username,
-                response: req.body.post,
-                averageScore: 0,
-                scoreCount: 0,
-                scoreCounts: [],
-                scoreHistory: []
-            });
-            for(let i = 0; i <= 100; i++) {
-                cur_post.scoreCounts.push(0);
+            let cur_posts = await analysisPost.find({analysis: req.body._id}).then(posts => {return posts});
+            if(isPostExist(username, cur_posts)) {
+                let cur_post = new analysisPost({
+                    analysis: cur_analysis,
+                    user: username,
+                    response: req.body.post,
+                    averageScore: 0,
+                    scoreCount: 0,
+                    scoreCounts: [],
+                    scoreHistory: []
+                });
+                for(let i = 0; i <= 100; i++) {
+                    cur_post.scoreCounts.push(0);
+                }
+                cur_post.save();
+                cur_analysis.responses.push(cur_post);
+                cur_analysis.save();
+                res.json({msg: "Post is saved."})
+            } else {
+                res.status(400).json({msg: "Bad request: user cannot submit multiple posts to one analysis."});
             }
-            cur_post.save();
-            cur_analysis.responses.push(cur_post);
-            cur_analysis.save();
-            res.json({msg: "Post is saved."})
         } else {
             res.status(400).json({msg: "Bad request: request body contains incorrect information."});
         }
@@ -78,7 +92,9 @@ router.route('/:id').get(passport.authenticate('jwt', { session: false }), (req,
                 other_posts.push(cur_post);
             }
         }
-        res.json({userPosts: user_posts, otherPosts: other_posts});
+        analysis.findById({_id: req.params.id}).then(analysis => {
+            res.json({userPosts: user_posts, otherPosts: other_posts, image: analysis.image});
+        }).catch(err => res.status(500).json({msg: "Internal servcie error", err: err}));
     }).catch(err => res.status(400).json({msg: "Bad request", err: err}));
 });
 

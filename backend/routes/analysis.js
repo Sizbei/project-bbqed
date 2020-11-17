@@ -3,6 +3,7 @@ const router = require('express').Router();
 let analysis = require('../models/analysis');
 let analysisQuestion = require('../models/analysisquestion');
 let acs = require('../models/acs');
+let analysisQuestion = require('../models/analysisquestion');
 
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
@@ -137,21 +138,38 @@ router.route('/past/size').get(passport.authenticate('jwt', {session : false}), 
 })
 
 //request body: {year, month, day, status}
-router.route('/add').put((req, res) => {
+router.route('/add').put(async (req, res) => {
     const analysis_count = 2;
     for(curTier in acsTiers) {
-        for (let i = 1; i <= analysis_count; i++) {
-            const a = new analysis({
-                question: curTier + ": Question " + i + "-day " + req.body.day,
-                status: req.body.status,
-                tier: curTier,
-                startTime: new Date(req.body.year, req.body.month, req.body.day),
-                endTime: new Date(req.body.year, req.body.month, req.body.day + 1),
-                users: [],
-                responses: []
-            });
-            a.save();
-        }
+        await analysisQuestion.aggregate([{$match: {tier: curTier}}, {$sample: {size: analysis_count}}]).then(questions => {
+            for(index in questions) {
+                const a = new analysis({
+                    question: questions[index].question,
+                    image: questions[index].image,
+                    status: req.body.status,
+                    tier: curTier,
+                    startTime: new Date(req.body.year, req.body.month, req.body.day),
+                    endTime: new Date(req.body.year, req.body.month, req.body.day + 1),
+                    users: [],
+                    responses: []
+                });
+                a.save();
+            }
+        }).catch(err => res.status(500).json({err: err}));
+    }
+    res.json("done");
+})
+
+"https://lakersdaily.com/wp-content/uploads/2020/09/USATSI_14765519_168386351_lowres-e1599228947973.jpg"
+// request body {questions: [str], image: str, tier: str}
+router.route('/add/questions').put((req, res) => {
+    for(let i = 0; i < req.body.questions.length; i++) {
+        const q = new analysisQuestion({
+            question: req.body.questions[i],
+            image: req.body.image,
+            tier: req.body.tier
+        });
+        q.save()
     }
     res.json("done");
 })
