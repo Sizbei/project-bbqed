@@ -29,7 +29,7 @@ export default function AnalysisPostView(props) {
       setOurPosts(initData.userPosts)
       setOtherPosts(initData.otherPosts)
     })
-  }, [_id])
+  }, [])
 
 
 
@@ -102,6 +102,7 @@ export default function AnalysisPostView(props) {
 } 
 
 function VotePost(props) {
+  const _id = props._id;
   const username = props.user;
   const us = "us" in props ? props.us : false;
   const acs = props.acs;
@@ -129,11 +130,25 @@ function VotePost(props) {
 
   const handleVote = (score) => {
     console.log("GOT", score);
-    console.log(scoreData[score]);
-    const newScoreData = Array(101).fill(0).map((el, i) => scoreData[i]);
-    newScoreData[score] += 1;
-    console.log("NEW SCORE DATA", newScoreData);
-    setScoreData(newScoreData);
+    
+    const requestBody = {
+      method: "put",
+      body: JSON.stringify({
+        user: "user1",
+        _id: _id,
+        score: score,
+      }),
+      headers: {'Content-Type' : 'application/json'}
+    }
+    fetch('/analysis/post/score/', requestBody).then(res => res.json())
+    .then((res) => {
+      if (res.status != 200) return;
+      console.log("GOT RESPONSE", res.status);
+
+      const newScoreData = Array(101).fill(0).map((el, i) => scoreData[i]);
+      newScoreData[score] += 1;
+      setScoreData(newScoreData);
+    })
   }
 
   return (

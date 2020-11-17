@@ -107,14 +107,14 @@ router.route('/score').put(passport.authenticate('jwt', { session: false }), asy
     const username = req.user.username;
     //const username = req.body.username;
     let cur_post = await analysisPost.findById({_id: req.body._id}).then(post => {return post})
-        .catch(err => res.status(400).json({msg: "Bad request", err: err}));
+        .catch(err => res.status(400).json({status: 400, msg: "Bad request", err: err}));
     if(cur_post && req.body.score >= 0 && req.body.score <=100 && Number.isInteger(req.body.score)) {
         let cur_analysis = await analysis.findById({_id: cur_post.analysis}).then(analysis => {return analysis})
-            .catch(err => res.status(500).json({msg: "Internal service err", err: err}));
+            .catch(err => res.status(500).json({status: 500, msg: "Internal service err", err: err}));
         if(cur_post.user != username && cur_analysis.users.includes(username)) {
             let cur_score_index = findScoreHistory(username, cur_post.scoreHistory);
             if(cur_score_index != -1) {
-                res.status(400).json({msg: "Bad request: Not supposed to score a post twice."})
+                res.status(400).json({status: 400, msg: "Bad request: Not supposed to score a post twice."})
             } else {
                 const new_score = {
                     user: username,
@@ -124,14 +124,14 @@ router.route('/score').put(passport.authenticate('jwt', { session: false }), asy
                 cur_post.averageScore = (cur_post.averageScore * cur_post.scoreCount + req.body.score)/(cur_post.scoreCount + 1);
                 cur_post.scoreCount += 1;
                 cur_post.scoreCounts.set(req.body.score, cur_post.scoreCounts[req.body.score] + 1);
-                cur_post.save().then(res.json({msg: "Score is posted."}))
-                    .catch(err => res.status(500).json({msg: "Internal service err", err: err}));
+                cur_post.save().then(res.json({status: 200, msg: "Score is posted."}))
+                    .catch(err => res.status(500).json({status: 500, msg: "Internal service err", err: err}));
             }
         } else {
-            res.status(400).json({msg: "Bad request: current user cannot score this post"});
+            res.status(400).json({status: 400, msg: "Bad request: current user cannot score this post"});
         }
     } else {
-        res.status(400).json({msg: "Bad request: request body contain incorrect information."});
+        res.status(400).json({status: 400, msg: "Bad request: request body contain incorrect information."});
     }
 });
 

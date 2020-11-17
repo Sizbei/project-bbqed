@@ -52,7 +52,7 @@ export default function Sliderr(props) {
 
   const updatePosition = e => {
     e.stopPropagation();
-    if (lock) {
+    if (lock || done) {
       return;
     }
 
