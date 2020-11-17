@@ -63,6 +63,7 @@
 
 .analysis-posts {
   display: flex;
+  margin-bottom: 2vh;
   flex-direction: column;
   gap: 2.5vh;
 }

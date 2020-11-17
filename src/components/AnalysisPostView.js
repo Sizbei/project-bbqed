@@ -60,16 +60,16 @@ export default function AnalysisPostView(props) {
           {ourPosts.map((data, index) => {
             console.log(data);
             return (
-              <VotePost user={data.user} us={authContext.user.username === data.user} acs={0} 
-              timeAgo={data.createdAt} scoreData={sampleHistogramData3} content={data.content} averageScore={data.averageScore} />
+              <VotePost _id={data._id} user={data.user} us={authContext.user.username === data.user} acs={0}
+              timeAgo={data.createdAt} scoreData={data.histogram} content={data.content} averageScore={data.averageScore} />
             )
           })}
 
           {otherPosts.map((data, index) => {
             console.log(data);
             return (
-              <VotePost user={data.user} us={authContext.user.username === data.user} acs={0} 
-              timeAgo={data.createdAt} scoreData={sampleHistogramData3} content={data.content} averageScore={data.averageScore} />
+              <VotePost _id={data._id} user={data.user} us={authContext.user.username === data.user} acs={0}
+              timeAgo={data.createdAt} scoreData={data.histogram} content={data.content} averageScore={data.averageScore} />
             )
           })}
         </div>

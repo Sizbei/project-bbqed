@@ -61,7 +61,7 @@ export default function Sliderr(props) {
     const y = -2 * ((e.clientY - target.top) / target.height - 0.5);
     const theta = getAngle(x, y);
 
-    console.log(x, y, "radian:", theta, "deg:", radToDegree(theta))
+    // console.log(x, y, "radian:", theta, "deg:", radToDegree(theta))
     let deg = radToDegree(theta);
     deg = Math.max(deg, minDeg);
     deg = Math.min(deg, maxDeg);
@@ -93,7 +93,7 @@ export default function Sliderr(props) {
 
   const handleMouseLeave = e => {
     e.stopPropagation();
-    console.log("Mouse out!");
+    // console.log("Mouse out!");
     setFocus(false);
     setAngle(prevAngle);
   }
