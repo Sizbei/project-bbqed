@@ -73,10 +73,9 @@ router.route('/:id').get(passport.authenticate('jwt', { session: false }), (req,
         let other_posts = [];
         for(let index in posts) {
             let cur_score_index = findScoreHistory(username, posts[index].scoreHistory);
-            console.log(index);
-            let isScored = false;
+            let score_history = null;
             if(cur_score_index != -1) {
-                isScored = true;
+                score_history = posts[index].scoreHistory[cur_score_index].score;
             }
             const cur_post = {
                 _id: posts[index]._id,
@@ -85,7 +84,7 @@ router.route('/:id').get(passport.authenticate('jwt', { session: false }), (req,
                 averageScore: posts[index].averageScore,
                 histogram: posts[index].scoreCounts,
                 createdAt: posts[index].createdAt,
-                isScored: isScored
+                scoredHistory: score_history,
             }
             if(cur_post.user == username) {
                 user_posts.push(cur_post);
