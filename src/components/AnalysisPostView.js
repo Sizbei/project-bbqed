@@ -14,7 +14,8 @@ export default function AnalysisPostView(props) {
   const [tier, setTier] = useState("Analyst");
   const [response, setResponse] = useState("");
   const [question, setQuestion] = useState("Sample Question to be Answered");
-  const [debates, setDebates] = useState([]);
+  const [ourPosts, setOurPosts] = useState([]);
+  const [otherPosts, setOtherPosts] = useState([]);
   const [averageScore, setAverageScore] = useState("0");
 
   useEffect(() => {
@@ -25,7 +26,8 @@ export default function AnalysisPostView(props) {
     .then((initData) => {
       console.log("got init", initData);
 
-      setDebates(initData.userPosts)
+      setOurPosts(initData.userPosts)
+      setOtherPosts(initData.otherPosts)
     })
   }, [_id])
 
@@ -55,7 +57,14 @@ export default function AnalysisPostView(props) {
         <div className="analysis-comments"> 
 
         <div className="analysis-posts">
-          {debates.map((data, index) => {
+          {ourPosts.map((data, index) => {
+            console.log(data);
+            return (
+              <VotePost user={data.user} acs={0} timeAgo={data.createdAt} scoreData={sampleHistogramData3} content={data.content} />
+            )
+          })}
+
+          {otherPosts.map((data, index) => {
             console.log(data);
             return (
               <VotePost user={data.user} acs={0} timeAgo={data.createdAt} scoreData={sampleHistogramData3} content={data.content} />
