@@ -1,9 +1,6 @@
 import React, {Component, useEffect, useState, useContext} from 'react';
 import {AuthContext} from '../Context/AuthContext';
-import ReactPaginate from 'react-paginate';
 import '../styling/Analysis.css';
-import axios from 'axios';
-import Header from './Header';
 import AnalysisPost from "./AnalysisPost"
 import { Pagination } from '@material-ui/lab';
 
@@ -21,7 +18,6 @@ export default function Analysis() {
 
     fetch('/analysis/current/').then(res => res.json())
     .then(current => {
-      console.log(current)
       setCurrentTierPosts(current.analyses.currentAcsTier);
       setOtherTierPosts(current.analyses.otherAcsTiers);
     })

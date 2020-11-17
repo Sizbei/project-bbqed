@@ -2,15 +2,13 @@ import React, {Component, useEffect, useState, useContext} from 'react';
 import { useHistory } from 'react-router-dom';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import '../styling/Analysis.css';
-import axios from 'axios';
-import Header from './Header';
+
 
 export default function AnalysisPost(props) {
 
-  const type = props.type;
   const [tier, setTier] = useState("");
   const [post, setPost] = useState(props.post);
-  const [endTime, setEndTime] = useState("")
+  const [timeLeft, setTimeLeft] = useState([0,0])
   let history = useHistory(); 
 
   useEffect(() => {
@@ -19,17 +17,28 @@ export default function AnalysisPost(props) {
 
       setPost(props.post);
       setTier(post.tier);
-      setEndTime(post.closesIn);
 
-    } catch(err) {
-    }
+      const endTime = Date.parse(post.endTime);
+      const curTime = new Date();
+
+      const timeDiff = endTime - curTime;
+
+      if(timeDiff > 0){
+        const hours = Math.floor(Math.abs(timeDiff / 36e5));
+        const minutes = Math.floor(Math.abs((timeDiff.getHours() - hours) /  60000))
+        setTimeLeft([hours, minutes]);
+      } else {
+        setTimeLeft([0,0]);
+      }
+
+    } catch(err) {}
 
 
-  }, [props.post, endTime]);
+  }, [props.post]);
 
 
   const handlePostClick = (event, value) => {
-    history.push("/analysis/" + post._id)
+    history.push("/analysis/post/" + post._id)
   };
 
 
@@ -44,10 +53,12 @@ export default function AnalysisPost(props) {
       </div>
 
       
-      {post.closesIn ? <div className="time-left">
-        <AccessTimeIcon />
+      {post.status === "open" ? <div className="time-left">
+        <div className="clockIcon">
+          <AccessTimeIcon />
+        </div>
         <div className="time">
-          Closes in: &ensp; 14h 28m
+          Closes in: &ensp; {timeLeft[0]}h {timeLeft[1]}m
         </div>
       </div> : null}
 
