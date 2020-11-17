@@ -145,13 +145,14 @@ function VotePost(props) {
   const content = props.content;
   var updatedTime = "";
 
-//   console.log("timeNow: " + timeNow + "\n" + timeNow.getMonth() + "\n" + timeNow.getDate() + "\n" + timeNow.getHours() + "\n" + timeNow.getMinutes() + "\n");
-//   console.log("timeBefore: " + timeBefore + "\n" + timeBefore.getMonth() + "\n" + timeBefore.getDate() + "\n" +  + timeBefore.getHours() + "\n" + timeBefore.getMinutes() + "\n");
+//   console.log("timeNow: " + timeNow + "\n" + timeNow.getMonth() + "\n" + timeNow.getDate() + "\nHours: " + timeNow.getHours() + "\n" + timeNow.getMinutes() + "\n");
+//   console.log("timeBefore: " + timeBefore + "\n" + timeBefore.getMonth() + "\n" + timeBefore.getDate() + "\nHours: " +  + timeBefore.getHours() + "\n" + timeBefore.getMinutes() + "\n");
+//   console.log(timeNow.getHours() > timeBefore.getHours());
   if(timeNow.getMonth() > timeBefore.getMonth()) {
     updatedTime = timeNow.getMonth() - timeBefore.getMonth() + " months ago";
   } else if (timeNow.getDate() > timeBefore.getDate()) {
     updatedTime = timeNow.getDate() - timeBefore.getDate() + " days ago";
-  } else if (timeNow.getHours > timeBefore.getHours()) {
+  } else if (timeNow.getHours() > timeBefore.getHours()) {
     updatedTime = timeNow.getHours() - timeBefore.getHours() + " hours ago";
   } else if (timeNow.getMinutes() > timeBefore.getMinutes()) {
     updatedTime = timeNow.getMinutes() - timeBefore.getMinutes() + " minutes ago";
