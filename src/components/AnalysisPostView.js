@@ -14,6 +14,7 @@ export default function AnalysisPostView(props) {
   const [tier, setTier] = useState("Analyst");
   const [response, setResponse] = useState("");
   const [question, setQuestion] = useState("Sample Question to be Answered");
+  const [imageUrl, setImageUrl] = useState("");
   const [ourPosts, setOurPosts] = useState([]);
   const [otherPosts, setOtherPosts] = useState([]);
 
@@ -23,6 +24,8 @@ export default function AnalysisPostView(props) {
       console.log("got init", initData);
 
       if (initData.userPosts.length > 0) {
+        setQuestion(initData.question);
+        setImageUrl(initData.image);
         setOurPosts(initData.userPosts)
         setOtherPosts(initData.otherPosts)
         setFormState("discussion");
@@ -73,11 +76,12 @@ export default function AnalysisPostView(props) {
           <label className="analysis-question-header">Daily Question </label>
           <label className="analysis-question-difficulty">{tier}</label>
         </span>
-        <label className="analysis-question-text">Sample question to be answered</label>
+        <label className="analysis-question-text">{question}</label>
         </div>
         <div className="analysis-question-image">
           {/* Insert image here; div used as a placeholder  */}
-          <div className="sample-div"/>
+          <img className="analysis-image" src={imageUrl} ></img>
+          {/* <div className="sample-div"/> */}
         </div>
         <div className="analysis-comments"> 
 
@@ -132,7 +136,7 @@ function VotePost(props) {
   const _id = props._id;
   const username = props.user;
   const us = "us" in props ? props.us : false;
-  const acs = props.acs;
+  const [acs, setACS] = useState("acs" in props ? props.acs : "-");
   var timeAgo = Date.parse(props.timeAgo);
   var timeNow = new Date(Date.now());
   var timeBefore = new Date(timeAgo);
@@ -177,6 +181,13 @@ function VotePost(props) {
       setScoreData(newScoreData);
     })
   }
+
+  useEffect(() => {
+    fetch( "/profile/" + username + "/acs").then(res => res.json()) 
+        .then(data => {
+            setACS(data.acsTotal);
+        })
+  }, [])
 
   return (
     <div>

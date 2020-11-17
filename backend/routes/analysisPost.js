@@ -10,7 +10,7 @@ const passportConfig = require('../passport');
 const { findById } = require('../models/acs');
 
 const findScoreHistory = (username, score_history) => {
-    for(index in score_history) {
+    for(const index in score_history) {
         if(score_history[index].user == username) {
             return index;
         }
@@ -71,8 +71,10 @@ router.route('/:id').get(passport.authenticate('jwt', { session: false }), (req,
     analysisPost.find({analysis: req.params.id}).sort({"createdAt": "desc"}).then(posts => {
         let user_posts = [];
         let other_posts = [];
-        for(index in posts) {
+        for(const index in posts) {
+            console.log(index);
             let cur_score_index = findScoreHistory(username, posts[index].scoreHistory);
+            console.log(index);
             let isScored = false;
             if(cur_score_index != -1) {
                 isScored = true;
@@ -93,7 +95,7 @@ router.route('/:id').get(passport.authenticate('jwt', { session: false }), (req,
             }
         }
         analysis.findById({_id: req.params.id}).then(analysis => {
-            res.json({userPosts: user_posts, otherPosts: other_posts, image: analysis.image});
+            res.json({userPosts: user_posts, otherPosts: other_posts, question: analysis.question, image: analysis.image});
         }).catch(err => res.status(500).json({msg: "Internal servcie error", err: err}));
     }).catch(err => res.status(400).json({msg: "Bad request", err: err}));
 });

@@ -5,6 +5,10 @@
     background-color: darkblue;
 }
 
+.analysis-image {
+  height:100%;
+}
+
 .insertSlider {
     height: 100%;
     width:100%;
