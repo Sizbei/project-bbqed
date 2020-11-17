@@ -10,7 +10,7 @@ export default function Analysis() {
   const [otherTierPosts, setOtherTierPosts] = useState(0);
   const [pastTierPosts, setPastTierPosts] = useState(0);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotlaPages] = useState(0);
+  const [totalPages, setTotlaPages] = useState(1);
   const authContext = useContext(AuthContext);
 
   useEffect(() => {
