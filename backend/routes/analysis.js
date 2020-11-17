@@ -33,6 +33,7 @@ const getTier = async (username) => {
     return tier
 }
 
+
 //const compareTime = (stopTime, curTime) => {
 //    let hours = Math.floor((stopTime - curTime)/(1000*60*60));
 //    let minutes = Math.floor((stopTime - curTime - hours*1000*60*60)/(1000*60)) + 1;
@@ -44,12 +45,14 @@ const getTier = async (username) => {
 //}
 
 const generateAnalysisResponse = (analysis) => {
+
     let response = {
         _id: analysis._id,
         question: analysis.question,
         tier: analysis.tier,
         status: analysis.status,
         endTime: analysis.endTime,
+
     }
     return response
 }
@@ -60,12 +63,14 @@ router.route('/current').get(passport.authenticate('jwt', {session : false}), as
     const username = req.user.username;
     try{
         const tier= await getTier(username);
+
         if (tier) {
             let response = {
                 currentAcsTier: [],
                 otherAcsTiers: [],
             }
             let curTierAnalyses = [];
+
             await analysis.find({status: "open"}).then(analyses => {
                 for(index in analyses) {
                     if (analyses[index].tier == tier) {

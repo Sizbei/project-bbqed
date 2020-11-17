@@ -49,6 +49,7 @@ export default function AnalysisPost(props) {
                           (tier === 'Pro Analyst' ? 'pro-analyst-div' : 
                           (tier === 'Analyst' ? 'analyst-div' : 
                           (tier === 'Fanalyst' ? 'fanalyst-div' : '')))} tier-div`} >{tier}</div>
+
         <div className="analysis-question">{post.question}</div>
       </div>
 
@@ -61,9 +62,6 @@ export default function AnalysisPost(props) {
           Closes in: &ensp; {timeLeft[0]}h {timeLeft[1]}m
         </div>
       </div> : null}
-
-      
-
     </div>
   );
     
