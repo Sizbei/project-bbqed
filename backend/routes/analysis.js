@@ -47,9 +47,8 @@ const generateAnalysisResponse = (analysis, curTime) => {
         _id: analysis._id,
         question: analysis.question,
         tier: analysis.tier,
-    }
-    if(curTime <= analysis.endTime) {
-        response.closesIn = analysis.endTime;
+        status: analysis.status,
+        endTime: analysis.endTime,
     }
     return response
 }
