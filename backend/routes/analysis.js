@@ -124,6 +124,13 @@ router.route('/past/:start/:limit').get(passport.authenticate('jwt', {session : 
     }
 })
 
+//router.route('/past/size').get((req, res) => {
+router.route('/past/size').get(passport.authenticate('jwt', {session : false}), (req, res) => {
+    analysis.find({status: "close"}).then(analyses => {
+        res.json({size: analyses.length});
+    }).catch(err => res.status(500).json({msg: "Internal service error.", err: err}));
+})
+
 //request body: {year, month, day, status}
 router.route('/add').put((req, res) => {
     const analysis_count = 2;
