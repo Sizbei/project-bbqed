@@ -210,7 +210,7 @@ function VotePost(props) {
           <div className="analysis-histogram">
             <Histogram data={scoreData} xScale={0.4} yScale={0.2}/>
           </div>
-          <label className="analysis-average-Score">Average Score: {averageScore}</label>
+          <label className="analysis-average-Score">Average Score: {averageScore}%</label>
           <label className="analysis-time-ago">{updatedTime}</label>
         </div>
         <label className="analysis-additional-comment">{content}</label>

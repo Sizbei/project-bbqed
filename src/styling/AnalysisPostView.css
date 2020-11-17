@@ -174,11 +174,12 @@
   }
 
   .analysis-average-Score {
-    font-size: 0.5vw;
+    font-size: 0.6vw;
     color:white;
     font-family: "CommissionerMedium";
     margin-left: 1.5%;
   }
+
   .left-user-info {
     height: 60%;
     width: 100%;
