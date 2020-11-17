@@ -7,8 +7,8 @@ import Slider from './Slider';
 import Histogram from './Histogram';
 
 export default function Analysis(props) {
-   
   const authContext = useContext(AuthContext);
+
   const [formState, setFormState] = useState("discussion");
   const [tier, setTier] = useState("Analyst");
   const [response, setResponse] = useState("");
@@ -18,11 +18,18 @@ export default function Analysis(props) {
   useEffect(() => {
     //Find out if the user had already answered the question and set new form state
     setFormState("discussion");
-
-    //Get user's tier and set tier
-    //setTier();
-    //setDebates();
+    fetch(props.path).then(res => res.json())
+    .then(data => {
+      setTier(data.tier);
+      setQuestion(data.question);
+      setDebates(data.responses);
+    })
+    .catch((error) => {
+      console.log(error); 
+    })
   })
+
+
 
   const sampleHistogramData = Array(101).fill(0).map((el, i) => i*i + (100-i)*(100-i) - 2 * 50 * 50);
   sampleHistogramData[55] = 50*50*30;
@@ -47,7 +54,7 @@ export default function Analysis(props) {
         </div>
         <div className="analysis-comments"> 
       
-        <div className="analysis-posts">
+        {/* <div className="analysis-posts">
           <VotePost username="Username" acs={543} timeAgo={"6 hours ago"} 
             scoreData={sampleHistogramData} content={"A controversial post..."} />
         
@@ -56,12 +63,10 @@ export default function Analysis(props) {
 
           <VotePost username="Username" acs={543} timeAgo={"6 hours ago"} 
               scoreData={Array(101).fill(0)} content={"No votes yet."} />
-        </div>
-
+        </div> */}
         {debates.map((data, index) => {
           return (
-              <div>
-              </div>
+            <div/>
           )
       })}
       </div>
