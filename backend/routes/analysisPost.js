@@ -10,9 +10,9 @@ const passportConfig = require('../passport');
 const { findById } = require('../models/acs');
 
 const findScoreHistory = (username, score_history) => {
-    for(const index in score_history) {
-        if(score_history[index].user == username) {
-            return index;
+    for(let i in score_history) {
+        if(score_history[i].user == username) {
+            return i;
         }
     }
     return -1;
@@ -71,8 +71,7 @@ router.route('/:id').get(passport.authenticate('jwt', { session: false }), (req,
     analysisPost.find({analysis: req.params.id}).sort({"createdAt": "desc"}).then(posts => {
         let user_posts = [];
         let other_posts = [];
-        for(const index in posts) {
-            console.log(index);
+        for(let index in posts) {
             let cur_score_index = findScoreHistory(username, posts[index].scoreHistory);
             console.log(index);
             let isScored = false;
