@@ -12,18 +12,22 @@ export default function TheZone(props) {
     const authContext = useContext(AuthContext);
     const postId = props.location.pathname.slice(17, props.location.pathname.length);
     const path = ' /zone/display/' + authContext.user.username + '/' + postId;
-
+    
+    
     const [username, setUsername] = useState('');
     const [likes, setLikes] = useState(0);
     const [acs, setAcs] = useState(0);
     const [content, setContent] = useState('');
     const [agree, setAgree] = useState(false);
     const [disagree, setDisagree] = useState(false);
+    const [rId, setRId] = useState('');
+    const [reported, setReported] = useState(false);
+
     const [posts, setPosts] = useState([]);
 
-   
     const [showPostPopup, setPostPopup] = useState(false);
     const [showReportPopup, setReportPopup] = useState(false);
+    const [showReportBtn, setReportBtn] = useState(false);
 
     useEffect(() => {
         fetch(path).then(res => res.json())
@@ -36,7 +40,6 @@ export default function TheZone(props) {
                 setAgree(data.posts.upvoted);
                 setDisagree(data.posts.downvoted);
                 
-                
             })
             .catch((error) => {
                 console.log(error);
@@ -47,7 +50,10 @@ export default function TheZone(props) {
        setPostPopup(!showPostPopup);
     }
 
-    const toggleReportPopup = () => {
+    const toggleReportPopup = (rId) => {
+        setRId(rId);
+
+        console.log(rId);
         setReportPopup(!showReportPopup);
     }
    
@@ -140,9 +146,10 @@ export default function TheZone(props) {
                     : null
                 }
 
-                {showReportPopup ? <ReportPopup closePopup={toggleReportPopup} />
+                {showReportPopup ? <ReportPopup closePopup={toggleReportPopup} rId = {rId} />
                     : null
                 }
+
                 <div class="tzone-post-body">
                     <button class="tzone-create-post-btn" onClick={togglePostPopup}>  {"What's on your mind, " + (authContext.user.username) + "?"}
                     </button>
@@ -166,8 +173,10 @@ export default function TheZone(props) {
                                     
                                     <div className="tzone-likes"> <label> {data.likes} </label></div>
                                     </div>
-                                <button className="tzone-report-btn" onClick={toggleReportPopup}>{"Report Post"}</button>
-                                    
+
+                                {showReportBtn ? null : <button className="tzone-report-btn" onClick={() => toggleReportPopup(data._id)} >{"Report Post"}</button>
+                                }
+                               
                                     
                                     <div className="tzone-post-info">      
                                     <Link to={"/theZone/display/" + (data._id)} className="tzone-link">

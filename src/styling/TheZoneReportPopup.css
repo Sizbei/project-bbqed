@@ -84,9 +84,10 @@ h1 {
     margin-right:20%;
 }
 
-.tzrp-popup-close-button:hover , .profile-popup-submit-button:hover { 
+.tzrp-popup-close-button:hover , .tzrp-popup-submit-button:hover { 
   color: #747474;
   background-color: white; 
+  cursor: pointer;
 }
 
 .tzone-post-buttons {
