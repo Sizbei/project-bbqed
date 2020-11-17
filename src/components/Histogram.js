@@ -12,7 +12,7 @@ export default function Histogram(props) {
   
   const nonZero = (function() {
     for (let i = 0; i < data.length; i++) {
-      console.log(data[i]);
+      // console.log(data[i]);
       if (Math.abs(data[i]) > 0.01) {
         return true;
       }
@@ -46,7 +46,7 @@ export default function Histogram(props) {
     return totalmul / weight;
   })
 
-  console.log("multipler", multiplier);
+  // console.log("multipler", multiplier);
 
   const transform = Array(data.length).fill(0).map((el, j) => {
     let total = 0;
@@ -56,7 +56,7 @@ export default function Histogram(props) {
     return (total * multiplier[j]).toFixed(6);
   })
 
-  console.log("transform", transform);
+  // console.log("transform", transform);
   
   // set the min x axis
   // const append = transform.concat([Math.min(...transform) / 1.05]);
