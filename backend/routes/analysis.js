@@ -3,12 +3,10 @@ const router = require('express').Router();
 let analysis = require('../models/analysis');
 let analysisQuestion = require('../models/analysisquestion');
 let acs = require('../models/acs');
-let analysisQuestion = require('../models/analysisquestion');
 
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const passportConfig = require('../passport');
-const { type } = require('jquery');
 
 const acsTiers = {
     "Fanalyst": [0, 300],
