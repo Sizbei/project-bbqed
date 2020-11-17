@@ -7,6 +7,7 @@ let acs = require('../models/acs');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const passportConfig = require('../passport');
+const { type } = require('jquery');
 
 const acsTiers = {
     "Fanalyst": [0, 300],
@@ -42,7 +43,7 @@ const getTier = async (username) => {
 //    return hours + "h " + minutes + "m"
 //}
 
-const generateAnalysisResponse = (analysis, curTime) => {
+const generateAnalysisResponse = (analysis) => {
     let response = {
         _id: analysis._id,
         question: analysis.question,
@@ -65,34 +66,33 @@ router.route('/current').get(passport.authenticate('jwt', {session : false}), as
                 otherAcsTiers: [],
             }
             let curTierAnalyses = [];
-            const curTime = new Date();
             await analysis.find({status: "open"}).then(analyses => {
                 for(index in analyses) {
                     if (analyses[index].tier == tier) {
                         curTierAnalyses.push(analyses[index]);
                     } else {
-                        response.otherAcsTiers.push(generateAnalysisResponse(analyses[index], curTime));
+                        response.otherAcsTiers.push(generateAnalysisResponse(analyses[index]));
                     }
                 }
                 // check if user has been assigned with a analysis question
                 if(curTierAnalyses[0].users.includes(username)) {
-                    response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[0], curTime));
-                    response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[1], curTime));
+                    response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[0]));
+                    response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[1]));
                 } else if (curTierAnalyses[1].users.includes(username)) {
-                    response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[1], curTime));
-                    response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[0], curTime));
+                    response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[1]));
+                    response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[0]));
                 } else {
                     // if not add user to one of the questions
                     if(curTierAnalyses[0].users.length <= curTierAnalyses[1].users.length) {
                         curTierAnalyses[0].users.push(username);
                         curTierAnalyses[0].save();
-                        response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[0], curTime));
-                        response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[1], curTime));
+                        response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[0]));
+                        response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[1]));
                     } else {
                         curTierAnalyses[1].users.push(username);
                         curTierAnalyses[1].save();
-                        response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[1], curTime));
-                        response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[0], curTime));
+                        response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[1]));
+                        response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[0]));
                     }
                 }
             });
