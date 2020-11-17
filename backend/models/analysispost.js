@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const analysisPostSchema = new Schema({
 
     analysis: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: [mongoose.Schema.Types.ObjectId],
         ref: 'analysis'
     },
     user: {
@@ -17,6 +17,7 @@ const analysisPostSchema = new Schema({
         unique: false,
         required: true,
     },
+  
     averageScore: {
         type: Number,
         unique: false,
@@ -46,6 +47,7 @@ const analysisPostSchema = new Schema({
             }
         }
     ]
+
 },{
     timestamps: true,
 })

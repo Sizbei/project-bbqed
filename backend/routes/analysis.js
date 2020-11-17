@@ -1,11 +1,13 @@
 //Start every route with these lines - connects with model
 const router = require('express').Router();
 let analysis = require('../models/analysis');
+let analysisQuestion = require('../models/analysisquestion');
 let acs = require('../models/acs');
 
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const passportConfig = require('../passport');
+const { type } = require('jquery');
 
 const acsTiers = {
     "Fanalyst": [0, 300],
@@ -31,65 +33,71 @@ const getTier = async (username) => {
     return tier
 }
 
-const compareTime = (stopTime, curTime) => {
-    let hours = Math.floor((stopTime - curTime)/(1000*60*60));
-    let minutes = Math.floor((stopTime - curTime - hours*1000*60*60)/(1000*60)) + 1;
-    if(minutes == 60) {
-        hours += 1;
-        minutes = 0;
-    }
-    return hours + "h " + minutes + "m"
-}
 
-const generateAnalysisResponse = (analysis, curTime) => {
+//const compareTime = (stopTime, curTime) => {
+//    let hours = Math.floor((stopTime - curTime)/(1000*60*60));
+//    let minutes = Math.floor((stopTime - curTime - hours*1000*60*60)/(1000*60)) + 1;
+//    if(minutes == 60) {
+//        hours += 1;
+//        minutes = 0;
+//    }
+//    return hours + "h " + minutes + "m"
+//}
+
+const generateAnalysisResponse = (analysis) => {
+
     let response = {
         _id: analysis._id,
         question: analysis.question,
         tier: analysis.tier,
-    }
-    if(curTime <= analysis.endTime) {
-        response.closesIn = compareTime(analysis.endTime, curTime);
+        status: analysis.status,
+        endTime: analysis.endTime,
+
     }
     return response
 }
 
-router.route('/current/:username').get(async (req, res) => {
+//router.route('/current/:username').get(async (req, res) => {
+router.route('/current').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
+    //const username = req.params.username;
+    const username = req.user.username;
     try{
-        const tier= await getTier(req.params.username);
+        const tier= await getTier(username);
+
         if (tier) {
             let response = {
                 currentAcsTier: [],
                 otherAcsTiers: [],
             }
             let curTierAnalyses = [];
-            const curTime = new Date();
+
             await analysis.find({status: "open"}).then(analyses => {
                 for(index in analyses) {
                     if (analyses[index].tier == tier) {
                         curTierAnalyses.push(analyses[index]);
                     } else {
-                        response.otherAcsTiers.push(generateAnalysisResponse(analyses[index], curTime));
+                        response.otherAcsTiers.push(generateAnalysisResponse(analyses[index]));
                     }
                 }
                 // check if user has been assigned with a analysis question
-                if(curTierAnalyses[0].users.includes(req.params.username)) {
-                    response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[0], curTime));
-                    response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[1], curTime));
-                } else if (curTierAnalyses[1].users.includes(req.params.username)) {
-                    response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[1], curTime));
-                    response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[0], curTime));
+                if(curTierAnalyses[0].users.includes(username)) {
+                    response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[0]));
+                    response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[1]));
+                } else if (curTierAnalyses[1].users.includes(username)) {
+                    response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[1]));
+                    response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[0]));
                 } else {
                     // if not add user to one of the questions
                     if(curTierAnalyses[0].users.length <= curTierAnalyses[1].users.length) {
-                        curTierAnalyses[0].users.push(req.params.username);
+                        curTierAnalyses[0].users.push(username);
                         curTierAnalyses[0].save();
-                        response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[0], curTime));
-                        response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[1], curTime));
+                        response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[0]));
+                        response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[1]));
                     } else {
-                        curTierAnalyses[1].users.push(req.params.username);
+                        curTierAnalyses[1].users.push(username);
                         curTierAnalyses[1].save();
-                        response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[1], curTime));
-                        response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[0], curTime));
+                        response.currentAcsTier.push(generateAnalysisResponse(curTierAnalyses[1]));
+                        response.otherAcsTiers.push(generateAnalysisResponse(curTierAnalyses[0]));
                     }
                 }
             });
@@ -102,22 +110,30 @@ router.route('/current/:username').get(async (req, res) => {
     }
 })
 
-router.route('/past/:limit').get(async (req, res) => {
+//router.route('/past/:start/:limit').get(async (req, res) => {
+router.route('/past/:start/:limit').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
     try {
-        if(req.params.limit > 0) {
+        if(req.params.limit > 0 && req.params.start >= 0) {
             let response = [];
-            await analysis.find({status: "close"}).sort({"startTime": "desc", "tier": "asc", "question": "asc"}).limit(parseInt(req.params.limit)).then(analyses => {
-                for(index in analyses) {
+            await analysis.find({status: "close"}).sort({"startTime": "desc", "tier": "asc", "question": "asc"}).limit(parseInt(req.params.limit) + parseInt(req.params.start)).then(analyses => {
+                for(let index = parseInt(req.params.start); index < analyses.length; index ++ ) {
                     response.push(generateAnalysisResponse(analyses[index]));
                 }
             });
             res.json({analyses: response})
         } else {
-            res.status(400).json({msg: "Bad request: limit cannot be zero and negative"});
+            res.status(400).json({msg: "Bad request: incorect information in url"});
         }
     } catch(err) {
         res.status(500).json({msg: "Internal service error."});
     }
+})
+
+//router.route('/past/size').get((req, res) => {
+router.route('/past/size').get(passport.authenticate('jwt', {session : false}), (req, res) => {
+    analysis.find({status: "close"}).then(analyses => {
+        res.json({size: analyses.length});
+    }).catch(err => res.status(500).json({msg: "Internal service error.", err: err}));
 })
 
 //request body: {year, month, day, status}
