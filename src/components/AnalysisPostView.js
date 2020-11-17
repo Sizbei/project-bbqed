@@ -105,10 +105,27 @@ function VotePost(props) {
   const username = props.user;
   const us = "us" in props ? props.us : false;
   const acs = props.acs;
-  const timeAgo = props.timeAgo;
+  var timeAgo = Date.parse(props.timeAgo);
+  var timeNow = new Date(Date.now());
+  var timeBefore = new Date(timeAgo);
   const [scoreData, setScoreData] = useState(props.scoreData);
   const averageScore = props.averageScore;
   const content = props.content;
+  var updatedTime = "";
+
+//   console.log("timeNow: " + timeNow + "\n" + timeNow.getMonth() + "\n" + timeNow.getDate() + "\n" + timeNow.getHours() + "\n" + timeNow.getMinutes() + "\n");
+//   console.log("timeBefore: " + timeBefore + "\n" + timeBefore.getMonth() + "\n" + timeBefore.getDate() + "\n" +  + timeBefore.getHours() + "\n" + timeBefore.getMinutes() + "\n");
+  if(timeNow.getMonth() > timeBefore.getMonth()) {
+    updatedTime = timeNow.getMonth() - timeBefore.getMonth() + " months ago";
+  } else if (timeNow.getDate() > timeBefore.getDate()) {
+    updatedTime = timeNow.getDate() - timeBefore.getDate() + " days ago";
+  } else if (timeNow.getHours > timeBefore.getHours()) {
+    updatedTime = timeNow.getHours() - timeBefore.getHours() + " hours ago";
+  } else if (timeNow.getMinutes() > timeBefore.getMinutes()) {
+    updatedTime = timeNow.getMinutes() - timeBefore.getMinutes() + " minutes ago";
+  } else {
+    updatedTime = " 1 minute ago";
+  }
 
   const handleVote = (score) => {
     console.log("GOT", score);
@@ -140,7 +157,7 @@ function VotePost(props) {
             <Histogram data={scoreData} xScale={0.4} yScale={0.2}/>
           </div>
           <label className="analysis-average-Score">Average Score: {averageScore}</label>
-          <label className="analysis-time-ago">{timeAgo}</label>
+          <label className="analysis-time-ago">{updatedTime}</label>
         </div>
         <label className="analysis-additional-comment">{content}</label>
       </div>
