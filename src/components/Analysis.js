@@ -14,6 +14,7 @@ export default function Analysis(props) {
   const [response, setResponse] = useState("");
   const [question, setQuestion] = useState("Sample Question to be Answered");
   const [debates, setDebates] = useState([]);
+  const [averageScore, setAverageScore] = useState("0");
 
   useEffect(() => {
     //Find out if the user had already answered the question and set new form state
@@ -54,16 +55,16 @@ export default function Analysis(props) {
         </div>
         <div className="analysis-comments"> 
       
-        {/* <div className="analysis-posts">
+        <div className="analysis-posts">
           <VotePost username="Username" acs={543} timeAgo={"6 hours ago"} 
-            scoreData={sampleHistogramData} content={"A controversial post..."} />
+            scoreData={sampleHistogramData} content={"A controversial post..."} averageScore={averageScore}/>
         
           <VotePost username="Username" acs={543} timeAgo={"6 hours ago"} 
-              scoreData={sampleHistogramData2} content={"Not controversial at all."} />
+              scoreData={sampleHistogramData2} content={"Not controversial at all."} averageScore={averageScore}/>
 
           <VotePost username="Username" acs={543} timeAgo={"6 hours ago"} 
-              scoreData={Array(101).fill(0)} content={"No votes yet."} />
-        </div> */}
+              scoreData={Array(101).fill(0)} content={"No votes yet."} averageScore={averageScore}/>
+        </div>
         {debates.map((data, index) => {
           return (
             <div/>
@@ -102,6 +103,7 @@ function VotePost(props) {
   const acs = props.acs;
   const timeAgo = props.timeAgo;
   const [scoreData, setScoreData] = useState(props.scoreData);
+  const averageScore = props.averageScore;
   const content = props.content;
 
   const handleVote = (score) => {
@@ -127,6 +129,7 @@ function VotePost(props) {
           <div className="analysis-histogram">
             <Histogram data={scoreData} xScale={0.4} yScale={0.2}/>
           </div>
+          <label className="analysis-average-Score">Average Score: {averageScore}</label>
           <label className="analysis-time-ago">{timeAgo}</label>
         </div>
         <label className="analysis-additional-comment">{content}</label>

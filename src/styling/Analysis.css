@@ -168,6 +168,12 @@
     font-family: "CommissionerMedium";
   }
 
+  .analysis-average-Score {
+    font-size: 0.5vw;
+    color:white;
+    font-family: "CommissionerMedium";
+    margin-left: 1.5%;
+  }
   .left-user-info {
     height: 60%;
     width: 100%;
