@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const analysisPostSchema = new Schema({
 
     analysis: {
-        type: [mongoose.Schema.Types.ObjectId],
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'analysis'
     },
     user: {
