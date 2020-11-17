@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route} from "react-router-dom";
 import {AuthContext} from './Context/AuthContext';
 import PrivateRoute from './hocs/PrivateRoute';
 import PublicRoute from './hocs/PublicRoute';
+import AdminRoute from './hocs/AdminRoute'
 
 import Login from "./components/Login";
 import TheZone from "./components/TheZone";
@@ -32,8 +33,8 @@ function App() {
       <PublicRoute path="/" exact component={Login} />
       <PrivateRoute path="/TheZone" exact component={TheZone} />
       <PrivateRoute path="/TheZone/display" component={Post} />
-      <PrivateRoute path= "/Reports/post" component={ReportPost}/>
-      <PrivateRoute path= "/Reports/comment" component={ReportComment}/>
+      <AdminRoute path= "/Reports/post" component={ReportPost}/>
+      <AdminRoute path= "/Reports/comment" component={ReportComment}/>
       <PrivateRoute path="/Trivia" component={Trivia} />
       <PrivateRoute path="/Analysis" component={Analysis} />
       <PrivateRoute path="/PicksAndPredictions" component={PicksAndPredictions} />
