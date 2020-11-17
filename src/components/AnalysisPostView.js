@@ -10,28 +10,53 @@ export default function AnalysisPostView(props) {
   const _id = window.location.pathname.split("/").pop();
 
   const authContext = useContext(AuthContext);
-  const [formState, setFormState] = useState("discussion");
+  const [formState, setFormState] = useState("etc");
   const [tier, setTier] = useState("Analyst");
   const [response, setResponse] = useState("");
   const [question, setQuestion] = useState("Sample Question to be Answered");
   const [ourPosts, setOurPosts] = useState([]);
   const [otherPosts, setOtherPosts] = useState([]);
-  const [averageScore, setAverageScore] = useState("0");
 
-  useEffect(() => {
-    //Find out if the user had already answered the question and set new form state
-    setFormState("discussion");
-
+  const restart = () => {
     fetch('/analysis/post/' + _id).then(res => res.json())
     .then((initData) => {
       console.log("got init", initData);
 
-      setOurPosts(initData.userPosts)
-      setOtherPosts(initData.otherPosts)
+      if (initData.userPosts.length > 0) {
+        setOurPosts(initData.userPosts)
+        setOtherPosts(initData.otherPosts)
+        setFormState("discussion");
+      } else {
+        setFormState("dailyQuestion");
+      }
     })
+  }
+  useEffect(() => {
+    //Find out if the user had already answered the question and set new form state
+    // setFormState("discussion");
+
+    restart();
   }, [])
 
+  const onSubmit = () => {
+    console.log("SUBMIT:", response);
 
+    const requestBody = {
+      method: "put",
+      body: JSON.stringify({
+        _id: _id,
+        username: authContext.user.username,
+        post: response,
+      }),
+      headers: {'Content-Type' : 'application/json'}
+    }
+    console.log("send", requestBody);
+    fetch('/analysis/post/', requestBody).then(res => res.json())
+    .then((res) => {
+      console.log("GOT RESPONSE", res);
+      restart();
+    })
+  }
 
   const sampleHistogramData = Array(101).fill(0).map((el, i) => i*i + (100-i)*(100-i) - 2 * 50 * 50);
   sampleHistogramData[55] = 50*50*30;
@@ -93,11 +118,13 @@ export default function AnalysisPostView(props) {
         </div>
         <div className='analysis-response'>
           <label className='analysis-response-header'>Your Response</label>
-          <textarea type="text" className="analysis-response-input" maxLength="1000"></textarea>
-          <button className='analysis-response-submit'>Submit</button>
+          <textarea type="text" className="analysis-response-input" maxLength="1000" onChange={e => setResponse(e.target.value)}></textarea>
+          <button className='analysis-response-submit' onClick={onSubmit}>Submit</button>
         </div>
       </div>
       );
+  } else {
+    return null;
   }
 } 
 
@@ -143,7 +170,7 @@ function VotePost(props) {
     fetch('/analysis/post/score/', requestBody).then(res => res.json())
     .then((res) => {
       if (res.status != 200) return;
-      console.log("GOT RESPONSE", res.status);
+      console.log("GOT RESPONSE", res);
 
       const newScoreData = Array(101).fill(0).map((el, i) => scoreData[i]);
       newScoreData[score] += 1;
