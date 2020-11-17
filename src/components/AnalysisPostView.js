@@ -60,14 +60,16 @@ export default function AnalysisPostView(props) {
           {ourPosts.map((data, index) => {
             console.log(data);
             return (
-              <VotePost user={data.user} acs={0} timeAgo={data.createdAt} scoreData={sampleHistogramData3} content={data.content} />
+              <VotePost user={data.user} us={authContext.user.username === data.user} acs={0} 
+              timeAgo={data.createdAt} scoreData={sampleHistogramData3} content={data.content} averageScore={data.averageScore} />
             )
           })}
 
           {otherPosts.map((data, index) => {
             console.log(data);
             return (
-              <VotePost user={data.user} acs={0} timeAgo={data.createdAt} scoreData={sampleHistogramData3} content={data.content} />
+              <VotePost user={data.user} us={authContext.user.username === data.user} acs={0} 
+              timeAgo={data.createdAt} scoreData={sampleHistogramData3} content={data.content} averageScore={data.averageScore} />
             )
           })}
         </div>
@@ -101,6 +103,7 @@ export default function AnalysisPostView(props) {
 
 function VotePost(props) {
   const username = props.user;
+  const us = "us" in props ? props.us : false;
   const acs = props.acs;
   const timeAgo = props.timeAgo;
   const [scoreData, setScoreData] = useState(props.scoreData);
@@ -118,9 +121,15 @@ function VotePost(props) {
 
   return (
     <div>
-      <div className="analysis-slider">
-        <Slider scale={0.7} onSubmit={handleVote}/>
-      </div>
+      {!us ? (
+        <div className="analysis-slider">
+          <Slider scale={0.7} onSubmit={handleVote}/>
+        </div>
+      ) : (
+        <div className="analysis-slider" style={{visibility: "hidden"}}>
+        </div>
+      )}
+      
       <div className="analysis-user">
         <div className="left-user-info">
           <label className="analysis-username">{username}</label>
