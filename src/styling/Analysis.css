@@ -91,14 +91,13 @@ body {
 
 .time-left {
   margin: 5px 5px 5px 5px;
-  padding: 5px 5px 5px 0px;
+  padding: 2px 5px 0px 0px;
   border-radius: 8px;
   border: 1px solid;
   background-color: rgb(105, 104, 104);
   overflow: hidden;
   text-align: center;
-  justify-content: flex-end;
-  
+  justify-content: flex-start;
   display: inline-block;
   width: 11%;
   display: flex;
@@ -108,9 +107,14 @@ body {
   font-family: 'CommissionerMedium';
   font-size: 0.8vw;
   margin-left: 5px;
-  padding-top: 2px;
+  padding-top: 3px;
   padding-right: 2px;
 
+}
+
+.clockIcon {
+  margin-left: 5px;
+  margin-top: 2px;
 }
 
 .analysis-question {
