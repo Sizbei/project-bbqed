@@ -9,7 +9,8 @@ export default function Analysis() {
   const [currentTierPosts, setCurrentTierPosts] = useState(0);
   const [otherTierPosts, setOtherTierPosts] = useState(0);
   const [pastTierPosts, setPastTierPosts] = useState(0);
-  const[page, setPage] = useState(1);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotlaPages] = useState(0);
   const authContext = useContext(AuthContext);
 
   useEffect(() => {
@@ -25,6 +26,11 @@ export default function Analysis() {
     fetch('/analysis/past/'+ ((page-1)*10).toString() + '/10').then(res => res.json())
     .then(past => {
       setPastTierPosts(past.analyses)
+    })
+
+    fetch('/analysis/past/size').then(res => res.json())
+    .then(res => {
+      setTotlaPages(Math.ceil(res.size / 10));
     })
 
   },[page]);
@@ -63,7 +69,7 @@ export default function Analysis() {
             {pastTierPosts.length > 0 && Array.from(Array(pastTierPosts.length)).map((x, index) => <AnalysisPost post={pastTierPosts[index]}/>)}
 
             <div className="analysis-pagination">
-              <Pagination count={10} color="primary" onChange={handlePageChange} />
+              <Pagination count={totalPages} color="primary" onChange={handlePageChange} />
             </div>
             
 
