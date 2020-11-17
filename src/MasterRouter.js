@@ -33,7 +33,7 @@ function App() {
       <PrivateRoute path="/TheZone/display" component={Post} />
       <PrivateRoute path="/Trivia" component={Trivia} />
       <PrivateRoute exact path="/Analysis" component={Analysis} />
-      <PrivateRoute path="/analysis/post" component={AnalysisPost} />
+      <PrivateRoute path="/analysis/post/:id" component={AnalysisPost} />
       <PrivateRoute path="/PicksAndPredictions" component={PicksAndPredictions} />
       <PrivateRoute path="/Profile" component={Profile} />
       <PrivateRoute path="/Settings" component={Settings} />

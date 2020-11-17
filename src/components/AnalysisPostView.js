@@ -7,8 +7,7 @@ import Slider from './Slider';
 import Histogram from './Histogram';
 
 export default function AnalysisPostView(props) {
-  // const _id = props._id;
-  const _id = "5faeb35bcc268a1e5473c87e";
+  const _id = window.location.pathname.split("/").pop();
 
   const authContext = useContext(AuthContext);
   const [formState, setFormState] = useState("discussion");
@@ -54,17 +53,7 @@ export default function AnalysisPostView(props) {
           <div className="sample-div"/>
         </div>
         <div className="analysis-comments"> 
-      
-        <div className="analysis-posts">
-          <VotePost username="Username" acs={543} timeAgo={"6 hours ago"} 
-            scoreData={sampleHistogramData} content={"A controversial post..."} averageScore={averageScore}/>
-        
-          <VotePost username="Username" acs={543} timeAgo={"6 hours ago"} 
-              scoreData={sampleHistogramData2} content={"Not controversial at all."} averageScore={averageScore}/>
 
-          <VotePost username="Username" acs={543} timeAgo={"6 hours ago"} 
-              scoreData={Array(101).fill(0)} content={"No votes yet."} />
-        </div>
         <div className="analysis-posts">
           {debates.map((data, index) => {
             console.log(data);
