@@ -9,6 +9,15 @@ const jwt = require('jsonwebtoken');
 const passportConfig = require('../passport');
 const { findById } = require('../models/acs');
 
+const findScoreHistory = (username, score_history) => {
+    for(index in score_history) {
+        if(score_history[index].user == username) {
+            return index;
+        }
+    }
+    return -1;
+}
+
 // request body: {_id: str, post: str}
 //router.route('/').put(async (req, res) => {
 router.route('/').put(passport.authenticate('jwt', { session: false }), async (req, res) => {
@@ -49,12 +58,19 @@ router.route('/:id').get(passport.authenticate('jwt', { session: false }), (req,
         let user_posts = [];
         let other_posts = [];
         for(index in posts) {
+            let cur_score_index = findScoreHistory(username, posts[index].scoreHistory);
+            let isScored = false;
+            if(cur_score_index != -1) {
+                isScored = true;
+            }
             const cur_post = {
                 _id: posts[index]._id,
                 user: posts[index].user,
                 content: posts[index].response,
                 averageScore: posts[index].averageScore,
-                createdAt: posts[index].createdAt
+                histogram: posts[index].scoreCounts,
+                createdAt: posts[index].createdAt,
+                isScored: isScored
             }
             if(cur_post.user == username) {
                 user_posts.push(cur_post);
@@ -76,6 +92,7 @@ router.route('/random/:id/:limit').get(passport.authenticate('jwt', { session: f
                 user: posts[index].user,
                 content: posts[index].response,
                 averageScore: posts[index].averageScore,
+                histogram: posts[index].scoreCounts,
                 createdAt: posts[index].createdAt
             }
             random_posts.push(cur_post);
@@ -83,15 +100,6 @@ router.route('/random/:id/:limit').get(passport.authenticate('jwt', { session: f
         res.json({posts: random_posts});
     }).catch(err => res.status(400).json({msg: "Bad request", err: err}));
 });
-
-const findScoreHistory = (username, score_history) => {
-    for(index in score_history) {
-        if(score_history[index].user == username) {
-            return index;
-        }
-    }
-    return null;
-}
 
 // request body: {_id: str, score: int}
 //router.route('/score').put(async (req, res) => {
@@ -105,7 +113,7 @@ router.route('/score').put(passport.authenticate('jwt', { session: false }), asy
             .catch(err => res.status(500).json({msg: "Internal service err", err: err}));
         if(cur_post.user != username && cur_analysis.users.includes(username)) {
             let cur_score_index = findScoreHistory(username, cur_post.scoreHistory);
-            if(cur_score_index) {
+            if(cur_score_index != -1) {
                 res.status(400).json({msg: "Bad request: Not supposed to score a post twice."})
             } else {
                 const new_score = {
@@ -125,17 +133,6 @@ router.route('/score').put(passport.authenticate('jwt', { session: false }), asy
     } else {
         res.status(400).json({msg: "Bad request: request body contain incorrect information."});
     }
-});
-
-//router.route('/score/histogram/:id').get(async (req, res) => {
-router.route('/score/histogram/:id').get(passport.authenticate('jwt', { session: false }), async (req, res) => {
-    analysisPost.findById({_id: req.params.id}).then(post => {
-        if(post) {
-            res.json({historgram: post.scoreCounts});
-        } else {
-            res.status(400).json({msg: "Bad request: incorrect information in url"});
-        }
-    }).catch(err => res.status(400).json({msg: "Bad request", err: err}));
 });
 
 module.exports = router;
