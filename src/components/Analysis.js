@@ -7,8 +7,10 @@ import Slider from './Slider';
 import Histogram from './Histogram';
 
 export default function Analysis(props) {
-  const authContext = useContext(AuthContext);
+  // const _id = props._id;
+  const _id = "5faeb35bcc268a1e5473c87e";
 
+  const authContext = useContext(AuthContext);
   const [formState, setFormState] = useState("discussion");
   const [tier, setTier] = useState("Analyst");
   const [response, setResponse] = useState("");
@@ -19,16 +21,24 @@ export default function Analysis(props) {
   useEffect(() => {
     //Find out if the user had already answered the question and set new form state
     setFormState("discussion");
-    fetch(props.path).then(res => res.json())
-    .then(data => {
-      setTier(data.tier);
-      setQuestion(data.question);
-      setDebates(data.responses);
+
+    fetch('/analysis/post/' + _id).then(res => res.json())
+    .then((initData) => {
+      console.log("got init", initData);
+
+      setDebates(initData.userPosts)
     })
-    .catch((error) => {
-      console.log(error); 
-    })
-  })
+
+    // fetch(props.path).then(res => res.json())
+    // .then(data => {
+    //   setTier(data.tier);
+    //   setQuestion(data.question);
+    //   setDebates(data.responses);
+    // })
+    // .catch((error) => {
+    //   console.log(error); 
+    // })
+  }, [_id])
 
 
 
@@ -63,13 +73,16 @@ export default function Analysis(props) {
               scoreData={sampleHistogramData2} content={"Not controversial at all."} averageScore={averageScore}/>
 
           <VotePost username="Username" acs={543} timeAgo={"6 hours ago"} 
-              scoreData={Array(101).fill(0)} content={"No votes yet."} averageScore={averageScore}/>
+              scoreData={Array(101).fill(0)} content={"No votes yet."} />
         </div>
-        {debates.map((data, index) => {
-          return (
-            <div/>
-          )
-      })}
+        <div className="analysis-posts">
+          {debates.map((data, index) => {
+            console.log(data);
+            return (
+              <VotePost user={data.user} acs={0} timeAgo={""} scoreData={sampleHistogramData3} content={data.content} />
+            )
+          })}
+        </div>
       </div>
   </div>
     );
@@ -99,7 +112,7 @@ export default function Analysis(props) {
 } 
 
 function VotePost(props) {
-  const username = props.username;
+  const username = props.user;
   const acs = props.acs;
   const timeAgo = props.timeAgo;
   const [scoreData, setScoreData] = useState(props.scoreData);

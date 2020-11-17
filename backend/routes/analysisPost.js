@@ -53,7 +53,8 @@ router.route('/:id').get(passport.authenticate('jwt', { session: false }), (req,
                 _id: posts[index]._id,
                 user: posts[index].user,
                 content: posts[index].response,
-                averageScore: posts[index].averageScore
+                averageScore: posts[index].averageScore,
+                createdAt: posts[index].createdAt
             }
             if(cur_post.user == username) {
                 user_posts.push(cur_post);
@@ -74,7 +75,8 @@ router.route('/random/:id/:limit').get(passport.authenticate('jwt', { session: f
                 _id: posts[index]._id,
                 user: posts[index].user,
                 content: posts[index].response,
-                averageScore: posts[index].averageScore
+                averageScore: posts[index].averageScore,
+                createdAt: posts[index].createdAt
             }
             random_posts.push(cur_post);
         }
