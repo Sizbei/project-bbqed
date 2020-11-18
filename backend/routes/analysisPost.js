@@ -93,7 +93,16 @@ router.route('/:id').get(passport.authenticate('jwt', { session: false }), (req,
             }
         }
         analysis.findById({_id: req.params.id}).then(analysis => {
-            res.json({userPosts: user_posts, otherPosts: other_posts, question: analysis.question, image: analysis.image});
+            res.json({
+                userPosts: user_posts,
+                otherPosts: other_posts, question: analysis.question,
+                analysis: {
+                    question: analysis.question,
+                    status: analysis.status,
+                    image: analysis.image,
+                    tier: analysis.tier
+                }
+            });
         }).catch(err => res.status(500).json({msg: "Internal servcie error", err: err}));
     }).catch(err => res.status(400).json({msg: "Bad request", err: err}));
 });
