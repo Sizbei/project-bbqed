@@ -17,20 +17,20 @@ export default function AnalysisPost(props) {
       setPost(props.post);
       setTier(post.tier);
 
-      const endTime = Date.parse(post.endTime);
+      const endTime = new Date(post.endTime);
       const curTime = new Date();
 
       const timeDiff = endTime - curTime;
 
       if(timeDiff > 0){
         const hours = Math.floor(Math.abs(timeDiff / 36e5));
-        const minutes = Math.floor(Math.abs((timeDiff.getHours() - hours) /  60000))
+        const minutes = Math.floor(Math.abs((timeDiff - hours * 36e5) /  60000))
+        
         setTimeLeft([hours, minutes]);
-      } else {
-        setTimeLeft([0,0]);
       }
 
-    } catch(err) {}
+
+    } catch(err) { console.log(err)}
 
 
   }, [props.post]);
