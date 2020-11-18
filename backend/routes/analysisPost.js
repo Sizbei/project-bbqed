@@ -95,7 +95,7 @@ router.route('/:id').get(passport.authenticate('jwt', { session: false }), (req,
         analysis.findById({_id: req.params.id}).then(analysis => {
             res.json({
                 userPosts: user_posts,
-                otherPosts: other_posts, question: analysis.question,
+                otherPosts: other_posts,
                 analysis: {
                     question: analysis.question,
                     status: analysis.status,
