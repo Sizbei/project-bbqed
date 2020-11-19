@@ -31,6 +31,7 @@
 
 .tzone-create-post-btn:hover {
     background-color: lightgrey;
+    color: black;
     cursor:pointer;
 }
 
@@ -100,7 +101,8 @@
   color: white;
   font-size: 1.1em;
   display: block;
-  margin-left: 2em;
+  text-indent: 2em;
+  margin-left: 10px;
   text-decoration: none;
 }
 
@@ -131,8 +133,8 @@
 
 .tzone-post-info {
   color: white; 
-  padding-bottom: 4px; 
-  padding-left: 0%; 
+  padding-bottom: 5%; 
+  border-radius: 8px;
 }
 
 .tzone-post-buttons {
@@ -185,6 +187,7 @@
   line-height: 2.7vw;
   border-radius: 50%;
   margin-left: 50%;
+  margin-top:3%;
   text-align: center;
   color: white;
   font-family: 'CommissionerBold';

@@ -52,13 +52,16 @@ h1 {
   font-size:20px;
   border-radius: 8px;
   font-family:"CommissionerMedium";
+  padding-left: 8px;
+  padding-top: 8px;
+  color: grey;
 
 }
 
 .profile-popup-input-characters {
   word-break: break-all;
-  padding-top: 3px;
-  padding-left: 3px;
+  padding-top: 10px;
+  
   font-size:20px;
   border-radius: 8px;
   font-family:"CommissionerMedium";

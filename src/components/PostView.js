@@ -222,11 +222,12 @@ export default function View(props) {
 
         <div className="tzpv-post-container">
             <div className="tzpv-user-info">
-            <Link to={'/profile/' + authContext.user.username} className="tzpv-profile-link">
+           <label> <Link to={'/profile/' + authContext.user.username} className="tzpv-profile-link">
                 <ProfilePicture username = {username}/>
-                </Link>
-            <label> <Link to={'/profile/' + authContext.user.username} className="tzpv-profile-link"> {username} ({acs})
-             </Link> </label>
+            </Link></label>
+
+             <Link to={'/profile/' + authContext.user.username} className="tzpv-profile-link"> {username} ({acs})
+             </Link> 
 
                 <div className="tzpv-likes"> <label> {likes} </label></div>
             </div>
@@ -259,9 +260,9 @@ export default function View(props) {
                         <div className="tzpv-profile">
                       <label> <Link to={'/profile/' + data.commenter.username} className="tzpv-profile-link">
                         {data.commenter.username} ({data.commenter.acs}) </Link> </label>
-                      <Link to={'/profile/' + data.commenter.username} className="tzpv-profile-link">
+                      <Link  className="tzpv-profile-link">
                             <ProfilePicture scale={0.8} username={data.commenter.username}/> </Link>
-                           {data.reported ? <label className="tzpv-creported"> Comment reported </label> : <button className="tzpv-report-btn" onClick={() => toggleReportPopup(data._id, "comment")} >{"Report Comment"}</button>
+                           {data.reported ? <button className="tzpv-creported"> Comment reported </button> : <button className="tzpv-creport-btn" onClick={() => toggleReportPopup(data._id, "comment")} >{"Report Comment"}</button>
                             }
                             <div className="tzpv-comment-agree-disagree">
                                 <a onClick={()=>handleCommentAgree(data, index)}className={data.upvoted? "tzpv-comment-link-selected": "tzpv-comment-link"}> Agree </a>

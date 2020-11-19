@@ -65,6 +65,9 @@
   color: white; 
   padding-bottom: 5%; 
   border-radius: 8px;
+  text-indent: 2em;
+  margin-left: 10px;
+  flex: 20%;
 }
 
 .tzpv-post-buttons {
@@ -107,21 +110,26 @@
   border-width: 5px;
 
 }
+
 .tzpv-likes { 
   background-color: #ff7e1f; 
-  font-size: 1vw; 
-  width: 3vw; 
-  height: 3vw; 
-  line-height: 2.7vw;
-  border-radius: 50%;
-  margin-left: 50%;
+  font-size: 1.5vw; 
+  width: 4vw; 
+  height: 4vw; 
+  line-height: 3.8vw;
+  border-radius: 75%;
+  margin-top: 1.7%;
+  margin-left: 65%;
+
   text-align: center;
   color: white;
-  font-family: 'CommissionerMedium';
+  font-family: 'CommissionerBold';
 }
+
 .tzpv-likes label { 
   margin: auto;
 }
+
 
 /************ CSS POST COMMENT **********/ 
 .tzpv-post-comment-container input {
@@ -191,6 +199,7 @@
 }
 
 .tzpv-profile-link {
+  margin-top: 2.5%;
   text-decoration: none;
   color: white;
 }
@@ -213,11 +222,24 @@
   width: 140px;
 }
 
+.tzpv-creport-btn{
+  background-color: grey;
+  border-radius: 8px;
+  border: 1px solid;
+  color: white;
+  display: absolute;
+  font-size: 1.1vw;
+  font-family: 'CommissionerBold';
+  text-align: center;
+  width: 180px;
+}
 
-.tzpv-report-btn:hover{
+
+.tzpv-report-btn:hover, .tzpv-creport-btn:hover{
   background-color: lightgrey;
   cursor: pointer;
 }
+
 
 .tzpv-reported{
   background-color: grey;
@@ -225,7 +247,7 @@
   border: 1px solid;
   color: red;
   font-size: 1.3vw;
-  font-family: 'CommissionerMedium';
+  font-family: 'CommissionerBold';
   text-align: center;
   padding-bottom: 5px;
 
@@ -237,11 +259,11 @@
   border-radius: 8px;
   border: 1px solid;
   color: red;
-  display: flex;
-  font-size: 1vw;
-  font-family: 'CommissionerMedium';
+  display: absolute;
+  font-size: 1.1vw;
+  font-family: 'CommissionerBold';
   text-align: center;
-  width: 140px;
+  width: 200px;
 }
 
 
@@ -249,5 +271,19 @@
   font-family: 'CommissionerMedium';
   src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Medium.ttf) format('truetype');
 }
+
+
+@font-face {
+  font-family: 'CommissionerBold';
+  src: local('CommissionerBold'), url(../res/fonts/Commissioner/Commissioner-Bold.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'CommissionerSemiBold';
+  src: local('CommissionerSemiBold'), url(../res/fonts/Commissioner/Commissioner-SemiBold.ttf) format('truetype');
+}
+
+
+
 
 

@@ -78,6 +78,7 @@ class ReportPopup extends React.Component {
   }
 
 
+
   }
   
   render() {  
@@ -91,7 +92,7 @@ class ReportPopup extends React.Component {
         </div>
       :
       <div className="tzrp-popup-content"> 
-        <h1> Would you like to report? </h1>
+            <h1> Would you like to report this {(this.props.type === "comment") ? "comment" : null}{(this.props.type === "post") ? "post" : null}? </h1>
         <div className="tzrp-report-buttons"> 
         <button className="tzrp-popup-close-button" onClick={this.props.closePopup}> Cancel </button>
         <button className="tzrp-popup-submit-button" onClick={this.handleSubmit}> Report </button>
