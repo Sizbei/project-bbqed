@@ -148,11 +148,26 @@ function VotePost(props) {
 //   console.log("timeBefore: " + timeBefore + "\n" + timeBefore.getMonth() + "\n" + timeBefore.getDate() + "\nHours: " +  + timeBefore.getHours() + "\n" + timeBefore.getMinutes() + "\n");
 //   console.log(timeNow.getHours() > timeBefore.getHours());
   if(timeNow.getMonth() > timeBefore.getMonth()) {
-    updatedTime = timeNow.getMonth() - timeBefore.getMonth() + " months ago";
+      if (timeNow.getMonth() - timeBefore.getMonth() == 1) {
+        updatedTime = "1 month ago";
+      }
+      else {
+        updatedTime = timeNow.getMonth() - timeBefore.getMonth() + " months ago";
+      }
   } else if (timeNow.getDate() > timeBefore.getDate()) {
-    updatedTime = timeNow.getDate() - timeBefore.getDate() + " days ago";
+    if (timeNow.getDate() - timeBefore.getDate() == 1) {
+        updatedTime = "1 day ago"
+    }
+    else {
+        updatedTime = timeNow.getDate() - timeBefore.getDate() + " days ago";
+    }
   } else if (timeNow.getHours() > timeBefore.getHours()) {
-    updatedTime = timeNow.getHours() - timeBefore.getHours() + " hours ago";
+    if (timeNow.getHours() - timeBefore.getHours() == 1) {
+        updatedTime = "1 hour ago"
+    }
+    else {
+        updatedTime = timeNow.getHours() - timeBefore.getHours() + " hours ago";
+    }
   } else if (timeNow.getMinutes() > timeBefore.getMinutes()) {
     updatedTime = timeNow.getMinutes() - timeBefore.getMinutes() + " minutes ago";
   } else {
