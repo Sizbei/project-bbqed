@@ -14,6 +14,7 @@ export default function AnalysisPostView(props) {
   const [tier, setTier] = useState("");
   const [response, setResponse] = useState("");
   const [question, setQuestion] = useState("Sample Question to be Answered");
+  const [debateHeader, setDebateHeader] = useState();
   const [imageUrl, setImageUrl] = useState("");
   const [ourPosts, setOurPosts] = useState([]);
   const [otherPosts, setOtherPosts] = useState([]);
@@ -22,7 +23,7 @@ export default function AnalysisPostView(props) {
     fetch('/analysis/post/' + _id).then(res => res.json())
     .then((initData) => {
       console.log("got init", initData);
-
+    
       setQuestion(initData.analysis.question);
       setImageUrl(initData.analysis.image);
       console.log("GOT IMAGE", initData.analysis.image);
@@ -31,6 +32,15 @@ export default function AnalysisPostView(props) {
       const isOpen = initData.analysis.status === "open";
       const containsUser = initData.analysis.isUserInAnalysis;
 
+      if (isOpen && !containsUser) {
+        setDebateHeader("Daily Debate (LOCKED)")
+      }
+      else if (isOpen && containsUser) {
+        setDebateHeader("Daily Debate");
+      }
+      else {
+        setDebateHeader("Past Debate");
+      }
       if (isOpen && containsUser && initData.userPosts.length == 0) {
         setFormState("dailyQuestion");
       } else {
@@ -41,8 +51,6 @@ export default function AnalysisPostView(props) {
     })
   }
   useEffect(() => {
-    //Find out if the user had already answered the question and set new form state
-    // setFormState("discussion");
 
     restart();
   }, [])
@@ -79,7 +87,7 @@ export default function AnalysisPostView(props) {
     <div className='analysis-background'>
       <div className="analysis-header">
         <span>
-          <label className="analysis-question-header">Daily Question </label>
+          <label className="analysis-question-header">{debateHeader} </label>
           <label className="analysis-question-difficulty">{tier}</label>
         </span>
         <label className="analysis-question-text">{question}</label>
@@ -113,7 +121,7 @@ export default function AnalysisPostView(props) {
       <div className='analysis-background'>
         <div className="analysis-header">
         <span>
-          <label className="analysis-question-header">Daily Question </label>
+          <label className="analysis-question-header">{debateHeader} </label>
           <label className="analysis-question-difficulty">{tier}</label>
         </span>
         <label className="analysis-question-text">{question}</label>
