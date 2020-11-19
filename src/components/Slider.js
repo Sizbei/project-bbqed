@@ -11,9 +11,8 @@ export default function Sliderr(props) {
   const onSubmit = "onSubmit" in props ? props.onSubmit : () => {}
   const [lock, setLock] = useState(false);
   const [focus, setFocus] = useState(false);
-  const [done, setDone] = useState(false);
-  const [angle, setAngle] = useState(180);
-  const [prevAngle, setPrevAngle] = useState(180);
+  const [done, setDone] = useState(props.pastScore != null);
+  const [angle, setAngle] = useState(props.pastScore != null ? props.pastScore : 180);
   const sliderContainerSize = 9;
   const minDeg = 25.15;
   const maxDeg = 335.8;
@@ -75,8 +74,12 @@ export default function Sliderr(props) {
 
   const submit = e => {
     e.stopPropagation();
+    if (done) {
+      console.log("Already done.");
+      return;
+    }
+
     console.log("Clicked!");
-    setPrevAngle(angle);
     setDone(true);
     onSubmit(invert(getTick(angle)));
   }
@@ -88,15 +91,12 @@ export default function Sliderr(props) {
     if (lock) {
       return;
     }
-    
-    setDone(false);
   }
 
   const handleMouseLeave = e => {
     e.stopPropagation();
     // console.log("Mouse out!");
     setFocus(false);
-    setAngle(prevAngle);
   }
 
   // Map a set of degree measures to a color
@@ -146,7 +146,6 @@ export default function Sliderr(props) {
   }
 
   const color = getColor(angle);
-  const prevColor = getColor(prevAngle);
 
   const sliderContainerStyle = {
   }
@@ -155,25 +154,13 @@ export default function Sliderr(props) {
     borderLeft: 0.4 * scale + "vw solid transparent",
     borderRight: 0.4 * scale + "vw solid transparent",
     borderBottom: 0.8 * scale + "vw solid " + color,
+    visibility: done || focus ? "visible" : "hidden",
   }
 
   const sliderArrowContainerStyle = {
     width: sliderContainerSize * scale + "vw",
     height: sliderContainerSize * scale + "vw",
     transform: "rotate(" + -angle + "deg)",
-  }
-
-  const sliderArrowGhostStyle = {
-    borderLeft: 0.4 * scale + "vw solid transparent",
-    borderRight: 0.4 * scale + "vw solid transparent",
-    borderBottom: 0.8 * scale + "vw solid " + prevColor,
-  }
-
-  const sliderArrowGhostContainerStyle = {
-    width: sliderContainerSize * scale + "vw",
-    height: sliderContainerSize * scale + "vw",
-    transform: "rotate(" + -prevAngle + "deg)",
-    visibility: prevAngle == null ? "hidden" : "visible",
   }
 
   const sliderMouseContainerStyle = {
@@ -197,10 +184,6 @@ export default function Sliderr(props) {
     <div className="slider-container" style={sliderContainerStyle}>
       <div className="slider-arrow-container" style={sliderArrowContainerStyle}>
         <div className="slider-arrow" style={sliderArrowStyle}>
-        </div>
-      </div>
-      <div className="slider-arrow-ghost-container" style={sliderArrowGhostContainerStyle}>
-        <div className="slider-arrow-ghost" style={sliderArrowGhostStyle}>
         </div>
       </div>
       <div className="slider-mouse-container" onMouseMove={updatePosition} onMouseDown={submit} 

@@ -11,7 +11,7 @@ export default function AnalysisPostView(props) {
 
   const authContext = useContext(AuthContext);
   const [formState, setFormState] = useState("etc");
-  const [tier, setTier] = useState("Analyst");
+  const [tier, setTier] = useState("");
   const [response, setResponse] = useState("");
   const [question, setQuestion] = useState("Sample Question to be Answered");
   const [imageUrl, setImageUrl] = useState("");
@@ -24,8 +24,9 @@ export default function AnalysisPostView(props) {
       console.log("got init", initData);
 
       if (initData.userPosts.length > 0) {
-        setQuestion(initData.question);
-        setImageUrl(initData.image);
+        setQuestion(initData.analysis.question);
+        setImageUrl(initData.analysis.image);
+        setTier(initData.analysis.tier);
         setOurPosts(initData.userPosts)
         setOtherPosts(initData.otherPosts)
         setFormState("discussion");
@@ -140,6 +141,7 @@ function VotePost(props) {
   var timeNow = new Date(Date.now());
   var timeBefore = new Date(timeAgo);
   const [scoreData, setScoreData] = useState(props.scoreData);
+  const [scoredHistory, setScoredHistory] = useState(props.scoredHistory);
   const averageScore = props.averageScore;
   const content = props.content;
   var updatedTime = "";
@@ -194,6 +196,7 @@ function VotePost(props) {
       const newScoreData = Array(101).fill(0).map((el, i) => scoreData[i]);
       newScoreData[score] += 1;
       setScoreData(newScoreData);
+      setScoredHistory(newScoreData);
     })
   }
 
@@ -208,7 +211,7 @@ function VotePost(props) {
     <div>
       {!us ? (
         <div className="analysis-slider">
-          <Slider scale={0.7} onSubmit={handleVote}/>
+          <Slider scale={0.7} onSubmit={handleVote} pastScore={scoredHistory}/>
         </div>
       ) : (
         <div className="analysis-slider" style={{visibility: "hidden"}}>
@@ -222,9 +225,9 @@ function VotePost(props) {
           {/* <div className="analysis-ACS-div">
           </div> */}
           <div className="analysis-histogram">
-            <Histogram data={scoreData} xScale={0.4} yScale={0.2}/>
+            {scoredHistory != null ? <Histogram data={scoreData} xScale={0.4} yScale={0.2}/> : null}
           </div>
-          <label className="analysis-average-Score">Average Score: {averageScore}%</label>
+          {scoredHistory != null ? <label className="analysis-average-Score">Average Score: {averageScore}%</label> : null}
           <label className="analysis-time-ago">{updatedTime}</label>
         </div>
         <label className="analysis-additional-comment">{content}</label>
