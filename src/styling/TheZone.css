@@ -49,18 +49,31 @@
   border-radius: 8px;
   border: 1px solid;
   color: white;
-  display: flex;
   font-size: 1.3vw;
   font-family: 'CommissionerMedium';
   text-align: center;
-  width: 140px;
+  padding-bottom: 5px;
+
+  width: 160px;
 }
 
-
 .tzone-report-btn:hover{
-  background-color: lightgrey;
+  background-color: white;
+  color: grey;
   cursor: pointer;
-  
+}
+
+.tzone-reported{
+  background-color: grey;
+  border-radius: 8px;
+  border: 1px solid;
+  color: red;
+  font-size: 1.3vw;
+  font-family: 'CommissionerBold';
+  text-align: center;
+  padding-bottom: 5px;
+
+  width: 160px;
 }
 
 /**************************** Display Post Related ***********************************/
@@ -174,7 +187,7 @@
   margin-left: 50%;
   text-align: center;
   color: white;
-  font-family: 'CommissionerMedium';
+  font-family: 'CommissionerBold';
 }
 .tzone-likes label { 
   margin: auto;
@@ -183,4 +196,9 @@
 @font-face {
   font-family: 'CommissionerMedium';
   src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Medium.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'CommissionerBold';
+  src: local('CommissionerBold'), url(../res/fonts/Commissioner/Commissioner-Bold.ttf) format('truetype');
 }

@@ -27,9 +27,11 @@
   font-family: 'CommissionerMedium';
   border-radius: 8px;
   padding-bottom: 10px;
+
 }
 
 .tzpv-comments-container { 
+
   width: 50%; 
   background-color: grey; 
   padding: 0% 3%;
@@ -152,6 +154,7 @@
   background-color: white; 
   border-radius: 8px;
   font-family: 'CommissionerMedium';
+  cursor: pointer;
 }
 
 /****************** CSS FOR COMMENT *********************/
@@ -194,7 +197,53 @@
 
 .tzpv-profile-link:hover {
   color: lightgrey;
+  cursor: pointer;
 }
+
+
+.tzpv-report-btn{
+  background-color: grey;
+  border-radius: 8px;
+  border: 1px solid;
+  color: white;
+  display: flex;
+  font-size: 1.3vw;
+  font-family: 'CommissionerMedium';
+  text-align: center;
+  width: 140px;
+}
+
+
+.tzpv-report-btn:hover{
+  background-color: lightgrey;
+  cursor: pointer;
+}
+
+.tzpv-reported{
+  background-color: grey;
+  border-radius: 8px;
+  border: 1px solid;
+  color: red;
+  font-size: 1.3vw;
+  font-family: 'CommissionerMedium';
+  text-align: center;
+  padding-bottom: 5px;
+
+  width: 160px;
+}
+
+.tzpv-creported{
+  background-color: grey;
+  border-radius: 8px;
+  border: 1px solid;
+  color: red;
+  display: flex;
+  font-size: 1vw;
+  font-family: 'CommissionerMedium';
+  text-align: center;
+  width: 140px;
+}
+
 
 @font-face {
   font-family: 'CommissionerMedium';

@@ -167,7 +167,7 @@ export default function TheZone(props) {
                             <div className="tzone-post-container">
 
                                 <div className="tzone-user-info">
-                                    <Link to={'/profile/' + data.poster.username} className="tzone-profile-link">
+                                    <Link className="tzone-profile-link">
                                     <ProfilePicture username={data.poster.username} />
                                     </Link>
                                    
@@ -179,7 +179,7 @@ export default function TheZone(props) {
                                     <div className="tzone-likes"> <label> {data.likes} </label></div>
                                     </div>
 
-                                   {data.reported ? null : <button className="tzone-report-btn" onClick={() => toggleReportPopup( data._id, "post")} >{"Report Post"}</button>
+                                {data.reported ? <label className="tzone-reported"> Post Reported </label> : <button className="tzone-report-btn" onClick={() => toggleReportPopup( data._id, "post")} >{"Report Post"}</button>
                                    }
                                
                                     

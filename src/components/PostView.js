@@ -231,7 +231,7 @@ export default function View(props) {
                 <div className="tzpv-likes"> <label> {likes} </label></div>
             </div>
 
-          {reported ? null : <button className="tzone-report-btn" onClick={() => toggleReportPopup(postId, "post")} >{"Report Post"}</button>
+          {reported ? <label className="tzpv-reported"> Post reported </label> : <button className="tzone-report-btn" onClick={() => toggleReportPopup(postId, "post")} >{"Report Post"}</button>
           }
 
 
@@ -248,6 +248,7 @@ export default function View(props) {
         <div className="tzpv-post-comment-container">
             <input type="text" name="comment-body" onChange={handleChangeCommentBody}/>
             <button onClick={handleAddComment}> Post Comment </button> 
+
         </div>
         <div className="tzpv-comments-container"> 
           <h2> Comments ({comments.length})</h2>
@@ -260,7 +261,7 @@ export default function View(props) {
                         {data.commenter.username} ({data.commenter.acs}) </Link> </label>
                       <Link to={'/profile/' + data.commenter.username} className="tzpv-profile-link">
                             <ProfilePicture scale={0.8} username={data.commenter.username}/> </Link>
-                           {data.reported ? null : <button className="tzone-report-btn" onClick={() => toggleReportPopup(postId, "comment")} >{"Report Comment"}</button>
+                           {data.reported ? <label className="tzpv-creported"> Comment reported </label> : <button className="tzpv-report-btn" onClick={() => toggleReportPopup(data._id, "comment")} >{"Report Comment"}</button>
                             }
                             <div className="tzpv-comment-agree-disagree">
                                 <a onClick={()=>handleCommentAgree(data, index)}className={data.upvoted? "tzpv-comment-link-selected": "tzpv-comment-link"}> Agree </a>
