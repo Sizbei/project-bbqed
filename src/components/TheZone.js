@@ -22,12 +22,15 @@ export default function TheZone(props) {
     const [disagree, setDisagree] = useState(false);
     const [rId, setRId] = useState('');
     const [reported, setReported] = useState(false);
+    const [type, setType] = useState('');
+
+
 
     const [posts, setPosts] = useState([]);
 
     const [showPostPopup, setPostPopup] = useState(false);
     const [showReportPopup, setReportPopup] = useState(false);
-    const [showReportBtn, setReportBtn] = useState(false);
+   
 
     useEffect(() => {
         fetch(path).then(res => res.json())
@@ -50,12 +53,14 @@ export default function TheZone(props) {
        setPostPopup(!showPostPopup);
     }
 
-    const toggleReportPopup = (rId) => {
+    const toggleReportPopup = (rId, type) => {
         setRId(rId);
-
-        console.log(rId);
+        setType(type);
+        
         setReportPopup(!showReportPopup);
     }
+
+    
    
     const handlePostAgree = (data, index) => {
 
@@ -146,7 +151,7 @@ export default function TheZone(props) {
                     : null
                 }
 
-                {showReportPopup ? <ReportPopup closePopup={toggleReportPopup} rId = {rId} />
+                {showReportPopup ? <ReportPopup closePopup={toggleReportPopup} rId = {rId} type = {type} />
                     : null
                 }
 
@@ -174,8 +179,8 @@ export default function TheZone(props) {
                                     <div className="tzone-likes"> <label> {data.likes} </label></div>
                                     </div>
 
-                                {showReportBtn ? null : <button className="tzone-report-btn" onClick={() => toggleReportPopup(data._id)} >{"Report Post"}</button>
-                                }
+                                   {data.reported ? null : <button className="tzone-report-btn" onClick={() => toggleReportPopup( data._id, "post")} >{"Report Post"}</button>
+                                   }
                                
                                     
                                     <div className="tzone-post-info">      

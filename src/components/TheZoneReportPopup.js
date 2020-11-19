@@ -10,9 +10,10 @@ class ReportPopup extends React.Component {
     super(props);
     this.state = {
       //user: 'user1',
-      totalReports: 0,
-      reported: false,
+      
+
       rId: props.postId,
+      showError: false,
     }
     this.handleSubmit = this.handleSubmit.bind(this);
   
@@ -21,8 +22,12 @@ class ReportPopup extends React.Component {
  
 
   handleSubmit(event) {
+
+    if(this.props.type === "post"){
+
     const body = {
-      _id: this.props.rId
+      user: this.context.user.username,
+      post: this.props.rId,
     }
     fetch('/zone/reportPost', {
       method: "post",
@@ -34,6 +39,7 @@ class ReportPopup extends React.Component {
         //axios.post('http://localhost:5000/post/add', body)
         .then(data => {
           this.setState({
+            
             done: true,
             showError: false,
           })
@@ -41,7 +47,29 @@ class ReportPopup extends React.Component {
         .catch((error) => {
           console.log(error);
     })
-    
+  }else if (this.props.type === "comment"){
+      const body = {
+        user: this.context.user.username,
+        _id: this.props.rId
+      }
+      fetch('/reportComment', {
+        method: "post",
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(res => res.json())
+        //axios.post('http://localhost:5000/post/add', body)
+        .then(data => {
+          this.setState({
+            done: true,
+            showError: false,
+          })
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+  }
 
 
   }
@@ -58,7 +86,7 @@ class ReportPopup extends React.Component {
       :
       <div className="tzrp-popup-content"> 
         <h1> Would you like to report? </h1>
-        <div className="tzrp-report-buttons">
+        <div className="tzrp-report-buttons"> 
         <button className="tzrp-popup-close-button" onClick={this.props.closePopup}> Cancel </button>
         <button className="tzrp-popup-submit-button" onClick={this.handleSubmit}> Report </button>
         </div>
