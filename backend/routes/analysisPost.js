@@ -100,7 +100,8 @@ router.route('/:id').get(passport.authenticate('jwt', { session: false }), (req,
                     question: analysis.question,
                     status: analysis.status,
                     image: analysis.image,
-                    tier: analysis.tier
+                    tier: analysis.tier,
+                    isUserInAnalysis: analysis.users.includes(username)
                 }
             });
         }).catch(err => res.status(500).json({msg: "Internal servcie error", err: err}));
