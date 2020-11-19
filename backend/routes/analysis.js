@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 const passportConfig = require('../passport');
 
 const acsTiers = {
-    "Fanalyst": [0, 300],
+    "Fanalyst": [100, 300],
     "Analyst": [300, 600],
     "Pro Analyst": [600, 900],
     "Expert Analyst": [900, 1100] 
@@ -31,17 +31,6 @@ const getTier = async (username) => {
     }
     return tier
 }
-
-
-//const compareTime = (stopTime, curTime) => {
-//    let hours = Math.floor((stopTime - curTime)/(1000*60*60));
-//    let minutes = Math.floor((stopTime - curTime - hours*1000*60*60)/(1000*60)) + 1;
-//    if(minutes == 60) {
-//        hours += 1;
-//        minutes = 0;
-//    }
-//    return hours + "h " + minutes + "m"
-//}
 
 const generateAnalysisResponse = (analysis) => {
 
