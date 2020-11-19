@@ -107,11 +107,17 @@
 }
 
 .tzone-profile-link {
+  margin-top: 2.5%;
   text-decoration: none;
   color: white;
 }
 
-.tzone-profile-link:hover {
+.tzone-profile-pic {
+  text-decoration: none;
+  color: white;
+}
+
+.tzone-profile-pic:hover {
   color: lightgrey;
 }
 

@@ -222,12 +222,12 @@ export default function View(props) {
 
         <div className="tzpv-post-container">
             <div className="tzpv-user-info">
-           <label> <Link to={'/profile/' + authContext.user.username} className="tzpv-profile-link">
+           <label> <Link to={'/profile/' + authContext.user.username} className="tzpv-profile-pic">
                 <ProfilePicture username = {username}/>
             </Link></label>
 
-             <Link to={'/profile/' + authContext.user.username} className="tzpv-profile-link"> {username} ({acs})
-             </Link> 
+             <label className="tzpv-profile-link"> {username} ({acs})
+             </label> 
 
                 <div className="tzpv-likes"> <label> {likes} </label></div>
             </div>

@@ -167,12 +167,12 @@ export default function TheZone(props) {
                             <div className="tzone-post-container">
 
                                 <div className="tzone-user-info">
-                                    <Link className="tzone-profile-link">
+                                    <Link className="tzone-profile-pic">
                                     <ProfilePicture username={data.poster.username} />
                                     </Link>
                                    
-                                    <label> <Link to={'/profile/' + data.poster.username} className="tzone-profile-link">{data.poster.username} ({data.poster.acs})  
-                                    </Link></label>
+                                    <label className="tzone-profile-link" >{data.poster.username} ({data.poster.acs})  
+                                    </label>
 
                                     
                                     

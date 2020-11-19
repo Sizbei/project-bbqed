@@ -203,11 +203,19 @@
   text-decoration: none;
   color: white;
 }
-
-.tzpv-profile-link:hover {
-  color: lightgrey;
-  cursor: pointer;
+.tzpv-profile-pic {
+  text-decoration: none;
+  color: white;
 }
+
+
+.tzpv-profile-user {
+  margin-top: 2.5%;
+  text-decoration: none;
+  color: white;
+}
+
+
 
 
 .tzpv-report-btn{

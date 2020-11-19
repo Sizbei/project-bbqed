@@ -88,7 +88,7 @@ class ReportPopup extends React.Component {
     
       {this.state.done ? 
         <div className="tzrp-popup-content"> 
-          <h1> Post Reported! </h1>
+            <h1> {(this.props.type === "comment") ? "Comment" : null}{(this.props.type === "post") ? "Post" : null} Reported! </h1>
         </div>
       :
       <div className="tzrp-popup-content"> 
