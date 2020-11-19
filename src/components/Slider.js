@@ -178,6 +178,7 @@ export default function Sliderr(props) {
   const percentStyle = {
     color: color,
     fontSize: 0.9 * scale + "vw",
+    visibility: done || focus ? "visible" : "hidden",
   }
 
   return (

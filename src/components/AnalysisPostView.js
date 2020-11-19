@@ -23,15 +23,20 @@ export default function AnalysisPostView(props) {
     .then((initData) => {
       console.log("got init", initData);
 
-      if (initData.userPosts.length > 0) {
-        setQuestion(initData.analysis.question);
-        setImageUrl(initData.analysis.image);
-        setTier(initData.analysis.tier);
+      setQuestion(initData.analysis.question);
+      setImageUrl(initData.analysis.image);
+      console.log("GOT IMAGE", initData.analysis.image);
+      setTier(initData.analysis.tier);
+      
+      const isOpen = initData.analysis.status === "open";
+      const containsUser = initData.analysis.isUserInAnalysis;
+
+      if (isOpen && containsUser && initData.userPosts.length == 0) {
+        setFormState("dailyQuestion");
+      } else {
         setOurPosts(initData.userPosts)
         setOtherPosts(initData.otherPosts)
         setFormState("discussion");
-      } else {
-        setFormState("dailyQuestion");
       }
     })
   }
@@ -80,9 +85,7 @@ export default function AnalysisPostView(props) {
         <label className="analysis-question-text">{question}</label>
         </div>
         <div className="analysis-question-image">
-          {/* Insert image here; div used as a placeholder  */}
           <img className="analysis-image" src={imageUrl} ></img>
-          {/* <div className="sample-div"/> */}
         </div>
         <div className="analysis-comments"> 
 
@@ -116,8 +119,7 @@ export default function AnalysisPostView(props) {
         <label className="analysis-question-text">{question}</label>
         </div>
         <div className="analysis-question-image">
-          {/* Insert image here; div used as a placeholder  */}
-          <div className="sample-div"/>
+          <img className="analysis-image" src={imageUrl} ></img>
         </div>
         <div className='analysis-response'>
           <label className='analysis-response-header'>Your Response</label>
