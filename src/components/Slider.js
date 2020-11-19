@@ -6,6 +6,7 @@ import AuthService from '../Services/AuthService';
 import '../styling/Slider.css';
 
 export default function Sliderr(props) {
+  const freeze = "freeze" in props ? props.freeze : false
   const scale = "scale" in props ? props.scale : 1.0;
   const onSubmit = "onSubmit" in props ? props.onSubmit : () => {}
   const [lock, setLock] = useState(false);
@@ -52,7 +53,7 @@ export default function Sliderr(props) {
 
   const updatePosition = e => {
     e.stopPropagation();
-    if (lock || done) {
+    if (lock || done || freeze) {
       return;
     }
 

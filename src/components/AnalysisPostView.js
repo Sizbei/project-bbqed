@@ -89,16 +89,14 @@ export default function AnalysisPostView(props) {
           {ourPosts.map((data, index) => {
             console.log(data);
             return (
-              <VotePost _id={data._id} user={data.user} us={authContext.user.username === data.user} acs={0}
-              timeAgo={data.createdAt} scoreData={data.histogram} content={data.content} averageScore={data.averageScore} />
+              <VotePost us={authContext.user.username === data.user} acs={0} timeAgo={data.createdAt} scoreData={data.histogram} {...data}/>
             )
           })}
 
           {otherPosts.map((data, index) => {
             console.log(data);
             return (
-              <VotePost _id={data._id} user={data.user} us={authContext.user.username === data.user} acs={0}
-              timeAgo={data.createdAt} scoreData={data.histogram} content={data.content} averageScore={data.averageScore} />
+              <VotePost us={authContext.user.username === data.user} acs={0} timeAgo={data.createdAt} scoreData={data.histogram} {...data}/>
             )
           })}
         </div>
@@ -136,6 +134,7 @@ function VotePost(props) {
   const _id = props._id;
   const username = props.user;
   const us = "us" in props ? props.us : false;
+  const isScored = props.isScored
   const [acs, setACS] = useState("acs" in props ? props.acs : "-");
   var timeAgo = Date.parse(props.timeAgo);
   var timeNow = new Date(Date.now());
