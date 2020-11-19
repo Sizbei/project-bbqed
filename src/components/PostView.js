@@ -33,6 +33,7 @@ export default function View(props) {
       
         fetch(path).then(res => res.json())
         .then(data => {
+          console.log(data); 
           setUsername(data.posts.poster.username); 
           setAcs(data.posts.poster.acs); 
           setLikes(data.posts.likes); 
@@ -48,7 +49,7 @@ export default function View(props) {
         
       }, [])
     
-    const handlePostAgree = () => {
+    const handlePostAgree = async () => {
         
         const body = {
           post: postId, 
@@ -56,7 +57,7 @@ export default function View(props) {
           upvoted: agree, 
           downvoted: disagree, 
         }
-        fetch('/zone/upvote', {
+        await fetch('/zone/upvote', {
           method :  "put",
           body : JSON.stringify(body),
           headers: {
@@ -75,7 +76,7 @@ export default function View(props) {
         
         
     }
-    const handlePostDisagree = () => {
+    const handlePostDisagree = async () => {
       
       const body = {
         post: postId, 
@@ -83,7 +84,7 @@ export default function View(props) {
         upvoted: agree, 
         downvoted: disagree, 
       }
-      fetch('/zone/downvote', {
+      await fetch('/zone/downvote', {
         method :  "put",
         body : JSON.stringify(body),
         headers: {
@@ -107,16 +108,15 @@ export default function View(props) {
 
     setReportPopup(!showReportPopup);
   }
-
-    const handleCommentAgree = (data, index) => {
-      
+  
+    const handleCommentAgree = async (data, index) => {      
       const body = {
         comment: data._id, 
         username: authContext.user.username, 
         upvoted: data.upvoted, 
         downvoted: data.downvoted, 
       }
-      fetch('/zone/upvote', {
+      await fetch('/zone/upvote', {
         method :  "put",
         body : JSON.stringify(body),
         headers: {
@@ -149,14 +149,14 @@ export default function View(props) {
       })  
       
     }
-    const handleCommentDisagree = (data, index) => { 
+    const handleCommentDisagree = async (data, index) => { 
       const body = {
         comment: data._id, 
         username: authContext.user.username, 
         upvoted: data.upvoted, 
         downvoted: data.downvoted, 
       }
-      fetch('/zone/downvote', {
+      await fetch('/zone/downvote', {
         method :  "put",
         body : JSON.stringify(body),
         headers: {
@@ -191,13 +191,13 @@ export default function View(props) {
     const handleChangeCommentBody = (e) => {
       setCommentBody(e.target.value); 
     }
-    const handleAddComment = () => { 
+    const handleAddComment = async () => { 
       const body = {
         post: postId, 
         commenter: authContext.user.username, 
         body: commentBody,
       }
-      fetch('/zone/addComment', {
+      await fetch('/zone/addComment', {
         method :  "post",
         body : JSON.stringify(body),
         headers: {
@@ -254,8 +254,9 @@ export default function View(props) {
         <div className="tzpv-comments-container"> 
           <h2> Comments ({comments.length})</h2>
             {comments.map((data,index) => {
+                console.log(data._id); 
                 return (
-                    <div className="tzpv-comment-container">
+                    <div id={data._id} className="tzpv-comment-container">
                         <label className="tzpv-comment-like">{data.likes}</label>
                         <div className="tzpv-profile">
                       <label> <Link to={'/profile/' + data.commenter.username} className="tzpv-profile-link">
