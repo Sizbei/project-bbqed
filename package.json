@@ -22,6 +22,7 @@
     "react-multi-select-component": "^3.0.4",
     "react-paginate": "^6.5.0",
     "react-router-dom": "^5.2.0",
+    "react-router-hash-link": "^2.2.2",
     "react-scripts": "^4.0.0",
     "react-toastr": "^3.0.0",
     "toastr": "^2.1.4",
