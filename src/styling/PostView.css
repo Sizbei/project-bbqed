@@ -274,6 +274,10 @@
   width: 200px;
 }
 
+.tzpv-id-label { 
+  color: white;
+  font-family:'CommissionerBold';  
+}
 
 @font-face {
   font-family: 'CommissionerMedium';

@@ -282,7 +282,7 @@ router.route('/display/:username/reportedComments/:page').get(async(req, res) =>
 })
 
 router.route('/display/:username/deletePost').delete(async(req, res) => {
-    await Post.deleteOne({_id: req.body._id}).then(() => {
+    await Post.deleteOne({_id: req.body._id}).then(async () => {
         await Comment.deleteMany({post: req.body._id}).then(() => {
             res.status(200).json("Deleted")
         }).catch((err) => {res.status(400).json('Error ' + err)})

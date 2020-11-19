@@ -228,15 +228,17 @@ export default function View(props) {
 
              <label className="tzpv-profile-link"> {username} ({acs})
              </label> 
+             
 
                 <div className="tzpv-likes"> <label> {likes} </label></div>
             </div>
-
+            {authContext.user.permissions === "Moderator" ? <label className="tzpv-id-label">id: {postId}</label> : null }
           {reported ? <label className="tzpv-reported"> Post reported </label> : <button className="tzone-report-btn" onClick={() => toggleReportPopup(postId, "post")} >{"Report Post"}</button>
           }
 
 
             <div className="tzpv-post-info"> 
+        
             <p> {content} </p>
             
             </div>
@@ -256,6 +258,8 @@ export default function View(props) {
             {comments.map((data,index) => {
                 console.log(data._id); 
                 return (
+                  <div>
+                    {authContext.user.permissions === "Moderator" ? <label className="tzpv-id-label">id: {data._id}</label> : null }
                     <div id={data._id} className="tzpv-comment-container">
                         <label className="tzpv-comment-like">{data.likes}</label>
                         <div className="tzpv-profile">
@@ -265,13 +269,18 @@ export default function View(props) {
                             <ProfilePicture scale={0.8} username={data.commenter.username}/> </Link>
                            {data.reported ? <button className="tzpv-creported"> Comment reported </button> : <button className="tzpv-creport-btn" onClick={() => toggleReportPopup(data._id, "comment")} >{"Report Comment"}</button>
                             }
+                            
                             <div className="tzpv-comment-agree-disagree">
                                 <a onClick={()=>handleCommentAgree(data, index)}className={data.upvoted? "tzpv-comment-link-selected": "tzpv-comment-link"}> Agree </a>
                                 <a onClick={()=>handleCommentDisagree(data, index)}className={data.downvoted? "tzpv-comment-link-selected": "tzpv-comment-link"}> Disagree </a>
                             </div>      
+                            
                         </div>
+                          
                         <p> {data.body} </p>
+
                     </div>
+                  </div>
                 )
             })}
         </div>
