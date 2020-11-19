@@ -39,7 +39,6 @@ class ReportPopup extends React.Component {
         //axios.post('http://localhost:5000/post/add', body)
         .then(data => {
           this.setState({
-            
             done: true,
             showError: false,
           })
@@ -48,11 +47,12 @@ class ReportPopup extends React.Component {
           console.log(error);
     })
   }else if (this.props.type === "comment"){
+
       const body = {
         user: this.context.user.username,
-        _id: this.props.rId
+        comment: this.props.rId,
       }
-      fetch('/reportComment', {
+      fetch('/zone/reportComment', {
         method: "post",
         body: JSON.stringify(body),
         headers: {

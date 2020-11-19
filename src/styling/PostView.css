@@ -105,7 +105,7 @@
   border-width: 5px;
 
 }
-.tzpvlikes { 
+.tzpv-likes { 
   background-color: #ff7e1f; 
   font-size: 1vw; 
   width: 3vw; 
@@ -120,6 +120,7 @@
 .tzpv-likes label { 
   margin: auto;
 }
+
 /************ CSS POST COMMENT **********/ 
 .tzpv-post-comment-container input {
   padding-bottom: 10%;
