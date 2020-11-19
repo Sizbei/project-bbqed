@@ -1,5 +1,4 @@
 import React, {Component, useEffect, useState, useContext} from 'react';
-import { useHistory } from 'react-router-dom';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import '../styling/Analysis.css';
 
@@ -9,7 +8,7 @@ export default function AnalysisPost(props) {
   const [tier, setTier] = useState("");
   const [post, setPost] = useState(props.post);
   const [timeLeft, setTimeLeft] = useState([0,0])
-  let history = useHistory(); 
+  const handlePostClick = props.handlePostClick;
 
   useEffect(() => {
     
@@ -18,32 +17,30 @@ export default function AnalysisPost(props) {
       setPost(props.post);
       setTier(post.tier);
 
-      const endTime = Date.parse(post.endTime);
+      const endTime = new Date(post.endTime);
       const curTime = new Date();
 
       const timeDiff = endTime - curTime;
 
       if(timeDiff > 0){
         const hours = Math.floor(Math.abs(timeDiff / 36e5));
-        const minutes = Math.floor(Math.abs((timeDiff.getHours() - hours) /  60000))
+        const minutes = Math.floor(Math.abs((timeDiff - hours * 36e5) /  60000))
+        
         setTimeLeft([hours, minutes]);
-      } else {
-        setTimeLeft([0,0]);
       }
 
-    } catch(err) {}
+
+    } catch(err) { console.log(err)}
 
 
   }, [props.post]);
 
-
-  const handlePostClick = (event, value) => {
-    history.push("/analysis/post/" + post._id)
-  };
-
+  const handleClick = (event, value) => {
+    handlePostClick(event, value, post);
+  }
 
   return(
-    <div className="analysis-post-container" onClick={handlePostClick}>
+    <div className="analysis-post-container" onClick={(event, value) => handleClick(event, value)}>
       <div className="analysis-post-front">
         <div className={`${tier === 'Expert Analyst' ? 'expert-analyst-div' : 
                           (tier === 'Pro Analyst' ? 'pro-analyst-div' : 

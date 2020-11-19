@@ -17,6 +17,7 @@ import Settings from "./components/Settings"
 import Header from "./components/Header"
 import Citations from "./components/Citations"
 import Queue from "./components/Queue"
+import AnalysisPost from "./components/AnalysisPostView"
 import ReportPost from "./components/ReportPosts"
 import ReportComment from "./components/ReportComments"
 
@@ -36,7 +37,8 @@ function App() {
       <AdminRoute path= "/Reports/post" component={ReportPost}/>
       <AdminRoute path= "/Reports/comment" component={ReportComment}/>
       <PrivateRoute path="/Trivia" component={Trivia} />
-      <PrivateRoute path="/Analysis" component={Analysis} />
+      <PrivateRoute exact path="/Analysis" component={Analysis} />
+      <PrivateRoute path="/analysis/post/:id" component={AnalysisPost} />
       <PrivateRoute path="/PicksAndPredictions" component={PicksAndPredictions} />
       <PrivateRoute path="/Profile" component={Profile} />
       <PrivateRoute path="/Settings" component={Settings} />
