@@ -129,19 +129,19 @@ router.route('/upvote').put(passport.authenticate('jwt', { session: false }), as
     //Handle Comments
     if (req.body.hasOwnProperty('comment') != 0) {
         if (req.body.upvoted) {
-            await Comment.findByIdAndUpdate({_id: req.body.comment}, {$pull: {upvoted: req.body.username}, $inc: {likes: -1}}, {new:true})
+            await Comment.findOneAndUpdate({_id: req.body.comment}, {$pull: {upvoted: req.body.username}, $inc: {likes: -1}}, {new:true})
             .then((updated) => {res.status(200).json({upvoted:false, downvoted:false, likes:updated.likes})})
             .catch((err) => {
                 res.status(400).json('Error: ' + err)
             })
         } else if (req.body.downvoted) {
-            await Comment.findByIdAndUpdate({_id: req.body.comment}, {$push: {upvoted: req.body.username}, $inc: {likes: 2}, $pull: {downvoted: req.body.username}}, {new:true})
+            await Comment.findOneAndUpdate({_id: req.body.comment}, {$push: {upvoted: req.body.username}, $inc: {likes: 2}, $pull: {downvoted: req.body.username}}, {new:true})
             .then((updated) => {res.status(200).json({upvoted:true, downvoted:false, likes:updated.likes})})
             .catch((err) => {
                 res.status(400).json('Error: ' + err)
             })
         } else {
-            await Comment.findByIdAndUpdate({_id: req.body.comment}, {$push: {upvoted: req.body.username}, $inc: {likes: 1}}, {new:true})
+            await Comment.findOneAndUpdate({_id: req.body.comment}, {$push: {upvoted: req.body.username}, $inc: {likes: 1}}, {new:true})
             .then((updated) => {res.status(200).json({upvoted:true, downvoted:false, likes:updated.likes})})
             .catch((err) => {
                 res.status(400).json('Error: ' + err)
@@ -150,7 +150,7 @@ router.route('/upvote').put(passport.authenticate('jwt', { session: false }), as
     //Handle Post
     } else if (req.body.hasOwnProperty('post') != 0) {
         if (req.body.upvoted) {
-            await Post.findByIdAndUpdate({_id: req.body.post}, {$pull: {upvoted: req.body.username}, $inc: {likes: -1}}, {new: true})
+            await Post.findOneAndUpdate({_id: req.body.post}, {$pull: {upvoted: req.body.username}, $inc: {likes: -1}}, {new: true})
             .then((updated) => {res.status(200).json({upvoted:false, downvoted:false, likes:updated.likes})})
             .catch((err) => {
                 res.status(400).json('Error: ' + err)
@@ -222,7 +222,7 @@ router.route('/downvote').put(passport.authenticate('jwt', { session: false }), 
 })
 
 router.route("/reportPost").post(async(req, res) => {
-    await Post.updateOne({_id: req.body.post}, {$push:{reported:req.body.user}, $inc:{totalReports:1}}).then(() =>{
+    await Post.findOneAndUpdate({_id: req.body.post}, {$push:{reported:req.body.user}, $inc:{totalReports:1}}).then(() =>{
         res.status(200).json('Reported!')
     }).catch((err) => {
         res.status(400).json('Error: ' + err)
@@ -230,7 +230,7 @@ router.route("/reportPost").post(async(req, res) => {
 })
 
 router.route("/reportComment").post(async(req, res) => {
-    await Comment.updateOne({_id: req.body.comment}, {$push:{reported:req.body.user}, $inc:{totalReports:1}}).then(() =>{
+    await Comment.findOneAndUpdate({_id: req.body.comment}, {$push:{reported:req.body.user}, $inc:{totalReports:1}}).then(() =>{
         res.status(200).json('Reported!')
     }).catch((err) => {
         res.status(400).json('Error: ' + err)
