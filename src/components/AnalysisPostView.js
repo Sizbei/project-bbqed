@@ -18,6 +18,7 @@ export default function AnalysisPostView(props) {
   const [imageUrl, setImageUrl] = useState("");
   const [ourPosts, setOurPosts] = useState([]);
   const [otherPosts, setOtherPosts] = useState([]);
+  const [activeForUser, setActiveForUser] = useState(false);
 
   const restart = () => {
     fetch('/analysis/post/' + _id).then(res => res.json())
@@ -31,6 +32,7 @@ export default function AnalysisPostView(props) {
       
       const isOpen = initData.analysis.status === "open";
       const containsUser = initData.analysis.isUserInAnalysis;
+      setActiveForUser(isOpen && containsUser);
 
       if (isOpen && !containsUser) {
         setDebateHeader("Daily Debate (LOCKED)")
@@ -50,8 +52,8 @@ export default function AnalysisPostView(props) {
       }
     })
   }
-  useEffect(() => {
 
+  useEffect(() => {
     restart();
   }, [])
 
@@ -101,14 +103,14 @@ export default function AnalysisPostView(props) {
           {ourPosts.map((data, index) => {
             console.log(data);
             return (
-              <VotePost us={authContext.user.username === data.user} acs={0} timeAgo={data.createdAt} scoreData={data.histogram} {...data}/>
+              <VotePost us={authContext.user.username === data.user} active={activeForUser} acs={0} timeAgo={data.createdAt} scoreData={data.histogram} {...data}/>
             )
           })}
 
           {otherPosts.map((data, index) => {
             console.log(data);
             return (
-              <VotePost us={authContext.user.username === data.user} acs={0} timeAgo={data.createdAt} scoreData={data.histogram} {...data}/>
+              <VotePost us={authContext.user.username === data.user} active={activeForUser} acs={0} timeAgo={data.createdAt} scoreData={data.histogram} {...data}/>
             )
           })}
         </div>
@@ -154,8 +156,9 @@ function VotePost(props) {
   const [scoredHistory, setScoredHistory] = useState(props.scoredHistory);
   const averageScore = props.averageScore;
   const content = props.content;
-  const showScore = us || scoredHistory != null;
   const hasBeenVoted = scoreData.reduce((accum, n) => accum + n) != 0
+  const active = props.active;
+  const showScore = us || scoredHistory != null || !active;
   var updatedTime = "";
 
 //   console.log("timeNow: " + timeNow + "\n" + timeNow.getMonth() + "\n" + timeNow.getDate() + "\nHours: " + timeNow.getHours() + "\n" + timeNow.getMinutes() + "\n");
@@ -225,12 +228,21 @@ function VotePost(props) {
 
   return (
     <div>
-      {!us ? (
+      {/* {!us ? (
         <div className="analysis-slider">
           <Slider scale={0.7} onSubmit={handleVote} pastScore={scoredHistory}/>
         </div>
       ) : (
         <div className="analysis-slider" style={{visibility: "hidden"}}>
+        </div>
+      )} */}
+
+      {us || (!active && scoredHistory == null) ? (
+        <div className="analysis-slider" style={{visibility: "hidden"}}>
+        </div>
+      ) : (
+        <div className="analysis-slider">
+          <Slider scale={0.7} onSubmit={handleVote} pastScore={scoredHistory}/>
         </div>
       )}
       
