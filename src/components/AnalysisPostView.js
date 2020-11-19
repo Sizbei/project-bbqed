@@ -147,6 +147,7 @@ function VotePost(props) {
   const averageScore = props.averageScore;
   const content = props.content;
   const showScore = us || scoredHistory != null;
+  const hasBeenVoted = scoreData.reduce((accum, n) => accum + n) != 0
   var updatedTime = "";
 
 //   console.log("timeNow: " + timeNow + "\n" + timeNow.getMonth() + "\n" + timeNow.getDate() + "\nHours: " + timeNow.getHours() + "\n" + timeNow.getMinutes() + "\n");
@@ -210,6 +211,10 @@ function VotePost(props) {
         })
   }, [])
 
+  const usernameStyle = {
+    color: us ? "crimson" : "white",
+  }
+
   return (
     <div>
       {!us ? (
@@ -223,14 +228,14 @@ function VotePost(props) {
       
       <div className="analysis-user">
         <div className="left-user-info">
-          <label className="analysis-username">{username}</label>
+          <label className="analysis-username" style={usernameStyle}>{username}</label>
           <label className="analysis-ACS">({acs})</label>
           {/* <div className="analysis-ACS-div">
           </div> */}
           <div className="analysis-histogram">
             {showScore ? <Histogram data={scoreData} xScale={0.4} yScale={0.2}/> : null}
           </div>
-          {showScore ? <label className="analysis-average-Score">Average Score: {averageScore}%</label> : null}
+          {hasBeenVoted && showScore ? <label className="analysis-average-Score">Average Score: {averageScore}%</label> : null}
           <label className="analysis-time-ago">{updatedTime}</label>
         </div>
         <label className="analysis-additional-comment">{content}</label>
