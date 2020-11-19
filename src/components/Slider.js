@@ -12,7 +12,6 @@ export default function Sliderr(props) {
   const [lock, setLock] = useState(false);
   const [focus, setFocus] = useState(false);
   const [done, setDone] = useState(props.pastScore != null);
-  const [angle, setAngle] = useState(props.pastScore != null ? props.pastScore : 180);
   const sliderContainerSize = 9;
   const minDeg = 25.15;
   const maxDeg = 335.8;
@@ -45,11 +44,16 @@ export default function Sliderr(props) {
   const getTick = deg => {
     return tickSize * Math.round((deg - minDeg) / tickAngle);
   }
-  
   const invert = tick => {
     return 100 - tick;
   }
 
+  const getAngleFromTick = tick => {
+    return minDeg + tickAngle * invert(tick) / tickSize;
+  }
+
+  const [angle, setAngle] = useState(props.pastScore != null ? getAngleFromTick(props.pastScore) : 180);
+  
   const updatePosition = e => {
     e.stopPropagation();
     if (lock || done || freeze) {
