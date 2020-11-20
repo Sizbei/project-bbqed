@@ -154,7 +154,8 @@ function VotePost(props) {
   var timeBefore = new Date(timeAgo);
   const [scoreData, setScoreData] = useState(props.scoreData);
   const [scoredHistory, setScoredHistory] = useState(props.scoredHistory);
-  const averageScore = props.averageScore;
+  const sum = scoreData.reduce((accum, n) => accum + n);
+  const averageScore = sum === 0 ? sum : scoreData.reduce((accum, n, i) => accum + i * n / sum);
   const content = props.content;
   const hasBeenVoted = scoreData.reduce((accum, n) => accum + n) != 0
   const active = props.active;
