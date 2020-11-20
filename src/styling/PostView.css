@@ -98,7 +98,7 @@
 .tzpv-post-button-agree-selected {
   background-color: #61b305; 
   border-color: #57A105;  
-  border-width: 5px;
+  border-width: 8px;
 }
 .tzpv-post-button-disagree {
   background-color: #d30909;
@@ -107,7 +107,7 @@
 .tzpv-post-button-disagree-selected {
   background-color: #d30909; 
   border-color: #A20909; 
-  border-width: 5px;
+  border-width: 8px;
 
 }
 
