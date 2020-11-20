@@ -102,12 +102,17 @@ function OptionsMenu() {
     history.push("/citations");
   }
 
+  const navigateToReports = () => {
+    history.push("/reports/post");
+  }
+
   return (
     <div className="options">
       <button className="optionsMenu" />
           <div className="optionsContent">
           <button className="optionsButtonsTopEnd" onClick={navigateToSettings}>Settings</button>
           <button className="optionsButtons" onClick={navigateToCitations}>Citations</button>
+          {authContext.user.permissions === "Moderator" ? <button className="optionsButtons" onClick={navigateToReports}> Reports </button> : null }
           <button className="optionsButtonsBotEnd" onClick={LogOut}>Log Out</button>
         </div>
     </div>
