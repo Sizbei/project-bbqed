@@ -23,12 +23,17 @@ export default function Analysis() {
     .then(current => {
       setCurrentTierPosts(current.analyses.currentAcsTier);
       setOtherTierPosts(current.analyses.otherAcsTiers);
-    })
+    }).catch(err => {})
 
     fetch('/analysis/past/'+ ((page-1)*10).toString() + '/10').then(res => res.json())
     .then(past => {
       setPastTierPosts(past.analyses)
-    })
+    }).catch(err => {})
+
+    fetch('/analysis/past/size').then(res => res.json())
+    .then(res => {
+      setTotlaPages(Math.ceil(res.size / 10));
+    }).catch(err => {})
 
     fetch('/analysis/past/size').then(res => res.json())
     .then(res => {
