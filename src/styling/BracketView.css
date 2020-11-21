@@ -1,10 +1,9 @@
 .bracketview-center {
-  /* height: calc(100vh - 155px); */
+  height: 100%;
+  height: calc(100vh - 117.3px);
   display: flex;
   justify-content: center;
-  /* align-items: center; */
-
-  /* background-color: blue; */
+  align-items: center;
 }
 
 .bracketview-div {

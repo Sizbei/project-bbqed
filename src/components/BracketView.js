@@ -120,29 +120,29 @@ export default function BracketView(props) {
     
     // Western Conference Finals
     const fHeight = (3 * heightBlock + pairHeight) / 2;
-    console.log(fHeight, (sfHeights[0] + sfHeights[1]) / 2);
     newObjects.push(drawPair(2 * widthBlock, fHeight - boxDim.height));
     drawT({x: widthBlock + boxDim.width + minLineGap, y: sfHeights[0]}, {x: widthBlock + boxDim.width + minLineGap, y: sfHeights[1]}, {x: 2 * widthBlock - minLineGap, y: fHeight})
 
-    // Eastern Conference Finals
+    // Finals
     newObjects.push(drawPair(3 * widthBlock, fHeight - boxDim.height));
-    drawT({x: 4 * widthBlock - minLineGap, y: sfHeights[0]}, {x: 4 * widthBlock - minLineGap, y: sfHeights[1]}, {x: 3 * widthBlock + boxDim.width + minLineGap, y: fHeight})
+    drawLine(2 * widthBlock + boxDim.width + minLineGap, 3 * widthBlock - minLineGap, fHeight, fHeight);
+    drawLine(3 * widthBlock + boxDim.width + minLineGap, 4 * widthBlock - minLineGap, fHeight, fHeight);
+
+    // Eastern Conference Finals
+    newObjects.push(drawPair(4 * widthBlock, fHeight - boxDim.height));
+    drawT({x: 5 * widthBlock - minLineGap, y: sfHeights[0]}, {x: 5 * widthBlock - minLineGap, y: sfHeights[1]}, {x: 4 * widthBlock + boxDim.width + minLineGap, y: fHeight})
 
     // Eastern Conference Semi Finals
     Array(2).fill(0).forEach((el, i) => {
       const sfHeight = sfHeights[i];
-      newObjects.push(drawPair(4 * widthBlock, sfHeight - boxDim.height));
-      drawT({x: 5 * widthBlock - minLineGap, y: 2 * i * heightBlock + boxDim.height}, {x: 5 * widthBlock - minLineGap, y: (2 * i + 1) * heightBlock +  + boxDim.height}, {x: 4 * widthBlock + boxDim.width + minLineGap, y: sfHeight})
+      newObjects.push(drawPair(5 * widthBlock, sfHeight - boxDim.height));
+      drawT({x: 6 * widthBlock - minLineGap, y: 2 * i * heightBlock + boxDim.height}, {x: 6 * widthBlock - minLineGap, y: (2 * i + 1) * heightBlock +  + boxDim.height}, {x: 5 * widthBlock + boxDim.width + minLineGap, y: sfHeight})
     })
 
     // Eastern Conference Round 1
     Array(4).fill(0).forEach((el, i) => newObjects.push(drawPair(width - boxDim.width, i * heightBlock)))
 
     setObjects(newObjects);
-    
-    // Draw connecting lines
-    // drawT({x: boxDim.width + minLineGap, y: boxDim.height}, {x: boxDim.width + minLineGap, y: 2 * heightBlock + boxDim.height}, {x: width - boxDim.width - minLineGap, y: heightBlock + boxDim.height})
-    // drawT({x: width - boxDim.width - minLineGap, y: boxDim.height}, {x: width - boxDim.width - minLineGap, y: 3 * heightBlock + boxDim.height}, {x: boxDim.width + minLineGap, y: height * 3 / 4})
   }    
 
   useEffect(() => {
