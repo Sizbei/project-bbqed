@@ -26,22 +26,11 @@ export default function BracketView(props) {
   const canvasWidth = Math.max(minWidth, props.width);
   const canvasHeight = Math.max(minHeight, props.height);
   
-  
-
   const [objects, setObjects] = useState([]);
 
   const round = (n) => {
-    const m = Math.round(n);
-    // if (m % 1 === 0) {
-    //   return m + 0.5;
-    // } else {
-    //   return m;
-    // }
-    if (m < n) {
-      return m + 0.5;
-    } else {
-      return m - 0.5;
-    }
+    const m = Math.floor(n);
+    return m + 0.5;
   }
 
   // ctx.lineTo and ctx.stroke() will draw a line where the current point is right on the center of the line. 
@@ -49,25 +38,30 @@ export default function BracketView(props) {
   const moveTo = (desx, desy) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    ctx.moveTo(round(desx), round(desy + lineWidth / 2));
+    ctx.moveTo(round(desx), round(desy));
   }
 
   const drawLineTo = (desx, desy) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    ctx.lineTo(round(desx), round(desy + lineWidth / 2));
+    ctx.lineTo(round(desx), round(desy));
     ctx.stroke();
   }
 
   const drawLine = (srcx, desx, srcy, desy) => {
-    moveTo(round(srcx), round(srcy));
-    drawLineTo(round(desx), round(desy));
+    if (srcy == desy) { // horizontal
+      moveTo(round(srcx), round(srcy));
+      drawLineTo(round(desx - lineWidth / 2), round(desy)); // a bandaid fix...
+    } else { // vertical
+      moveTo(round(srcx), round(srcy));
+      drawLineTo(round(desx), round(desy));
+    }
   }
 
   const drawPair = (marginLeft, marginTop) => {
     const newObjects = []
-    newObjects.push(<Rect {...boxDim} marginLeft={marginLeft} marginTop={marginTop} />)
-    newObjects.push(<Rect {...boxDim} marginLeft={marginLeft} marginTop={marginTop + boxDim.height + lineWidth} />)
+    newObjects.push(<Rect {...boxDim} marginLeft={round(marginLeft)} marginTop={round(marginTop)} />)
+    newObjects.push(<Rect {...boxDim} marginLeft={round(marginLeft)} marginTop={round(marginTop + boxDim.height + lineWidth)} />)
     return newObjects;
   }
 
@@ -87,13 +81,13 @@ export default function BracketView(props) {
       drawLine(b.x, b.x + minTurn, b.y, b.y);
       drawLine(a.x + minTurn - lineWidth / 2, a.x + minTurn - lineWidth / 2, a.y, b.y);
       drawLine(a.x + minTurn - lineWidth / 2, a.x + minTurn - lineWidth / 2, a.y, c.y);
-      drawLine(a.x + minTurn - lineWidth, c.x, Math.round(c.y), Math.round(c.y));
+      drawLine(a.x + minTurn - lineWidth, c.x, c.y, c.y);
     } else {
-      drawLine(a.x, a.x - minTurn, a.y, a.y);
-      drawLine(b.x, b.x - minTurn, b.y, b.y);
+      drawLine(a.x - minTurn, a.x, a.y, a.y);
+      drawLine(b.x - minTurn, b.x, b.y, b.y);
       drawLine(a.x - minTurn + lineWidth / 2, a.x - minTurn + lineWidth / 2, a.y, b.y);
       drawLine(a.x - minTurn + lineWidth / 2, a.x - minTurn + lineWidth / 2, a.y, c.y);
-      drawLine(a.x - minTurn + lineWidth, c.x, c.y, c.y);
+      drawLine(c.x, a.x - minTurn + lineWidth, c.y, c.y);
     }
   }
 
