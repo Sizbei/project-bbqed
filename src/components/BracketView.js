@@ -4,8 +4,44 @@ import AuthService from '../Services/AuthService';
 import '../styling/BracketView.css';
 
 export default function BracketView(props) {
-  const canvasRef = useRef(null);
+  const { height, width } = useWindowDimensions();
 
+  return (
+    <div>
+      <Bracket {...props} width={width * 0.85} height={(height - 117.3) * 0.9} />
+    </div>
+  );
+}
+
+// Get window dimensions. Source:
+// https://stackoverflow.com/a/36862446
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height
+  };
+}
+
+function useWindowDimensions() {
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions());
+    }
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return windowDimensions;
+}
+
+function Bracket(props) {
+  const canvasRef = useRef(null);
+  const onClick = props.onClick;
+  
   // constants
   const color = '#FFFFFF';
   const boxDim = {
@@ -50,19 +86,12 @@ export default function BracketView(props) {
 
   const drawLine = (srcx, desx, srcy, desy) => {
     if (srcy == desy) { // horizontal
-      moveTo(round(srcx), round(srcy));
-      drawLineTo(round(desx - lineWidth / 2), round(desy)); // a bandaid fix...
+      moveTo(round(srcx), round(srcy + lineWidth));
+      drawLineTo(round(desx - lineWidth / 2), round(desy + lineWidth)); // a bandaid fix...
     } else { // vertical
-      moveTo(round(srcx), round(srcy));
-      drawLineTo(round(desx), round(desy));
+      moveTo(round(srcx), round(srcy + lineWidth));
+      drawLineTo(round(desx), round(desy + lineWidth));
     }
-  }
-
-  const drawPair = (marginLeft, marginTop) => {
-    const newObjects = []
-    newObjects.push(<Rect {...boxDim} marginLeft={round(marginLeft)} marginTop={round(marginTop)} />)
-    newObjects.push(<Rect {...boxDim} marginLeft={round(marginLeft)} marginTop={round(marginTop + boxDim.height + lineWidth)} />)
-    return newObjects;
   }
 
   /* Draw the connecting lines for this:
@@ -91,6 +120,13 @@ export default function BracketView(props) {
     }
   }
 
+  const drawPair = (marginLeft, marginTop) => {
+    const newObjects = []
+    newObjects.push(<Rect {...boxDim} marginLeft={round(marginLeft)} marginTop={round(marginTop)} onClick={onClick} />)
+    newObjects.push(<Rect {...boxDim} marginLeft={round(marginLeft)} marginTop={round(marginTop + boxDim.height + lineWidth)} onClick={onClick} />)
+    return newObjects;
+  }
+
   const draw = () => {
     const canvas = canvasRef.current;
     const width = canvas.offsetWidth;
@@ -106,8 +142,11 @@ export default function BracketView(props) {
     const widthGap = (width - 7 * boxDim.width) / 6;
     const widthBlock = boxDim.width + widthGap;
 
+    let i = 0;
+
     // Western Conference Round 1
     Array(4).fill(0).forEach((el, i) => newObjects.push(drawPair(0, i * heightBlock)))
+    i += 2;
 
     // Western Conference Semi Finals
     let sfHeights = [];
@@ -167,8 +206,8 @@ function Rect(props) {
   const height = props.height;
   const marginLeft = props.marginLeft;
   const marginTop = props.marginTop;
+  const onClick = props.onClick;
 
-  console.log(width, height);
   const style = {
     backgroundColor: "grey",
     width: width + "px",
@@ -177,8 +216,7 @@ function Rect(props) {
     marginTop: marginTop + "px"
   }
   return (
-    <div className="rect" style={style}>
-      
+    <div className="rect" style={style} onClick={() => onClick(0)}>
     </div>
   )
 }
