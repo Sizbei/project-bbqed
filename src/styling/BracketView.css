@@ -1,18 +1,20 @@
 .bracketview-center {
+  /* height: calc(100vh - 155px); */
   display: flex;
   justify-content: center;
+  /* align-items: center; */
 
   /* background-color: blue; */
 }
 
 .bracketview-div {
   position: relative;
-  background-color: red;
 }
 
 .rect {
   position: absolute;
   top: 0;
+  /* border: 1px solid black; */
 }
 
 .bracket {
