@@ -21,7 +21,7 @@ export default function BracketView(props) {
   const minLineGap = 10;
 
   // canvas width/height
-  const minWidth = 6 * boxDim.width;
+  const minWidth = 6 * boxDim.width + 5 * (2 * (minTurn + minLineGap) + lineWidth);
   const minHeight = 4 * minHeightDiff + 4 * pairHeight;
   const canvasWidth = Math.max(minWidth, props.width);
   const canvasHeight = Math.max(minHeight, props.height);
@@ -112,7 +112,7 @@ export default function BracketView(props) {
     // Western Conference Semi Finals
     const sf1Height = (0 + heightBlock + pairHeight) / 2;
     newObjects.push(drawPair(widthBlock, sf1Height - boxDim.height));
-    drawT({x: boxDim.width + minLineGap, y: boxDim.height}, {x: boxDim.width + minLineGap, y: heightBlock + boxDim.height}, {x: 2 * widthBlock - minLineGap, y: sf1Height})
+    drawT({x: boxDim.width + minLineGap, y: boxDim.height}, {x: boxDim.width + minLineGap, y: heightBlock + boxDim.height}, {x: widthBlock - minLineGap, y: sf1Height})
 
 
     // Eastern Conference Round 1
@@ -121,8 +121,8 @@ export default function BracketView(props) {
     setObjects(newObjects);
     
     // Draw connecting lines
-    drawT({x: boxDim.width + minLineGap, y: boxDim.height}, {x: boxDim.width + minLineGap, y: 2 * heightBlock + boxDim.height}, {x: width - boxDim.width - minLineGap, y: heightBlock + boxDim.height})
-    drawT({x: width - boxDim.width - minLineGap, y: boxDim.height}, {x: width - boxDim.width - minLineGap, y: 3 * heightBlock + boxDim.height}, {x: boxDim.width + minLineGap, y: height * 3 / 4})
+    // drawT({x: boxDim.width + minLineGap, y: boxDim.height}, {x: boxDim.width + minLineGap, y: 2 * heightBlock + boxDim.height}, {x: width - boxDim.width - minLineGap, y: heightBlock + boxDim.height})
+    // drawT({x: width - boxDim.width - minLineGap, y: boxDim.height}, {x: width - boxDim.width - minLineGap, y: 3 * heightBlock + boxDim.height}, {x: boxDim.width + minLineGap, y: height * 3 / 4})
   }    
 
   useEffect(() => {
