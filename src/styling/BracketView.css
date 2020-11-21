@@ -1,0 +1,21 @@
+.bracketview-center {
+  display: flex;
+  justify-content: center;
+
+  /* background-color: blue; */
+}
+
+.bracketview-div {
+  position: relative;
+  background-color: red;
+}
+
+.rect {
+  position: absolute;
+  top: 0;
+}
+
+.bracket {
+  position: absolute;
+  top: 0;
+}
