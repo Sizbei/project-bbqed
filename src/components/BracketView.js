@@ -17,11 +17,11 @@ export default function BracketView(props) {
   const pairHeight = 2 * boxDim.height + lineWidth;
 
   // constants regarding connecting lines
-  const minTurn = 20;
-  const minLineGap = 10;
+  const minTurn = 10;
+  const minLineGap = 5;
 
   // canvas width/height
-  const minWidth = 6 * boxDim.width + 5 * (2 * (minTurn + minLineGap) + lineWidth);
+  const minWidth = 7 * boxDim.width + 6 * (2 * (minTurn + minLineGap) + lineWidth);
   const minHeight = 4 * minHeightDiff + 4 * pairHeight;
   const canvasWidth = Math.max(minWidth, props.width);
   const canvasHeight = Math.max(minHeight, props.height);
@@ -81,13 +81,13 @@ export default function BracketView(props) {
       drawLine(b.x, b.x + minTurn, b.y, b.y);
       drawLine(a.x + minTurn - lineWidth / 2, a.x + minTurn - lineWidth / 2, a.y, b.y);
       drawLine(a.x + minTurn - lineWidth / 2, a.x + minTurn - lineWidth / 2, a.y, c.y);
-      drawLine(a.x + minTurn - lineWidth, c.x, c.y, c.y);
+      drawLine(a.x + minTurn, c.x, c.y, c.y);
     } else {
       drawLine(a.x - minTurn, a.x, a.y, a.y);
       drawLine(b.x - minTurn, b.x, b.y, b.y);
-      drawLine(a.x - minTurn + lineWidth / 2, a.x - minTurn + lineWidth / 2, a.y, b.y);
-      drawLine(a.x - minTurn + lineWidth / 2, a.x - minTurn + lineWidth / 2, a.y, c.y);
-      drawLine(c.x, a.x - minTurn + lineWidth, c.y, c.y);
+      drawLine(a.x - minTurn - lineWidth / 2, a.x - minTurn - lineWidth / 2, a.y, b.y);
+      drawLine(a.x - minTurn - lineWidth / 2, a.x - minTurn - lineWidth / 2, a.y, c.y);
+      drawLine(c.x, a.x - minTurn, c.y, c.y);
     }
   }
 
@@ -103,17 +103,37 @@ export default function BracketView(props) {
     const heightGap = Math.max((height - 4 * pairHeight) / 3, minHeightDiff);
     const heightBlock = pairHeight + heightGap;
 
-    const widthGap = (width - 6 * boxDim.width) / 5;
+    const widthGap = (width - 7 * boxDim.width) / 6;
     const widthBlock = boxDim.width + widthGap;
 
     // Western Conference Round 1
     Array(4).fill(0).forEach((el, i) => newObjects.push(drawPair(0, i * heightBlock)))
 
     // Western Conference Semi Finals
-    const sf1Height = (0 + heightBlock + pairHeight) / 2;
-    newObjects.push(drawPair(widthBlock, sf1Height - boxDim.height));
-    drawT({x: boxDim.width + minLineGap, y: boxDim.height}, {x: boxDim.width + minLineGap, y: heightBlock + boxDim.height}, {x: widthBlock - minLineGap, y: sf1Height})
+    let sfHeights = [];
+    Array(2).fill(0).forEach((el, i) => {
+      const sfHeight = 2 * i * heightBlock + (heightBlock + pairHeight) / 2;
+      sfHeights.push(sfHeight);
+      newObjects.push(drawPair(widthBlock, sfHeight - boxDim.height));
+      drawT({x: boxDim.width + minLineGap, y: 2 * i * heightBlock + boxDim.height}, {x: boxDim.width + minLineGap, y: (2 * i + 1) * heightBlock +  + boxDim.height}, {x: widthBlock - minLineGap, y: sfHeight})
+    })
+    
+    // Western Conference Finals
+    const fHeight = (3 * heightBlock + pairHeight) / 2;
+    console.log(fHeight, (sfHeights[0] + sfHeights[1]) / 2);
+    newObjects.push(drawPair(2 * widthBlock, fHeight - boxDim.height));
+    drawT({x: widthBlock + boxDim.width + minLineGap, y: sfHeights[0]}, {x: widthBlock + boxDim.width + minLineGap, y: sfHeights[1]}, {x: 2 * widthBlock - minLineGap, y: fHeight})
 
+    // Eastern Conference Finals
+    newObjects.push(drawPair(3 * widthBlock, fHeight - boxDim.height));
+    drawT({x: 4 * widthBlock - minLineGap, y: sfHeights[0]}, {x: 4 * widthBlock - minLineGap, y: sfHeights[1]}, {x: 3 * widthBlock + boxDim.width + minLineGap, y: fHeight})
+
+    // Eastern Conference Semi Finals
+    Array(2).fill(0).forEach((el, i) => {
+      const sfHeight = sfHeights[i];
+      newObjects.push(drawPair(4 * widthBlock, sfHeight - boxDim.height));
+      drawT({x: 5 * widthBlock - minLineGap, y: 2 * i * heightBlock + boxDim.height}, {x: 5 * widthBlock - minLineGap, y: (2 * i + 1) * heightBlock +  + boxDim.height}, {x: 4 * widthBlock + boxDim.width + minLineGap, y: sfHeight})
+    })
 
     // Eastern Conference Round 1
     Array(4).fill(0).forEach((el, i) => newObjects.push(drawPair(width - boxDim.width, i * heightBlock)))
