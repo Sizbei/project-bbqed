@@ -16,6 +16,10 @@
   /* border: 1px solid black; */
 }
 
+.rect-content {
+  color: white;
+}
+
 .bracket {
   position: absolute;
   top: 0;

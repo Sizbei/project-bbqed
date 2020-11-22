@@ -1,6 +1,4 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {AuthContext} from '../Context/AuthContext';
-import AuthService from '../Services/AuthService';
 import '../styling/BracketView.css';
 
 export default function BracketView(props) {
@@ -41,6 +39,7 @@ function useWindowDimensions() {
 function Bracket(props) {
   const canvasRef = useRef(null);
   const onClick = props.onClick;
+  const slots = props.slots;
   
   // constants
   const color = '#FFFFFF';
@@ -120,10 +119,10 @@ function Bracket(props) {
     }
   }
 
-  const drawPair = (marginLeft, marginTop) => {
+  const drawPair = (i, marginLeft, marginTop) => {
     const newObjects = []
-    newObjects.push(<Rect {...boxDim} marginLeft={round(marginLeft)} marginTop={round(marginTop)} onClick={onClick} />)
-    newObjects.push(<Rect {...boxDim} marginLeft={round(marginLeft)} marginTop={round(marginTop + boxDim.height + lineWidth)} onClick={onClick} />)
+    newObjects.push(<Rect key={"rect" + i} index={i} slot={slots[i]} {...boxDim} marginLeft={round(marginLeft)} marginTop={round(marginTop)} onClick={onClick} />)
+    newObjects.push(<Rect key={"rect" + (i+1)} index={i+1} slot={slots[i+1]} {...boxDim} marginLeft={round(marginLeft)} marginTop={round(marginTop + boxDim.height + lineWidth)} onClick={onClick} />)
     return newObjects;
   }
 
@@ -142,44 +141,54 @@ function Bracket(props) {
     const widthGap = (width - 7 * boxDim.width) / 6;
     const widthBlock = boxDim.width + widthGap;
 
-    let i = 0;
+    let index = 0;
 
     // Western Conference Round 1
-    Array(4).fill(0).forEach((el, i) => newObjects.push(drawPair(0, i * heightBlock)))
-    i += 2;
+    Array(4).fill(0).forEach((el, i) => {
+      newObjects.push(drawPair(index, 0, i * heightBlock))
+      index += 2;
+    })
 
     // Western Conference Semi Finals
     let sfHeights = [];
     Array(2).fill(0).forEach((el, i) => {
       const sfHeight = 2 * i * heightBlock + (heightBlock + pairHeight) / 2;
       sfHeights.push(sfHeight);
-      newObjects.push(drawPair(widthBlock, sfHeight - boxDim.height));
+      newObjects.push(drawPair(index, widthBlock, sfHeight - boxDim.height));
       drawT({x: boxDim.width + minLineGap, y: 2 * i * heightBlock + boxDim.height}, {x: boxDim.width + minLineGap, y: (2 * i + 1) * heightBlock +  + boxDim.height}, {x: widthBlock - minLineGap, y: sfHeight})
+      index += 2;
     })
     
     // Western Conference Finals
     const fHeight = (3 * heightBlock + pairHeight) / 2;
-    newObjects.push(drawPair(2 * widthBlock, fHeight - boxDim.height));
+    newObjects.push(drawPair(index, 2 * widthBlock, fHeight - boxDim.height));
     drawT({x: widthBlock + boxDim.width + minLineGap, y: sfHeights[0]}, {x: widthBlock + boxDim.width + minLineGap, y: sfHeights[1]}, {x: 2 * widthBlock - minLineGap, y: fHeight})
+    index += 2;
 
     // Finals
-    newObjects.push(drawPair(3 * widthBlock, fHeight - boxDim.height));
+    newObjects.push(drawPair(index, 3 * widthBlock, fHeight - boxDim.height));
     drawLine(2 * widthBlock + boxDim.width + minLineGap, 3 * widthBlock - minLineGap, fHeight, fHeight);
     drawLine(3 * widthBlock + boxDim.width + minLineGap, 4 * widthBlock - minLineGap, fHeight, fHeight);
+    index += 2;
 
     // Eastern Conference Finals
-    newObjects.push(drawPair(4 * widthBlock, fHeight - boxDim.height));
+    newObjects.push(drawPair(index, 4 * widthBlock, fHeight - boxDim.height));
     drawT({x: 5 * widthBlock - minLineGap, y: sfHeights[0]}, {x: 5 * widthBlock - minLineGap, y: sfHeights[1]}, {x: 4 * widthBlock + boxDim.width + minLineGap, y: fHeight})
+    index += 2;
 
     // Eastern Conference Semi Finals
     Array(2).fill(0).forEach((el, i) => {
       const sfHeight = sfHeights[i];
-      newObjects.push(drawPair(5 * widthBlock, sfHeight - boxDim.height));
+      newObjects.push(drawPair(index, 5 * widthBlock, sfHeight - boxDim.height));
       drawT({x: 6 * widthBlock - minLineGap, y: 2 * i * heightBlock + boxDim.height}, {x: 6 * widthBlock - minLineGap, y: (2 * i + 1) * heightBlock +  + boxDim.height}, {x: 5 * widthBlock + boxDim.width + minLineGap, y: sfHeight})
+      index += 2;
     })
 
     // Eastern Conference Round 1
-    Array(4).fill(0).forEach((el, i) => newObjects.push(drawPair(width - boxDim.width, i * heightBlock)))
+    Array(4).fill(0).forEach((el, i) => {
+      newObjects.push(drawPair(index, width - boxDim.width, i * heightBlock));
+      index += 2;
+    })
 
     setObjects(newObjects);
   }    
@@ -188,9 +197,6 @@ function Bracket(props) {
     draw();
   }, [JSON.stringify(props)])
 
-  console.log(objects);
-
-  console.log("final", canvasWidth, canvasHeight);
   return (
     <div className="bracketview-center">
       <div className="bracketview-div">  
@@ -202,6 +208,8 @@ function Bracket(props) {
 }
 
 function Rect(props) {
+  const index = props.index;
+  const slot = props.slot;
   const width = props.width;
   const height = props.height;
   const marginLeft = props.marginLeft;
@@ -215,8 +223,10 @@ function Rect(props) {
     marginLeft: marginLeft + "px",
     marginTop: marginTop + "px"
   }
+
   return (
-    <div className="rect" style={style} onClick={() => onClick(0)}>
+    <div className="rect" style={style} onClick={() => onClick(index)}>
+      <span className="rect-content"> {slot} </span>
     </div>
   )
 }
