@@ -199,6 +199,15 @@ export default function BracketController(props) {
 
     newPredictions[matchName] = newPrediction;
 
+    // Reset predictions for higher levels if it's new
+    if (newPrediction !== previousPrediction) {
+      let resetTreeIndex = parent(treeIndex);
+      while (resetTreeIndex != 1) {
+        newPredictions[toMatchName(resetTreeIndex)] = null;
+        resetTreeIndex = parent(resetTreeIndex);
+      }
+    }
+
     // while (treeIndex != 1) {
       
 
