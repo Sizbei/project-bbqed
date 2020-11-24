@@ -19,15 +19,17 @@ router.route('/display/:username/focused').get(passport.authenticate('jwt', { se
     console.log(post);
 });
 
-router.route('/display/:username').get(passport.authenticate('jwt', { session: false }), async(req, res) => {
-    let recentPosts = await Post.find({}, "likes _id poster body upvoted downvoted reported" ).sort({'createdAt':'desc'}).limit(10).then(async (post) => {
+router.route('/display/:page/:sortedBy').get(passport.authenticate('jwt', { session: false }), async(req, res) => {
+    let sortedBy = req.params.sortedBy
+    let page = req.params.page
+    let recentPosts = await Post.find({}, "likes _id poster body upvoted downvoted reported" ).sort({sortedBy:'desc'}).skip(10*page).limit(10).then(async (post) => {
         return post
     }).catch((err) => {res.status(400).json('Error ' + err)})
     let newPostsList = []
     for (var i = 0; i < recentPosts.length; i++) {
-        let upvoted = recentPosts[i].upvoted.includes(req.params.username)
-        let downvoted = recentPosts[i].downvoted.includes(req.params.username)
-        let reported = recentPosts[i].reported.includes(req.params.username)
+        let upvoted = recentPosts[i].upvoted.includes(req.user.username)
+        let downvoted = recentPosts[i].downvoted.includes(req.user.username)
+        let reported = recentPosts[i].reported.includes(req.user.username)
         let newPost = {}
         newPost._id = recentPosts[i]._id
         newPost.likes = recentPosts[i].likes
