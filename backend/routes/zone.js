@@ -78,7 +78,7 @@ router.route('/display/:page/:sortedBy').get(passport.authenticate('jwt', { sess
     res.json({posts: newPostsList});
 })
 
-router.route('/display/:username/:post').get(passport.authenticate('jwt', { session: false }), async(req, res) => {
+router.route('/display/post/:post').get(passport.authenticate('jwt', { session: false }), async(req, res) => {
     let singlePost = await Post.findById(req.params.post).then(async (post) => {
         return post
     }).catch((err) => {res.status(400).json('Error ' + err)})
@@ -101,14 +101,14 @@ router.route('/display/:username/:post').get(passport.authenticate('jwt', { sess
         newComment.commenter.acs = acs
         newComment.likes = comments[j].likes
         newComment.body = comments[j].body
-        newComment.upvoted = comments[j].upvoted.includes(req.params.username);
-        newComment.downvoted = comments[j].downvoted.includes(req.params.username);
-        newComment.reported = comments[j].reported.includes(req.params.username)
+        newComment.upvoted = comments[j].upvoted.includes(req.user.username);
+        newComment.downvoted = comments[j].downvoted.includes(req.user.username);
+        newComment.reported = comments[j].reported.includes(req.user.username)
         newComments[j] = newComment
     }
-    let upvoted = singlePost.upvoted.includes(req.params.username)
-    let downvoted = singlePost.downvoted.includes(req.params.username)
-    let reported = singlePost.reported.includes(req.params.username)
+    let upvoted = singlePost.upvoted.includes(req.user.username)
+    let downvoted = singlePost.downvoted.includes(req.user.username)
+    let reported = singlePost.reported.includes(req.user.username)
     let newPost = {}
     newPost._id = singlePost._id
     newPost.likes = singlePost.likes
