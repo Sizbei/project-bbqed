@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 export default function View(props) {
     const authContext = useContext(AuthContext); 
     const postId = props.location.pathname.slice(17, props.location.pathname.length); 
-    const path = ' /zone/display/' + authContext.user.username + '/' + postId ; 
+    const path = ' /post/display/post/'+ postId ; 
     const [commentBody, setCommentBody] = useState(''); 
     const [username, setUsername] = useState(''); 
     const [likes, setLikes] = useState(0); 
@@ -30,7 +30,7 @@ export default function View(props) {
     const [showReportBtn, setShowReportBtn] = useState(false);
 
     useEffect(() => {
-      
+        console.log(path);
         fetch(path).then(res => res.json())
         .then(data => {
           console.log(data); 
@@ -42,10 +42,10 @@ export default function View(props) {
           setDisagree(data.posts.downvoted); 
           setComments(data.posts.comments); 
           setReported(data.posts.reported)
-        })
-        .catch((error) => {
-          console.log(error); 
-        })
+          })
+            .catch((error) => {
+              console.log(error); 
+            })
         
       }, [])
     
