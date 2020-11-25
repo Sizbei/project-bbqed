@@ -9,14 +9,40 @@ let Profile = require('../models/profile')
 let Acs = require('../models/acs')
 const mongoose = require('mongoose');
 
-router.route('/display/:username/focused').get(passport.authenticate('jwt', { session: false }), async(req, res) => {
+router.route('/display/focused/:page/:sortedBy').get(passport.authenticate('jwt', { session: false }), async(req, res) => {
     var radarList = await Profile.findOne({username: req.params.username}).then((user) => {
         return user.radarList;
     });
-    var recentPosts = await Post.find({poster: {$in: radarList}}).sort({'createdAt':'desc'}).then((post) => {
-        return post;
-    })
-    console.log(post);
+    let sortedBy = req.params.sortedBy
+    let page = req.params.page
+    let recentPosts = await Post.find({$in:radarList}, "likes _id poster body upvoted downvoted reported" ).sort({sortedBy:'desc'}).skip(10*page).limit(10).then(async (post) => {
+        return post
+    }).catch((err) => {res.status(400).json('Error ' + err)})
+    let newPostsList = []
+    for (var i = 0; i < recentPosts.length; i++) {
+        let upvoted = recentPosts[i].upvoted.includes(req.user.username)
+        let downvoted = recentPosts[i].downvoted.includes(req.user.username)
+        let reported = recentPosts[i].reported.includes(req.user.username)
+        let newPost = {}
+        newPost._id = recentPosts[i]._id
+        newPost.likes = recentPosts[i].likes
+        newPost.poster = {}
+        newPost.poster.username = recentPosts[i].poster
+        let image = await Profile.findOne({username: newPost.poster.username}, "image").then((user) => {
+            return user.image
+        }).catch((err) => {res.status(400).json('Error ' + err)})
+        newPost.poster.image = image;
+        let acs = await Acs.findOne({username: newPost.poster.username}, "acsTotal.total").then((acsobj) => {
+            return acsobj.acsTotal.total
+        }).catch((err) => {res.status(400).json('Error ' + err)})
+        newPost.poster.acs = acs
+        newPost.body = recentPosts[i].body
+        newPost.upvoted = upvoted
+        newPost.downvoted = downvoted
+        newPost.reported = reported
+        newPostsList[i] = newPost
+    }
+    res.json({posts: newPostsList});
 });
 
 router.route('/display/:page/:sortedBy').get(passport.authenticate('jwt', { session: false }), async(req, res) => {
