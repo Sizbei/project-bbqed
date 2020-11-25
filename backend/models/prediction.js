@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 const predictionSchema = new Schema({
+    user: {
+      type: String,
+    },
     team1: {
       type: String,
     },
@@ -11,8 +14,9 @@ const predictionSchema = new Schema({
     prediction: {
       type: String,
     },
-    gameDay: {
-      type: String,
+    game: {
+      type: mongoose.Schema.Types.ObjectId,
+      refPath: 'game',
     },
     gameCategory: {
       type: mongoose.Schema.Types.ObjectId,
