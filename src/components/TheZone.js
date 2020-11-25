@@ -2,8 +2,9 @@ import React, { useEffect, useState, useContext } from 'react';
 import '../styling/TheZone.css';
 import PostPopup from './ProfilePostPopup';
 import ReportPopup from './TheZoneReportPopup';
+import Pagination from "@material-ui/lab/Pagination";
 import { AuthContext } from '../Context/AuthContext';
-import ProfilePicture from './ProfilePicture'
+import ProfilePicture from './ProfilePicture';
 import { Link } from 'react-router-dom';
 
 
@@ -11,7 +12,8 @@ import { Link } from 'react-router-dom';
 export default function TheZone(props) {
     const authContext = useContext(AuthContext);
     const postId = props.location.pathname.slice(17, props.location.pathname.length);
-    const path = ' /zone/display/' + authContext.user.username + '/' + postId;
+    const upath = '/zone/display/' + authContext.user.username + '/focused' + authContext.user.username;
+    const spath = '/zone/display/:page/:sortedBy';
     
     
     const [username, setUsername] = useState('');
@@ -24,16 +26,24 @@ export default function TheZone(props) {
     const [reported, setReported] = useState(false);
     const [type, setType] = useState('');
 
-
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalNumber, setTotalNumber] = useState(0); 
     const [posts, setPosts] = useState([]);
 
     const [showPostPopup, setPostPopup] = useState(false);
     const [showReportPopup, setReportPopup] = useState(false);
    
 
-    useEffect(() => {
-        fetch(path).then(res => res.json())
+    useEffect(() => {    
+        handlePosts(currentPage - 1); 
+    }, [currentPage])
+
+    const togglePostPopup = () => {
+       setPostPopup(!showPostPopup);
+    }
+
+    const handlePosts = async (page) => {
+        await fetch(spath + authContext.user.username ).then(response => response.json())
             .then(data => {
                 setPosts(data.posts);
                 setUsername(data.posts.poster.username);
@@ -42,15 +52,11 @@ export default function TheZone(props) {
                 setContent(data.posts.body);
                 setAgree(data.posts.upvoted);
                 setDisagree(data.posts.downvoted);
-                
-            })
-            .catch((error) => {
+                setPosts(data.posts);
+                setTotalNumber(data.posts);
+            }).catch((error) => {
                 console.log(error);
             })
-    }, [])
-
-    const togglePostPopup = () => {
-       setPostPopup(!showPostPopup);
     }
 
     const toggleReportPopup = (rId, type) => {
@@ -60,7 +66,10 @@ export default function TheZone(props) {
         setReportPopup(!showReportPopup);
     }
 
-    
+    const handlePageChange = (event, newPage) => {
+        setCurrentPage(newPage);
+    }
+
    
     const handlePostAgree = (data, index) => {
 
@@ -198,6 +207,7 @@ export default function TheZone(props) {
                         </div>
                     )
                 })}
+                <Pagination className="MuiPagination-ul" color="primary" count={Math.ceil(totalNumber / 10)} onChange={handlePageChange} />
             </div>
         </div>
     )
