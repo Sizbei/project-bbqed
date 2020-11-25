@@ -37,10 +37,32 @@ export default function TeamBoxLeft(props) {
     var givenTeamName = props.name;
     var backgroundColor = props.color;
     const [teamImage, setTeamImage] = useState('');
+    var height = props.height;
+    var fontSize;
+    var width;
+    const scaleFactor = 3;
+    const fontFactor = 5;
+
     if(backgroundColor == null) {
         backgroundColor = 'black';
     }
-    var backgroundStyle = { "background-color": backgroundColor };
+
+    if(height == null) {
+        height = 5;
+        
+    }
+    width = height * scaleFactor;
+    fontSize = height / fontFactor;
+
+    var TeamBoxStyle = { 
+        "background-color": backgroundColor,
+        "height": height + "vw",
+        "width": width + "vw" 
+    };
+
+    var FontStyle = {
+        "font-size": fontSize + "vw"
+    }
 
     useEffect(() => {
         fetch('/teams').then(res => res.json())
@@ -55,12 +77,12 @@ export default function TeamBoxLeft(props) {
     }, [])
 
     return (
-        <div className='TeamBox' style={backgroundStyle}>
+        <div className='TeamBox' style={TeamBoxStyle}>
             <div className='TB-teamImage'>
                 <img src={teamImage} className='TB-image'/>
             </div>
             <div className='TB-teamName-left'>
-                <label className='TB-name-left'>{givenTeamName}</label>
+                <label className='TB-name-left' style={FontStyle}>{givenTeamName}</label>
             </div>
         </div>
     );
