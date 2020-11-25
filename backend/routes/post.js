@@ -1,5 +1,8 @@
 const router = require('express').Router();
-let post = require('../models/post');
+let Post = require('../models/post');
+let Comment = require('../models/comment');
+let Profile = require('../models/profile')
+let Acs = require('../models/acs')
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const passportConfig = require('../passport');
@@ -8,7 +11,7 @@ router.route("/add").post(passport.authenticate('jwt', {session : false}),(req, 
     console.log(req.body);
     const poster = req.body.poster;
     const body = req.body.body;
-    const newPost = new post({
+    const newPost = new Post({
         poster: poster,
         body: body
     });
