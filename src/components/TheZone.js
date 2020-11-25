@@ -12,13 +12,10 @@ import { Link } from 'react-router-dom';
 export default function TheZone(props) {
     const authContext = useContext(AuthContext);
     const postId = props.location.pathname.slice(17, props.location.pathname.length);
-    const upath = '/zone/display/' + authContext.user.username + '/focused' + authContext.user.username;
-    const spath = '/zone/display/:page/:sortedBy';
+    const upath = '/zone/display/focused/';
+    const spath = '/zone/display/';
     
     
-    const [username, setUsername] = useState('');
-    const [likes, setLikes] = useState(0);
-    const [acs, setAcs] = useState(0);
     const [content, setContent] = useState('');
     const [agree, setAgree] = useState(false);
     const [disagree, setDisagree] = useState(false);
@@ -26,12 +23,12 @@ export default function TheZone(props) {
     const [reported, setReported] = useState(false);
     const [type, setType] = useState('');
 
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1); 
     const [totalNumber, setTotalNumber] = useState(0); 
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState([]); 
 
-    const [showPostPopup, setPostPopup] = useState(false);
-    const [showReportPopup, setReportPopup] = useState(false);
+    const [showPostPopup, setPostPopup] = useState(false);         
+    const [showReportPopup, setReportPopup] = useState(false);       
    
 
     useEffect(() => {    
@@ -43,20 +40,19 @@ export default function TheZone(props) {
     }
 
     const handlePosts = async (page) => {
-        await fetch(spath + authContext.user.username ).then(response => response.json())
+        await fetch(spath + page + '/likes').then(response => response.json())
             .then(data => {
                 setPosts(data.posts);
-                setUsername(data.posts.poster.username);
-                setAcs(data.posts.poster.acs);
-                setLikes(data.posts.likes);
                 setContent(data.posts.body);
                 setAgree(data.posts.upvoted);
                 setDisagree(data.posts.downvoted);
                 setPosts(data.posts);
-                setTotalNumber(data.posts);
+                setTotalNumber(data.post_count);
+                
             }).catch((error) => {
                 console.log(error);
             })
+       
     }
 
     const toggleReportPopup = (rId, type) => {
@@ -207,7 +203,7 @@ export default function TheZone(props) {
                         </div>
                     )
                 })}
-                <Pagination className="MuiPagination-ul" color="primary" count={Math.ceil(totalNumber / 10)} onChange={handlePageChange} />
+                <Pagination className="MuiPagination-ul" color="primary" count={Math.ceil(totalNumber/ 10)} onChange={handlePageChange} />
             </div>
         </div>
     )
