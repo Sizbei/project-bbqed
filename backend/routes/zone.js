@@ -13,14 +13,21 @@ router.route('/display/focused/:page/:sortedBy').get(passport.authenticate('jwt'
     let post_count = await Post.count({}).then((total) => {
         return total
     }).catch((err) => {res.status(400).json('Error ' + err)})
-    var radarList = await Profile.findOne({username: req.params.username}).then((user) => {
+    var radarList = await Profile.findOne({username: req.user.username}).then((user) => {
         return user.radarList;
     });
     let sortedBy = req.params.sortedBy
     let page = req.params.page
-    let recentPosts = await Post.find({$in:radarList}, "likes _id poster body upvoted downvoted reported" ).sort({sortedBy:'desc'}).skip(10*page).limit(10).then(async (post) => {
-        return post
-    }).catch((err) => {res.status(400).json('Error ' + err)})
+    let recentPosts = null;
+    if (sortedBy === 'createdAt') {
+        recentPosts = await Post.find({poster:{$in:radarList}}, "likes _id poster body upvoted downvoted reported" ).sort({'createdAt':'desc'}).skip(10*page).limit(10).then(async (post) => {
+            return post
+        }).catch((err) => {res.status(400).json('Error ' + err)})
+    } else {
+        recentPosts = await Post.find({poster:{$in:radarList}}, "likes _id poster body upvoted downvoted reported" ).sort({'likes':'desc'}).skip(10*page).limit(10).then(async (post) => {
+            return post
+        }).catch((err) => {res.status(400).json('Error ' + err)})
+    }
     let newPostsList = []
     for (var i = 0; i < recentPosts.length; i++) {
         let upvoted = recentPosts[i].upvoted.includes(req.user.username)
@@ -54,9 +61,17 @@ router.route('/display/:page/:sortedBy').get(passport.authenticate('jwt', { sess
     }).catch((err) => {res.status(400).json('Error ' + err)})
     let sortedBy = req.params.sortedBy
     let page = req.params.page
-    let recentPosts = await Post.find({}, "likes _id poster body upvoted downvoted reported" ).sort({sortedBy:'desc'}).skip(10*page).limit(10).then(async (post) => {
-        return post
-    }).catch((err) => {res.status(400).json('Error ' + err)})
+    let recentPosts = null;
+    if (sortedBy === 'createdAt') {
+        recentPosts = await Post.find({}, "likes _id poster body upvoted downvoted reported" ).sort({'createdAt':'desc'}).skip(10*page).limit(10).then(async (post) => {
+            return post
+        }).catch((err) => {res.status(400).json('Error ' + err)})
+    } else {
+        recentPosts = await Post.find({}, "likes _id poster body upvoted downvoted reported" ).sort({'likes':'desc'}).skip(10*page).limit(10).then(async (post) => {
+            return post
+        }).catch((err) => {res.status(400).json('Error ' + err)})
+    }
+
     let newPostsList = []
     for (var i = 0; i < recentPosts.length; i++) {
         let upvoted = recentPosts[i].upvoted.includes(req.user.username)
