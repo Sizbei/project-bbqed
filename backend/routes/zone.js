@@ -10,7 +10,7 @@ let Acs = require('../models/acs')
 const mongoose = require('mongoose');
 
 router.route('/display/focused/:page/:sortedBy').get(passport.authenticate('jwt', { session: false }), async(req, res) => {
-    let post_count = await Post.count({totalReports:{$gt:0}}).then((total) => {
+    let post_count = await Post.count({}).then((total) => {
         return total
     }).catch((err) => {res.status(400).json('Error ' + err)})
     var radarList = await Profile.findOne({username: req.params.username}).then((user) => {
@@ -49,7 +49,7 @@ router.route('/display/focused/:page/:sortedBy').get(passport.authenticate('jwt'
 });
 
 router.route('/display/:page/:sortedBy').get(passport.authenticate('jwt', { session: false }), async(req, res) => {
-    let post_count = await Post.count({totalReports:{$gt:0}}).then((total) => {
+    let post_count = await Post.count({}).then((total) => {
         return total
     }).catch((err) => {res.status(400).json('Error ' + err)})
     let sortedBy = req.params.sortedBy
