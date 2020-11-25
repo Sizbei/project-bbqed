@@ -1,18 +1,29 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
-const regularSeasonSchema = new Schema({
+const predictionSchema = new Schema({
     game: {
         type: mongoose.Schema.Types.ObjectId,
         refPath: 'game',
+    },
+    closeTime: {
+        type: Date,
+        unique: false,
+        required: false,
     },
     status: {
         type: String,
         unique: false,
         required: true,
-        enum : ['open','close','waitForAcs']
+        enum : ['open','close']
     },
-    predictions: [
+    acsStatus: {
+        type: String,
+        unique: false,
+        required: true,
+        enum : ['pend','close']
+    },
+    picks: [
         {
             user: {
                 type: String,
@@ -30,5 +41,5 @@ const regularSeasonSchema = new Schema({
     timestamps: true,
 });
 
-const regularSeason = mongoose.model('regularSeason', regularSeasonSchema);
-module.exports = regularSeason;
+const prediction = mongoose.model('prediction', predictionSchema);
+module.exports = prediction;
