@@ -1,0 +1,20 @@
+.ip-background { 
+  display: flex; 
+  color: white; 
+  justify-content: center;
+  font-family: 'CommissionerBold'; 
+}
+
+.ip-matches-container { 
+  align-items: center;
+  flex-direction: column; 
+}
+.ip-match-row-container { 
+  color: white;
+}
+
+
+@font-face {
+  font-family: 'CommissionerBold';
+  src: local('CommissionerBold'), url(../res/fonts/Commissioner/Commissioner-Bold.ttf) format('truetype');
+}

@@ -20,6 +20,7 @@ import Queue from "./components/Queue"
 import AnalysisPost from "./components/AnalysisPostView"
 import ReportPost from "./components/ReportPosts"
 import ReportComment from "./components/ReportComments"
+import IndvPrediction from "./components/IndvPrediction"
 
 function App() {
   //example of using authContext in function
@@ -38,6 +39,7 @@ function App() {
       <AdminRoute path= "/Reports/comment" component={ReportComment}/>
       <PrivateRoute path="/Trivia" component={Trivia} />
       <PrivateRoute exact path="/Analysis" component={Analysis} />
+      <PrivateRoute path="/ip" component={IndvPrediction} /> 
       <PrivateRoute path="/analysis/post/:id" component={AnalysisPost} />
       <PrivateRoute path="/PicksAndPredictions" component={PicksAndPredictions} />
       <PrivateRoute path="/Profile" component={Profile} />
