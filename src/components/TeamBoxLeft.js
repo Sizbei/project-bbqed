@@ -41,7 +41,7 @@ export default function TeamBoxLeft(props) {
     var fontSize;
     var width;
     const scaleFactor = 3;
-    const fontFactor = 5;
+    const fontFactor = 4;
 
     if(backgroundColor == null) {
         backgroundColor = 'black';
