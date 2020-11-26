@@ -68,6 +68,7 @@ const defaultColor = {
 /*
   Usage:
   - required: a team name
+  - props.type: left or right. default: left
   - provide props.image for faster loads. Prefetch all images with the /teams route. Otherwise the fetches are slow
   - provide props.color for custom color
   - provide props.height for custom height (must specify the unit)
@@ -75,8 +76,9 @@ const defaultColor = {
 
   Feel free to add more custom and default values.
   */
-export default function TeamBoxLeft(props) {
+export default function TeamBox(props) {
     var givenTeamName = props.name;
+    var boxType = "type" in props ? props.type : "left";
     var backgroundColor = "color" in props ? props.color : (givenTeamName in defaultColor ? defaultColor[givenTeamName] : "black");
     const propsImage = "image" in props ? props.image : "";
     const [fetchImage, setFetchImage] = useState("");
@@ -111,16 +113,32 @@ export default function TeamBoxLeft(props) {
           .catch(err => { console.log('ERROR') }) ; 
     }, [props.name])
 
-    return (
+    const imgSrc = propsImage != "" ? propsImage : fetchImage;
+
+    if (boxType === "left") {
+      return (
         <div className='TeamBox' style={TeamBoxStyle}>
             <div className='TB-teamImage'>
-                <img src={propsImage != "" ? propsImage : fetchImage} className='TB-image'/>
+                <img src={imgSrc} className='TB-image'/>
             </div>
             <div className='TB-teamName-left'>
                 <label className='TB-name-left' style={FontStyle}>{givenTeamName}</label>
             </div>
         </div>
-    );
+      );
+    } else if (boxType === "right") {
+      return (
+        <div className='TeamBox' style={TeamBoxStyle}>
+            <div className='TB-teamName-right'>
+                <label className='TB-name-right' style={FontStyle}>{givenTeamName}</label>
+            </div>
+            <div className='TB-teamImage'>
+                <img src={imgSrc} className='TB-image'/>
+            </div>
+        </div>
+      )
+    }
 }
+    
 
   

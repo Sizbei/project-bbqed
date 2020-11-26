@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import '../styling/BracketView.css';
-import TeamBoxLeft from './TeamBoxLeft';
-import TeamBoxRight from './TeamBoxRight';
+import TeamBox from './TeamBox';
 
 export default function BracketView(props) {
   const { height, width } = useWindowDimensions();
@@ -127,6 +126,7 @@ function Bracket(props) {
     if (slots[i] !== null) {
       image = images[slots[i].replace(/\s/g, "")]
     }
+
     return <Rect key={"rect" + i} index={i} slot={slots[i]} image={image} {...boxDim} marginLeft={round(marginLeft)} marginTop={round(marginTop)} onClick={onClick} />
   }
 
@@ -246,6 +246,16 @@ function Rect(props) {
   const marginTop = props.marginTop;
   const onClick = props.onClick;
 
+  const type = (function() {
+    if (index == 30) {
+      return "left";
+    } else if (index < 15) {
+      return "left";
+    } else {
+      return "right";
+    }
+  }());
+
   const style = {
     width: width + "px",
     height: height + "px",
@@ -255,7 +265,7 @@ function Rect(props) {
 
   return (
     <div className="rect" style={style} onClick={() => onClick(index)}>
-      {slot != null ? <TeamBoxLeft name={slot} image={image} width={width + "px"} height={height + "px"} scale={5}></TeamBoxLeft> : null}
+      {slot != null ? <TeamBox name={slot} image={image} type={type} width={width + "px"} height={height + "px"} scale={5}></TeamBox> : null}
     </div>
   )
 }
