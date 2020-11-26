@@ -10,15 +10,15 @@ let Acs = require('../models/acs')
 const mongoose = require('mongoose');
 
 router.route('/display/focused/:page/:sortedBy').get(passport.authenticate('jwt', { session: false }), async(req, res) => {
-    let post_count = await Post.count({}).then((total) => {
-        return total
-    }).catch((err) => {res.status(400).json('Error ' + err)})
     var radarList = await Profile.findOne({username: req.user.username}).then((user) => {
         return user.radarList;
     });
     let sortedBy = req.params.sortedBy
     let page = req.params.page
     let recentPosts = null;
+    let post_count = await Post.count({poster:{$in:radarList}).then((total) => {
+        return total
+    }).catch((err) => {res.status(400).json('Error ' + err)})
     if (sortedBy === 'createdAt') {
         recentPosts = await Post.find({poster:{$in:radarList}}, "likes _id poster body upvoted downvoted reported" ).sort({'createdAt':'desc'}).skip(10*page).limit(10).then(async (post) => {
             return post
