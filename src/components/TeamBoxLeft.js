@@ -33,31 +33,66 @@ import '../styling/TeamBox.css'
 <TeamBoxLeft name="Washington Wizards" color='#004C9E'></TeamBoxLeft> 
 */ 
 
+const defaultColor = {
+  "Atlanta Hawks": "black",
+  "Boston Celtics": '#008248',
+  "Brooklyn Nets": '#FF6E00',
+  "Charlotte Hornets": '#00788C',
+  "Chicago Bulls": '#C4001E',
+  "Cleveland Chandeliers": '#6F2633',
+  "Dallas Mavericks": '#007DC5',
+  "Denver Nuggets": '#001E3E',
+  "Detroit Pistons": '#1D428A',
+  "Golden State Warriors": '#FDB927',
+  "Houston Rockets": '#F00840',
+  "Indiana Pacers": '#002D62',
+  "Los Angeles Lakers": '#552583',
+  "Los Angeles Clippers": '#5B91F2',
+  "Memphis Grizzles": '#305168',
+  "Miami Heat": '#D00000',
+  "Milwaukee Bucks": '#00471B',
+  "Minnesota Timberwolves": '#78BE20',
+  "New Orleans Pelicans": '#E31837',
+  "New York Knicks": '#006BB6',
+  "OKC City Thunder": '#FDBB30',
+  "Utah Jazz": '#00471B',
+  "Orlando Magic": '#0B77BD',
+  "Phoenix Suns": '#D75F06',
+  "Portland Trail Blazers": 'black',
+  "Sacramento Kings": '#5A2D80',
+  "San Antonio Spurs": '#181A21',
+  "Toronto Raptors": 'black',
+  "Washington Wizards": '#004C9E',
+}
+
+/*
+  Usage:
+  - required: a team name
+  - provide props.image for faster loads. Prefetch all images with the /teams route. Otherwise the fetches are slow
+  - provide props.color for custom color
+  - provide props.height for custom height (must specify the unit)
+  - provide props.width for custom width (must specify the unit)
+
+  Feel free to add more custom and default values.
+  */
 export default function TeamBoxLeft(props) {
     var givenTeamName = props.name;
-    var backgroundColor = props.color;
-    const [teamImage, setTeamImage] = useState('');
-    var height = props.height;
+    var backgroundColor = "color" in props ? props.color : (givenTeamName in defaultColor ? defaultColor[givenTeamName] : "black");
+    const propsImage = "image" in props ? props.image : "";
+    const [fetchImage, setFetchImage] = useState("");
+    var height = "height" in props ? props.height : 5;
     var fontSize;
     var width;
-    const scaleFactor = 3;
+    const scaleFactor = "scale" in props ? props.scale : 3;
     const fontFactor = 4;
 
-    if(backgroundColor == null) {
-        backgroundColor = 'black';
-    }
-
-    if(height == null) {
-        height = 5;
-        
-    }
     width = height * scaleFactor;
     fontSize = height / fontFactor;
 
     var TeamBoxStyle = { 
         "background-color": backgroundColor,
-        "height": height + "vw",
-        "width": width + "vw" 
+        "height": "height" in props ? props.height : height + "vw",
+        "width": "width" in props ? props.width : width + "vw" 
     };
 
     var FontStyle = {
@@ -65,21 +100,21 @@ export default function TeamBoxLeft(props) {
     }
 
     useEffect(() => {
-        fetch('/teams').then(res => res.json())
-            .then(data => {
-            data.forEach(function(team) { 
-                if(team.name === givenTeamName.replace(/\s/g, "")) {
-                    setTeamImage(team.image);
-                }
-            }); 
-            })
-            .catch(err => { console.log('ERROR') }) ; 
-    }, [])
+      fetch('/teams').then(res => res.json())
+          .then(data => {
+          data.forEach(function(team) { 
+              if(team.name === givenTeamName.replace(/\s/g, "")) {
+                  setFetchImage(team.image);
+              }
+          }); 
+          })
+          .catch(err => { console.log('ERROR') }) ; 
+    }, [props.name])
 
     return (
         <div className='TeamBox' style={TeamBoxStyle}>
             <div className='TB-teamImage'>
-                <img src={teamImage} className='TB-image'/>
+                <img src={propsImage != "" ? propsImage : fetchImage} className='TB-image'/>
             </div>
             <div className='TB-teamName-left'>
                 <label className='TB-name-left' style={FontStyle}>{givenTeamName}</label>

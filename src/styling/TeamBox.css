@@ -1,6 +1,7 @@
 .TeamBox {
     border-radius: 0.25vw;
-    padding: 0.8vw;
+    box-sizing: border-box;
+    padding: 0.2vw;
 }
 
 .TB-teamImage {
@@ -37,7 +38,7 @@
 .TB-name-left {
     font-family:'CommissionerMedium';
     font-size: 1vw;
-    margin-left: 2vw;
+    margin-left: 1vw;
     color: white;
 }
 
