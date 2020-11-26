@@ -1,0 +1,47 @@
+.all {
+    height:40vw;
+    width:98vw;
+}
+
+.Leaderboard {
+    height: 100%;
+    width: 85%;
+    margin-left: 5%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    background-color:  #1b1a18;
+    display: flex;
+    flex-direction: column;
+}
+
+.Leaderboard-row {
+    width: 100%;
+    height: 10%;
+    padding-top:2%;
+}
+
+.L-col-Global {
+    width: 20%;
+    height: 100%;
+    color:white;
+    float: left;
+    text-align: center;
+    font-size: 1.2vw;
+}
+
+.L-col-Radar {
+    width: 33%;
+    height: 100%;
+    color:white;
+    text-align: center;
+    float: left;
+    font-size: 1.2vw;
+}
+
+.L-col-Image {
+    width: 2.5vw;
+    height:2.5vw;
+    margin-left: 32%;
+    background-color:white;
+    position:absolute;
+}
