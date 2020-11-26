@@ -12,9 +12,6 @@ import { Link } from 'react-router-dom';
 export default function TheZone(props) {
     const authContext = useContext(AuthContext);
     const postId = props.location.pathname.slice(17, props.location.pathname.length);
-    const upath = '/zone/display/focused/';
-    const spath = '/zone/display/';
-    
     
     const [content, setContent] = useState('');
     const [agree, setAgree] = useState(false);
@@ -22,6 +19,9 @@ export default function TheZone(props) {
     const [rId, setRId] = useState('');
     const [reported, setReported] = useState(false);
     const [type, setType] = useState('');
+
+    const [path, setPath] = useState('/zone/display/');
+    const [sortedBy, setSortedBy] = useState('createdAt'); 
 
     const [currentPage, setCurrentPage] = useState(1); 
     const [totalNumber, setTotalNumber] = useState(0); 
@@ -33,14 +33,17 @@ export default function TheZone(props) {
 
     useEffect(() => {    
         handlePosts(currentPage - 1); 
-    }, [currentPage])
+    }, [currentPage, sortedBy, path])
+
+
+   
 
     const togglePostPopup = () => {
        setPostPopup(!showPostPopup);
     }
 
     const handlePosts = async (page) => {
-        await fetch(spath + page + '/likes').then(response => response.json())
+        await fetch(path + page + '/' + sortedBy).then(response => response.json())
             .then(data => {
                 setPosts(data.posts);
                 setContent(data.posts.body);
@@ -166,6 +169,23 @@ export default function TheZone(props) {
                 </div>
 
                 <div className= "tzone-post-number"> Posts ({posts.length})</div>
+                <div className = "tzone-dropbtns">
+                    <div class="tzone-dropdown1">
+                        <button class="tzone-dropbtn1">Dropdown</button>
+                        <div class="tzone-dropdown-content1">
+                            <a onClick={() => setPath('/zone/display/focused/')} >upath</a>
+                            <a onClick={() => setPath('/zone/display/')} >spath</a>
+                        </div>
+                    </div>
+                    <div class="tzone-dropdown2">
+                        <button class="tzone-dropbtn2">Sort By</button>
+                        <div class="tzone-dropdown-content2">
+                            <a onClick={() => setSortedBy('likes')} >Likes</a>
+                            <a onClick={() => setSortedBy('createdAt')} >New</a>
+                        </div>
+                    </div> 
+
+                </div>
                 {posts.map((data, index) => {
                     return (
                         <div class="tzone-overall-container">
