@@ -2,30 +2,104 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 const playoffSchema = new Schema({
-    user: {
+
+  year: {
+    type: String,
+    required: true,
+  },
+
+  westernConference: {
+    quarterfinals: [{
+      team1: {
+        type: String,
+      },
+      team2: {
+        type: String,
+      },
+      games: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'game',
+      },
+    }],
+    semifinals: [{
+      team1: {
+        type: String,
+      },
+      team2: {
+        type: String,
+      },
+      games: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'game',
+      },
+    }],
+    finals: {
+      team1: {
+        type: String,
+      },
+      team2: {
+        type: String,
+      },
+      games: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'game',
+      },
+    }
+  },
+
+  finals: {
+    westernTeam: {
       type: String,
     },
-    year: {
+    easternTeam: {
       type: String,
     },
-    predictions: {
-      quarterfinals: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'prediction'
+    games: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: 'game',
+    }
+
+  },
+
+  easternConference: {
+    quarterfinals: [{
+      team1: {
+        type: String,
       },
-      semifinals: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'prediction'
+      team2: {
+        type: String,
       },
-      conferencefinals: {
+      games: {
         type: [mongoose.Schema.Types.ObjectId],
-        ref: 'prediction'
+        ref: 'game',
       },
-      finals: {
+    }],
+    semifinals: [{
+      team1: {
+        type: String,
+      },
+      team2: {
+        type: String,
+      },
+      games: {
         type: [mongoose.Schema.Types.ObjectId],
-        ref: 'prediction'
+        ref: 'game',
       },
-    },
+    }],
+    finals: {
+      team1: {
+        type: String,
+      },
+      team2: {
+        type: String,
+      },
+      games: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'game',
+      },
+    }
+  }
+
   }, {
     timestamps: true,
   });
