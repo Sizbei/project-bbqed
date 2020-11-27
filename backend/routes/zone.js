@@ -16,7 +16,7 @@ router.route('/display/focused/:page/:sortedBy').get(passport.authenticate('jwt'
     let sortedBy = req.params.sortedBy
     let page = req.params.page
     let recentPosts = null;
-    let post_count = await Post.count({poster:{$in:radarList}).then((total) => {
+    let post_count = await Post.count({poster:{$in:radarList}}).then((total) => {
         return total
     }).catch((err) => {res.status(400).json('Error ' + err)})
     if (sortedBy === 'createdAt') {
