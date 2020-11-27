@@ -35,24 +35,24 @@ export default function BracketController(props) {
     "EC-QF4B",
   ]
 
-  // contain the teams that are representeed in the bracket
+  // contain the teams that are represented in the bracket
   const [teams, setTeams] = useState({
-    "WC-QF1A": "WC-QF1A",
-    "WC-QF1B": "WC-QF1B",
-    "WC-QF2A": "WC-QF2A",
-    "WC-QF2B": "WC-QF2B",
-    "WC-QF3A": "WC-QF3A",
-    "WC-QF3B": "WC-QF3B",
-    "WC-QF4A": "WC-QF4A",
-    "WC-QF4B": "WC-QF4B",
-    "EC-QF1A": "EC-QF1A",
-    "EC-QF1B": "EC-QF1B",
-    "EC-QF2A": "EC-QF2A",
-    "EC-QF2B": "EC-QF2B",
-    "EC-QF3A": "EC-QF3A",
-    "EC-QF3B": "EC-QF3B",
-    "EC-QF4A": "EC-QF4A",
-    "EC-QF4B": "EC-QF4B",
+    "WC-QF1A": "Atlanta Hawks",
+    "WC-QF1B": "Boston Celtics",
+    "WC-QF2A": "Brooklyn Nets",
+    "WC-QF2B": "Charlotte Hornets",
+    "WC-QF3A": "Chicago Bulls",
+    "WC-QF3B": "Cleveland Chandeliers",
+    "WC-QF4A": "Dallas Mavericks",
+    "WC-QF4B": "Minnesota Timberwolves",
+    "EC-QF1A": "Portland Trail Blazers",
+    "EC-QF1B": "Detroit Pistons",
+    "EC-QF2A": "Toronto Raptors",
+    "EC-QF2B": "Washington Wizards",
+    "EC-QF3A": "Miami Heat",
+    "EC-QF3B": "Milwaukee Bucks",
+    "EC-QF4A": "Golden State Warriors",
+    "EC-QF4B": "Houston Rockets",
   })
 
   const [predictions, setPredictions] = useState({
@@ -72,6 +72,28 @@ export default function BracketController(props) {
     "EC-QF3": null,
     "EC-QF4": null,
   });
+
+  // the actual results of the games
+  const [results, setResults] = useState({
+    "WC-QF1": null,
+    "WC-QF2": null,
+    "WC-QF3": null,
+    "WC-QF4": null, 
+    "WC-SF1": null,
+    "WC-SF2": null,
+    "WC-F": null,
+    "F": null,
+    "EC-F": null,
+    "EC-SF1": null,
+    "EC-SF2": null,
+    "EC-QF1": null,
+    "EC-QF2": null,
+    "EC-QF3": null,
+    "EC-QF4": null,
+  });
+
+  // the change to the user's acs
+  const [acsChange, setAcsChange] = useState('none');
 
   const [counter, setCounter] = useState(0); // ensure updates for child useEffect so that onClick remains fresh
 
@@ -108,7 +130,7 @@ export default function BracketController(props) {
     return map[representative];
   }
 
-  // Translate 0-29 to a tree index
+  // Translate 0-30 to a tree index
   // the winner is the tree index 1
   const toTreeIndex = {
     0: 16,
@@ -141,6 +163,7 @@ export default function BracketController(props) {
     27: 29,
     28: 30,
     29: 31,
+    30: 1,
   }
 
   // Reverse toTreeIndex
@@ -172,7 +195,7 @@ export default function BracketController(props) {
   const onClick = (index) => {
     setCounter(counter + 1);
 
-    const teamName = codes[index];
+    const teamName = teams[codes[index]];
     let treeIndex = toTreeIndex[index];
     
     console.log("start", predictions);
@@ -184,12 +207,11 @@ export default function BracketController(props) {
 
     if (!hasChildren(treeIndex)) {
       newPrediction = teamName;
-      console.log("LEAF NODE");
+      console.log("LEAF NODE", newPrediction);
     } else {
       const predictedUs = newPredictions[toMatchName(2 * treeIndex)];
       const predictedOther = newPredictions[toMatchName(2 * getOpposingTreeIndex(treeIndex))];
 
-      console.log("Predicted children", predictedUs, predictedOther);
       if (predictedUs === null || predictedOther === null) {
         console.log("Nothing to predict here.");
       } else {
@@ -208,19 +230,13 @@ export default function BracketController(props) {
       }
     }
 
-    // while (treeIndex != 1) {
-      
-
-    //   treeIndex = parent(treeIndex);
-    // }
-
     setPredictions(newPredictions);
   }
 
   console.log("predictions", predictions);
 
   const slots = (function(){
-    const slots = Array(30).fill(0).map((el, i) => {
+    const slots = Array(31).fill(0).map((el, i) => {
       const treeIndex = toTreeIndex[i];
       
       if (!hasChildren(treeIndex)) {
@@ -229,8 +245,6 @@ export default function BracketController(props) {
         const childPrediction = predictions[toMatchName(2 * treeIndex)];
         return childPrediction;
       }
-
-      return i;
     })
     return slots;
   }());

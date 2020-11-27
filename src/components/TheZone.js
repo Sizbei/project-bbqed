@@ -30,7 +30,9 @@ export default function TheZone(props) {
 
     const [showPostPopup, setPostPopup] = useState(false);
     const [showReportPopup, setReportPopup] = useState(false);
-   
+
+    const defaultState = {state: "none"};
+    const [state, setState] = useState(defaultState);
 
     useEffect(() => {
         fetch(path).then(res => res.json())
@@ -60,10 +62,19 @@ export default function TheZone(props) {
         setReportPopup(!showReportPopup);
     }
 
-    
-   
     const handlePostAgree = (data, index) => {
+        if (state.state !== "none") return;
+        setState({ state: "agree", data: data, index: index});
+    }
 
+    // post agree
+    useEffect(() => {
+      if (state.state != "agree") return;
+
+      const data = state.data;
+      const index = state.index;
+
+      console.log(data);
         const body = {
             post: data._id,
             username: authContext.user.username,
@@ -96,52 +107,65 @@ export default function TheZone(props) {
                     ...posts.slice(index + 1)
                 ]
                 setPosts(newPosts);
+                setState(defaultState);
             })
             .catch((error) => {
                 console.log(error);
+                setState(defaultState);
             })
+    }, [state.state])
 
-    }
     const handlePostDisagree = (data, index) => {
-        const body = {
-            post: data._id,
-            username: authContext.user.username,
-            upvoted: data.upvoted,
-            downvoted: data.downvoted,
-        }
-        fetch('/zone/downvote', {
-            method: "put",
-            body: JSON.stringify(body),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(res => res.json())
-            //axios.post('http://localhost:5000/post/add', body)
-            .then(updatedData => {
-                const updatedEntry = {
-                    "_id": data._id,
-                    "poster": {
-                        "username": data.poster.username,
-                        "image": data.poster.image,
-                        "acs": data.poster.acs
-                    },
-                    "body": data.body,
-                    "likes": updatedData.likes,
-                    "upvoted": updatedData.upvoted,
-                    "downvoted": updatedData.downvoted
-                }
-                const newPosts = [
-                    ...posts.slice(0, index),
-                    updatedEntry,
-                    ...posts.slice(index + 1)
-                ]
-                setPosts(newPosts);
-            })
-            .catch((error) => {
-                console.log(error);
-            })
+      if (state.state !== "none") return;
+      setState({ state: "disagree", data: data, index: index});    
     }
 
+    useEffect(() => {
+      if (state.state !== "disagree") return;
+
+      const data = state.data;
+      const index = state.index;
+
+      const body = {
+          post: data._id,
+          username: authContext.user.username,
+          upvoted: data.upvoted,
+          downvoted: data.downvoted,
+      }
+      fetch('/zone/downvote', {
+          method: "put",
+          body: JSON.stringify(body),
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      }).then(res => res.json())
+          //axios.post('http://localhost:5000/post/add', body)
+          .then(updatedData => {
+              const updatedEntry = {
+                  "_id": data._id,
+                  "poster": {
+                      "username": data.poster.username,
+                      "image": data.poster.image,
+                      "acs": data.poster.acs
+                  },
+                  "body": data.body,
+                  "likes": updatedData.likes,
+                  "upvoted": updatedData.upvoted,
+                  "downvoted": updatedData.downvoted
+              }
+              const newPosts = [
+                  ...posts.slice(0, index),
+                  updatedEntry,
+                  ...posts.slice(index + 1)
+              ]
+              setPosts(newPosts);
+              setState(defaultState);
+          })
+          .catch((error) => {
+              console.log(error);
+              setState(defaultState);
+          })
+    }, [state.state])
     
     return (
         <div class="tzone-page">

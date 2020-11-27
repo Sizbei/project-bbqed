@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import '../styling/BracketView.css';
+import TeamBox from './TeamBox';
 
 export default function BracketView(props) {
   const { height, width } = useWindowDimensions();
@@ -44,8 +45,8 @@ function Bracket(props) {
   // constants
   const color = '#FFFFFF';
   const boxDim = {
-    width: 200,
-    height: 60,
+    width: props.width / 7,
+    height: props.height / 10,
   }
   const minHeightDiff = 10;
   const lineWidth = 1;
@@ -62,6 +63,7 @@ function Bracket(props) {
   const canvasHeight = Math.max(minHeight, props.height);
   
   const [objects, setObjects] = useState([]);
+  const [images, setImages] = useState({});
 
   const round = (n) => {
     const m = Math.floor(n);
@@ -119,10 +121,19 @@ function Bracket(props) {
     }
   }
 
-  const drawPair = (i, marginLeft, marginTop) => {
+  const getRect = (i, marginLeft, marginTop) => {
+    let image = "";
+    if (slots[i] !== null) {
+      image = images[slots[i].replace(/\s/g, "")]
+    }
+
+    return <Rect key={"rect" + i} index={i} slot={slots[i]} image={image} {...boxDim} marginLeft={round(marginLeft)} marginTop={round(marginTop)} onClick={onClick} />
+  }
+
+  const getPair = (i, marginLeft, marginTop) => {
     const newObjects = []
-    newObjects.push(<Rect key={"rect" + i} index={i} slot={slots[i]} {...boxDim} marginLeft={round(marginLeft)} marginTop={round(marginTop)} onClick={onClick} />)
-    newObjects.push(<Rect key={"rect" + (i+1)} index={i+1} slot={slots[i+1]} {...boxDim} marginLeft={round(marginLeft)} marginTop={round(marginTop + boxDim.height + lineWidth)} onClick={onClick} />)
+    newObjects.push(getRect(i, marginLeft, marginTop));
+    newObjects.push(getRect(i + 1, marginLeft, marginTop + boxDim.height + lineWidth));
     return newObjects;
   }
 
@@ -145,7 +156,7 @@ function Bracket(props) {
 
     // Western Conference Round 1
     Array(4).fill(0).forEach((el, i) => {
-      newObjects.push(drawPair(index, 0, i * heightBlock))
+      newObjects.push(getPair(index, 0, i * heightBlock))
       index += 2;
     })
 
@@ -154,48 +165,66 @@ function Bracket(props) {
     Array(2).fill(0).forEach((el, i) => {
       const sfHeight = 2 * i * heightBlock + (heightBlock + pairHeight) / 2;
       sfHeights.push(sfHeight);
-      newObjects.push(drawPair(index, widthBlock, sfHeight - boxDim.height));
+      newObjects.push(getPair(index, widthBlock, sfHeight - boxDim.height));
       drawT({x: boxDim.width + minLineGap, y: 2 * i * heightBlock + boxDim.height}, {x: boxDim.width + minLineGap, y: (2 * i + 1) * heightBlock +  + boxDim.height}, {x: widthBlock - minLineGap, y: sfHeight})
       index += 2;
     })
     
     // Western Conference Finals
     const fHeight = (3 * heightBlock + pairHeight) / 2;
-    newObjects.push(drawPair(index, 2 * widthBlock, fHeight - boxDim.height));
+    newObjects.push(getPair(index, 2 * widthBlock, fHeight - boxDim.height));
     drawT({x: widthBlock + boxDim.width + minLineGap, y: sfHeights[0]}, {x: widthBlock + boxDim.width + minLineGap, y: sfHeights[1]}, {x: 2 * widthBlock - minLineGap, y: fHeight})
     index += 2;
 
     // Finals
-    newObjects.push(drawPair(index, 3 * widthBlock, fHeight - boxDim.height));
+    newObjects.push(getPair(index, 3 * widthBlock, fHeight - boxDim.height));
     drawLine(2 * widthBlock + boxDim.width + minLineGap, 3 * widthBlock - minLineGap, fHeight, fHeight);
     drawLine(3 * widthBlock + boxDim.width + minLineGap, 4 * widthBlock - minLineGap, fHeight, fHeight);
     index += 2;
 
     // Eastern Conference Finals
-    newObjects.push(drawPair(index, 4 * widthBlock, fHeight - boxDim.height));
+    newObjects.push(getPair(index, 4 * widthBlock, fHeight - boxDim.height));
     drawT({x: 5 * widthBlock - minLineGap, y: sfHeights[0]}, {x: 5 * widthBlock - minLineGap, y: sfHeights[1]}, {x: 4 * widthBlock + boxDim.width + minLineGap, y: fHeight})
     index += 2;
 
     // Eastern Conference Semi Finals
     Array(2).fill(0).forEach((el, i) => {
       const sfHeight = sfHeights[i];
-      newObjects.push(drawPair(index, 5 * widthBlock, sfHeight - boxDim.height));
+      newObjects.push(getPair(index, 5 * widthBlock, sfHeight - boxDim.height));
       drawT({x: 6 * widthBlock - minLineGap, y: 2 * i * heightBlock + boxDim.height}, {x: 6 * widthBlock - minLineGap, y: (2 * i + 1) * heightBlock +  + boxDim.height}, {x: 5 * widthBlock + boxDim.width + minLineGap, y: sfHeight})
       index += 2;
     })
 
     // Eastern Conference Round 1
     Array(4).fill(0).forEach((el, i) => {
-      newObjects.push(drawPair(index, width - boxDim.width, i * heightBlock));
+      newObjects.push(getPair(index, width - boxDim.width, i * heightBlock));
       index += 2;
     })
+
+    // Champion
+    newObjects.push(getRect(index, 3 * widthBlock, heightBlock / 2));
+    index += 2;
 
     setObjects(newObjects);
   }    
 
+  // draw again whenever props changes
   useEffect(() => {
     draw();
-  }, [JSON.stringify(props)])
+  }, [JSON.stringify(props), JSON.stringify(images)])
+
+  // initial fetch for team logos
+  useEffect(() => {
+    fetch('/teams').then(res => res.json())
+      .then(data => {
+        const map = {}
+        data.forEach(el => {
+          map[el.name] = el.image;
+        })
+        setImages(map);
+      })
+      .catch(err => { console.log('ERROR') });
+  }, [])
 
   return (
     <div className="bracketview-center">
@@ -210,14 +239,24 @@ function Bracket(props) {
 function Rect(props) {
   const index = props.index;
   const slot = props.slot;
+  const image = props.image;
   const width = props.width;
   const height = props.height;
   const marginLeft = props.marginLeft;
   const marginTop = props.marginTop;
   const onClick = props.onClick;
 
+  const type = (function() {
+    if (index == 30) {
+      return "left";
+    } else if (index < 15) {
+      return "left";
+    } else {
+      return "right";
+    }
+  }());
+
   const style = {
-    backgroundColor: "grey",
     width: width + "px",
     height: height + "px",
     marginLeft: marginLeft + "px",
@@ -226,7 +265,7 @@ function Rect(props) {
 
   return (
     <div className="rect" style={style} onClick={() => onClick(index)}>
-      <span className="rect-content"> {slot} </span>
+      {slot != null ? <TeamBox name={slot} image={image} type={type} width={width + "px"} height={height + "px"} scale={5}></TeamBox> : null}
     </div>
   )
 }
