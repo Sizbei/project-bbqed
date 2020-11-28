@@ -11,6 +11,12 @@ const predictionSchema = new Schema({
         unique: false,
         required: false,
     },
+    type: {
+        type: String,
+        unique: false,
+        required: true,
+        enum : ['seasonal','playoff', 'playin']
+    },
     status: {
         type: String,
         unique: false,

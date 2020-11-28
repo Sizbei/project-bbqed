@@ -22,10 +22,6 @@ const gameSchema = new Schema({
   gameDay: {
     type: Date,
   },
-  prediction: {
-    type: mongoose.Schema.Types.ObjectId,
-    refPath: 'prediction',
-  }
 }, {
   timestamps: true,
 });
