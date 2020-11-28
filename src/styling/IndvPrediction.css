@@ -5,6 +5,9 @@
   font-family: 'CommissionerBold'; 
 }
 
+.ip-full-container { 
+  padding-top: 2.5%; 
+}
 .ip-matches-container { 
   align-items: center;
   flex-direction: column; 
@@ -13,7 +16,24 @@
   color: white;
 }
 
+.ip-header-section  {
+  border-bottom: 5px solid white; 
+  display: flex;
+  
+}
 
+.ip-navigation-buttons { 
+  background-color: #222629;
+  color: white; 
+  border: none;
+  cursor:pointer;
+  font-family: 'ComissionerBold';
+  outline: none;
+}
+
+.ip-navigation-buttons:hover {
+  color:  #ff7e1f; 
+}
 @font-face {
   font-family: 'CommissionerBold';
   src: local('CommissionerBold'), url(../res/fonts/Commissioner/Commissioner-Bold.ttf) format('truetype');

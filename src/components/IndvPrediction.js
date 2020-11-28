@@ -3,9 +3,9 @@ import {AuthContext} from '../Context/AuthContext';
 import "../styling/IndvPrediction.css"
 
 export default function PredictionsView() { 
-  const currentDate = new Date(); 
-  const firstDayofWeek = currentDate.getDate() - currentDate.getDay(); 
-  const lastDayofWeek = firstDayofWeek + 6; 
+  const [currentDate, setCurrentDate] = useState(new Date()); 
+  const [firstDayofWeek, setFirstDay] = useState(currentDate.getDate() - currentDate.getDay()); 
+  const [lastDayofWeek, setLastDay] = useState(firstDayofWeek + 6);  
   const [selectedWeek, setCurrentWeek] = useState(currentDate); 
   const authContext = useContext(AuthContext); 
   const dummyData = [
@@ -15,25 +15,46 @@ export default function PredictionsView() {
     {date: "01/02/2019" ,team1: 'teamG', team2: 'teamH' },
   ]
   useEffect(() => {
-    
+    fetch().then(res => res.json())
+    .then (data=> {
+      
+    })
+    .catch((error) => { 
+      console.log(error); 
+    })
   },[])
+
+  const handleSelection= () => { 
+    fetch().then(res => res.json())
+    .then (data=> {
+      
+    })
+    .catch((error) => { 
+      console.log(error); 
+    })
+  }
+
   return (
     <div className="ip-background">
-      <div className="ip-header-section">
-        
-      </div>
-      <div className="ip-matches-container">
-        {dummyData.map((data) => {
-          return (
-            <div className="ip-match-row-container"> 
-              <label>{data.date}</label>  
-              <button> {data.team1} </button>
-              <label> vs </label>
-              <button>{data.team2} </button>
-            </div>
-          )
-          
-        })}
+      <div className="ip-full-container">
+        <div className="ip-header-section">
+          <button className="ip-navigation-buttons">{"<"}</button>
+          <label> {firstDayofWeek} </label>
+          <button className="ip-navigation-buttons">{">"}</button>
+        </div>
+        <div className="ip-matches-container">
+          {dummyData.map((data) => {
+            return (
+              <div className="ip-match-row-container"> 
+                <label>{data.date}</label>  
+                <button> {data.team1} </button>
+                <label> vs </label>
+                <button>{data.team2} </button>
+              </div>
+            )
+            
+          })}
+        </div>
       </div>
     </div> 
   )
