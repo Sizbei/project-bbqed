@@ -58,7 +58,7 @@ const analysisPostRouter = require('./routes/analysisPost');
 app.use('/analysis/post', analysisPostRouter)
 
 const reportRouter = require('./routes/report');
-app.use('/report/', reportRouter)
+app.use('/report', reportRouter)
 
 //App is now listening for calls
 app.listen(port, () => {
