@@ -53,10 +53,10 @@ const generateResponseFromPrediction = async (predictions, user) => {
     return response;
 }
 
-router.route('/current/:username').get(async (req, res) => {
-//router.route('/current').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
-    const user = req.params.username;
-    //const user = req.user.username;
+//router.route('/current/:username').get(async (req, res) => {
+router.route('/current').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
+    //const user = req.params.username;
+    const user = req.user.username;
     const cur_date = demo_date; //since games in DB are all historical data, use a demo date to represent current date
     const end_date = findStartAndEndDate(cur_date, 0, 0).endDate;
     prediction.find({$and: [{closeTime: {$gte: cur_date}},{closeTime: {$lt: end_date}}, {type: "seasonal"}]}).then(async predictions => {
@@ -64,10 +64,10 @@ router.route('/current/:username').get(async (req, res) => {
     }).catch(err => res.status(500).json({err: err}));
 })
 
-router.route('/past/:username').get(async (req, res) => {
-//router.route('/past').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
-    const user = req.params.username;
-    //const user = req.user.username;
+//router.route('/past/:username').get(async (req, res) => {
+router.route('/past').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
+    //const user = req.params.username;
+    const user = req.user.username;
     const cur_date = demo_date; //since games in DB are all historical data, use a demo date to represent current date
     const start_date = findStartAndEndDate(cur_date, 1, 0).startDate;
     prediction.find({$and: [{closeTime: {$gte: start_date}},{closeTime: {$lt: cur_date}}, {type: "seasonal"}]}).then(async predictions => {

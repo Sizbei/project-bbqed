@@ -21,10 +21,10 @@ const findUserPick = (picks, user) => {
 }
 
 //req body: {_id: str, user: str, pick: str}
-router.route('/addPrediction').put(async (req, res) => {
-//router.route('/addPrediction').put(passport.authenticate('jwt', {session : false}), async (req, res) => {
-    const user = req.body.user;
-    //const user = req.user.username;
+//router.route('/addPrediction').put(async (req, res) => {
+router.route('/addPrediction').put(passport.authenticate('jwt', {session : false}), async (req, res) => {
+    //const user = req.body.user;
+    const user = req.user.username;
     const cur_date = demo_date; //since games in DB are all historical data, use a demo date to represent current date
     prediction.findOne({game: req.body._id}).then(prediction => {
         let cur_pick = null;
