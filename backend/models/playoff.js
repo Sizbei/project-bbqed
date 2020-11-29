@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 
+function validateTwoTeams (val) {
+  return val.length == 2;
+}
+
 const Schema = mongoose.Schema;
 const playoffSchema = new Schema({
-
   year: {
     type: String,
     required: true,
@@ -10,94 +13,114 @@ const playoffSchema = new Schema({
 
   westernConference: {
     quarterfinals: [{
-      team1: {
-        type: String,
-      },
-      team2: {
-        type: String,
+      teams: {
+        type: [String],
+        validate: validateTwoTeams,
       },
       games: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'game',
+      },
+      score: {
+        type: [Number],
+        validate: validateTwoTeams,
+        default: [0,0],
       },
     }],
     semifinals: [{
-      team1: {
-        type: String,
-      },
-      team2: {
-        type: String,
+      teams: {
+        type: [String],
+        validate: validateTwoTeams,
       },
       games: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'game',
+      },
+      score: {
+        type: [Number],
+        validate: validateTwoTeams,
+        default: [0,0],
       },
     }],
-    finals: {
-      team1: {
-        type: String,
-      },
-      team2: {
-        type: String,
+    confinals: [{
+      teams: {
+        type: [String],
+        validate: validateTwoTeams,
       },
       games: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'game',
       },
-    }
+      score: {
+        type: [Number],
+        validate: validateTwoTeams,
+        default: [0,0],
+      },
+    }]
   },
 
   finals: {
-    westernTeam: {
-      type: String,
-    },
-    easternTeam: {
-      type: String,
+    teams: {
+      type: [String],
+      validate: validateTwoTeams,
     },
     games: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: 'game',
-    }
-
+    },
+    score: {
+      type: [Number],
+      validate: validateTwoTeams,
+      default: [0,0],
+    },
   },
 
   easternConference: {
     quarterfinals: [{
-      team1: {
-        type: String,
-      },
-      team2: {
-        type: String,
+      teams: {
+        type: [String],
+        validate: validateTwoTeams,
       },
       games: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'game',
+      },
+      score: {
+        type: [Number],
+        validate: validateTwoTeams,
+        default: [0,0],
       },
     }],
     semifinals: [{
-      team1: {
-        type: String,
-      },
-      team2: {
-        type: String,
+      teams: {
+        type: [String],
+        validate: validateTwoTeams,
       },
       games: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'game',
+      },
+      score:{
+        type: [Number],
+        validate: validateTwoTeams,
+        default: [0,0],
       },
     }],
-    finals: {
-      team1: {
-        type: String,
-      },
-      team2: {
-        type: String,
+    confinals: [{
+      teams: {
+        type: [String],
+        validate: validateTwoTeams,
       },
       games: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'game',
       },
-    }
+      score: {
+        type: [Number],
+        validate: validateTwoTeams,
+        default: [0,0],
+      },
+    }]
   }
 
   }, {

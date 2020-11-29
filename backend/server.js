@@ -57,6 +57,9 @@ app.use('/analysis', analysisRouter)
 const analysisPostRouter = require('./routes/analysisPost');
 app.use('/analysis/post', analysisPostRouter)
 
+const playoffRouter = require('./routes/playoff');
+app.use('/playoff', playoffRouter)
+
 //App is now listening for calls
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
