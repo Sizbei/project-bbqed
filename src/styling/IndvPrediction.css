@@ -14,8 +14,13 @@
 }
 .ip-match-row-container { 
   color: white;
+  display:flex; 
+
 }
 
+.ip-teams-versus {
+  padding-left: 10%; 
+}
 .ip-header-section  {
   border-bottom: 5px solid white; 
   display: flex;
@@ -30,7 +35,13 @@
   font-family: 'ComissionerBold';
   outline: none;
 }
+.ip-date{ 
+  padding-right: 30%; 
+}
 
+.ip-teams-versus TeamBox { 
+  word-break: break-all;
+}
 .ip-navigation-buttons:hover {
   color:  #ff7e1f; 
 }
