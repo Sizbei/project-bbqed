@@ -39,7 +39,7 @@
   display: flex;
   align-items: center;
 }
-.ip-matches-info button { 
+.ip-matches-info-button { 
   margin-left: 2%;
   margin-right: 2%;
   background-color: transparent;
