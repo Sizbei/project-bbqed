@@ -20,7 +20,7 @@ const findUserPick = (picks, user) => {
     return null;
 }
 
-//req body: {_id: str, user: str, pick: str}
+//req body: {_id: str, pick: str}
 //router.route('/addPrediction').put(async (req, res) => {
 router.route('/addPrediction').put(passport.authenticate('jwt', {session : false}), async (req, res) => {
     //const user = req.body.user;

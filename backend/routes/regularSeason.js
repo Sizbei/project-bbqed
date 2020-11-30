@@ -33,20 +33,24 @@ const findStartAndEndDate = (cur_date, week_back, week_forward) => {
     }
 }
 
-const generateResponseFromPrediction = async (predictions, user) => {
+const generateResponseFromPrediction = async (predictions, user, cur_date) => {
     const response = [];
     for(let index in predictions) {
         const cur_game = await game.findOne({_id: predictions[index].game}).then(game => {return game});
         const team1 = await team.findOne({_id: cur_game.team1}).then(team => {return team});
         const team2 = await team.findOne({_id: cur_game.team2}).then(team => {return team});
-        const cur_prediction = {
+        let cur_prediction = {
             _id: predictions[index]._id,
             team1Name: team1.name,
             team1Image: team1.image,
             team2Name: team2.name,
             team2Image: team2.image,
             gameDay: cur_game.gameDay,
+            result: null,
             pick: findUserPick(predictions[index].picks, user)
+        }
+        if (cur_game.gameDay <= cur_date) {
+            cur_prediction.result = cur_game.result;
         }
         response.push(cur_prediction);
     }
@@ -60,7 +64,7 @@ router.route('/current').get(passport.authenticate('jwt', {session : false}), as
     const cur_date = demo_date; //since games in DB are all historical data, use a demo date to represent current date
     const end_date = findStartAndEndDate(cur_date, 0, 0).endDate;
     prediction.find({$and: [{closeTime: {$gte: cur_date}},{closeTime: {$lt: end_date}}, {type: "seasonal"}]}).then(async predictions => {
-        res.json({currentSeasonals: await generateResponseFromPrediction(predictions, user)});
+        res.json({currentSeasonals: await generateResponseFromPrediction(predictions, user, cur_date)});
     }).catch(err => res.status(500).json({err: err}));
 })
 
@@ -71,7 +75,7 @@ router.route('/past').get(passport.authenticate('jwt', {session : false}), async
     const cur_date = demo_date; //since games in DB are all historical data, use a demo date to represent current date
     const start_date = findStartAndEndDate(cur_date, 1, 0).startDate;
     prediction.find({$and: [{closeTime: {$gte: start_date}},{closeTime: {$lt: cur_date}}, {type: "seasonal"}]}).then(async predictions => {
-        res.json({pastSeasonals: await generateResponseFromPrediction(predictions, user)});
+        res.json({pastSeasonals: await generateResponseFromPrediction(predictions, user, cur_date)});
     }).catch(err => res.status(500).json({err: err}));
 })
 
