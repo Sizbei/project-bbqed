@@ -124,7 +124,7 @@ function Bracket(props) {
   const getRect = (i, marginLeft, marginTop) => {
     let image = "";
     if (slots[i] !== null) {
-      image = images[slots[i].replace(/\s/g, "")]
+      image = images[slots[i]];
     }
 
     return <Rect key={"rect" + i} index={i} slot={slots[i]} image={image} {...boxDim} marginLeft={round(marginLeft)} marginTop={round(marginTop)} onClick={onClick} />
@@ -225,7 +225,7 @@ function Bracket(props) {
       })
       .catch(err => { console.log('ERROR') });
   }, [])
-
+  
   return (
     <div className="bracketview-center">
       <div className="bracketview-div">  
