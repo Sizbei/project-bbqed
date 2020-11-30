@@ -7,21 +7,46 @@
 
 .ip-full-container { 
   padding-top: 2.5%; 
+  width: 60%; 
 }
 .ip-matches-container { 
-  align-items: center;
   flex-direction: column; 
+  
 }
 .ip-match-row-container { 
+  border-bottom: 2px solid white; 
+  padding-top: 3%;
+  padding-bottom: 3%;
   color: white;
+  display:flex; 
+  align-content: space-between;
+  align-items: center;
+
 }
 
 .ip-header-section  {
   border-bottom: 5px solid white; 
   display: flex;
-  
+  justify-content: flex-end;
+}
+.ip-date-label { 
+  flex-grow: 1; 
 }
 
+
+.ip-matches-info {
+  margin-right: 4%;
+  display: flex;
+  align-items: center;
+}
+.ip-matches-info-button { 
+  margin-left: 2%;
+  margin-right: 2%;
+  background-color: transparent;
+  border: none; 
+  cursor: pointer; 
+  outline: none; 
+}
 .ip-navigation-buttons { 
   background-color: #222629;
   color: white; 
@@ -29,8 +54,8 @@
   cursor:pointer;
   font-family: 'ComissionerBold';
   outline: none;
+  cursor: pointer;
 }
-
 .ip-navigation-buttons:hover {
   color:  #ff7e1f; 
 }
