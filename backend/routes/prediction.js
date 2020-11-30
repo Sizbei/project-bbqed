@@ -26,7 +26,7 @@ router.route('/addPrediction').put(passport.authenticate('jwt', {session : false
     //const user = req.body.user;
     const user = req.user.username;
     const cur_date = demo_date; //since games in DB are all historical data, use a demo date to represent current date
-    prediction.findOne({game: req.body._id}).then(prediction => {
+    prediction.findById({_id: req.body._id}).then(prediction => {
         let cur_pick = null;
         if(!prediction || !req.body.pick) {
             res.status(400).json({err: "Bad request: invaild information in request"});
