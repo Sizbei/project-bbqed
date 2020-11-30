@@ -10,5 +10,4 @@ router.route("/bracket/:year").post(passport.authenticate('jwt', {session : fals
 });
 
 
-
 module.exports = router;

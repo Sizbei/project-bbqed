@@ -40,7 +40,7 @@ function App() {
       <PrivateRoute path="/Trivia" component={Trivia} />
       <PrivateRoute exact path="/Analysis" component={Analysis} />
       <PrivateRoute path="/analysis/post/:id" component={AnalysisPost} />
-      <PrivateRoute path="/PicksAndPredictions" component={PicksAndPredictions} />
+      <PrivateRoute path="/Predictions" component={PicksAndPredictions} />
       <PrivateRoute path="/Profile" component={Profile} />
       <PrivateRoute path="/Settings" component={Settings} />
       <PrivateRoute path="/Citations" component={Citations} />
