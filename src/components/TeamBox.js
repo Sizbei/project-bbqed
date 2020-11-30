@@ -92,13 +92,13 @@ export default function TeamBox(props) {
     fontSize = height / fontFactor;
 
     var TeamBoxStyle = { 
-        "background-color": backgroundColor,
+        "backgroundColor": backgroundColor,
         "height": "height" in props ? props.height : height + "vw",
         "width": "width" in props ? props.width : width + "vw" 
     };
 
     var FontStyle = {
-        "font-size": fontSize + "vw"
+        "fontSize": fontSize + "vw"
     }
 
     useEffect(() => {

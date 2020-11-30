@@ -53,7 +53,7 @@ export default function BracketController(props) {
     "EC-QF3B": "Milwaukee Bucks",
     "EC-QF4A": "Golden State Warriors",
     "EC-QF4B": "Houston Rockets",
-  })
+  })  
 
   const [predictions, setPredictions] = useState({
     "WC-QF1": null,
