@@ -132,12 +132,13 @@ export default function TheZone(props) {
                     "poster": {
                         "username": data.poster.username,
                         "image": data.poster.image,
-                        "acs": data.poster.acs
+                        "acs": data.poster.acs,
+                    "reported":  data.reported
                     },
                     "body": data.body,
                     "likes": updatedData.likes,
                     "upvoted": updatedData.upvoted,
-                    "downvoted": updatedData.downvoted
+                    "downvoted": updatedData.downvoted,
                 }
                 const newPosts = [
                     ...posts.slice(0, index),
@@ -169,8 +170,10 @@ export default function TheZone(props) {
                     <div class="tzone-dropdown1">
                         <button class="tzone-dropbtn1">Views</button>
                         <div class="tzone-dropdown-content1">
-                            <a onClick={() => setPath('/zone/display/')} >View All</a>
-                            <a onClick={() => setPath('/zone/display/focused/')} >Compressed</a>
+                            <a className={path === '/zone/display/' ? "tzone-drop-click" : "tzone-drop-btn"
+                            } onClick={() => setPath('/zone/display/')} >View All</a>
+                            <a className={path === '/zone/display/focused/' ? "tzone-drop-click" : "tzone-drop-btn" 
+                            } onClick={() => setPath('/zone/display/focused/')} >Compressed</a>
                         </div>
                     </div>
                     <div class="tzone-dropdown2">
