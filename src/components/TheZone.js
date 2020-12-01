@@ -103,6 +103,7 @@ export default function TheZone(props) {
                     updatedEntry,
                     ...posts.slice(index + 1)
                 ]
+                
                 setPosts(newPosts);
             })
             .catch((error) => {
@@ -155,36 +156,38 @@ export default function TheZone(props) {
         <div class="tzone-page">
             
             <div class= "tzone-all-posts"> 
-                {showPostPopup ? <PostPopup closePopup={togglePostPopup} />
-                    : null
-                }
-
-                {showReportPopup ? <ReportPopup closePopup={toggleReportPopup} rId = {rId} type = {type} />
-                    : null
-                }
+            
 
                 <div class="tzone-post-body">
                     <button class="tzone-create-post-btn" onClick={togglePostPopup}>  {"What's on your mind, " + (authContext.user.username) + "?"}
                     </button>
                 </div>
 
-                <div className= "tzone-post-number"> Posts ({posts.length})</div>
+               
+                <div className="tzone-post-number"> {path === '/zone/display/' ? 'All' : 'Focused'} Posts ({posts.length})</div>
                 <div className = "tzone-dropbtns">
                     <div class="tzone-dropdown1">
-                        <button class="tzone-dropbtn1">Dropdown</button>
+                        <button class="tzone-dropbtn1">Views</button>
                         <div class="tzone-dropdown-content1">
-                            <a onClick={() => setPath('/zone/display/focused/')} >upath</a>
-                            <a onClick={() => setPath('/zone/display/')} >spath</a>
+                            <a onClick={() => setPath('/zone/display/')} >View All</a>
+                            <a onClick={() => setPath('/zone/display/focused/')} >Compressed</a>
                         </div>
                     </div>
                     <div class="tzone-dropdown2">
-                        <button class="tzone-dropbtn2">Sort By</button>
-                        <div class="tzone-dropdown-content2">
-                            <a onClick={() => setSortedBy('likes')} >Likes</a>
-                            <a onClick={() => setSortedBy('createdAt')} >New</a>
-                        </div>
+                        { sortedBy === 'createdAt' ? <button class="tzone-dropbtnClicked" onClick={() => setSortedBy('createdAt')} >New</button>: <button class="tzone-dropbtn1" onClick={() => setSortedBy('createdAt')} >New</button>
+                        }
+                        {sortedBy === 'likes' ? <button class="tzone-dropbtnClicked" onClick={() => setSortedBy('likes')} >Popular</button> : <button class="tzone-dropbtn1" onClick={() => setSortedBy('likes')} >Popular</button>
+                        }
+                       
+                       
                     </div> 
+                    {showPostPopup ? <PostPopup closePopup={togglePostPopup} />
+                        : null
+                    }
 
+                    {showReportPopup ? <ReportPopup closePopup={toggleReportPopup} rId={rId} type={type} />
+                        : null
+                    }
                 </div>
                 {posts.map((data, index) => {
                     return (
@@ -216,8 +219,8 @@ export default function TheZone(props) {
                                     </div> 
                                  </div>
                         <div className="tzone-post-buttons">
-                                <a onClick={() => handlePostAgree(data, index)} className={data.agree ? "tzone-post-button-agree-selected" : "tzone-post-button-agree"}> Agree </a>
-                                <a onClick={() => handlePostDisagree(data, index)} className={data.disagree ? "tzone-post-button-disagree-selected" : "tzone-post-button-disagree"}> Disagree </a>
+                                <a onClick={() => handlePostAgree(data, index)} className={data.upvoted ? "tzone-post-button-agree-selected" : "tzone-post-button-agree"}> Agree </a>
+                                <a onClick={() => handlePostDisagree(data, index)} className={data.downvoted ? "tzone-post-button-disagree-selected" : "tzone-post-button-disagree"}> Disagree </a>
                         </div>
 
                         </div>
