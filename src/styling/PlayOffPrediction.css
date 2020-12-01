@@ -1,0 +1,61 @@
+.center-predictionBox {
+    padding-top: 2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.predictionBox {
+    height:35vw;
+    width:60vw;
+    padding: 2.5%;
+    background-color: #1b1a18;
+    color: white;
+}
+
+.gamePredictionBox {
+    width: 100%;
+    height: 10%;
+    padding: 1%;
+}
+
+.gameNumber {
+    width: 10%;
+    height:100%;
+    float:left;
+    font-family: 'CommissionerMedium';
+}
+
+.predictTeams {
+    width:70%;
+    height:100%;
+    float:left;
+    display:flex;
+    justify-content: center;
+
+}
+ 
+.resultPrediction {
+    width:20%;
+    height:100%;
+    float:left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'CommissionerMedium';
+}
+
+.spaceAllotted {
+    width: 10%;
+}
+
+.darkened {
+    filter: brightness(50%);
+}
+
+@font-face {
+    font-family: 'CommissionerMedium';
+    src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Medium.ttf) format('truetype');
+}
