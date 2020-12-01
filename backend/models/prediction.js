@@ -2,32 +2,50 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 const predictionSchema = new Schema({
-    user: {
-      type: String,
-    },
-    team1: {
-      type: String,
-    },
-    team2: {
-      type: String,
-    },
-    prediction: {
-      type: String,
-    },
     game: {
-      type: mongoose.Schema.Types.ObjectId,
-      refPath: 'game',
+        type: mongoose.Schema.Types.ObjectId,
+        refPath: 'game',
     },
-    gameCategory: {
-      type: mongoose.Schema.Types.ObjectId,
-      refPath: 'onModel',
+    closeTime: {
+        type: Date,
+        unique: false,
+        required: false,
     },
-    onModel: {
-      type: String,
-      enum: ['regularSeason', 'playoff'],
-    }
-  }, {
+    type: {
+        type: String,
+        unique: false,
+        required: true,
+        enum : ['seasonal','playoff', 'playin']
+    },
+    status: {
+        type: String,
+        unique: false,
+        required: true,
+        enum : ['open','close']
+    },
+    acsStatus: {
+        type: String,
+        unique: false,
+        required: true,
+        enum : ['pend','close']
+    },
+    picks: [
+        {
+            user: {
+                type: String,
+                unique: false,
+                required: true,
+            },
+            pick: {
+                type: String,
+                unique: false,
+                required: true,
+            }
+        }
+    ]
+}, {
     timestamps: true,
-  });
+});
+
 const prediction = mongoose.model('prediction', predictionSchema);
 module.exports = prediction;
