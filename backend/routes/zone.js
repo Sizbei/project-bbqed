@@ -45,6 +45,11 @@ router.route('/display/focused/:page/:sortedBy').get(passport.authenticate('jwt'
         let acs = await Acs.findOne({username: newPost.poster.username}, "acsTotal.total").then((acsobj) => {
             return acsobj.acsTotal.total
         }).catch((err) => {res.status(400).json('Error ' + err)})
+        if (acs < 100) {
+            acs = 100
+        } else if (acs >= 1100) {
+            acs = 1100
+        }
         newPost.poster.acs = acs
         newPost.body = recentPosts[i].body
         newPost.upvoted = upvoted
@@ -89,6 +94,11 @@ router.route('/display/:page/:sortedBy').get(passport.authenticate('jwt', { sess
         let acs = await Acs.findOne({username: newPost.poster.username}, "acsTotal.total").then((acsobj) => {
             return acsobj.acsTotal.total
         }).catch((err) => {res.status(400).json('Error ' + err)})
+        if (acs < 100) {
+            acs = 100
+        } else if (acs >= 1100) {
+            acs = 1100
+        }
         newPost.poster.acs = acs
         newPost.body = recentPosts[i].body
         newPost.upvoted = upvoted

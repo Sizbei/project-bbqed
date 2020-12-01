@@ -40,6 +40,11 @@ router.route('/display/post/:post').get(passport.authenticate('jwt', { session: 
         let acs = await Acs.findOne({username: newComment.commenter.username}, 'acsTotal.total').then((acsobj) => {
             return acsobj.acsTotal.total
         }).catch((err) => {res.status(400).json('Error ' + err)})
+        if (acs < 100) {
+            acs = 100
+        } else if (acs >= 1100) {
+            acs = 1100
+        }
         newComment.commenter.acs = acs
         newComment.likes = comments[j].likes
         newComment.body = comments[j].body
@@ -63,6 +68,11 @@ router.route('/display/post/:post').get(passport.authenticate('jwt', { session: 
     let acs = await Acs.findOne({username: newPost.poster.username}, 'acsTotal.total').then((acsobj) => {
         return acsobj.acsTotal.total
     }).catch((err) => {res.status(400).json('Error ' + err)})
+    if (acs < 100) {
+        acs = 100
+    } else if (acs > 1100) {
+        acs = 1100
+    }
     newPost.poster.acs = acs
     newPost.body = singlePost.body
     newPost.upvoted = upvoted
