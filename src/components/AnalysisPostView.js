@@ -198,7 +198,7 @@ function VotePost(props) {
     const requestBody = {
       method: "put",
       body: JSON.stringify({
-        user: "user1",
+        user: authContext.user.username,
         _id: _id,
         score: score,
       }),

@@ -1,7 +1,10 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
+import {AuthContext} from '../Context/AuthContext';
 import BracketView from './BracketView.js';
 
 export default function BracketController(props) {
+  const authContext = useContext(AuthContext);
+
   const codes = [
     "WC-QF1A",
     "WC-QF1B",
@@ -55,26 +58,7 @@ export default function BracketController(props) {
     "EC-QF4B": "Houston Rockets",
   })  
 
-  const [predictions, setPredictions] = useState({
-    "WC-QF1": null,
-    "WC-QF2": null,
-    "WC-QF3": null,
-    "WC-QF4": null, 
-    "WC-SF1": null,
-    "WC-SF2": null,
-    "WC-F": null,
-    "F": null,
-    "EC-F": null,
-    "EC-SF1": null,
-    "EC-SF2": null,
-    "EC-QF1": null,
-    "EC-QF2": null,
-    "EC-QF3": null,
-    "EC-QF4": null,
-  });
-
-  // the actual results of the games
-  const [results, setResults] = useState({
+  const [matchData, setMatchData] = useState({
     "WC-QF1": null,
     "WC-QF2": null,
     "WC-QF3": null,
@@ -175,79 +159,68 @@ export default function BracketController(props) {
     return reverse;
   }())
 
-  const hasChildren = (treeIndex) => {
-    return treeIndex < 16;
-  }
-
-  const parent = (treeIndex) => {
-    if (treeIndex <= 1) {
-      return 'None';
-    }
-
-    if (treeIndex % 2 == 0) {
-      return treeIndex / 2;
-    } else {
-      return (treeIndex - 1) / 2;
-    }
-  }
-
-
-  const onClick = (index) => {
-    setCounter(counter + 1);
-
-    const teamName = teams[codes[index]];
-    let treeIndex = toTreeIndex[index];
-    
-    console.log("start", predictions);
-    const newPredictions = {...predictions};
-    const matchName = toMatchName(treeIndex);
-    const previousPrediction = predictions[matchName];
-
-    let newPrediction = null; 
-
-    if (!hasChildren(treeIndex)) {
-      newPrediction = teamName;
-      console.log("LEAF NODE", newPrediction);
-    } else {
-      const predictedUs = newPredictions[toMatchName(2 * treeIndex)];
-      const predictedOther = newPredictions[toMatchName(2 * getOpposingTreeIndex(treeIndex))];
-
-      if (predictedUs === null || predictedOther === null) {
-        console.log("Nothing to predict here.");
-      } else {
-        newPrediction = predictedUs;
-      }
-    }
-
-    newPredictions[matchName] = newPrediction;
-
-    // Reset predictions for higher levels if it's new
-    if (newPrediction !== previousPrediction) {
-      let resetTreeIndex = parent(treeIndex);
-      while (resetTreeIndex != 1) {
-        newPredictions[toMatchName(resetTreeIndex)] = null;
-        resetTreeIndex = parent(resetTreeIndex);
-      }
-    }
-
-    setPredictions(newPredictions);
-  }
-
-  console.log("predictions", predictions);
-
+  // fill in the actual slots to be shown 
   const slots = (function(){
-    const slots = Array(31).fill(0).map((el, i) => {
-      const treeIndex = toTreeIndex[i];
-      
-      if (!hasChildren(treeIndex)) {
-        return teams[codes[i]]
-      } else {
-        const childPrediction = predictions[toMatchName(2 * treeIndex)];
-        return childPrediction;
+    const slots = Array(30).fill(0).map((el, i) => {
+      const code = codes[i];
+      console.log(code.charAt(code.length - 1));
+      const matchName = toMatchName(toTreeIndex[i]);
+      if (matchName in matchData && matchData[matchName] != null) {
+        return matchData[matchName]['teams'][code.charAt(code.length - 1) == 'A' ? 0 : 1];
       }
     })
     return slots;
   }());
+
+  const onClick = (index) => {
+    console.log(index);
+  }
+
+  useEffect(() => {
+    const requestBody = {
+      method: "post",
+      body: JSON.stringify({
+        user: authContext.user.username,
+      }),
+      headers: {'Content-Type' : 'application/json'}
+    }
+    fetch('/prediction/playoff/bracket/2019', requestBody).then(res => res.json())
+    .then((res) => {
+      console.log("GOT RESPONSE", res);
+
+      // transform the data to a different form...
+      const newMatchData = {};
+
+      console.log(res["westernConference"])
+      // newMatchData["WC-QF1"] = res["westernConference"]["quarterfinals"][0];
+
+      Object.keys(res["westernConference"]["quarterfinals"]).forEach((key) => {
+        newMatchData["WC-QF" + (parseInt(key) + 1)] = res["westernConference"]["quarterfinals"][key];
+      })
+
+      Object.keys(res["westernConference"]["semifinals"]).forEach((key) => {
+        newMatchData["WC-SF" + (parseInt(key) + 1)] = res["westernConference"]["semifinals"][key];
+      })
+
+      newMatchData["WC-F"] = res["westernConference"]["confinals"][0];
+
+      Object.keys(res["easternConference"]["quarterfinals"]).forEach((key) => {
+        newMatchData["EC-QF" + (parseInt(key) + 1)] = res["easternConference"]["quarterfinals"][key];
+      })
+
+      Object.keys(res["easternConference"]["semifinals"]).forEach((key) => {
+        newMatchData["EC-SF" + (parseInt(key) + 1)] = res["easternConference"]["semifinals"][key];
+      })
+
+      newMatchData["EC-F"] = res["easternConference"]["confinals"][0];
+      
+      newMatchData["F"] = res["finals"];
+
+      setMatchData(newMatchData); 
+    })
+  }, [])
+
+  console.log("match data", matchData);
 
   return <BracketView slots={slots} onClick={onClick} counter={counter}/>
 }
