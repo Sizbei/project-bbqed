@@ -47,7 +47,7 @@ const generateResponseFromPrediction = async (predictions, user, cur_date) => {
             team2Image: team2.image,
             gameDay: cur_game.gameDay,
             result: null,
-            pick: findUserPick(predictions[index].picks, user)
+            pick: findUserPick(predictions[index].picks, user).pick
         }
         if (cur_game.gameDay <= cur_date) {
             cur_prediction.result = cur_game.result;
