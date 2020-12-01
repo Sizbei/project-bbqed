@@ -9,7 +9,6 @@ export default class PicksAndPredictions extends Component {
     render() {
         return(
         <div className>
-            <PlayOffPrediction predictions={[1, 2, 3, 4, 5, 6, 7]} ></PlayOffPrediction>
         </div>
         );
     }

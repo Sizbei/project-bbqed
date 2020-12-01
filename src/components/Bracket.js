@@ -1,6 +1,7 @@
 import React, {useEffect, useContext, useState} from 'react';
 import {AuthContext} from '../Context/AuthContext';
 import BracketView from './BracketView.js';
+import PlayOffPrediction from './PlayOffPrediction';
 
 export default function BracketController(props) {
   const authContext = useContext(AuthContext);
@@ -37,6 +38,8 @@ export default function BracketController(props) {
     "EC-QF4A",
     "EC-QF4B",
   ]
+
+  const [year, setYear] = useState(2019);
 
   // contain the teams that are represented in the bracket
   const [teams, setTeams] = useState({
@@ -80,6 +83,8 @@ export default function BracketController(props) {
   const [acsChange, setAcsChange] = useState('none');
 
   const [counter, setCounter] = useState(0); // ensure updates for child useEffect so that onClick remains fresh
+
+  const [playOffPrediction, setPlayOffPrediction] = useState(null);
 
   const getOpposingTreeIndex = (treeIndex) => {
     return treeIndex % 2 == 0 ? treeIndex + 1 : treeIndex - 1;
@@ -163,17 +168,33 @@ export default function BracketController(props) {
   const slots = (function(){
     const slots = Array(30).fill(0).map((el, i) => {
       const code = codes[i];
-      console.log(code.charAt(code.length - 1));
       const matchName = toMatchName(toTreeIndex[i]);
       if (matchName in matchData && matchData[matchName] != null) {
-        return matchData[matchName]['teams'][code.charAt(code.length - 1) == 'A' ? 0 : 1];
+        const teamName = matchData[matchName]['teams'][code.charAt(code.length - 1) == 'A' ? 0 : 1];
+        return teamName === '' ? null : teamName;
       }
     })
     return slots;
   }());
 
-  const onClick = (index) => {
-    console.log(index);
+  const onBracketClick = (index) => {
+    const matchName = toMatchName(toTreeIndex[index]);
+    if (matchName === "winner") return;
+
+    const data = matchData[matchName]
+
+    if (data["teams"][0] === "" && data["teams"][1] === "") {
+      return;
+    } else {
+      setPlayOffPrediction(data);
+    }
+  }
+
+  const onPredictionClick = (code) => {
+    console.log(code);
+    if (code === "close") {
+      setPlayOffPrediction(null);
+    }
   }
 
   useEffect(() => {
@@ -184,7 +205,8 @@ export default function BracketController(props) {
       }),
       headers: {'Content-Type' : 'application/json'}
     }
-    fetch('/prediction/playoff/bracket/2019', requestBody).then(res => res.json())
+
+    fetch('/prediction/playoff/bracket/' + year, requestBody).then(res => res.json())
     .then((res) => {
       console.log("GOT RESPONSE", res);
 
@@ -222,6 +244,6 @@ export default function BracketController(props) {
 
   console.log("match data", matchData);
 
-  return <BracketView slots={slots} onClick={onClick} counter={counter}/>
+  return <BracketView slots={slots} onBracketClick={onBracketClick} onPredictionClick={onPredictionClick} counter={counter} playOffPrediction={playOffPrediction}/>
 }
 

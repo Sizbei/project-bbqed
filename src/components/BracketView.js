@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import '../styling/BracketView.css';
 import TeamBox from './TeamBox';
+import PlayOffPrediction from './PlayOffPrediction';
 
 export default function BracketView(props) {
   const { height, width } = useWindowDimensions();
@@ -39,9 +40,11 @@ function useWindowDimensions() {
 
 function Bracket(props) {
   const canvasRef = useRef(null);
-  const onClick = props.onClick;
+  const onBracketClick = props.onBracketClick;
+  const onPredictionClick = props.onPredictionClick;
   const slots = props.slots;
-  
+  const playOffPrediction = props.playOffPrediction;
+
   // constants
   const color = '#FFFFFF';
   const boxDim = {
@@ -127,7 +130,7 @@ function Bracket(props) {
       image = images[slots[i]];
     }
 
-    return <Rect key={"rect" + i} index={i} slot={slots[i]} image={image} {...boxDim} marginLeft={round(marginLeft)} marginTop={round(marginTop)} onClick={onClick} />
+    return <Rect key={"rect" + i} index={i} slot={slots[i]} image={image} {...boxDim} marginLeft={round(marginLeft)} marginTop={round(marginTop)} onClick={onBracketClick} />
   }
 
   const getPair = (i, marginLeft, marginTop) => {
@@ -221,16 +224,18 @@ function Bracket(props) {
         data.forEach(el => {
           map[el.name] = el.image;
         })
+        console.log("MAP", map);
         setImages(map);
       })
       .catch(err => { console.log('ERROR') });
   }, [])
-  
+    
   return (
     <div className="bracketview-center">
       <div className="bracketview-div">  
         <canvas id="bracket" ref={canvasRef} width={canvasWidth} height={canvasHeight}></canvas>
         {objects}
+        {playOffPrediction !== null ? <PlayOffPrediction data={playOffPrediction} predictions={[1, 2, 3, 4, 5, 6, 7]} onClick={onPredictionClick} images={images}></PlayOffPrediction> : null}
       </div> 
     </div>
   )
