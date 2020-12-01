@@ -155,10 +155,27 @@
   border: none;
   z-index: 0;
   margin-right: 10px;
-   border-radius: 8px;
+  border-radius: 8px;
+  text-align: center;
+  width: 130px;
+  border-bottom: 1px solid black;
 }
 
-.tzone-dropbtnClicked {
+.tzone-sort {
+  background-color: white;
+  color: black;
+  padding: 10px;
+  font-size: 1vw;
+  font-family: 'CommissionerMedium';
+  border: none;
+  z-index: 0;
+  margin-right: 10px;
+  border-radius: 8px;
+  text-align: center;
+  
+}
+
+.tzone-sort-clicked {
   background-color: grey;
   color: white;
   padding: 10px;
@@ -167,13 +184,51 @@
   border: none;
   z-index: 0;
   margin-right: 10px;
-   border-radius: 8px;
+  border-radius: 8px;
 }
 
 .tzone-dropbtn1:hover {
   cursor: pointer;
   
 }
+
+
+.tzone-path-btn{
+  background-color: white;
+  color: black;
+  padding: 10px;
+  font-size: 1vw;
+  font-family: 'CommissionerMedium';
+  border: none;
+  z-index: 0;
+  margin-right: 10px;
+  border-radius: 8px;
+  text-align: center;
+  width: 110px;
+  border-bottom: 1px solid black;
+}
+.tzone-path-btn:hover {
+  background-color: lightgrey;
+  color: black;
+  text-align: center;
+  border-bottom: 1px solid black;
+}
+
+.tzone-path-clicked{
+  background-color: rgb(36, 35, 35);
+  color: white;
+  padding: 10px;
+  font-size: 1vw;
+  font-family: 'CommissionerMedium';
+  border: none;
+  z-index: 0;
+  margin-right: 10px;
+  border-radius: 8px;
+  text-align: center;
+  width: 110px;
+  border-bottom: 1px solid black;
+}
+
 
 /* The container <div> - needed to position the dropdown content */
 .tzone-dropdown1 {
@@ -185,19 +240,18 @@
 .tzone-dropdown-content1 {
   display: none;
   position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  box-shadow: 0px 8px 12px 0px rgba(0,0,0,0.2);
+  background-color: none;
+  min-width: 110px;
   z-index: 0;
+  border-style: none;
 }
 
 
 /* Links inside the dropdown */
 .tzone-dropdown-content1 a {
-  color: black;
-  padding: 12px 16px;
   text-decoration: none;
   display: block;
+  border-style: none;
 }
 
 
@@ -207,63 +261,15 @@
   cursor: pointer;
 }
 
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.tzone-dropdown1:hover .dropbtn {background-color: #3e8e41;}
-
-/* Dropdown Button */
-.tzone-dropbtn2 {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px;
-  font-size: 1vw;
-  font-family: 'CommissionerMedium';
-  border: none;
-  border-radius: 8px;
-}
-
-.tzone-dropbtn2:hover {
-  cursor: pointer;
-  
-}
-
 
 /* The container <div> - needed to position the dropdown content */
-.tzone-dropdown2 {
+.tzone-sort-btns {
   position: relative;
   display: inline-block;
  
 }
 
-/* Dropdown Content (Hidden by Default) */
-.tzone-dropdown-content2 {
-  display: none;
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  box-shadow: 0px 8px 12px 0px rgba(0,0,0,0.2);
 
-}
-
-
-/* Links inside the dropdown */
-.tzone-dropdown-content2 a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-/* Change color of dropdown links on hover */
-.tzone-dropdown-content2 a:hover {background-color: #ddd;}
-
-/* Show the dropdown menu on hover */
-.tzone-dropdown2:hover .tzone-dropdown-content2 {
-  display: block;
-  cursor: pointer;
-}
-
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.tzone-dropdown2:hover .dropbtn {background-color: #3e8e41;}
 
 /******************************* Single Post CSS *************************************/
 .tzone-user-info {

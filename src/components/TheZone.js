@@ -139,6 +139,7 @@ export default function TheZone(props) {
                     "likes": updatedData.likes,
                     "upvoted": updatedData.upvoted,
                     "downvoted": updatedData.downvoted,
+                    "reported": data.reported
                 }
                 const newPosts = [
                     ...posts.slice(0, index),
@@ -168,18 +169,18 @@ export default function TheZone(props) {
                 <div className="tzone-post-number"> {path === '/zone/display/' ? 'All' : 'Focused'} Posts ({posts.length})</div>
                 <div className = "tzone-dropbtns">
                     <div class="tzone-dropdown1">
-                        <button class="tzone-dropbtn1">Views</button>
+                        <button class="tzone-dropbtn1"> Select Views</button>
                         <div class="tzone-dropdown-content1">
-                            <a className={path === '/zone/display/' ? "tzone-drop-click" : "tzone-drop-btn"
+                            <a className={path === '/zone/display/' ? "tzone-path-clicked" : "tzone-path-btn"
                             } onClick={() => setPath('/zone/display/')} >View All</a>
-                            <a className={path === '/zone/display/focused/' ? "tzone-drop-click" : "tzone-drop-btn" 
+                            <a className={path === '/zone/display/focused/' ? "tzone-path-clicked" : "tzone-path-btn" 
                             } onClick={() => setPath('/zone/display/focused/')} >Compressed</a>
                         </div>
                     </div>
-                    <div class="tzone-dropdown2">
-                        { sortedBy === 'createdAt' ? <button class="tzone-dropbtnClicked" onClick={() => setSortedBy('createdAt')} >New</button>: <button class="tzone-dropbtn1" onClick={() => setSortedBy('createdAt')} >New</button>
+                    <div class="tzone-sort-btns">
+                        { sortedBy === 'createdAt' ? <button class="tzone-sort-clicked" onClick={() => setSortedBy('createdAt')} >New</button>: <button class="tzone-sort" onClick={() => setSortedBy('createdAt')} >New</button>
                         }
-                        {sortedBy === 'likes' ? <button class="tzone-dropbtnClicked" onClick={() => setSortedBy('likes')} >Popular</button> : <button class="tzone-dropbtn1" onClick={() => setSortedBy('likes')} >Popular</button>
+                        {sortedBy === 'likes' ? <button class="tzone-sort-clicked" onClick={() => setSortedBy('likes')} >Popular</button> : <button class="tzone-sort" onClick={() => setSortedBy('likes')} >Popular</button>
                         }
                        
                        
