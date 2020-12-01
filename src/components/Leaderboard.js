@@ -13,26 +13,30 @@ export default function Leaderboard(props) {
 
     if (mode === "Global") {
         return (
-            <div className='Leaderboard'>
-                <GlobalHeaderRow></GlobalHeaderRow>
-                {users.map((data, index) => {
-                    console.log(data);
-                    if(index % 2 == 0) {
-                        //<GlobalRow color='#0B0A0A' rank='1' numofplayers='20' percentofplayers='20' division='x' points='2' ></GlobalRow>
+            <div className='all'>
+                <div className='Leaderboard'>
+                    <GlobalHeaderRow></GlobalHeaderRow>
+                    {users.map((data, index) => {
+                        console.log(data);
+                        if(index % 2 == 0) {
+                            //<GlobalRow color='#0B0A0A' rank='1' numofplayers='20' percentofplayers='20' division='x' points='2' ></GlobalRow>
+                            return (
+                                <GlobalRow color='#0B0A0A'></GlobalRow>
+                            )
+                        }
+                        //<GlobalRow rank='1' numofplayers='20' percentofplayers='20' division='x' points='2' ></GlobalRow>
                         return (
-                            <GlobalRow color='#0B0A0A'></GlobalRow>
+                            <GlobalRow></GlobalRow>
                         )
-                    }
-                    //<GlobalRow rank='1' numofplayers='20' percentofplayers='20' division='x' points='2' ></GlobalRow>
-                    return (
-                        <GlobalRow></GlobalRow>
-                    )
-                })}
-            </div>
+                    })}
+                </div>
+            </div> 
         );
     } 
     else if (mode === "Radar") {
         return (
+            <div className='all'>
+
             <div className='Leaderboard'>
                 <RadarHeaderRow></RadarHeaderRow>
                 {users.map((data, index) => {
@@ -48,7 +52,7 @@ export default function Leaderboard(props) {
                         <RadarRow></RadarRow>
                     )
                 })}
-                
+                </div>
             </div>
         );
     }
