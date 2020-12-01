@@ -22,17 +22,19 @@ export default function PredictionsView() {
       .then (data=> {
         setTotal(data.currentSeasonals.length); 
         setCurrentMatches(data.currentSeasonals);
-        setCurrentSelection(data.currentSeasonals.slice(0,10)); 
-        //console.log(currentMatches);
+        //console.log(page); 
+        setCurrentSelection(data.currentSeasonals.slice(page*10 - 10, page*10 )); 
         setCurrentLoad(false);
         setWaitingLoad(false); 
+        console.log(list);
+        
       })
       .catch((error) => { 
         console.log(error); 
       })
     }
     else {
-      getCurrent(page, list);    
+      getCurrent(page, list);   
       setWaitingLoad(false); 
     }
     
@@ -44,7 +46,7 @@ export default function PredictionsView() {
       .then (data=> {
         setTotal(data.pastSeasonals.length); 
         setFinishedMatches(data.pastSeasonals); 
-        setCurrentSelection(data.pastSeasonals.slice(0,10)); 
+        setCurrentSelection(data.pastSeasonals.slice(page*10 - 10, page*10)); 
         console.log(data.pastSeasonals);
         setPastLoad(false);
         setWaitingLoad(false); 
@@ -74,7 +76,7 @@ export default function PredictionsView() {
       getPast(currentPage, finishedMatches, pastLoad)
     }
     
-  }, [currentPage, type])
+  }, [currentPage, type, currentLoad, pastLoad])
 
 /*
   useEffect(() => {
@@ -85,6 +87,7 @@ export default function PredictionsView() {
   },[type])
 */
   const handleSelection= (teamName, matchId) => { 
+    console.log("match: " + matchId + "\nteamname:" + teamName);
     const body = {
       _id: matchId,
       pick: teamName, 
@@ -97,7 +100,7 @@ export default function PredictionsView() {
       }
     }).then(res => res.json())
     .then (data=> {
-      getSeasonals(currentPage);
+      setCurrentLoad(true); 
     })
     .catch((error) => { 
       console.log(error); 
@@ -110,14 +113,14 @@ export default function PredictionsView() {
   }
   const onChangeSelect = (e) => {
     if (e.target.value === "Completed Matches") { 
-      setCurrentPage(0); 
+      setCurrentPage(1); 
       setType("past"); 
       setPastLoad(true); 
       setWaitingLoad(true); 
     }
     
     else if (e.target.value === "Upcoming Matches") {
-      setCurrentPage(0); 
+      setCurrentPage(1); 
       setType("current"); 
       setCurrentLoad(true); 
       setWaitingLoad(true); 
@@ -145,7 +148,9 @@ export default function PredictionsView() {
               <div className="ip-match-row-container">
                 <label className="ip-date-label"> {data.gameDay.substring(0,10)} </label>
                 <div className="ip-matches-info">
-                  <button className="ip-matches-info-button" onClick={()=>handleSelection(data.team1Name, data._id)}><TeamBox name={data.team1Name} image={data.team1Image}/></button>
+                  <button className={data.pick === null?  "ip-matches-info-button" 
+                                    : (type === "current" ? (1? "ip-matches-info-button-selected" : "ip-matches-info-button")
+                                    : null )} onClick={()=>handleSelection(data.team1Name, data._id)}><TeamBox name={data.team1Name} image={data.team1Image}/></button>
                   <label className="ip-vs-label"> VS </label>
                   <button className="ip-matches-info-button" onClick={()=>handleSelection(data.team2Name, data._id)}><TeamBox name={data.team2Name} image={data.team2Image}/></button>
                 </div>

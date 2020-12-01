@@ -39,13 +39,28 @@
   display: flex;
   align-items: center;
 }
-.ip-matches-info-button { 
+.ip-matches-info-button,  .ip-matches-info-button-selected , .ip-matches-info-button-correct, .ip-matches-info-button-incorrect{ 
   margin-left: 2%;
   margin-right: 2%;
-  background-color: transparent;
   border: none; 
   cursor: pointer; 
   outline: none; 
+}
+
+.ip-matches-info-button {
+  background-color: transparent;
+}
+
+.ip-matches-info-button-selected {
+  background-color: blue;
+}
+
+.ip-matches-info-button-correct {
+  background-color: transparent;
+}
+
+.ip-matches-info-button-incorrect {
+  background-color: transparent;
 }
 .ip-navigation-buttons { 
   background-color: #222629;
