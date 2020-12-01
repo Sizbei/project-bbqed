@@ -77,3 +77,5 @@ router.route('/clearComment').post(async(req, res) => {
         res.status(200).json("Cleared")
     }).catch((err) => {res.status(400).json('Error ' + err)})
 })
+
+module.exports = router;
