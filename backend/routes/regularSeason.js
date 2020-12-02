@@ -47,20 +47,24 @@ const generateResponseFromPrediction = async (predictions, user, cur_date) => {
             team2Image: team2.image,
             gameDay: cur_game.gameDay,
             result: null,
-            pick: findUserPick(predictions[index].picks, user).pick
+            pick: null
         }
-        if (cur_game.gameDay <= cur_date) {
+        if(cur_game.gameDay <= cur_date) {
             cur_prediction.result = cur_game.result;
+        }
+        let cur_pick = null;
+        if(cur_pick = findUserPick(predictions[index].picks, user)) {
+            cur_prediction.pick = cur_pick.pick;
         }
         response.push(cur_prediction);
     }
     return response;
 }
 
-//router.route('/current/:username').get(async (req, res) => {
-router.route('/current').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
-    //const user = req.params.username;
-    const user = req.user.username;
+router.route('/current/:username').get(async (req, res) => {
+//router.route('/current').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
+    const user = req.params.username;
+    //const user = req.user.username;
     const cur_date = demo_date; //since games in DB are all historical data, use a demo date to represent current date
     const end_date = findStartAndEndDate(cur_date, 0, 0).endDate;
     prediction.find({$and: [{closeTime: {$gte: cur_date}},{closeTime: {$lt: end_date}}, {type: "seasonal"}]}).then(async predictions => {
