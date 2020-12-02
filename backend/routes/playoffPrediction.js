@@ -14,38 +14,50 @@ router.route("/bracket/:year").post(passport.authenticate('jwt', {session : fals
 router.route("/result/:gameId").get(passport.authenticate('jwt', {session : false}),(req, res) => {
   game.findOne({_id: req.params.gameId})
   .then(g => {
-
-    if(g.gameDay > new Date()){
-      res.json({result: g.result, open: true});
-    } else {
-      res.json({result: g.result, open: false});
-    }
-    
+    res.json({result: g.result, open: g.gameDay > new Date()});
   })
   .catch(err => res.status(400).json({err: err}));
 });
 
 router.route("/pick/:user/:gameId").get(passport.authenticate('jwt', {session : false}),(req, res) => {
-  prediction.findOne({game: req.params.gameId, picks: {user: req.params.user}})
+  prediction.findOne({game: req.params.gameId}).select({pick: { $elemMatch: {user: req.params.user} }})
   .then(p => {
-    res.json({result: g.result});
+    res.json({pick: p.pick});
   })
-  .catch(err => res.status(400).json({err: err}));
+  .catch(() => {res.json({pick: ''})});
 });
 
 
-router.route("/add").put(passport.authenticate('jwt', {session : false}),(req, res) => {
-  prediction.findOne({game: req.body.gameId})
-  .then(game => {
-    const user = req.body.user;
-    const team = req.body.team;
-    const userPick = {
-      user: user,
-      pick: pick,
+router.route("/add").put((req, res) => {
+
+  const user = req.body.user;
+  const team = req.body.team;
+
+  var options = {new: true, setDefaultsOnInsert: true, useFindAndModify: false};
+
+  prediction.findOneAndUpdate({game: req.body.gameId, status: "open", picks: {$elemMatch: {user: user}}}, 
+                              {$set: {"picks.$.pick": team}}, 
+                                options)
+  .then(p => {
+    
+    if(!p){
+      const newPrediction = {
+        user: user,
+        pick: team
+      }
+      prediction.findOne({game: req.body.gameId})
+      .then(p2 => {
+        p2.picks.push(newPrediction);
+        p2.save()
+      })
     }
-    game.prediction.push(userPick);
-    game.save().then(() => res.json("Prediction added"));
+
+    console.log(p);
+    //game.prediction.push(userPick);
+    //game.save().then(() => res.json("Prediction added"));
+    res.json(p)
   })
+  
 });
 
 
