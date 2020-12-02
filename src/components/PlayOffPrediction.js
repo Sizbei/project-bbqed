@@ -3,6 +3,8 @@ import '../styling/PlayOffPrediction.css'
 import TeamBox from './TeamBox'
  
 export default function PlayOffPrediction(props) {
+    console.log('GOT', props);
+
     const data = props.data;
     const predictions = props.predictions;
     const matchIds = props.matchIds;
@@ -47,7 +49,6 @@ export default function PlayOffPrediction(props) {
                         </div>
                     </div>
                       {predictions.map((data, index) => {
-                          console.log(data);
                           return (
                               <div className="gamePredictionBox">
                                   <div className="gameNumber">Game {index + 1}</div>
@@ -96,7 +97,6 @@ export default function PlayOffPrediction(props) {
                         <label className="predictionResult">Result</label> 
                     </div>
                   {predictions.map((data, index) => {
-                      console.log(data);
                       return (
                           <div className="gamePredictionBox">
                               <div className="gameNumber">Game {index + 1}</div>
