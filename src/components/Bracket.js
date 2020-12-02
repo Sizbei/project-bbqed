@@ -39,7 +39,7 @@ export default function BracketController(props) {
     "EC-QF4B",
   ]
 
-  const [year, setYear] = useState(2019);
+  const [year, setYear] = useState(2020);
 
   // contain the teams that are represented in the bracket
   const [teams, setTeams] = useState({
@@ -186,6 +186,19 @@ export default function BracketController(props) {
     if (data["teams"][0] === "" && data["teams"][1] === "") {
       return;
     } else {
+      console.log("games", '/prediction/playoff/result/' + data.games[0]);
+      const requestBody = {
+        method: "get",
+        body: JSON.stringify({
+          user: authContext.user.username,
+        }),
+        headers: {'Content-Type' : 'application/json'}
+      }
+      fetch('/prediction/playoff/result/' + data.games[0]).then(res => res.json())
+      .then((res) => {
+        console.log("GOT MATCH RESPONSE", res);
+      })
+      
       setPlayOffPrediction(data);
     }
   }
