@@ -10,8 +10,9 @@ export default function PlayOffPrediction(props) {
     const images = props.images;
     const teamA = data.teams[0];
     const teamB = data.teams[1];
+    const scoreA = data.score[0];
+    const scoreB = data.score[1];
     var results = "results" in props ? props.results : "Pending";
-
     const teamClassName = (index) => {
         const base = "team" + (index + 1) + "Box";
         return base;
@@ -30,7 +31,21 @@ export default function PlayOffPrediction(props) {
           <div className="predictionBox-popup" onClick={() => onClick("close")}>
             <div className="predctionBox-popup_inner" onClick = {(e) => { e.stopPropagation(); }}>
               <div className="center-predictionBox">
-                  <div className="predictionBox">
+              <div className="predictionBox">
+                    <div className="predictionHeader">
+                        <div className="predictionLeft">
+                            <label className='predictionScore'>{scoreA}</label>
+                
+                            <label className='predictionTeamName'> {teamA}</label>
+                        </div>
+                        <div className="predictionVS">
+                            <label className='predictionVersus'>vs</label>
+                        </div>
+                        <div className='predictionRight'>
+                            <label className='predictionTeamName'> {teamB}</label>
+                            <label className='predictionScore'>{scoreB}</label>
+                        </div>
+                    </div>
                       {predictions.map((data, index) => {
                           console.log(data);
                           return (
@@ -45,9 +60,9 @@ export default function PlayOffPrediction(props) {
                                           <TeamBox name={teamB} height='4vw' width='12vw' image={imageB}></TeamBox>
                                       </div>
                                   </div>
-                                  <div className="resultPrediction">
-                                      <label>Result</label>
-                                      <label>{results}</label>
+                                  <div className="resultPredictionImage">
+                                      <div>{results}</div> 
+                                      {/* Expecting results to be images */}
                                   </div>    
                               </div>
                           );
@@ -63,6 +78,23 @@ export default function PlayOffPrediction(props) {
         <div className="predctionBox-popup_inner" onClick = {(e) => { e.stopPropagation(); }}>
           <div className="center-predictionBox">
               <div className="predictionBox">
+                    <div className="predictionHeader">
+                        <div className="predictionLeft">
+                            <label className='predictionScore'>{scoreA}</label>
+                
+                            <label className='predictionTeamName'> {teamA}</label>
+                        </div>
+                        <div className="predictionVS">
+                            <label className='predictionVersus'>vs</label>
+                        </div>
+                        <div className='predictionRight'>
+                            <label className='predictionTeamName'> {teamB}</label>
+                            <label className='predictionScore'>{scoreB}</label>
+                        </div>
+                    </div>
+                    <div className="align-result-right">
+                        <label className="predictionResult">Result</label> 
+                    </div>
                   {predictions.map((data, index) => {
                       console.log(data);
                       return (
@@ -77,9 +109,9 @@ export default function PlayOffPrediction(props) {
                                       <TeamBox name={teamB} height='4vw' width='12vw' image={imageB}></TeamBox>
                                   </div>
                               </div>
-                              <div className="resultPrediction">
-                                  <label>Result</label>
-                                  <label>{results}</label>
+                              <div className="resultPredictionImage">
+                                  <div>{results}</div>
+                                 {/* Expecting results to be images */}
                               </div>    
                           </div>
                       );
