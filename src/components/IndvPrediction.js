@@ -5,7 +5,8 @@ import "../styling/IndvPrediction.css";
 import TeamBox from './TeamBox'; 
 
 export default function PredictionsView() { 
-  const [currentDate, setCurrentDate] = useState(new Date()); 
+  const [currentDate] = useState(new Date()); 
+  const [dateSelected, setDateSelected] = useState(currentDate); 
   const [currentMatches, setCurrentMatches] = useState([]); 
   const [finishedMatches, setFinishedMatches] = useState([]); 
   const [currentPage, setCurrentPage] = useState(1); 
@@ -148,11 +149,15 @@ export default function PredictionsView() {
               <div className="ip-match-row-container">
                 <label className="ip-date-label"> {data.gameDay.substring(0,10)} </label>
                 <div className="ip-matches-info">
-                  <button className={data.pick === null?  "ip-matches-info-button" 
-                                    : (type === "current" ? (1? "ip-matches-info-button-selected" : "ip-matches-info-button")
-                                    : null )} onClick={()=>handleSelection(data.team1Name, data._id)}><TeamBox name={data.team1Name} image={data.team1Image}/></button>
+                  <button className={data.pick === null?  "ip-matches-info-button"
+                                    :data.pick === data.team1Name? (type === "current" ? "ip-matches-info-button-selected" : (data.pick === data.result ? "ip-matches-info-button-correct" : "ip-matches-info-button-incorrect")) 
+                                    : "ip-matches-info-button" } 
+                          onClick={()=>handleSelection(data.team1Name, data._id)}><TeamBox name={data.team1Name} image={data.team1Image}/></button>
                   <label className="ip-vs-label"> VS </label>
-                  <button className="ip-matches-info-button" onClick={()=>handleSelection(data.team2Name, data._id)}><TeamBox name={data.team2Name} image={data.team2Image}/></button>
+                  <button className={data.pick === null?  "ip-matches-info-button"
+                                    :data.pick === data.team2Name? (type === "current" ? "ip-matches-info-button-selected" : (data.pick === data.result ? "ip-matches-info-button-correct" : "ip-matches-info-button-incorrect")) 
+                                    : "ip-matches-info-button" }  
+                          onClick={()=>handleSelection(data.team2Name, data._id)}><TeamBox name={data.team2Name} image={data.team2Image}/></button>
                 </div>
               </div>
           

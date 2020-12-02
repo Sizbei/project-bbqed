@@ -45,22 +45,27 @@
   border: none; 
   cursor: pointer; 
   outline: none; 
+  padding-top: 2%; 
+  padding-bottom: 2%; 
+  border-radius: 5%;
 }
 
 .ip-matches-info-button {
   background-color: transparent;
 }
-
+.ip-matches-info TeamBox {
+  cursor: pointer; 
+}
 .ip-matches-info-button-selected {
-  background-color: blue;
+  background-color: rgb(76, 135, 245);
 }
 
 .ip-matches-info-button-correct {
-  background-color: transparent;
+  background-color: rgb(92, 155, 92);
 }
 
 .ip-matches-info-button-incorrect {
-  background-color: transparent;
+  background-color: rgb(165, 40, 40);
 }
 .ip-navigation-buttons { 
   background-color: #222629;
