@@ -94,4 +94,20 @@ router.route('/week/:weekNumber').get(passport.authenticate('jwt', {session : fa
     }).catch(err => res.status(500).json({err: err}));
 })
 
+router.route('profile/:page').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
+    //const user = req.params.username;
+    const user = req.user.username;
+    const page = req.params.page;
+    const cur_date = demo_date; //since games in DB are all historical data, use a demo date to represent current date
+    const period = findStartAndEndDate(cur_date, req.params.weekNumber, req.params.weekNumber);
+    prediction.find({$and: [{closeTime: {$gte: period.startDate}},{closeTime: {$lt: period.endDate}}]})
+    .sort({'closeTime':'desc'})
+    .skip(5*page)
+    .limit(5)
+    .then(async predictions => {
+        res.json({Seasonals: await generateResponseFromPrediction(predictions, user, cur_date)});
+    }).catch(err => res.status(500).json({err: err}));
+})
+
+
 module.exports = router;
