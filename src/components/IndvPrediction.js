@@ -4,7 +4,7 @@ import Pagination from "@material-ui/lab/Pagination";
 import "../styling/IndvPrediction.css";
 import TeamBox from './TeamBox'; 
 
-export default function PredictionsView() { 
+export default function PredictionsView(props) { 
   const [currentMatches, setCurrentMatches] = useState([]); 
   const [finishedMatches, setFinishedMatches] = useState([]); 
   const [currentPage, setCurrentPage] = useState(1); 
@@ -81,7 +81,7 @@ export default function PredictionsView() {
   
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage); 
-    console.log(currentSelection); 
+    //console.log(currentMatches); 
   }
 
   const handleSelection= (data, teamName,index) => { 
@@ -115,8 +115,15 @@ export default function PredictionsView() {
           updatedEntry, 
           ...currentSelection.slice(index +1) 
         ]
+        const newMatches = [
+          ...currentMatches.slice(0, currentPage*10 - 10), 
+          ...currentSelection.slice(0, index),
+          updatedEntry, 
+          ...currentSelection.slice(index +1) ,
+          ...currentMatches.slice(currentPage*10)
+        ]
         setCurrentSelection(newSelection); 
-        
+        setCurrentMatches(newMatches); 
       })
       .catch((error) => { 
         console.log(error); 
@@ -137,13 +144,17 @@ export default function PredictionsView() {
     }
     
   }
-
+  const redirect= () => {
+    props.history.push('/ph');
+    window.location.reload(); 
+  }
   return (
      waitingLoad ? 
      <div> <h1>Loading ...</h1>  </div>
     : 
     <div className="ip-background">
       <div className="ip-full-container">
+      <button onClick={() => redirect()}className="ip-redirect-button"> Picks History </button>
         <div className="ip-header-section">
             <select onChange={onChangeSelect} value={type === "current" ?  "Upcoming Matches": "Completed Matches"}>
               <option>  Upcoming Matches </option>

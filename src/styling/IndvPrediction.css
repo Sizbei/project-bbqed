@@ -78,9 +78,27 @@
   color: white; 
   border: none;
   cursor:pointer;
-  font-family: 'ComissionerBold';
+  font-family: 'CommissionerBold';
   outline: none;
   cursor: pointer;
+}
+
+.ip-redirect-button { 
+  background-color: #222629;
+  color: white; 
+  border: white 2px solid ;
+  cursor:pointer;
+  font-family: 'CommissionerBold';
+  outline: none;
+}
+
+.ip-redirect-button:hover { 
+  color: #222629;
+  background-color: white; 
+  border: white 2px solid ;
+  cursor:pointer;
+  font-family: 'CommissionerBold';
+  outline: none;
 }
 .ip-navigation-buttons:hover {
   color:  #ff7e1f; 

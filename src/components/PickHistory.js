@@ -4,7 +4,7 @@ import Pagination from "@material-ui/lab/Pagination";
 import "../styling/IndvPrediction.css";
 import TeamBox from './TeamBox'; 
 
-export default function PickHistoryView () {
+export default function PickHistoryView (props) {
   const authContext = useContext(AuthContext); 
   const [pastLoad, setPastLoad] = useState(true); 
   const [weekSelected, setWeekSelected] = useState(-1); 
@@ -65,17 +65,25 @@ export default function PickHistoryView () {
       setWaitingLoad(true); 
     }
   } 
+
+  const redirect= () => {
+    props.history.push('/ip');
+    window.location.reload(); 
+  }
   return (
     waitingLoad ? 
      <div> <h1>Loading ...</h1>  </div>
     : 
     <div className="ip-background">
     <div className="ip-full-container">
+      <button onClick={() => redirect()}className="ip-redirect-button"> Individual Picks </button>
       <div className="ip-header-section">
-        <button onClick={()=>handleWeekChange("forward")}className="ip-navigation-buttons"> {"<"}</button>
-        <label>{weekSelected === 0? "This Week" : -1 * weekSelected + " week(s) ago"}</label>
-        <button onClick={()=>handleWeekChange("back")} className="ip-navigation-buttons"> {">"}</button>        
-        <button> Individual Picks </button>
+       
+        <div className="ip-week-redirect">
+          <button onClick={()=>handleWeekChange("forward")}className="ip-navigation-buttons"> {"<"}</button>
+          <label>{weekSelected === 0? "This Week" : -1 * weekSelected + " week(s) ago"}</label>
+          <button onClick={()=>handleWeekChange("back")} className="ip-navigation-buttons"> {">"}</button>        
+        </div> 
       </div>
       
       <div className="ip-matches-container">
