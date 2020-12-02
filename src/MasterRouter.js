@@ -20,7 +20,8 @@ import Queue from "./components/Queue"
 import AnalysisPost from "./components/AnalysisPostView"
 import ReportPost from "./components/ReportPosts"
 import ReportComment from "./components/ReportComments"
-import IndvPrediction from "./components/IndvPrediction"
+import IndvPrediction from "./components/IndvPrediction";
+import PickHistory from "./components/PickHistory";
 
 function App() {
   //example of using authContext in function
@@ -40,6 +41,7 @@ function App() {
       <PrivateRoute path="/Trivia" component={Trivia} />
       <PrivateRoute exact path="/Analysis" component={Analysis} />
       <PrivateRoute path="/ip" component={IndvPrediction} /> 
+      <PrivateRoute path="/ph" component={PickHistory}/>
       <PrivateRoute path="/analysis/post/:id" component={AnalysisPost} />
       <PrivateRoute path="/PicksAndPredictions" component={PicksAndPredictions} />
       <PrivateRoute path="/Profile" component={Profile} />

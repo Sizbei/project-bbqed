@@ -78,15 +78,6 @@ export default function PredictionsView() {
     
   }, [currentPage, type, pastLoad, currentLoad])
 
-/*
-  useEffect(() => {
-    setIsLoading(true);
-    getSeasonals(currentPage); 
-    getPast(currentPage);
-    
-  },[type])
-*/
-  
   
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage); 

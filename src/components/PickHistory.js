@@ -4,14 +4,17 @@ import Pagination from "@material-ui/lab/Pagination";
 import "../styling/IndvPrediction.css";
 import TeamBox from './TeamBox'; 
 
-export default function View() {
-  const [pastLoad, setPastLoad] = useState(true); 
-  const [weekSelected, setWeekSelected] = useState(0); 
-  const [finishedMatches, setFinishedMatches] = useState([]); 
-  const [currentPage, setCurrentPage] = useState(1); 
-  const [total, setTotal] = useState(0);
+export default function PickHistoryView () {
   const authContext = useContext(AuthContext); 
+  const [pastLoad, setPastLoad] = useState(true); 
+  const [weekSelected, setWeekSelected] = useState(-1); 
+  const [finishedMatches, setFinishedMatches] = useState([]); 
+  const [currentSelection, setCurrentSelection] = useState([]); 
+  const [currentPage, setCurrentPage] = useState(1); 
+  const [waitingLoad, setWaitingLoad] = useState(true); 
+  const [total, setTotal] = useState(0);
   
+
   const getPastHistory = async (page , list, initialLoad, week) => {
     if (initialLoad) {
       await fetch("/prediction/season/week/" + week).then(res => res.json()) 
@@ -44,10 +47,13 @@ export default function View() {
       getPastHistory(currentPage, finishedMatches, pastLoad, weekSelected);
     
   }, [currentPage, weekSelected])
-
+  const handlePageChange = (event, newPage) => {
+    setCurrentPage(newPage); 
+    console.log(currentSelection); 
+  }
   const handleWeekChange = ( type) => {
     if (type === "forward") {
-      if (weekSelected < 0 ) { 
+      if (weekSelected < -1 ) { 
         setWeekSelected(weekSelected + 1);  
         setPastLoad(true);  
         setWaitingLoad(true);     
@@ -60,13 +66,18 @@ export default function View() {
     }
   } 
   return (
-    <div>
+    waitingLoad ? 
+     <div> <h1>Loading ...</h1>  </div>
+    : 
+    <div className="ip-background">
+    <div className="ip-full-container">
       <div className="ip-header-section">
         <button onClick={()=>handleWeekChange("forward")}className="ip-navigation-buttons"> {"<"}</button>
         <label>{weekSelected === 0? "This Week" : -1 * weekSelected + " week(s) ago"}</label>
         <button onClick={()=>handleWeekChange("back")} className="ip-navigation-buttons"> {">"}</button>        
+        <button> Individual Picks </button>
       </div>
-     
+      
       <div className="ip-matches-container">
             {currentSelection.map((data,index) => { 
               return(
@@ -74,20 +85,19 @@ export default function View() {
                   <label className="ip-date-label"> {data.gameDay.substring(0,10)} </label>
                   <div className="ip-matches-info">
                     <button className={data.pick === null?  "ip-matches-info-button"
-                                      :data.pick === data.team1Name? (type === "current" ? "ip-matches-info-button-selected" : (data.pick === data.result ? "ip-matches-info-button-correct" : "ip-matches-info-button-incorrect")) 
-                                      : "ip-matches-info-button" } 
-                            onClick={()=>handleSelection(data, data.team1Name, index)}><TeamBox name={data.team1Name} image={data.team1Image}/></button>
+                                      :data.pick === data.team1Name?  (data.pick === data.result ? "ip-matches-info-button-correct" : "ip-matches-info-button-incorrect")
+                                      : "ip-matches-info-button" }><TeamBox name={data.team1Name} image={data.team1Image}/></button>
                     <label className="ip-vs-label"> VS </label>
                     <button className={data.pick === null?  "ip-matches-info-button"
-                                      :data.pick === data.team2Name? (type === "current" ? "ip-matches-info-button-selected" : (data.pick === data.result ? "ip-matches-info-button-correct" : "ip-matches-info-button-incorrect")) 
-                                      : "ip-matches-info-button" }  
-                            onClick={()=>handleSelection(data, data.team2Name, index)}><TeamBox name={data.team2Name} image={data.team2Image}/></button>
+                                      :data.pick === data.team2Name? (data.pick === data.result ? "ip-matches-info-button-correct" : "ip-matches-info-button-incorrect") 
+                                      : "ip-matches-info-button" }><TeamBox name={data.team2Name} image={data.team2Image}/></button>
                   </div>
                 </div>
             
             )})}
           </div>
           <Pagination className="MuiPagination-ul" color="primary" count={Math.ceil(total/10)} onChange={handlePageChange} />
+    </div>
     </div>
   )
 }
