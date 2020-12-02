@@ -20,13 +20,13 @@ const findUserPick = (picks, user) => {
     return null;
 }
 
-const findStartAndEndDate = (cur_date, week_back, week_forward) => {
+const findStartAndEndDate = (cur_date, week_start, week_end) => {
     const cur_year = cur_date.getFullYear();
     const cur_month = cur_date.getMonth();
     const cur_day = cur_date.getDate();
     const cur_day_inweek = cur_date.getDay();
-    const start_date = new Date(cur_year, cur_month, cur_day - (cur_day_inweek) - (week_back * 7) + 1);
-    const end_date = new Date(cur_year, cur_month, cur_day + (6 - cur_day_inweek) + (week_forward * 7) + 2);
+    const start_date = new Date(cur_year, cur_month, cur_day - (cur_day_inweek) + (week_start * 7) + 1);
+    const end_date = new Date(cur_year, cur_month, cur_day + (6 - cur_day_inweek) + (week_end * 7) + 2);
     return {
         startDate: start_date,
         endDate: end_date
@@ -77,9 +77,20 @@ router.route('/past').get(passport.authenticate('jwt', {session : false}), async
     //const user = req.params.username;
     const user = req.user.username;
     const cur_date = demo_date; //since games in DB are all historical data, use a demo date to represent current date
-    const start_date = findStartAndEndDate(cur_date, 1, 0).startDate;
+    const start_date = findStartAndEndDate(cur_date, 0, 0).startDate;
     prediction.find({$and: [{closeTime: {$gte: start_date}},{closeTime: {$lt: cur_date}}, {type: "seasonal"}]}).then(async predictions => {
         res.json({pastSeasonals: await generateResponseFromPrediction(predictions, user, cur_date)});
+    }).catch(err => res.status(500).json({err: err}));
+})
+
+router.route('/week/:weekNumber/:username').get(async (req, res) => {
+//router.route('/week/:weekNumber').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
+    const user = req.params.username;
+    //const user = req.user.username;
+    const cur_date = demo_date; //since games in DB are all historical data, use a demo date to represent current date
+    const period = findStartAndEndDate(cur_date, req.params.weekNumber, req.params.weekNumber);
+    prediction.find({$and: [{closeTime: {$gte: period.startDate}},{closeTime: {$lt: period.endDate}}, {type: "seasonal"}]}).then(async predictions => {
+        res.json({Seasonals: await generateResponseFromPrediction(predictions, user, cur_date)});
     }).catch(err => res.status(500).json({err: err}));
 })
 
