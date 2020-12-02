@@ -1,4 +1,5 @@
-.all {
+.leaderboardRadar {
+    position:absolute;
     margin-top:5%;
     height:100%;
     width:100%;
@@ -8,9 +9,21 @@
     align-items: center;
 }
 
+.leaderboardGlobal {
+    position:absolute;
+    margin-top:5%;
+    height:100%;
+    width:100%;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+}
+
 .Leaderboard {
-    height: 100%;
-    width: 85%;
+    height: 150%;
+    width: 83%;
     background-color:  #1b1a18;
 }
 
@@ -33,7 +46,7 @@
 }
 
 .L-col-Radar {
-    width: 33%;
+    width: 30%;
     height: 100%;
     color:white;
     text-align: center;
@@ -45,13 +58,47 @@
 
 }
 
-.L-col-Image {
-    width: 2.5vw;
-    height:2.5vw;
-    margin-left: 30%;
-    margin-top: -0.5%;
-    background-color:white;
-    position:absolute;
+.L-col-Radar-Space {
+    width: 2vw;
+    float:left;
+    color:#1b1a18;
+}
+
+.L-col-Radar-Image {
+    width: 2vw;
+    height: 2vw;
+    float:left;
+    display: flex;
+    justify-content: center;
+}
+
+.leaderboardButton {
+    width: 30%;
+    height: 2.5vw;
+    border-top-left-radius: 5vw;
+    border-top-right-radius: 5vw;
+    border:none;
+    background-color: #0B0A0A;
+    color: white;
+    font-family: 'CommissionerMedium';
+    text-align: center;
+    font-size: 1vw;
+}
+
+.leaderboardButtonDiv {
+    width:83%;
+    height:5%;
+    display: flex;
+    justify-content: center;
+}
+
+.centerSpace {
+    width:100%;
+    float: left;
+}
+
+.leaderboardButton:focus {
+    outline:none;
 }
 
 @font-face {
