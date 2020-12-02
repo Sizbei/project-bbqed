@@ -5,7 +5,6 @@ import "../styling/IndvPrediction.css";
 import TeamBox from './TeamBox'; 
 
 export default function PredictionsView() { 
-  const [weekSelected, setWeekSelected] = useState(0); 
   const [currentMatches, setCurrentMatches] = useState([]); 
   const [finishedMatches, setFinishedMatches] = useState([]); 
   const [currentPage, setCurrentPage] = useState(1); 
@@ -20,6 +19,7 @@ export default function PredictionsView() {
     if (initialLoad) {
       await fetch("/prediction/season/current").then(res => res.json())
       .then (data=> {
+        setCurrentPage(1); 
         setTotal(data.currentSeasonals.length); 
         setCurrentMatches(data.currentSeasonals);
         //console.log(page); 
@@ -44,31 +44,11 @@ export default function PredictionsView() {
     if (initialLoad) {
       await fetch("/prediction/season/past").then(res => res.json()) 
       .then (data=> {
+        setCurrentPage(1); 
         setTotal(data.pastSeasonals.length); 
         setFinishedMatches(data.pastSeasonals); 
         setCurrentSelection(data.pastSeasonals.slice(page*10 - 10, page*10)); 
         //console.log(data.pastSeasonals);
-        setPastLoad(false);
-        setWaitingLoad(false); 
-      })
-      .catch((error) => {
-        console.log(error); 
-      })
-    }
-    else {
-      getCurrent(page, list); 
-      setWaitingLoad(false); 
-      
-    }
-  }
-  const getPastHistory = async (page , list, initialLoad, week) => {
-    if (initialLoad) {
-      await fetch("/prediction/season/week/" + week).then(res => res.json()) 
-      .then (data=> {
-        setTotal(data.Seasonals.length); 
-        setFinishedMatches(data.Seasonals); 
-        setCurrentSelection(data.Seasonals.slice(page*10 - 10, page*10)); 
-        //console.log(data.Seasonals);
         setPastLoad(false);
         setWaitingLoad(false); 
       })
@@ -95,11 +75,8 @@ export default function PredictionsView() {
     else if (type === "past") {
       getPast(currentPage, finishedMatches, pastLoad);
     }
-    else if (type === "history") {
-      getPastHistory(currentPage, finishedMatches, pastLoad, weekSelected);
-    }
     
-  }, [currentPage, type, weekSelected])
+  }, [currentPage, type, pastLoad, currentLoad])
 
 /*
   useEffect(() => {
@@ -109,72 +86,60 @@ export default function PredictionsView() {
     
   },[type])
 */
-  const handleSelection= (teamName, matchId) => { 
-    console.log("match: " + matchId + "\nteamname:" + teamName);
-    const body = {
-      _id: matchId,
-      pick: teamName, 
-    }
-    fetch('/prediction/addPrediction', {
-      method :  "PUT",
-      body : JSON.stringify(body),
-      headers: {
-          'Content-Type' : 'application/json'
-      }
-    }).then(res => res.json())
-    .then (data=> {
-      setCurrentLoad(true); 
-    })
-    .catch((error) => { 
-      console.log(error); 
-    })
-    
-  }
+  
   
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage); 
+    console.log(currentSelection); 
   }
 
-  const handleWeekChange = ( type) => {
-    console.log(type); 
-    if (type === "forward") {
-      if (weekSelected < 0 ) { 
-        setWeekSelected(weekSelected + 1);      
+  const handleSelection= (data, teamName,index) => { 
+    //console.log("match: " + matchId + "\nteamname:" + teamName);
+    if (type === "current") {
+      const body = {
+        _id: data._id,
+        pick: teamName, 
       }
-      if (weekSelected === 0)  { 
-        setType("current"); 
-        setCurrentPage(1);
-        setCurrentLoad(true); 
-        setWaitingLoad(true); 
-      }
-      else {
-      setType("history"); 
-      setCurrentPage(1); 
-      setPastLoad(true); 
-      setWaitingLoad(true); 
-      }
-    }
-    else {
-      setWeekSelected(weekSelected - 1);     
-      setType("history"); 
-      setCurrentPage(1); 
-      setPastLoad(true); 
-      setWaitingLoad(true); 
-    }
-      
-
-    
-  } 
+      fetch('/prediction/addPrediction', {
+        method :  "PUT",
+        body : JSON.stringify(body),
+        headers: {
+            'Content-Type' : 'application/json'
+        }
+      }).then(res => res.json())
+      .then (updatedData => {
+        
+        const updatedEntry = {
+          "gameDay": data.gameDay,
+          "pick": teamName,
+          "result": data.result,
+          "team1Image": data.team1Image,
+          "team1Name": data.team1Name,
+          "team2Image": data.team2Image,
+          "team2Name": data.team2Name,
+          "_id": data._id,
+        }
+        const newSelection = [
+          ...currentSelection.slice(0, index),
+          updatedEntry, 
+          ...currentSelection.slice(index +1) 
+        ]
+        setCurrentSelection(newSelection); 
+        
+      })
+      .catch((error) => { 
+        console.log(error); 
+      })
+    }  
+  }
   const onChangeSelect = (e) => {
     if (e.target.value === "Completed Matches") { 
-      setCurrentPage(1); 
       setType("past"); 
       setPastLoad(true); 
       setWaitingLoad(true); 
     }
     
     else if (e.target.value === "Upcoming Matches") {
-      setCurrentPage(1); 
       setType("current"); 
       setCurrentLoad(true); 
       setWaitingLoad(true); 
@@ -189,36 +154,34 @@ export default function PredictionsView() {
     <div className="ip-background">
       <div className="ip-full-container">
         <div className="ip-header-section">
-            {weekSelected === 0?
-            <select onChange={onChangeSelect} value={type === "past" ? "Completed Matches" : "Upcoming Matches"}>
+            <select onChange={onChangeSelect} value={type === "current" ?  "Upcoming Matches": "Completed Matches"}>
               <option>  Upcoming Matches </option>
               <option> Completed Matches</option>
-            </select> :null}
-          <button onClick={()=>handleWeekChange("forward")}className="ip-navigation-buttons"> {"<"}</button>
-            <label>{weekSelected === 0? "This Week" : -1 * weekSelected + " week(s) ago"}</label>
-          <button onClick={()=>handleWeekChange("back")} className="ip-navigation-buttons"> {">"}</button>
+            </select>         
         </div>
+        <div>
         <div className="ip-matches-container">
-          {currentSelection.map(data=> { 
-            return(
-              <div className="ip-match-row-container">
-                <label className="ip-date-label"> {data.gameDay.substring(0,10)} </label>
-                <div className="ip-matches-info">
-                  <button className={data.pick === null?  "ip-matches-info-button"
-                                    :data.pick === data.team1Name? (type === "current" ? "ip-matches-info-button-selected" : (data.pick === data.result ? "ip-matches-info-button-correct" : "ip-matches-info-button-incorrect")) 
-                                    : "ip-matches-info-button" } 
-                          onClick={()=>handleSelection(data.team1Name, data._id)}><TeamBox name={data.team1Name} image={data.team1Image}/></button>
-                  <label className="ip-vs-label"> VS </label>
-                  <button className={data.pick === null?  "ip-matches-info-button"
-                                    :data.pick === data.team2Name? (type === "current" ? "ip-matches-info-button-selected" : (data.pick === data.result ? "ip-matches-info-button-correct" : "ip-matches-info-button-incorrect")) 
-                                    : "ip-matches-info-button" }  
-                          onClick={()=>handleSelection(data.team2Name, data._id)}><TeamBox name={data.team2Name} image={data.team2Image}/></button>
+            {currentSelection.map((data,index) => { 
+              return(
+                <div className="ip-match-row-container">
+                  <label className="ip-date-label"> {data.gameDay.substring(0,10)} </label>
+                  <div className="ip-matches-info">
+                    <button className={data.pick === null?  "ip-matches-info-button"
+                                      :data.pick === data.team1Name? (type === "current" ? "ip-matches-info-button-selected" : (data.pick === data.result ? "ip-matches-info-button-correct" : "ip-matches-info-button-incorrect")) 
+                                      : "ip-matches-info-button" } 
+                            onClick={()=>handleSelection(data, data.team1Name, index)}><TeamBox name={data.team1Name} image={data.team1Image}/></button>
+                    <label className="ip-vs-label"> VS </label>
+                    <button className={data.pick === null?  "ip-matches-info-button"
+                                      :data.pick === data.team2Name? (type === "current" ? "ip-matches-info-button-selected" : (data.pick === data.result ? "ip-matches-info-button-correct" : "ip-matches-info-button-incorrect")) 
+                                      : "ip-matches-info-button" }  
+                            onClick={()=>handleSelection(data, data.team2Name, index)}><TeamBox name={data.team2Name} image={data.team2Image}/></button>
+                  </div>
                 </div>
-              </div>
-          
-          )})}
-        </div>
-        <Pagination className="MuiPagination-ul" color="primary" count={Math.ceil(total/10)} onChange={handlePageChange} />
+            
+            )})}
+          </div>
+          <Pagination className="MuiPagination-ul" color="primary" count={Math.ceil(total/10)} onChange={handlePageChange} />
+      </div> 
       </div>
     </div> 
   )
