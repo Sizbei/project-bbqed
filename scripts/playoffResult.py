@@ -46,20 +46,28 @@ def setMatchup(c, round, next, i, bracketCounter):
     response = requests.get('http://localhost:5000/playoff/' + year + '/' + bracket[c][round][i]['teams'][0] + '/' + bracket[c][round][i]['teams'][1]).text
     games = json.loads(response)
     
+    if(round == 'semifinals'): print(bracket[c][round][i]['teams'][0], bracket[c][round][i]['teams'][1])
+    
+    bracket[c][round][i]['games'] = games['gameIds']
     bracket[c][round][i]['score'] = games['score']
     
     if(next != 'finals'):
+          
         if bracketCounter % 2 == 0:
-            bracket[c][next][bracketCounter]['teams'][0] = games['result']
+            bracket[c][next][int(bracketCounter // 2)]['teams'][0] = games['result']
         else:
-            bracket[c][next][bracketCounter]['teams'][1] = games['result']
-            bracketCounter += 1
+            bracket[c][next][int(bracketCounter // 2)]['teams'][1] = games['result']
+            
+        bracketCounter += 1
+            
     elif(next == 'finals'):
         
         if c == 'easternConference':
             bracket[finals]['teams'][0] = games['result']
         elif c == 'westernConference':
             bracket[finals]['teams'][1] = games['result']
+    
+    return bracketCounter
 
     
 def finalResults():
@@ -76,26 +84,25 @@ for con in ['westernConference', 'easternConference']:
     bracket[con]['semifinals'] = [ {'teams': ['',''], 'games': [], 'score': [0,0]} for x in range(2)]
     
     for i in range(len(bracket[con]['quarterfinals'])):
-        setMatchup(con, 'quarterfinals', 'semifinals',  i, bracketCounter)
+        bracketCounter = setMatchup(con, 'quarterfinals', 'semifinals',  i, bracketCounter)
     bracketCounter = 0
     
     bracket[con]['confinals'] = [{'teams': ['',''], 'games': [], 'score': [0,0]}]
     
     for i in range(len(bracket[con]['semifinals'])):
         
-        if bracket[con]['semifinals'][i]['teams'][0] and bracket[con]['semifinals'][i]['teams'][0]:
-            setMatchup(con, 'semifinals', 'confinals', i, bracketCounter)
+        if bracket[con]['semifinals'][i]['teams'][0] and bracket[con]['semifinals'][i]['teams'][1]:
+            bracketCounter = setMatchup(con, 'semifinals', 'confinals', i, bracketCounter)
     bracketCounter = 0
     
     bracket['finals'] = {'teams': ['',''], 'games': [], 'score': [0,0]}
     
-    if bracket[con]['confinals'][0]['teams'][0] and bracket[con]['confinals'][0]['teams'][0]:
-        setMatchup(con, 'confinals', 'finals', i)
+    if bracket[con]['confinals'][0]['teams'][0] and bracket[con]['confinals'][0]['teams'][1]:
+        bracketCounter = setMatchup(con, 'confinals', 'finals', i)
 
 
 if bracket['finals']['teams'][0] and bracket['finals']['teams'][1]:    
     finalResults()
  
-res = requests.post('http://localhost:5000/playoff/add', json=bracket)
-print(bracket)
+res = requests.post('http://localhost:5000/playoff/add/bracket', json=bracket)
     
