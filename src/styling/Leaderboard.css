@@ -1,23 +1,24 @@
 .all {
-    height:40vw;
-    width:98vw;
+    margin-top:5%;
+    height:100%;
+    width:100%;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .Leaderboard {
     height: 100%;
     width: 85%;
-    margin-left: 5%;
-    margin-top: 2%;
-    margin-bottom: 2%;
     background-color:  #1b1a18;
-    display: flex;
-    flex-direction: column;
 }
 
 .Leaderboard-row {
-    width: 100%;
-    height: 10%;
-    padding-top:2%;
+    padding-left:4%;
+    padding-right: 4%;
+    padding-top: 2%;
+    padding-bottom: 4%;
 }
 
 .L-col-Global {
@@ -25,9 +26,10 @@
     height: 100%;
     color:white;
     float: left;
-    text-align: center;
     font-size: 1.2vw;
     font-family: 'CommissionerMedium';
+    display: flex;
+    justify-content: center;
 }
 
 .L-col-Radar {
@@ -38,12 +40,16 @@
     float: left;
     font-size: 1.2vw;
     font-family: 'CommissionerMedium';
+    display: flex;
+    justify-content: center;
+
 }
 
 .L-col-Image {
     width: 2.5vw;
     height:2.5vw;
-    margin-left: 32%;
+    margin-left: 30%;
+    margin-top: -0.5%;
     background-color:white;
     position:absolute;
 }

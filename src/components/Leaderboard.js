@@ -4,29 +4,32 @@ import '../styling/Leaderboard.css'
 export default function Leaderboard(props) {
     const [users, setUsers] = useState([]);
     var mode = props.mode;
-//     const givenUsers = props.users;
-//    console.log(givenUsers);
+     const givenUsers = props.users;
 
     useEffect(() => {
         //fetch and setUsers
     }, [])
+    
+// /prediction/leaderboard
+// /prediction/regularseason/global
+// /prediction/playoff
 
     if (mode === "Global") {
         return (
             <div className='all'>
                 <div className='Leaderboard'>
                     <GlobalHeaderRow></GlobalHeaderRow>
-                    {users.map((data, index) => {
+                    {givenUsers.map((data, index) => {
                         console.log(data);
                         if(index % 2 == 0) {
                             //<GlobalRow color='#0B0A0A' rank='1' numofplayers='20' percentofplayers='20' division='x' points='2' ></GlobalRow>
                             return (
-                                <GlobalRow color='#0B0A0A'></GlobalRow>
+                                <GlobalRow rank={index+1} color='#0B0A0A'></GlobalRow>
                             )
                         }
                         //<GlobalRow rank='1' numofplayers='20' percentofplayers='20' division='x' points='2' ></GlobalRow>
                         return (
-                            <GlobalRow></GlobalRow>
+                            <GlobalRow rank={index+1}></GlobalRow>
                         )
                     })}
                 </div>
@@ -39,17 +42,17 @@ export default function Leaderboard(props) {
 
             <div className='Leaderboard'>
                 <RadarHeaderRow></RadarHeaderRow>
-                {users.map((data, index) => {
+                {givenUsers.map((data, index) => {
                     console.log(data);
                     if(index % 2 == 0) {
                         //<RadarRow color='#0B0A0A' rank='1' name='andy' points='23'></RadarRow>
                         return (
-                            <RadarRow color='#0B0A0A'></RadarRow>
+                            <RadarRow rank={index+1} color='#0B0A0A'></RadarRow>
                         )
                     }
                     //<RadarRow color='#0B0A0A'></RadarRow>
                     return (
-                        <RadarRow></RadarRow>
+                        <RadarRow rank={index+1}></RadarRow>
                     )
                 })}
                 </div>
@@ -82,24 +85,14 @@ function RadarHeaderRow(props) {
 }
 
 function GlobalRow(props) {
-    const [rank, setRank] = useState();
-    const [division, setDivision] = useState();
-    const [numberOfPlayers, setNumberOfPlayers] = useState();
-    const [percentOfPlayers, setPercentOfPlayers] = useState();
-    const [pointsNeeded, setPointsNeeded] = useState();
-
+    const rank = "rank" in props ? props.rank : 0;
+    const division = "division" in props ? props.division : "N/A";
+    const numberOfPlayers = "numberofplayers" in props ? props.numofplayers : "-";
+    const percentOfPlayers = "percentofplayers" in props ? props.percentofplayers : "-";
+    const pointsNeeded = "pointsNeeded" in props ? props.pointsNeeded : "-";
+    const backgroundColor = "color" in props ? props.color : "1b1a18"
     useEffect(() => {
-        setRank(props.rank);
-        setDivision(props.division);
-        setNumberOfPlayers(props.numofplayers);
-        setPercentOfPlayers(props.percentofplayers)
-        setPointsNeeded(props.points);
     })
-
-    var backgroundColor = props.color;
-    if(backgroundColor == null) {
-        backgroundColor = '#1b1a18';
-    }
     var backgroundStyle = { "background-color": backgroundColor };
 
     return (
@@ -114,20 +107,13 @@ function GlobalRow(props) {
 }
 
 function RadarRow(props) {
-    const [rank, setRank] = useState();
-    const [name, setName] = useState();
-    const [points, setPoints] = useState();
+    const rank = "rank" in props ? props.rank : 0;
+    const name = "name" in props ? props.name : "-";
+    const points = "points" in props ? props.points : "-";
+    const backgroundColor = "color" in props ? props.color : "1b1a18"
 
     useEffect(() => {
-        setRank(props.rank);
-        setName(props.name);
-        setPoints(props.points);
     })
-
-    var backgroundColor = props.color;
-    if(backgroundColor == null) {
-        backgroundColor = '#1b1a18';
-    }
     var backgroundStyle = { "background-color": backgroundColor };
 
     return (
