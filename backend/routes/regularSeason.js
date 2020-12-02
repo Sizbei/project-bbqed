@@ -83,10 +83,10 @@ router.route('/past').get(passport.authenticate('jwt', {session : false}), async
     }).catch(err => res.status(500).json({err: err}));
 })
 
-router.route('/week/:weekNumber/:username').get(async (req, res) => {
-//router.route('/week/:weekNumber').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
-    const user = req.params.username;
-    //const user = req.user.username;
+//router.route('/week/:weekNumber/:username').get(async (req, res) => {
+router.route('/week/:weekNumber').get(passport.authenticate('jwt', {session : false}), async (req, res) => {
+    //const user = req.params.username;
+    const user = req.user.username;
     const cur_date = demo_date; //since games in DB are all historical data, use a demo date to represent current date
     const period = findStartAndEndDate(cur_date, req.params.weekNumber, req.params.weekNumber);
     prediction.find({$and: [{closeTime: {$gte: period.startDate}},{closeTime: {$lt: period.endDate}}, {type: "seasonal"}]}).then(async predictions => {
