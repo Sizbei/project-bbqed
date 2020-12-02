@@ -67,6 +67,12 @@
 .ip-matches-info-button-incorrect {
   background-color: rgb(165, 40, 40);
 }
+.ip-header-section select {
+  background-color: #222629;
+  color: white; 
+  font-family: 'ComissionerBold'; 
+  outline: none; 
+}
 .ip-navigation-buttons { 
   background-color: #222629;
   color: white; 

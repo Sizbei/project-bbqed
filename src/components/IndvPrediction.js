@@ -5,8 +5,7 @@ import "../styling/IndvPrediction.css";
 import TeamBox from './TeamBox'; 
 
 export default function PredictionsView() { 
-  const [currentDate] = useState(new Date()); 
-  const [dateSelected, setDateSelected] = useState(currentDate); 
+  const [weekSelected, setWeekSelected] = useState(0); 
   const [currentMatches, setCurrentMatches] = useState([]); 
   const [finishedMatches, setFinishedMatches] = useState([]); 
   const [currentPage, setCurrentPage] = useState(1); 
@@ -27,7 +26,7 @@ export default function PredictionsView() {
         setCurrentSelection(data.currentSeasonals.slice(page*10 - 10, page*10 )); 
         setCurrentLoad(false);
         setWaitingLoad(false); 
-        console.log(list);
+        //console.log(list);
         
       })
       .catch((error) => { 
@@ -48,7 +47,7 @@ export default function PredictionsView() {
         setTotal(data.pastSeasonals.length); 
         setFinishedMatches(data.pastSeasonals); 
         setCurrentSelection(data.pastSeasonals.slice(page*10 - 10, page*10)); 
-        console.log(data.pastSeasonals);
+        //console.log(data.pastSeasonals);
         setPastLoad(false);
         setWaitingLoad(false); 
       })
@@ -62,7 +61,27 @@ export default function PredictionsView() {
       
     }
   }
-  
+  const getPastHistory = async (page , list, initialLoad, week) => {
+    if (initialLoad) {
+      await fetch("/prediction/season/week/" + week).then(res => res.json()) 
+      .then (data=> {
+        setTotal(data.Seasonals.length); 
+        setFinishedMatches(data.Seasonals); 
+        setCurrentSelection(data.Seasonals.slice(page*10 - 10, page*10)); 
+        //console.log(data.Seasonals);
+        setPastLoad(false);
+        setWaitingLoad(false); 
+      })
+      .catch((error) => {
+        console.log(error); 
+      })
+    }
+    else {
+      getCurrent(page, list); 
+      setWaitingLoad(false); 
+      
+    }
+  }
   const getCurrent = (page, list) => {
     const indexOfLastPost = page * 10; 
     const indexOfFirstPost = indexOfLastPost - 10; 
@@ -74,10 +93,13 @@ export default function PredictionsView() {
       getSeasonals(currentPage, currentMatches ,currentLoad); 
     }
     else if (type === "past") {
-      getPast(currentPage, finishedMatches, pastLoad)
+      getPast(currentPage, finishedMatches, pastLoad);
+    }
+    else if (type === "history") {
+      getPastHistory(currentPage, finishedMatches, pastLoad, weekSelected);
     }
     
-  }, [currentPage, type, currentLoad, pastLoad])
+  }, [currentPage, type, weekSelected])
 
 /*
   useEffect(() => {
@@ -112,6 +134,37 @@ export default function PredictionsView() {
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage); 
   }
+
+  const handleWeekChange = ( type) => {
+    console.log(type); 
+    if (type === "forward") {
+      if (weekSelected < 0 ) { 
+        setWeekSelected(weekSelected + 1);      
+      }
+      if (weekSelected === 0)  { 
+        setType("current"); 
+        setCurrentPage(1);
+        setCurrentLoad(true); 
+        setWaitingLoad(true); 
+      }
+      else {
+      setType("history"); 
+      setCurrentPage(1); 
+      setPastLoad(true); 
+      setWaitingLoad(true); 
+      }
+    }
+    else {
+      setWeekSelected(weekSelected - 1);     
+      setType("history"); 
+      setCurrentPage(1); 
+      setPastLoad(true); 
+      setWaitingLoad(true); 
+    }
+      
+
+    
+  } 
   const onChangeSelect = (e) => {
     if (e.target.value === "Completed Matches") { 
       setCurrentPage(1); 
@@ -136,12 +189,14 @@ export default function PredictionsView() {
     <div className="ip-background">
       <div className="ip-full-container">
         <div className="ip-header-section">
+            {weekSelected === 0?
             <select onChange={onChangeSelect} value={type === "past" ? "Completed Matches" : "Upcoming Matches"}>
               <option>  Upcoming Matches </option>
               <option> Completed Matches</option>
-            </select>
-          <button className="ip-navigation-buttons"> {"<"}</button>
-          <button className="ip-navigation-buttons"> {">"}</button>
+            </select> :null}
+          <button onClick={()=>handleWeekChange("forward")}className="ip-navigation-buttons"> {"<"}</button>
+            <label>{weekSelected === 0? "This Week" : -1 * weekSelected + " week(s) ago"}</label>
+          <button onClick={()=>handleWeekChange("back")} className="ip-navigation-buttons"> {">"}</button>
         </div>
         <div className="ip-matches-container">
           {currentSelection.map(data=> { 
