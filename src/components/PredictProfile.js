@@ -71,7 +71,9 @@ export default function PredictProfile(props) {
               {currentSelection.map((data, index) => {
                 return (
                   <div>
-                    <label className="pp-date-label"> {data.gameDay.substring(0, 10)} </label>
+                    <div className="pp-match-date"> 
+                    <label className="pp-date-label"> {"DATE: " + data.gameDay.substring(0, 10)} </label>
+                    </div>
                     <div className="pp-match-row-container">
 
                       <div className="pp-matches-info">
@@ -90,7 +92,9 @@ export default function PredictProfile(props) {
                 )
               })}
             </div>
+            <div className="pp-pagination" >
             <Pagination className="MuiPagination-ul" color="primary" count={Math.ceil(total / 3)} onChange={handlePageChange} />
+            </div>
           </div>
         </div>
       </div>

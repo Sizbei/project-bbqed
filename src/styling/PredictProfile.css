@@ -8,12 +8,19 @@
 .pp-full-container { 
   
   align-self: center;
-  margin-bottom: 10px;
-  
+
 }
+
+.pp-pagination { 
+  
+  margin-left: 20%;
+
+}
+
+
 .pp-matches-container { 
   flex-direction: column; 
-  
+  margin-left: -30px;
 }
 .pp-match-row-container { 
   border-bottom: 2px solid white; 
@@ -34,14 +41,20 @@
 
 .pp-date-label label{ 
   margin-top: 5px;
-  margin-bottom: 1900px;
+ 
 }
 
+.pp-match-date{
+  margin-top: 1.4%;
+  margin-left: 5%;
+  margin-bottom: -1.4%;
+}
 
 .pp-matches-info {
   margin-right: 4%;
   display: flex;
   align-items: center;
+  
 }
 .pp-matches-info-button,  .pp-matches-info-button-selected , .pp-matches-info-button-correct, .ip-matches-info-button-incorrect{ 
   margin-left: 2%;
@@ -87,6 +100,13 @@
 .pp-navigation-buttons:hover {
   color:  #ff7e1f; 
 }
+
+.pp-matches-info TeamBox {
+  cursor: pointer; 
+  color: #FF7e1F;
+  word-wrap: break-word;
+}
+
 @font-face {
   font-family: 'CommissionerBold';
   src: local('CommissionerBold'), url(../res/fonts/Commissioner/Commissioner-Bold.ttf) format('truetype');
