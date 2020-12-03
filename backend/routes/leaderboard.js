@@ -61,6 +61,7 @@ async function divisonPromise(year, category, res) {
           resolve();
 
         })
+        .catch(err => res.status(400).json({err: err}));
         
       })
     })
@@ -78,6 +79,7 @@ async function divisonPromise(year, category, res) {
     divisionPercentage: divisionPercentage
   })})
   .then(result => res.json(result))
+  .catch(err => res.status(400).json({err: err}));
 
 }
 
