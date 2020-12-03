@@ -1,19 +1,19 @@
-.ip-background { 
+.pp-background { 
   display: flex; 
   color: white; 
   justify-content: center;
   font-family: 'CommissionerBold'; 
 }
 
-.ip-full-container { 
+.pp-full-container { 
   padding-top: 2.5%; 
   width: 60%; 
 }
-.ip-matches-container { 
+.pp-matches-container { 
   flex-direction: column; 
   
 }
-.ip-match-row-container { 
+.pp-match-row-container { 
   border-bottom: 2px solid white; 
   padding-top: 3%;
   padding-bottom: 3%;
@@ -24,22 +24,22 @@
 
 }
 
-.ip-header-section  {
+.pp-header-section  {
   border-bottom: 5px solid white; 
   display: flex;
   justify-content: flex-end;
 }
-.ip-date-label { 
+.pp-date-label { 
   flex-grow: 1; 
 }
 
 
-.ip-matches-info {
+.pp-matches-info {
   margin-right: 4%;
   display: flex;
   align-items: center;
 }
-.ip-matches-info-button,  .ip-matches-info-button-selected , .ip-matches-info-button-correct, .ip-matches-info-button-incorrect{ 
+.pp-matches-info-button,  .pp-matches-info-button-selected , .pp-matches-info-button-correct, .ip-matches-info-button-incorrect{ 
   margin-left: 2%;
   margin-right: 2%;
   border: none; 
@@ -50,39 +50,40 @@
   border-radius: 5%;
 }
 
-.ip-matches-info-button {
+.pp-matches-info-button {
   background-color: transparent;
 }
-.ip-matches-info TeamBox {
+.pp-matches-info TeamBox {
   cursor: pointer; 
 }
-.ip-matches-info-button-selected {
+.pp-matches-info-button-selected {
   background-color: rgb(76, 135, 245);
 }
 
-.ip-matches-info-button-correct {
+.pp-matches-info-button-correct {
   background-color: rgb(92, 155, 92);
 }
 
-.ip-matches-info-button-incorrect {
+.pp-matches-info-button-incorrect {
   background-color: rgb(165, 40, 40);
 }
-.ip-header-section select {
+.pp-header-section select {
   background-color: #222629;
   color: white; 
   font-family: 'ComissionerBold'; 
   outline: none; 
 }
-.ip-navigation-buttons { 
+.pp-navigation-buttons { 
   background-color: #222629;
   color: white; 
   border: none;
   cursor:pointer;
-  font-family: 'ComissionerBold';
+  font-family: 'CommissionerBold';
   outline: none;
   cursor: pointer;
 }
-.ip-navigation-buttons:hover {
+
+.pp-navigation-buttons:hover {
   color:  #ff7e1f; 
 }
 @font-face {

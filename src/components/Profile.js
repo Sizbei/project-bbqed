@@ -6,6 +6,8 @@ import RLPopup from './ProfileRLPopup';
 import ImageSelect from './ImageSelect';
 import {AuthContext} from '../Context/AuthContext';
 import ProfilePicture from './ProfilePicture';
+import PredictProfile from './PredictProfile';
+
 
 /*
 acsChart: [
@@ -338,7 +340,7 @@ export default class Profile extends Component {
                             <div className="prof-picks">
                                 <h2 className="prof-title"> Current Picks </h2>
                                 <div className="prof-picks-content">
-                                    To be implemented in future sprint
+                                    <PredictProfile />
                                 </div>
                             </div>
 
