@@ -146,6 +146,7 @@ export default function AnalysisPostView(props) {
 function VotePost(props) {
   const _id = props._id;
   const username = props.user;
+  const authContext = useContext(AuthContext);
   const us = "us" in props ? props.us : false;
   const isScored = props.isScored
   const [acs, setACS] = useState("acs" in props ? props.acs : "-");
