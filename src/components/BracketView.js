@@ -43,6 +43,7 @@ function Bracket(props) {
   const onBracketClick = props.onBracketClick;
   const onPredictionClick = props.onPredictionClick;
   const slots = props.slots;
+  const results = props.results;
   const playOffPrediction = props.playOffPrediction;
 
   // constants
@@ -235,7 +236,7 @@ function Bracket(props) {
       <div className="bracketview-div">  
         <canvas id="bracket" ref={canvasRef} width={canvasWidth} height={canvasHeight}></canvas>
         {objects}
-        {playOffPrediction !== null ? <PlayOffPrediction data={playOffPrediction} predictions={[1, 2, 3, 4, 5, 6, 7]} onClick={onPredictionClick} images={images}></PlayOffPrediction> : null}
+        {playOffPrediction !== null ? <PlayOffPrediction data={playOffPrediction} results={results} predictions={[1, 2, 3, 4, 5, 6, 7]} onClick={onPredictionClick} images={images}></PlayOffPrediction> : null}
       </div> 
     </div>
   )

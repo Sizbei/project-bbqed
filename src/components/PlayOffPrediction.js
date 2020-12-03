@@ -6,7 +6,7 @@ export default function PlayOffPrediction(props) {
     console.log('GOT', props);
 
     const data = props.data;
-    const predictions = props.predictions;
+    const games = data.games;
     const matchIds = props.matchIds;
     const onClick = props.onClick;
     const images = props.images;
@@ -28,57 +28,60 @@ export default function PlayOffPrediction(props) {
     const imageA = teamA in images ? images[teamA] : "";
     const imageB = teamB in images ? images[teamB] : "";
 
-    if (results !== "Pending") {
-        return (
-          <div className="predictionBox-popup" onClick={() => onClick("close")}>
-            <div className="predctionBox-popup_inner" onClick = {(e) => { e.stopPropagation(); }}>
-              <div className="center-predictionBox">
-              <div className="predictionBox">
-                    <div className="predictionHeader">
-                        <div className="predictionLeft">
-                            <label className='predictionScore'>{scoreA}</label>
+    // if (results !== "Pending") {
+    //     return (
+    //       <div className="predictionBox-popup" onClick={() => onClick("close")}>
+    //         <div className="predctionBox-popup_inner" onClick = {(e) => { e.stopPropagation(); }}>
+    //           <div className="center-predictionBox">
+    //           <div className="predictionBox">
+    //                 <div className="predictionHeader">
+    //                     <div className="predictionLeft">
+    //                         <label className='predictionScore'>{scoreA}</label>
                 
-                            <label className='predictionTeamName'> {teamA}</label>
-                        </div>
-                        <div className="predictionVS">
-                            <label className='predictionVersus'>vs</label>
-                        </div>
-                        <div className='predictionRight'>
-                            <label className='predictionTeamName'> {teamB}</label>
-                            <label className='predictionScore'>{scoreB}</label>
-                        </div>
-                    </div>
-                      {predictions.map((data, index) => {
-                          return (
-                              <div className="gamePredictionBox">
-                                  <div className="gameNumber">Game {index + 1}</div>
-                                  <div className='predictTeams'>
-                                      <div className='darkened'>
-                                          <TeamBox name={teamA} height='4vw' width='12vw' image={imageA}></TeamBox>
-                                      </div>
-                                      <div className='spaceAllotted'></div>
-                                      <div className='darkened'>
-                                          <TeamBox name={teamB} height='4vw' width='12vw' image={imageB}></TeamBox>
-                                      </div>
-                                  </div>
-                                  <div className="resultPredictionImage">
-                                      <div>{results}</div> 
-                                      {/* Expecting results to be images */}
-                                  </div>    
-                              </div>
-                          );
-                      })}
-                  </div>
-              </div>
-            </div>
-          </div>
-        );
-    }
+    //                         <label className='predictionTeamName'> {teamA}</label>
+    //                     </div>
+    //                     <div className="predictionVS">
+    //                         <label className='predictionVersus'>vs</label>
+    //                     </div>
+    //                     <div className='predictionRight'>
+    //                         <label className='predictionTeamName'> {teamB}</label>
+    //                         <label className='predictionScore'>{scoreB}</label>
+    //                     </div>
+    //                 </div>
+    //                   {predictions.map((data, index) => {
+    //                       let result = null;
+    //                       if (results[index] !== "") {
+    //                         result = <TeamBox name={results[index]} height='4vw' width='12vw' image={images[results[index]]}></TeamBox>
+    //                       }
+    //                       return (
+    //                           <div className="gamePredictionBox">
+    //                               <div className="gameNumber">Game {index + 1}</div>
+    //                               <div className='predictTeams'>
+    //                                   <div className='darkened'>
+    //                                       <TeamBox name={teamA} height='4vw' width='12vw' image={imageA}></TeamBox>
+    //                                   </div>
+    //                                   <div className='spaceAllotted'></div>
+    //                                   <div className='darkened'>
+    //                                       <TeamBox name={teamB} height='4vw' width='12vw' image={imageB}></TeamBox>
+    //                                   </div>
+    //                               </div>
+    //                               <div className="resultPredictionImage">
+    //                                   {result}
+    //                               </div>    
+    //                           </div>
+    //                       );
+    //                   })}
+    //               </div>
+    //           </div>
+    //         </div>
+    //       </div>
+    //     );
+    // }
     return (
       <div className="predictionBox-popup" onClick={() => onClick("close")}>
         <div className="predctionBox-popup_inner" onClick = {(e) => { e.stopPropagation(); }}>
           <div className="center-predictionBox">
-              <div className="predictionBox">
+              <div className="predictionBox"> 
                     <div className="predictionHeader">
                         <div className="predictionLeft">
                             <label className='predictionScore'>{scoreA}</label>
@@ -96,7 +99,11 @@ export default function PlayOffPrediction(props) {
                     <div className="align-result-right">
                         <label className="predictionResult">Result</label> 
                     </div>
-                  {predictions.map((data, index) => {
+                  {games.map((data, index) => {
+                      let result = null;
+                      if (results[index] !== "") {
+                        result = <TeamBox name={results[index]} height='4vw' width='12vw' image={images[results[index]]}></TeamBox>
+                      }
                       return (
                           <div className="gamePredictionBox">
                               <div className="gameNumber">Game {index + 1}</div>
@@ -110,8 +117,7 @@ export default function PlayOffPrediction(props) {
                                   </div>
                               </div>
                               <div className="resultPredictionImage">
-                                  <div>{results}</div>
-                                 {/* Expecting results to be images */}
+                                {result}
                               </div>    
                           </div>
                       );
