@@ -4,20 +4,19 @@ let profiles = require('../models/profile');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const passportConfig = require('../passport');
-const { json } = require('express');
 
 const divisions = [
 
-  {max: 100, min: 90},
-  {max: 89, min: 80},
-  {max: 79, min: 70},
-  {max: 69, min: 60},
-  {max: 59, min: 50},
-  {max: 49, min: 40},
-  {max: 39, min: 30},
-  {max: 29, min: 20},
-  {max: 19, min: 10},
-  {max: 9, min: 0}
+  {max: 100, min: 91},
+  {max: 90, min: 81},
+  {max: 80, min: 71},
+  {max: 70, min: 61},
+  {max: 60, min: 51},
+  {max: 50, min: 41},
+  {max: 40, min: 31},
+  {max: 30, min: 21},
+  {max: 20, min: 11},
+  {max: 10, min: 0}
 
 ]
 
@@ -29,39 +28,54 @@ async function returnGlobalLeaderboard(year, category, res){
 
   const totalUsers = (await predictionPoints.aggregate([{$match: {year: year, category: category}}, {$project: {total: {$size: "$userPoints"}}}]))[0].total
   
-  divisions.forEach(async function(division, index){
+  
+
+
+  var values = new Promise((resolve, reject) => {
+
+    divisions.forEach(async function(division, index){
     
-    predictionPoints.aggregate([{$match: {year: year, category: category}}, 
-                                {$project: {
-                                  divisionCount: {
-                                    $size: {
-                                      $filter: {
-                                        "input": "$userPoints", 
-                                        "as": "userPoints", 
-                                        "cond": {
-                                          "$and":[
-                                            {"$gte": ["$$userPoints.points", division.min]},
-                                            {"$lte": ["$$userPoints.points", division.max]}
-                                          ]
-                                        }}}}}}])
-    .then(async count => {
+      predictionPoints.aggregate([{$match: {year: year, category: category}}, 
+                                  {$project: {
+                                    divisionCount: {
+                                      $size: {
+                                        $filter: {
+                                          "input": "$userPoints", 
+                                          "as": "userPoints", 
+                                          "cond": {
+                                            "$and":[
+                                              {"$gte": ["$$userPoints.points", division.min]},
+                                              {"$lte": ["$$userPoints.points", division.max]}
+                                            ]
+                                          }}}}}}])
+      .then(async count => {
+  
+        console.log(division.max);
+        divisionThreshhold[index] = division.max;
+        divisionCounts[index] = count[0].divisionCount;
+        divisionPercentage[index] = count[0].divisionCount / totalUsers * 100;
+  
+        if(index === divisions.length - 1){
+  
+          const result = {
+            divisionThreshhold: divisionThreshhold, 
+            divisionCounts: divisionCounts, 
+            divisionPercentage: divisionPercentage
+          }
 
-      divisionThreshhold[index] = division.max;
-      divisionCounts[index] = count[0].divisionCount;
-      divisionPercentage[index] = count[0].divisionCount / totalUsers * 100;
+          res.json(result)
+          resolve();
+          
+        }
+  
+      })
+  
+    });
 
-      if(index == divisions.length - 1){
-        res.json( {
-          divisionThreshhold: divisionThreshhold, 
-          divisionCounts: divisionCounts, 
-          divisionPercentage: divisionPercentage
-        })
-        
-      }
-
-    })
 
   });
+
+  values.then(() => console.log(""))
 
 }
 
@@ -77,16 +91,63 @@ function sortRadarRanking(user1, user2){
   
 }
 
+async function getProfilePicture(user, callback){
+
+  profiles.findOne({username: user.user})
+  .then(async userProfile => {
+    callback(userProfile.image)
+  });
+
+}
+
 async function returnRadarLeaderboard(year, user, category, res){
 
   profiles.findOne({username: user})
-  .then(userProfile => {
-    console.log(userProfile.radarList)
+  .then(async userProfile => {
     predictionPoints.findOne({year: year, category: category})
-    .then(pp => {
-      const radarUsers = pp.userPoints.filter(function (entry) {return (userProfile.radarList.includes(entry.user) || entry.user === user)});
-      radarUsers.sort(sortRadarRanking);
-      res.json(radarUsers)
+    .then(async pp => {
+      var radarUsers = pp.userPoints.filter(function (entry) {return (userProfile.radarList.includes(entry.user) || entry.user === user)});
+      
+      var addMissingUsers = new Promise(async(resolve, reject) => {
+        userProfile.radarList.forEach(async function(eachUser, index){
+          if(!radarUsers.some(e => e.user === eachUser) && eachUser !== user){
+            radarUsers.push({user: eachUser, points: 0})
+          }
+
+          if(index === userProfile.radarList.length - 1){
+            resolve();
+          }
+
+        })
+
+      });
+
+      addMissingUsers.then(() => radarUsers.sort(sortRadarRanking));
+      
+      //radarUsers.sort(sortRadarRanking);
+
+      var addPictures = new Promise(async (resolve, reject) => {
+
+        radarUsers.forEach(async function(eachUser, index){
+  
+          getProfilePicture(eachUser, function(pic) {
+
+            try{
+              eachUser._doc.picture = pic;
+            }catch{
+              eachUser.picture = pic;
+            }
+            
+            if(index === radarUsers.length - 1){
+              console.log(radarUsers)
+              resolve();
+            }
+          })
+          
+        });
+      });
+
+      addPictures.then(() => res.json(radarUsers))
     })
   })
 
@@ -94,25 +155,25 @@ async function returnRadarLeaderboard(year, user, category, res){
 
 router.route("/regularseason/global/:year").get(async(req, res) => {
 
-  returnGlobalLeaderboard(req.params.year, "regularSeason", res);
+  await returnGlobalLeaderboard(req.params.year, "regularSeason", res);
   
 });
 
-router.route("/regularseason/radarlist/:year/:user").get((req, res) => {
+router.route("/regularseason/radarlist/:year/:user").get(async(req, res) => {
 
-  returnRadarLeaderboard(req.params.year, req.params.user, "regularSeason", res)
-
-});
-
-router.route("/playoff/global/:year").get((req, res) => {
-
-  returnGlobalLeaderboard(req.params.year, "playoff", res);
+  await returnRadarLeaderboard(req.params.year, req.params.user, "regularSeason", res)
 
 });
 
-router.route("/playoff/radarlist/:year/:user").get((req, res) => {
+router.route("/playoff/global/:year").get(async(req, res) => {
 
-  returnRadarLeaderboard(req.params.year, req.params.user, "playoff", res)
+  await returnGlobalLeaderboard(req.params.year, "playoff", res);
+
+});
+
+router.route("/playoff/radarlist/:year/:user").get(async(req, res) => {
+
+  await returnRadarLeaderboard(req.params.year, req.params.user, "playoff", res)
 
 });
 
