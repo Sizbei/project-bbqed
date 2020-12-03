@@ -57,8 +57,16 @@ app.use('/analysis', analysisRouter)
 const analysisPostRouter = require('./routes/analysisPost');
 app.use('/analysis/post', analysisPostRouter)
 
+
+const predictionRouter = require('./routes/prediction');
+app.use('/prediction', predictionRouter)
+
+const regularSeasonRouter = require('./routes/regularSeason');
+app.use('/prediction/season', regularSeasonRouter)
+
 const reportRouter = require('./routes/report');
 app.use('/report', reportRouter)
+
 
 //App is now listening for calls
 app.listen(port, () => {
