@@ -20,19 +20,25 @@ export default function BracketController(props) {
 
   const results = Array(7);
   const setResults = Array(7);
-
-  // for (let i = 0; i < 7; i++) {
-  //   [results[i], setResults[i]] = useState(i);
-  // }
   [results[0], setResults[0]] = useState("");
   [results[1], setResults[1]] = useState("");
   [results[2], setResults[2]] = useState("");
   [results[3], setResults[3]] = useState("");
   [results[4], setResults[4]] = useState("");
-  [results[5], setResults[5]] = useState("");
+  [results[5], setResults[5]] = useState(""); 
   [results[6], setResults[6]] = useState("");
+
+  const predictions = Array(7);
+  const setPredictions = Array(7);
+  [predictions[0], setPredictions[0]] = useState("");
+  [predictions[1], setPredictions[1]] = useState("");
+  [predictions[2], setPredictions[2]] = useState("");
+  [predictions[3], setPredictions[3]] = useState("");
+  [predictions[4], setPredictions[4]] = useState("");
+  [predictions[5], setPredictions[5]] = useState("");
+  [predictions[6], setPredictions[6]] = useState("");
   
-  console.log(results);
+  console.log(results, predictions);
 
   const codes = [
     "WC-QF1A",
@@ -196,6 +202,17 @@ export default function BracketController(props) {
     return slots;
   }());
 
+  const getPredictionData = (data, index) => {
+    fetch('/prediction/playoff/pick/' + authContext.user.username + "/" + data.games[index]).then(res => res.json())
+    .then((res) => {
+      console.log("GOT PREDICTION RESPONSE " + index, res);
+      setPredictions[index](res["pick"]);
+    })
+    .catch((res) => {
+      console.log("error");
+    })
+  }
+
   const getResultData = (data, index) => {
     fetch('/prediction/playoff/result/' + data.games[index]).then(res => res.json())
     .then((res) => {
@@ -208,7 +225,6 @@ export default function BracketController(props) {
   }
 
   const onBracketClick = (index) => {
-    setResults[0](index);
     console.log("click click");
     const matchName = toMatchName(toTreeIndex[index]);
     if (matchName === "winner") return;
@@ -219,7 +235,8 @@ export default function BracketController(props) {
       return;
     } else {
       console.log("games", data.games);
-    
+      
+      data.games.forEach((el, i) => getPredictionData(data, i))
       data.games.forEach((el, i) => getResultData(data, i))
       setPlayOffPrediction(data);
     }
@@ -231,12 +248,18 @@ export default function BracketController(props) {
       setPlayOffPrediction(null);
       setResults.forEach(el => el(""));
     }
-
+    
+    let updatedValue;
+    if (predictions[msg["index"]] === msg['team']) {
+      updatedValue = "";
+    } else {
+      updatedValue = msg['team'];
+    }
     const requestBody = {
       method: "put",
       body: JSON.stringify({
         user: authContext.user.username,
-        team: msg['team'],
+        team: updatedValue,
         gameId: msg['gameId'],
       }),
       headers: {'Content-Type' : 'application/json'}
@@ -244,6 +267,9 @@ export default function BracketController(props) {
     fetch('/prediction/playoff/add', requestBody).then(res => res.json())
     .then((res) => {
       console.log("GOT RESPONSE", res);
+      if (res != null) {
+        setPredictions[msg["index"]](updatedValue);
+      }
     })
   }
 
@@ -294,6 +320,6 @@ export default function BracketController(props) {
 
   console.log("match data", matchData);
 
-  return <BracketView slots={slots} onBracketClick={onBracketClick} onPredictionClick={onPredictionClick} counter={counter} results={results} playOffPrediction={playOffPrediction}/>
+  return <BracketView slots={slots} onBracketClick={onBracketClick} onPredictionClick={onPredictionClick} counter={counter} predictions={predictions} results={results} playOffPrediction={playOffPrediction}/>
 }
 
