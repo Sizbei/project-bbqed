@@ -1,5 +1,6 @@
-import React, {useState, useEffect} from "react"
+import React, {useState, useEffect, useContext} from "react"
 import '../styling/Leaderboard.css'
+import {AuthContext} from '../Context/AuthContext';
 
 export default function Leaderboard(props) {
     const[globalBGStyle, setGlobalBGStyle] = useState({ "background-color": "#c8651b" });
@@ -18,7 +19,25 @@ export default function Leaderboard(props) {
     var regSeasonStyle;
     var playOffStyle;
 
+    const[numOfPlayers, setNumOfPlayers] = useState([]);
+    const[percentOfPlayers, setPercentOfPlayers] = useState([]);
+    const[pointsNeeded, setPointsNeeded] = useState([]);
+    const[radarList, setRadarList] = useState([]);
+
+    const authContext = useContext(AuthContext);
+
     useEffect(() => {
+        fetch('/prediction/leaderboard/regularseason/global/'+2020).then(res => res.json())
+        .then(data => {
+            console.log(data);
+            console.log(data.divisionCounts);
+            console.log(data.divisionPercentage);
+            console.log(data.divisionThreshold);
+            setNumOfPlayers(data.divisionCounts);
+            setPercentOfPlayers(data.divisionPercentage);
+            setPointsNeeded(data.divisionThreshhold);
+        }).catch(err => {
+        })
     }, [])
     
 // /prediction/leaderboard
@@ -26,6 +45,23 @@ export default function Leaderboard(props) {
 // /prediction/playoff
 
     const changeToGlobal = () => {
+        fetch('/prediction/leaderboard/regularseason/global/'+2020).then(res => res.json())
+        .then(data => {
+            console.log(data);
+            console.log(data.divisionCounts);
+            console.log(data.divisionPercentage);
+            console.log(data.divisionThreshold);
+            setNumOfPlayers(data.divisionCounts);
+            setPercentOfPlayers(data.divisionPercentage);
+            setPointsNeeded(data.divisionThreshhold);
+            for (var i=1; i < numOfPlayers.length()+1; i++) {
+                document.getElementById("numOfPlayers"+i).innerHTML = numOfPlayers[i-1];
+                document.getElementById("percentOfPlayers"+i).innerHTML = percentOfPlayers[i-1];
+                document.getElementById("pointsNeeded"+i).innerHTML = pointsNeeded[i-1];
+            }
+        }).catch(err => {
+        })
+
         leaderboardRadarStyle = { "visibility": "hidden"};
         leaderboardGlobalStyle = { "visibility": "visible"};
         setGlobalVisStyle(leaderboardGlobalStyle);
@@ -58,6 +94,23 @@ export default function Leaderboard(props) {
     }
 
     const changeToRadar = () => {
+        fetch('/prediction/leaderboard/regularseason/radarlist/'+2020+'/'+authContext.user.username).then(res => res.json())
+        .then(data => {
+            console.log(data);
+            setRadarList(data);
+            // console.log(data.divisionCounts);
+            // console.log(data.divisionPercentage);
+            // console.log(data.divisionThreshold);
+            // setNumOfPlayers(data.divisionCounts);
+            // setPercentOfPlayers(data.divisionPercentage);
+            // setPointsNeeded(data.divisionThreshhold);
+            for (var i=1; i < radarList.length()+1; i++) {
+                document.getElementById("numOfPlayers"+i).innerHTML = numOfPlayers[i-1];
+                document.getElementById("percentOfPlayers"+i).innerHTML = percentOfPlayers[i-1];
+                document.getElementById("pointsNeeded"+i).innerHTML = pointsNeeded[i-1];
+            }
+        }).catch(err => {
+        })
         globalStyle = { "background-color": "#0B0A0A" };
         radarStyle = { "background-color": "#c8651b" };
         leaderboardRadarStyle = { "visibility": "visible"};
@@ -66,11 +119,6 @@ export default function Leaderboard(props) {
         setRadarBGStyle(radarStyle);
         setGlobalVisStyle(leaderboardGlobalStyle);
         setRadarVisStyle(leaderboardRadarStyle);
-    }
-
-    const radarRowClassName = (index) => {
-        const base = "radarRow" + (index + 1);
-        return base;
     }
 
     const swapYears = (id) => {
@@ -102,16 +150,16 @@ export default function Leaderboard(props) {
             
                 <div className='Leaderboard'>
                     <GlobalHeaderRow></GlobalHeaderRow>
-                    {givenUsers.map((data, index) => {
+                    {numOfPlayers.map((data, index) => {
                         if(index % 2 == 0) {
                             //<GlobalRow color='#0B0A0A' rank='1' numofplayers='20' percentofplayers='20' division='x' points='2' ></GlobalRow>
                             return (
-                                <GlobalRow rank={index+1} division={'Division ' + (index+1)} color='#0B0A0A'></GlobalRow>
+                                <GlobalRow rank={index+1} division={'Division ' + (index+1)} color='#0B0A0A' numOfPlayers = {data} percentOfPlayers = {percentOfPlayers} pointsNeeded={pointsNeeded}></GlobalRow>
                             )
                         }
                         //<GlobalRow rank='1' numofplayers='20' percentofplayers='20' division='x' points='2' ></GlobalRow>
                         return (
-                            <GlobalRow rank={index+1} division={'Division ' + (index+1)}></GlobalRow>
+                            <GlobalRow rank={index+1} division={'Division ' + (index+1)} numOfPlayers = {data} percentOfPlayers = {percentOfPlayers} pointsNeeded={pointsNeeded}></GlobalRow>
                         )
                     })}
                 </div>
@@ -180,9 +228,9 @@ function RadarHeaderRow(props) {
 function GlobalRow(props) {
     const rank = "rank" in props ? props.rank : 0;
     const division = "division" in props ? props.division : "N/A";
-    const numberOfPlayers = "numberofplayers" in props ? props.numofplayers : "-";
-    const percentOfPlayers = "percentofplayers" in props ? props.percentofplayers : "-";
-    const pointsNeeded = "pointsNeeded" in props ? props.pointsNeeded : "-";
+    const numberOfPlayers = "numOfPlayers" in props ? props.numOfPlayers : "-";
+    const percentOfPlayers = props.percentOfPlayers[rank-1] + ' %';
+    const pointsNeeded = props.pointsNeeded[rank-1];
     const backgroundColor = "color" in props ? props.color : "1b1a18"
     
     const numOfPlayersID = (rank) => {
