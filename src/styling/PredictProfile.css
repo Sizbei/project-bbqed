@@ -6,8 +6,10 @@
 }
 
 .pp-full-container { 
-  padding-top: 2.5%; 
-  width: 60%; 
+  
+  align-self: center;
+  margin-bottom: 10px;
+  
 }
 .pp-matches-container { 
   flex-direction: column; 
@@ -29,8 +31,10 @@
   display: flex;
   justify-content: flex-end;
 }
-.pp-date-label { 
-  flex-grow: 1; 
+
+.pp-date-label label{ 
+  margin-top: 5px;
+  margin-bottom: 1900px;
 }
 
 
@@ -43,7 +47,6 @@
   margin-left: 2%;
   margin-right: 2%;
   border: none; 
-  cursor: pointer; 
   outline: none; 
   padding-top: 2%; 
   padding-bottom: 2%; 
@@ -53,9 +56,7 @@
 .pp-matches-info-button {
   background-color: transparent;
 }
-.pp-matches-info TeamBox {
-  cursor: pointer; 
-}
+
 .pp-matches-info-button-selected {
   background-color: rgb(76, 135, 245);
 }

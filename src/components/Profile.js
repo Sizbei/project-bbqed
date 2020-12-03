@@ -35,7 +35,7 @@ export default class Profile extends Component {
     constructor(props) {
         super(props);
         //console.log(props.location.pathname); 
-        
+
         this.state = { 
             path: props.location.pathname,
             username: '',
@@ -340,7 +340,7 @@ export default class Profile extends Component {
                             <div className="prof-picks">
                                 <h2 className="prof-title"> Current Picks </h2>
                                 <div className="prof-picks-content">
-                                    <PredictProfile />
+                                        <PredictProfile currPath={this.state.path}/>
                                 </div>
                             </div>
 
