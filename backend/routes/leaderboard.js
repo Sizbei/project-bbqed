@@ -1,5 +1,6 @@
 const router = require('express').Router();
 let predictionPoints = require('../models/predictionPoints');
+let profiles = require('../models/profile');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const passportConfig = require('../passport');
@@ -64,30 +65,55 @@ async function returnGlobalLeaderboard(year, category, res){
 
 }
 
+function sortRadarRanking(user1, user2){
+  
+  if(user1.points > user2.points){
+    return -1;
+  }
+  if(user1.points < user2.points){
+    return 1;
+  }
+  return 0;
+  
+}
+
+async function returnRadarLeaderboard(year, user, category, res){
+
+  profiles.findOne({username: user})
+  .then(userProfile => {
+    console.log(userProfile.radarList)
+    predictionPoints.findOne({year: year, category: category})
+    .then(pp => {
+      const radarUsers = pp.userPoints.filter(function (entry) {return (userProfile.radarList.includes(entry.user) || entry.user === user)});
+      radarUsers.sort(sortRadarRanking);
+      res.json(radarUsers)
+    })
+  })
+
+}
+
 router.route("/regularseason/global/:year").get(async(req, res) => {
 
   returnGlobalLeaderboard(req.params.year, "regularSeason", res);
   
 });
 
-router.route("/regularseason/radarlist//:year/:user").get((req, res) => {
-  predictionPoints.findOne({year: req.params.year, category: "regularSeason"})
-  .then(userPoints => {
-    
-  })
+router.route("/regularseason/radarlist/:year/:user").get((req, res) => {
+
+  returnRadarLeaderboard(req.params.year, req.params.user, "regularSeason", res)
+
 });
 
 router.route("/playoff/global/:year").get((req, res) => {
 
   returnGlobalLeaderboard(req.params.year, "playoff", res);
-  
+
 });
 
 router.route("/playoff/radarlist/:year/:user").get((req, res) => {
-  predictionPoints.findOne({year: req.params.year, category: "playoff"})
-  .then(userPoints => {
-    
-  })
+
+  returnRadarLeaderboard(req.params.year, req.params.user, "playoff", res)
+
 });
 
 router.route("/add/board").post((req, res) => {
