@@ -9,14 +9,14 @@ const predictionPointsSchema = new Schema({
       type: String,
       enum: ["regularSeason", "playoff"]
     },
-    userPoints: {
+    userPoints: [{
       user: {
         type: String
       },
       points: {
-        type: String
+        type: Number
       }
-    }
+    }]
   }, {
     timestamps: true,
   });
