@@ -45,6 +45,7 @@ export default function PickHistoryView (props) {
   }
   useEffect(() => {
       getPastHistory(currentPage, finishedMatches, pastLoad, weekSelected);
+      console.log(finishedMatches); 
     
   }, [currentPage, weekSelected])
   const handlePageChange = (event, newPage) => {

@@ -51,7 +51,8 @@ export default class Profile extends Component {
             following: false, 
             fullRadarList: [], 
             teams: [],
-            imgSelect: null
+            imgSelect: null,
+            userFound: false,
         }
         this.handleEditProfile = this.handleEditProfile.bind(this);
         this.changeUser = this.changeUser.bind(this);
@@ -133,7 +134,8 @@ export default class Profile extends Component {
                 interest: data.interest,
                 about: data.about,  
                 image: data.image, 
-                teams: data.teams
+                teams: data.teams,
+                userFound: true
             }) 
         })
         .then(data => {
@@ -190,22 +192,33 @@ export default class Profile extends Component {
     
         fetch( this.state.path + "/acs").then(res => res.json()) 
         .then(data => {
-            console.log(data.acsChart[0].value);
-            this.setState({
-                acs: data.acsTotal,
-                acsHistory: data.acsHistory, 
-                acsChart: [   
-                    { title: data.acsChart[0].title, value: data.acsChart[0].value, color: '#61b305' },
-                    { title: data.acsChart[1].title, value: data.acsChart[1].value, color: '#f8e871' },
-                    { title: data.acsChart[2].title, value: data.acsChart[2].value, color: '#d30909' },
-                    { title: data.acsChart[3].title, value: data.acsChart[3].value, color: ' #ff7e1f'},
-                ]
-            })
+            if (data.acsChart !== undefined ) { 
+
+                console.log(data.acsChart[0].value);
+                this.setState({
+                    acs: data.acsTotal,
+                    acsHistory: data.acsHistory, 
+                    acsChart: [   
+                        { title: data.acsChart[0].title, value: data.acsChart[0].value, color: '#61b305' },
+                        { title: data.acsChart[1].title, value: data.acsChart[1].value, color: '#f8e871' },
+                        { title: data.acsChart[2].title, value: data.acsChart[2].value, color: '#d30909' },
+                        { title: data.acsChart[3].title, value: data.acsChart[3].value, color: ' #ff7e1f'},
+                    ]
+                })
+            }
         })
     }   
 
 
     render(){
+        if (!this.state.userFound) {
+            return (
+                <div>
+                    <h1> User not Found </h1>
+                </div>
+            )
+        }
+        else {
         const radarList = this.state.fullRadarList.slice(0, 5); 
         return (
             <div>
@@ -356,8 +369,8 @@ export default class Profile extends Component {
         )
             
         
+        }
+    
     }
-    
-    
 
 }
