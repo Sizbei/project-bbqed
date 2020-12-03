@@ -20,62 +20,73 @@ const divisions = [
 
 ]
 
-async function returnGlobalLeaderboard(year, category, res){
+
+async function divisonPromise(year, category, res) {
 
   var divisionThreshhold = [0,0,0,0,0,0,0,0,0,0];
   var divisionCounts = [0,0,0,0,0,0,0,0,0,0];
   var divisionPercentage = [0,0,0,0,0,0,0,0,0,0];
+  
 
   const totalUsers = (await predictionPoints.aggregate([{$match: {year: year, category: category}}, {$project: {total: {$size: "$userPoints"}}}]))[0].total
   
-  
 
+  const values2 = Promise.all(
+    divisions.map((division, index) => {
 
-  var values = new Promise((resolve, reject) => {
-
-    divisions.forEach(async function(division, index){
-    
-      predictionPoints.aggregate([{$match: {year: year, category: category}}, 
-                                  {$project: {
-                                    divisionCount: {
-                                      $size: {
-                                        $filter: {
-                                          "input": "$userPoints", 
-                                          "as": "userPoints", 
-                                          "cond": {
-                                            "$and":[
-                                              {"$gte": ["$$userPoints.points", division.min]},
-                                              {"$lte": ["$$userPoints.points", division.max]}
-                                            ]
-                                          }}}}}}])
-      .then(async count => {
+      return new Promise((resolve, reject) => {
+        predictionPoints.aggregate([{$match: {year: year, category: category}}, 
+          {$project: {
+            divisionCount: {
+              $size: {
+                $filter: {
+                  "input": "$userPoints", 
+                  "as": "userPoints", 
+                  "cond": {
+                    "$and":[
+                      {"$gte": ["$$userPoints.points", division.min]},
+                      {"$lte": ["$$userPoints.points", division.max]}
+                    ]
+                  }}}}}}])
+        .then(count => {
   
-        console.log(division.max);
-        divisionThreshhold[index] = division.max;
-        divisionCounts[index] = count[0].divisionCount;
-        divisionPercentage[index] = count[0].divisionCount / totalUsers * 100;
-  
-        if(index === divisions.length - 1){
-  
-          const result = {
+          divisionThreshhold[index] = division.max;
+          divisionCounts[index] = count[0].divisionCount;
+          divisionPercentage[index] = count[0].divisionCount / totalUsers * 100;
+          /*console.log({
             divisionThreshhold: divisionThreshhold, 
             divisionCounts: divisionCounts, 
             divisionPercentage: divisionPercentage
-          }
-
-          res.json(result)
+          })*/
           resolve();
-          
-        }
-  
+
+        })
+        
       })
+    })
+
+  )
   
-    });
+    const getValues = async () => {
+      return await values2;
+    }
+
+  
+  getValues().then(() => {return( {
+    divisionThreshhold: divisionThreshhold, 
+    divisionCounts: divisionCounts, 
+    divisionPercentage: divisionPercentage
+  })})
+  .then(result => res.json(result))
+
+}
 
 
-  });
+async function returnGlobalLeaderboard(year, category, res){
 
-  values.then(() => console.log(""))
+  Promise.resolve()
+    .then(() => {divisonPromise(year, category, res)})
+    //.then(result => {console.log(result)})
 
 }
 
@@ -95,7 +106,7 @@ async function getProfilePicture(user, callback){
 
   profiles.findOne({username: user.user})
   .then(async userProfile => {
-    callback(userProfile.image)
+    await callback(userProfile.image)
   });
 
 }
@@ -109,8 +120,13 @@ async function returnRadarLeaderboard(year, user, category, res){
       var radarUsers = pp.userPoints.filter(function (entry) {return (userProfile.radarList.includes(entry.user) || entry.user === user)});
       
       var addMissingUsers = new Promise(async(resolve, reject) => {
+
+        if(!radarUsers.some(e => e.user === user)){
+          radarUsers.push({user: user, points: 0})
+        }
+
         userProfile.radarList.forEach(async function(eachUser, index){
-          if(!radarUsers.some(e => e.user === eachUser) && eachUser !== user){
+          if(!radarUsers.some(e => e.user === eachUser)){
             radarUsers.push({user: eachUser, points: 0})
           }
 
@@ -126,28 +142,29 @@ async function returnRadarLeaderboard(year, user, category, res){
       
       //radarUsers.sort(sortRadarRanking);
 
-      var addPictures = new Promise(async (resolve, reject) => {
+      const addPictures = new Promise(async (resolve, reject) => {
 
         radarUsers.forEach(async function(eachUser, index){
   
           getProfilePicture(eachUser, function(pic) {
 
-            try{
-              eachUser._doc.picture = pic;
-            }catch{
-              eachUser.picture = pic;
-            }
-            
-            if(index === radarUsers.length - 1){
-              console.log(radarUsers)
-              resolve();
-            }
-          })
+          try{
+            eachUser._doc.picture = pic;
+          }catch{
+            eachUser.picture = pic;
+          }
+          
+          if(index === radarUsers.length - 1){
+            console.log(radarUsers)
+            resolve();
+          }
+
+        })
           
         });
-      });
+      })
+      .then(() => {res.json(radarUsers)})
 
-      addPictures.then(() => res.json(radarUsers))
     })
   })
 
