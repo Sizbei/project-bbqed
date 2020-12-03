@@ -164,11 +164,13 @@ export default function Leaderboard(props) {
                 console.log(data);
                 var name;
                 var points;
+                var image;
                 var list = data;
-                for (var i=0; i < list.length; i++) {
+                for (var i=0; i < radarList.length; i++) {
                     try {
                         name = list[i].user;
                         points = list[i].points;
+                        image = list[i].picture;
                         if (i > 0) {
                             if (document.getElementById("points" + (i)).innerHTML === document.getElementById("points" + (i+1)).innerHTML) {
                                 document.getElementById("rank" + (i+1)).innerHTML = document.getElementById("rank" + (i)).innerHTML;
@@ -177,10 +179,15 @@ export default function Leaderboard(props) {
                                 document.getElementById("rank" + (i+1)).innerHTML = i+1;
                             }
                         }
+                        document.getElementById("pfp" + (i+1)).src = image;
                         document.getElementById("name" + (i+1)).innerHTML = name;
                         document.getElementById("points" + (i+1)).innerHTML = points;
                     }
                     catch {
+                        document.getElementById("pfp" + (i+1)).src = 'https://png.pngtree.com/svg/20161027/631929649c.svg';
+                        document.getElementById("rank" + (i+1)).innerHTML = '-';
+                        document.getElementById("name" + (i+1)).innerHTML = '-';
+                        document.getElementById("points" + (i+1)).innerHTML = '-';
                     }
                 }
             }).catch(err => {
@@ -225,7 +232,7 @@ export default function Leaderboard(props) {
                 var points;
                 var image;
                 var list = data;
-                for (var i=0; i < list.length; i++) {
+                for (var i=0; i < radarList.length; i++) {
                     try {
                         name = list[i].user;
                         points = list[i].points;
@@ -243,6 +250,10 @@ export default function Leaderboard(props) {
                         document.getElementById("points" + (i+1)).innerHTML = points;
                     }
                     catch {
+                        document.getElementById("pfp" + (i+1)).src = 'https://png.pngtree.com/svg/20161027/631929649c.svg';
+                        document.getElementById("rank" + (i+1)).innerHTML = '-';
+                        document.getElementById("name" + (i+1)).innerHTML = '-';
+                        document.getElementById("points" + (i+1)).innerHTML = '-';
                     }
                 }
             }).catch(err => {
