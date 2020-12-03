@@ -19,6 +19,9 @@ export default function Leaderboard(props) {
     var regSeasonStyle;
     var playOffStyle;
 
+    const[mode, setMode] = useState('global');
+    const[season, setSeason] = useState('regular season');
+
     const[numOfPlayers, setNumOfPlayers] = useState([]);
     const[percentOfPlayers, setPercentOfPlayers] = useState([]);
     const[pointsNeeded, setPointsNeeded] = useState([]);
@@ -32,11 +35,16 @@ export default function Leaderboard(props) {
             console.log(data);
             console.log(data.divisionCounts);
             console.log(data.divisionPercentage);
-            console.log(data.divisionThreshold);
+            console.log(data.divisionThreshhold);
             setNumOfPlayers(data.divisionCounts);
             setPercentOfPlayers(data.divisionPercentage);
             setPointsNeeded(data.divisionThreshhold);
         }).catch(err => {
+        })
+
+        fetch('/prediction/leaderboard/regularseason/radarlist/'+2020+'/'+authContext.user.username).then(res => res.json())
+        .then(data => {
+            setRadarList(data);
         })
     }, [])
     
@@ -45,22 +53,45 @@ export default function Leaderboard(props) {
 // /prediction/playoff
 
     const changeToGlobal = () => {
-        fetch('/prediction/leaderboard/regularseason/global/'+2020).then(res => res.json())
-        .then(data => {
-            console.log(data);
-            console.log(data.divisionCounts);
-            console.log(data.divisionPercentage);
-            console.log(data.divisionThreshold);
-            setNumOfPlayers(data.divisionCounts);
-            setPercentOfPlayers(data.divisionPercentage);
-            setPointsNeeded(data.divisionThreshhold);
-            for (var i=1; i < numOfPlayers.length()+1; i++) {
-                document.getElementById("numOfPlayers"+i).innerHTML = numOfPlayers[i-1];
-                document.getElementById("percentOfPlayers"+i).innerHTML = percentOfPlayers[i-1];
-                document.getElementById("pointsNeeded"+i).innerHTML = pointsNeeded[i-1];
-            }
-        }).catch(err => {
-        })
+        setMode('global');
+        
+        if (season === 'regular season') {
+            fetch('/prediction/leaderboard/regularseason/global/'+2020).then(res => res.json())
+            .then(data => {
+                console.log(data);
+                console.log(data.divisionCounts);
+                console.log(data.divisionPercentage);
+                console.log(data.divisionThreshhold);
+
+                for (var i=1; i < 11; i++) {
+                    document.getElementById("numOfPlayers"+i).innerHTML = data.divisionCounts[i-1];
+                    document.getElementById("percentOfPlayers"+i).innerHTML = data.divisionPercentage[i-1] + '%';
+                    document.getElementById("pointsNeeded"+i).innerHTML = data.divisionThreshhold[i-1];
+                }
+            }).catch(err => {
+                console.log(err);
+            })
+        }
+        else if (season === 'playoff') {
+            fetch('/prediction/leaderboard/playoff/global/'+2020).then(res => res.json())
+            .then(data => {
+                console.log(data);
+                console.log(data.divisionCounts);
+                console.log(data.divisionPercentage);
+                console.log(data.divisionThreshhold);
+
+                for (var i=1; i < 11; i++) {
+                    document.getElementById("numOfPlayers"+i).innerHTML = data.divisionCounts[i-1];
+                    document.getElementById("percentOfPlayers"+i).innerHTML = data.divisionPercentage[i-1] + '%';
+                    document.getElementById("pointsNeeded"+i).innerHTML = data.divisionThreshhold[i-1];
+                }
+            }).catch(err => {
+                console.log(err);
+            })
+        }
+        else {
+            console.log('should never get here');
+        }
 
         leaderboardRadarStyle = { "visibility": "hidden"};
         leaderboardGlobalStyle = { "visibility": "visible"};
@@ -71,46 +102,136 @@ export default function Leaderboard(props) {
         radarStyle = { "background-color": "#0B0A0A" };
         setGlobalBGStyle(globalStyle);
         setRadarBGStyle(radarStyle);
-        var index;
-        for (index = 1; index < 10; index++) {
-            console.log(document.getElementById("globalRow" + index));
-        }
     }
 
     const changeToRegSeason = () => {
+        setSeason('regular season');
+        if (mode === 'global') {
+            fetch('/prediction/leaderboard/regularseason/global/'+2020).then(res => res.json())
+            .then(data => {
+                console.log(data);
+                console.log(data.divisionCounts);
+                console.log(data.divisionPercentage);
+                console.log(data.divisionThreshhold);
+
+                for (var i=1; i < 11; i++) {
+                    document.getElementById("numOfPlayers"+i).innerHTML = data.divisionCounts[i-1];
+                    document.getElementById("percentOfPlayers"+i).innerHTML = data.divisionPercentage[i-1] + '%';
+                    document.getElementById("pointsNeeded"+i).innerHTML = data.divisionThreshhold[i-1];
+                }
+            }).catch(err => {
+                console.log(err);
+            })
+        }
+        else if (mode === 'radar') {
+            fetch('/prediction/leaderboard/regularseason/radarlist/'+2020+'/'+authContext.user.username).then(res => res.json())
+            .then(data => {
+                console.log(data);
+                setRadarList(data);
+                var name;
+                var points;
+                radarList.map((data, i) => {
+                    name = data.user;
+                    points = data.points;
+                    document.getElementById("name" + (i+1)).innerHTML = name;
+                    document.getElementById("points" + (i+1)).innerHTML = points;
+                });
+            }).catch(err => {
+                console.log(err);
+            })
+        }
+        else {
+            console.log('this shouldnt happen');
+        }
         regSeasonStyle = { "background-color": "#c8651b" };
         playOffStyle = {"background-color": "#0B0A0A" };
         setRegSeasonBGStyle(regSeasonStyle);
         setPlayOffBGStyle(playOffStyle);
-        //fetch 
     }
 
     const changeToPlayOff = () => {
+        setSeason('playoff');
+
+        if (mode === 'global') {
+            fetch('/prediction/leaderboard/playoff/global/'+2020).then(res => res.json())
+            .then(data => {
+                console.log(data);
+                console.log(data.divisionCounts);
+                console.log(data.divisionPercentage);
+                console.log(data.divisionThreshhold);
+
+                for (var i=1; i < 11; i++) {
+                    document.getElementById("numOfPlayers"+i).innerHTML = data.divisionCounts[i-1];
+                    document.getElementById("percentOfPlayers"+i).innerHTML = data.divisionPercentage[i-1] + '%';
+                    document.getElementById("pointsNeeded"+i).innerHTML = data.divisionThreshhold[i-1];
+                }
+            }).catch(err => {
+                console.log(err);
+            })
+        }
+        else if (mode === 'radar') {
+            fetch('/prediction/leaderboard/playoff/radarlist/' + 2020 + '/'+authContext.user.username).then(res => res.json())
+            .then(data => {
+                console.log(data);
+                setRadarList(data);
+                var name;
+                var points;
+                radarList.map((data, i) => {
+                    name = data.user;
+                    points = data.points;
+                    document.getElementById("name" + (i+1)).innerHTML = name;
+                    document.getElementById("points" + (i+1)).innerHTML = points;
+                });
+            }).catch(err => {
+                console.log(err);
+            })
+        }
+        else {
+            console.log('this shouldnt happen');
+        }
         regSeasonStyle = { "background-color": "#0B0A0A" };
         playOffStyle = {"background-color": "#c8651b" };
         setRegSeasonBGStyle(regSeasonStyle);
         setPlayOffBGStyle(playOffStyle);
-        //fetch
     }
 
     const changeToRadar = () => {
-        fetch('/prediction/leaderboard/regularseason/radarlist/'+2020+'/'+authContext.user.username).then(res => res.json())
-        .then(data => {
-            console.log(data);
-            setRadarList(data);
-            // console.log(data.divisionCounts);
-            // console.log(data.divisionPercentage);
-            // console.log(data.divisionThreshold);
-            // setNumOfPlayers(data.divisionCounts);
-            // setPercentOfPlayers(data.divisionPercentage);
-            // setPointsNeeded(data.divisionThreshhold);
-            for (var i=1; i < radarList.length()+1; i++) {
-                document.getElementById("numOfPlayers"+i).innerHTML = numOfPlayers[i-1];
-                document.getElementById("percentOfPlayers"+i).innerHTML = percentOfPlayers[i-1];
-                document.getElementById("pointsNeeded"+i).innerHTML = pointsNeeded[i-1];
-            }
-        }).catch(err => {
-        })
+        setMode('radar');
+
+        if (season === 'regular season') {
+            fetch('/prediction/leaderboard/regularseason/radarlist/'+2020+'/'+authContext.user.username).then(res => res.json())
+            .then(data => {
+                console.log(data);
+                setRadarList(data);
+                var name;
+                var points;
+                radarList.map((data, i) => {
+                    name = data.user;
+                    points = data.points;
+                    document.getElementById("name" + (i+1)).innerHTML = name;
+                    document.getElementById("points" + (i+1)).innerHTML = points;
+                });
+            }).catch(err => {
+                console.log(err);
+            })
+        }
+        else if (season === 'playoff') {
+            fetch('/prediction/leaderboard/playoff/radarlist/'+2020+'/'+authContext.user.username).then(res => res.json())
+            .then(data => {
+                console.log(data);
+                setRadarList(data);
+                var name;
+                var points;
+                radarList.map((data, i) => {
+                    name = data.user;
+                    points = data.points;
+                    document.getElementById("name" + (i+1)).innerHTML = name;
+                    document.getElementById("points" + (i+1)).innerHTML = points;
+                });
+            }).catch(err => {
+                console.log(err);
+            })
+        }
         globalStyle = { "background-color": "#0B0A0A" };
         radarStyle = { "background-color": "#c8651b" };
         leaderboardRadarStyle = { "visibility": "visible"};
@@ -184,7 +305,7 @@ export default function Leaderboard(props) {
                 </div>
                 <div className='Leaderboard'>
                     <RadarHeaderRow></RadarHeaderRow>
-                    {givenUsers.map((data, index) => {
+                    {radarList.map((data, index) => {
                         if(index % 2 == 0) {
                             //<RadarRow color='#0B0A0A' rank='1' name='andy' points='23'></RadarRow>
                             return (
