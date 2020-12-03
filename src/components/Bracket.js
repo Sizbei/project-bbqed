@@ -225,12 +225,26 @@ export default function BracketController(props) {
     }
   }
 
-  const onPredictionClick = (code) => {
-    console.log(code);
-    if (code === "close") {
+  const onPredictionClick = (msg) => {
+    console.log(msg);
+    if (msg === "close") {
       setPlayOffPrediction(null);
       setResults.forEach(el => el(""));
     }
+
+    const requestBody = {
+      method: "put",
+      body: JSON.stringify({
+        user: authContext.user.username,
+        team: msg['team'],
+        gameId: msg['gameId'],
+      }),
+      headers: {'Content-Type' : 'application/json'}
+    }
+    fetch('/prediction/playoff/add', requestBody).then(res => res.json())
+    .then((res) => {
+      console.log("GOT RESPONSE", res);
+    })
   }
 
   useEffect(() => {

@@ -108,11 +108,11 @@ export default function PlayOffPrediction(props) {
                           <div className="gamePredictionBox">
                               <div className="gameNumber">Game {index + 1}</div>
                               <div className='predictTeams'>
-                                  <div className={teamClassName(index)} onClick={() => {onClick(teamA); darkenOtherBox(index+1.5, index+1)}}>
+                                  <div className={teamClassName(index)} onClick={() => {onClick({gameId: data, team: teamB}); darkenOtherBox(index+1.5, index+1)}}>
                                       <TeamBox name={teamA} height='4vw' width='12vw' image={imageA}></TeamBox>
                                   </div>
                                   <div className='spaceAllotted'></div>
-                                  <div className={teamClassName(index+0.5)} onClick={() => {onClick(teamB); darkenOtherBox(index+1, index+1.5)}}>
+                                  <div className={teamClassName(index+0.5)} onClick={() => {onClick({gameId: data, team: teamB}); darkenOtherBox(index+1, index+1.5)}}>
                                       <TeamBox name={teamB} height='4vw' width='12vw' image={imageB}></TeamBox>
                                   </div>
                               </div>
