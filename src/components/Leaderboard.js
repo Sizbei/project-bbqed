@@ -10,8 +10,6 @@ export default function Leaderboard(props) {
     const[regSeasonBGStyle, setRegSeasonBGStyle] = useState({ "background-color": "#c8651b" });
     const[playOffBGStyle, setPlayOffBGStyle] = useState({ "background-color": "#0B0A0A" });
 
-    const givenUsers = props.users;
-
     var leaderboardRadarStyle;
     var leaderboardGlobalStyle;
     var globalStyle;
@@ -33,116 +31,81 @@ export default function Leaderboard(props) {
         fetch('/prediction/leaderboard/regularseason/global/'+2020).then(res => res.json())
         .then(data => {
             console.log(data);
-            console.log(data.divisionCounts);
-            console.log(data.divisionPercentage);
-            console.log(data.divisionThreshhold);
             setNumOfPlayers(data.divisionCounts);
             setPercentOfPlayers(data.divisionPercentage);
             setPointsNeeded(data.divisionThreshhold);
         }).catch(err => {
+            console.log(err);
         })
 
         fetch('/prediction/leaderboard/regularseason/radarlist/'+2020+'/'+authContext.user.username).then(res => res.json())
         .then(data => {
             setRadarList(data);
+        }).catch(err => {
+            console.log(err);
         })
     }, [])
-    
-// /prediction/leaderboard
-// /prediction/regularseason/global
-// /prediction/playoff
 
     const changeToGlobal = () => {
         setMode('global');
         
+        //Use different fetch commands based on what season is selected, populate the leaderboard
         if (season === 'regular season') {
-            fetch('/prediction/leaderboard/regularseason/global/'+2020).then(res => res.json())
-            .then(data => {
-                console.log(data);
-                console.log(data.divisionCounts);
-                console.log(data.divisionPercentage);
-                console.log(data.divisionThreshhold);
-
-                for (var i=1; i < 11; i++) {
-                    document.getElementById("numOfPlayers"+i).innerHTML = data.divisionCounts[i-1];
-                    document.getElementById("percentOfPlayers"+i).innerHTML = data.divisionPercentage[i-1] + '%';
-                    document.getElementById("pointsNeeded"+i).innerHTML = data.divisionThreshhold[i-1];
-                }
-            }).catch(err => {
-                console.log(err);
-            })
+            fetchRegGlobal();
         }
         else if (season === 'playoff') {
-            fetch('/prediction/leaderboard/playoff/global/'+2020).then(res => res.json())
-            .then(data => {
-                console.log(data);
-                console.log(data.divisionCounts);
-                console.log(data.divisionPercentage);
-                console.log(data.divisionThreshhold);
-
-                for (var i=1; i < 11; i++) {
-                    document.getElementById("numOfPlayers"+i).innerHTML = data.divisionCounts[i-1];
-                    document.getElementById("percentOfPlayers"+i).innerHTML = data.divisionPercentage[i-1] + '%';
-                    document.getElementById("pointsNeeded"+i).innerHTML = data.divisionThreshhold[i-1];
-                }
-            }).catch(err => {
-                console.log(err);
-            })
+            fetchPlayoffGlobal();
         }
         else {
             console.log('should never get here');
         }
 
+        //Swap to global leaderboard
         leaderboardRadarStyle = { "visibility": "hidden"};
         leaderboardGlobalStyle = { "visibility": "visible"};
         setGlobalVisStyle(leaderboardGlobalStyle);
         setRadarVisStyle(leaderboardRadarStyle);
-
+        //Change the background color of the global button
         globalStyle = { "background-color": "#c8651b" };
         radarStyle = { "background-color": "#0B0A0A" };
         setGlobalBGStyle(globalStyle);
         setRadarBGStyle(radarStyle);
     }
 
+    const changeToRadar = () => {
+        setMode('radar');
+        //Use different fetch commands based on what season is selected, populate the leaderboard
+        if (season === 'regular season') {
+            fetchRegRadar();
+        }
+        else if (season === 'playoff') {
+            fetchPlayoffRadarList();
+        }
+
+        //Swap to radar leaderboard
+        leaderboardRadarStyle = { "visibility": "visible"};
+        leaderboardGlobalStyle = { "visibility": "hidden"};
+        setGlobalVisStyle(leaderboardGlobalStyle);
+        setRadarVisStyle(leaderboardRadarStyle);
+        //Change the background color of the radar button
+        globalStyle = { "background-color": "#0B0A0A" };
+        radarStyle = { "background-color": "#c8651b" };
+        setGlobalBGStyle(globalStyle);
+        setRadarBGStyle(radarStyle);        
+    }
+
     const changeToRegSeason = () => {
         setSeason('regular season');
         if (mode === 'global') {
-            fetch('/prediction/leaderboard/regularseason/global/'+2020).then(res => res.json())
-            .then(data => {
-                console.log(data);
-                console.log(data.divisionCounts);
-                console.log(data.divisionPercentage);
-                console.log(data.divisionThreshhold);
-
-                for (var i=1; i < 11; i++) {
-                    document.getElementById("numOfPlayers"+i).innerHTML = data.divisionCounts[i-1];
-                    document.getElementById("percentOfPlayers"+i).innerHTML = data.divisionPercentage[i-1] + '%';
-                    document.getElementById("pointsNeeded"+i).innerHTML = data.divisionThreshhold[i-1];
-                }
-            }).catch(err => {
-                console.log(err);
-            })
+            fetchRegGlobal();
         }
         else if (mode === 'radar') {
-            fetch('/prediction/leaderboard/regularseason/radarlist/'+2020+'/'+authContext.user.username).then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setRadarList(data);
-                var name;
-                var points;
-                radarList.map((data, i) => {
-                    name = data.user;
-                    points = data.points;
-                    document.getElementById("name" + (i+1)).innerHTML = name;
-                    document.getElementById("points" + (i+1)).innerHTML = points;
-                });
-            }).catch(err => {
-                console.log(err);
-            })
+            fetchRegRadar();
         }
         else {
             console.log('this shouldnt happen');
         }
+        //Change the background color of the regular season button
         regSeasonStyle = { "background-color": "#c8651b" };
         playOffStyle = {"background-color": "#0B0A0A" };
         setRegSeasonBGStyle(regSeasonStyle);
@@ -151,14 +114,98 @@ export default function Leaderboard(props) {
 
     const changeToPlayOff = () => {
         setSeason('playoff');
-
+        //Use different fetch commands based on what mode is selected, populate the leaderboard
         if (mode === 'global') {
-            fetch('/prediction/leaderboard/playoff/global/'+2020).then(res => res.json())
+            fetchPlayoffGlobal();
+        }
+        else if (mode === 'radar') {
+            fetchPlayoffRadarList();
+        }
+        else {
+            console.log('this shouldnt happen');
+        }
+        //Change the background color of the playoff button
+        regSeasonStyle = { "background-color": "#0B0A0A" };
+        playOffStyle = {"background-color": "#c8651b" };
+        setRegSeasonBGStyle(regSeasonStyle);
+        setPlayOffBGStyle(playOffStyle);
+    }
+
+    const swapYears = (id) => {
+        var temp = document.getElementById("yearButton").innerHTML
+        document.getElementById("yearButton").innerHTML = document.getElementById(id).innerHTML;
+        document.getElementById("yearButtonR").innerHTML = document.getElementById(id).innerHTML;
+
+        document.getElementById(id).innerHTML = temp;
+        document.getElementById(id + "R").innerHTML = temp;
+
+
+        console.log(document.getElementById("yearButton"));
+        if (mode === 'global' && season === 'regular season') {
+            fetchRegGlobal();
+        }
+        else if (mode === 'global' && season === 'playoff') {
+            fetchPlayoffGlobal();
+        }
+        else if (mode === 'radar' && season === 'regular season') {
+            fetchRegRadar();
+        }
+        else if (mode === 'radar' && season === 'playoff') {
+            fetchPlayoffRadarList();
+        }
+        else {
+            console.log('shouldnt reach here');
+        }
+    }
+
+    const fetchPlayoffRadarList = () => {
+        fetch('/prediction/leaderboard/playoff/radarlist/'+document.getElementById("yearButton").innerHTML+'/'+authContext.user.username).then(res => res.json())
             .then(data => {
                 console.log(data);
-                console.log(data.divisionCounts);
-                console.log(data.divisionPercentage);
-                console.log(data.divisionThreshhold);
+                var name;
+                var points;
+                var list = data;
+                for (var i=0; i < list.length; i++) {
+                    try {
+                        name = list[i].user;
+                        points = list[i].points;
+                        if (i > 0) {
+                            if (document.getElementById("points" + (i)).innerHTML === document.getElementById("points" + (i+1)).innerHTML) {
+                                document.getElementById("rank" + (i+1)).innerHTML = document.getElementById("rank" + (i)).innerHTML;
+                            }
+                            else {
+                                document.getElementById("rank" + (i+1)).innerHTML = i+1;
+                            }
+                        }
+                        document.getElementById("name" + (i+1)).innerHTML = name;
+                        document.getElementById("points" + (i+1)).innerHTML = points;
+                    }
+                    catch {
+                    }
+                }
+            }).catch(err => {
+                console.log(err);
+            })
+    }
+
+    const fetchPlayoffGlobal = () => {
+        fetch('/prediction/leaderboard/playoff/global/'+document.getElementById("yearButton").innerHTML).then(res => res.json())
+            .then(data => {
+                console.log(data);
+                for (var i=1; i < 11; i++) {
+                    document.getElementById("numOfPlayers"+i).innerHTML = data.divisionCounts[i-1];
+                    document.getElementById("percentOfPlayers"+i).innerHTML = data.divisionPercentage[i-1] + '%';
+                    document.getElementById("pointsNeeded"+i).innerHTML = data.divisionThreshhold[i-1];
+                }
+            }).catch(err => {
+                console.log(err);
+            })
+    }
+
+    const fetchRegGlobal = () => {
+        fetch('/prediction/leaderboard/regularseason/global/'+document.getElementById("yearButton").innerHTML).then(res => res.json())
+            .then(data => {
+                console.log(data);
 
                 for (var i=1; i < 11; i++) {
                     document.getElementById("numOfPlayers"+i).innerHTML = data.divisionCounts[i-1];
@@ -168,86 +215,40 @@ export default function Leaderboard(props) {
             }).catch(err => {
                 console.log(err);
             })
-        }
-        else if (mode === 'radar') {
-            fetch('/prediction/leaderboard/playoff/radarlist/' + 2020 + '/'+authContext.user.username).then(res => res.json())
+    }
+
+    const fetchRegRadar = () => {
+        fetch('/prediction/leaderboard/regularseason/radarlist/'+document.getElementById("yearButton").innerHTML+'/'+authContext.user.username).then(res => res.json())
             .then(data => {
                 console.log(data);
-                setRadarList(data);
                 var name;
                 var points;
-                radarList.map((data, i) => {
-                    name = data.user;
-                    points = data.points;
-                    document.getElementById("name" + (i+1)).innerHTML = name;
-                    document.getElementById("points" + (i+1)).innerHTML = points;
-                });
+                var image;
+                var list = data;
+                for (var i=0; i < list.length; i++) {
+                    try {
+                        name = list[i].user;
+                        points = list[i].points;
+                        image = list[i].picture;
+                        if (i > 0) {
+                            if (document.getElementById("points" + (i)).innerHTML === document.getElementById("points" + (i+1)).innerHTML) {
+                                document.getElementById("rank" + (i+1)).innerHTML = document.getElementById("rank" + (i)).innerHTML;
+                            }
+                            else {
+                                document.getElementById("rank" + (i+1)).innerHTML = i+1;
+                            }
+                        }
+                        document.getElementById("pfp" + (i+1)).src = image;
+                        document.getElementById("name" + (i+1)).innerHTML = name;
+                        document.getElementById("points" + (i+1)).innerHTML = points;
+                    }
+                    catch {
+                    }
+                }
             }).catch(err => {
                 console.log(err);
             })
-        }
-        else {
-            console.log('this shouldnt happen');
-        }
-        regSeasonStyle = { "background-color": "#0B0A0A" };
-        playOffStyle = {"background-color": "#c8651b" };
-        setRegSeasonBGStyle(regSeasonStyle);
-        setPlayOffBGStyle(playOffStyle);
     }
-
-    const changeToRadar = () => {
-        setMode('radar');
-
-        if (season === 'regular season') {
-            fetch('/prediction/leaderboard/regularseason/radarlist/'+2020+'/'+authContext.user.username).then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setRadarList(data);
-                var name;
-                var points;
-                radarList.map((data, i) => {
-                    name = data.user;
-                    points = data.points;
-                    document.getElementById("name" + (i+1)).innerHTML = name;
-                    document.getElementById("points" + (i+1)).innerHTML = points;
-                });
-            }).catch(err => {
-                console.log(err);
-            })
-        }
-        else if (season === 'playoff') {
-            fetch('/prediction/leaderboard/playoff/radarlist/'+2020+'/'+authContext.user.username).then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setRadarList(data);
-                var name;
-                var points;
-                radarList.map((data, i) => {
-                    name = data.user;
-                    points = data.points;
-                    document.getElementById("name" + (i+1)).innerHTML = name;
-                    document.getElementById("points" + (i+1)).innerHTML = points;
-                });
-            }).catch(err => {
-                console.log(err);
-            })
-        }
-        globalStyle = { "background-color": "#0B0A0A" };
-        radarStyle = { "background-color": "#c8651b" };
-        leaderboardRadarStyle = { "visibility": "visible"};
-        leaderboardGlobalStyle = { "visibility": "hidden"};
-        setGlobalBGStyle(globalStyle);
-        setRadarBGStyle(radarStyle);
-        setGlobalVisStyle(leaderboardGlobalStyle);
-        setRadarVisStyle(leaderboardRadarStyle);
-    }
-
-    const swapYears = (id) => {
-        var temp = document.getElementById("yearButton").innerHTML
-        document.getElementById("yearButton").innerHTML = document.getElementById(id).innerHTML;
-        document.getElementById(id).innerHTML = temp;
-    }
-
     return (
         <div>
             <div className='leaderboardGlobal' style = {globalVisStyle}>
@@ -255,13 +256,13 @@ export default function Leaderboard(props) {
                     <button className="leaderboardButton" style = {regSeasonBGStyle} onClick = {() => changeToRegSeason()}>Regular Season</button>
                     <button className="leaderboardButton" style = {playOffBGStyle} onClick = {() => changeToPlayOff()}>Playoff</button>
                     <div className="yearButtonDiv">
-                        <button className="yearButton">2020</button>
+                        <button className="yearButton" id="yearButton">2020</button>
                             <div className="yearOptions">
-                                <button className="yearOptionsButton">2019</button>
-                                <button className="yearOptionsButton">2018</button>
-                                <button className="yearOptionsButton">2017</button>
-                                <button className="yearOptionsButton">2016</button>
-                                <button className="yearOptionsButton">2015</button>
+                                <button className="yearOptionsButton" id="yearOption1" onClick={() => swapYears("yearOption1")}>2019</button>
+                                <button className="yearOptionsButton" id="yearOption2" onClick={() => swapYears("yearOption2")}>2018</button>
+                                <button className="yearOptionsButton" id="yearOption3" onClick={() => swapYears("yearOption3")}>2017</button>
+                                <button className="yearOptionsButton" id="yearOption4" onClick={() => swapYears("yearOption4")}>2016</button>
+                                <button className="yearOptionsButton" id="yearOption5" onClick={() => swapYears("yearOption5")}>2015</button>
                             </div>
                     </div>
                     <div className='centerSpace'></div>
@@ -290,13 +291,13 @@ export default function Leaderboard(props) {
                     <button className="leaderboardButton" style = {regSeasonBGStyle}  onClick = {() => changeToRegSeason()}>Regular Season</button>
                     <button className="leaderboardButton" style = {playOffBGStyle}  onClick = {() => changeToPlayOff()}>Playoff</button>
                     <div className="yearButtonDiv">
-                        <button className="yearButton" id="yearButton">2020</button>
+                        <button className="yearButton" id="yearButtonR">2020</button>
                             <div className="yearOptions">
-                                <button className="yearOptionsButton" id="yearOption1" onClick={() => swapYears("yearOption1")}>2019</button>
-                                <button className="yearOptionsButton" id="yearOption2" onClick={() => swapYears("yearOption2")}>2018</button>
-                                <button className="yearOptionsButton" id="yearOption3" onClick={() => swapYears("yearOption3")}>2017</button>
-                                <button className="yearOptionsButton" id="yearOption4" onClick={() => swapYears("yearOption4")}>2016</button>
-                                <button className="yearOptionsButton" id="yearOption5" onClick={() => swapYears("yearOption5")}>2015</button>
+                                <button className="yearOptionsButton" id="yearOption1R" onClick={() => swapYears("yearOption1")}>2019</button>
+                                <button className="yearOptionsButton" id="yearOption2R" onClick={() => swapYears("yearOption2")}>2018</button>
+                                <button className="yearOptionsButton" id="yearOption3R" onClick={() => swapYears("yearOption3")}>2017</button>
+                                <button className="yearOptionsButton" id="yearOption4R" onClick={() => swapYears("yearOption4")}>2016</button>
+                                <button className="yearOptionsButton" id="yearOption5R" onClick={() => swapYears("yearOption5")}>2015</button>
                             </div>
                     </div>
                     <div className='centerSpace'></div>
@@ -386,8 +387,13 @@ function RadarRow(props) {
     const rank = "rank" in props ? props.rank : 0;
     const name = "name" in props ? props.name : "-";
     const points = "points" in props ? props.points : "-";
-    const profilePic = "profilePIc" in props ? props.profile : "https://cdn.onlinewebfonts.com/svg/img_258083.png"
+    const profilePic = "profilePIc" in props ? props.profile : "https://png.pngtree.com/svg/20161027/631929649c.svg"
     const backgroundColor = "color" in props ? props.color : "1b1a18"
+
+    const rankID = (rank) => {
+        const id = "rank" + (rank);
+        return id;
+    }
 
     const profilePicID = (rank) => {
         const id = "pfp" + (rank);
@@ -408,7 +414,7 @@ function RadarRow(props) {
 
     return (
         <div className='Leaderboard-row' style={backgroundStyle}>
-            <label className='L-col-Radar'>{rank}</label>
+            <label className='L-col-Radar' id={rankID(rank)}>{rank}</label>
             <img className='L-col-Radar-Image' src={profilePic} id={profilePicID(rank)}></img>
             <label className='L-col-Radar' id={nameID(rank)}>{name}</label>
             <label className='L-col-Radar' id={pointsNeededID(rank)}>{points}</label>
