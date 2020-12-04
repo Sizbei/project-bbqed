@@ -85,19 +85,22 @@ export default function TeamBox(props) {
     const propsImage = "image" in props ? props.image : "";
     const [fetchImage, setFetchImage] = useState("");
     var height = "height" in props ? props.height : 5;
+    var fontSize;
     var width;
     const scaleFactor = "scale" in props ? props.scale : 3;
+    const fontFactor = 4;
 
     width = height * scaleFactor;
+    fontSize = height / fontFactor;
 
     var TeamBoxStyle = { 
-        "backgroundColor": backgroundColor,
+        "background-color": backgroundColor,
         "height": "height" in props ? props.height : height + "vw",
         "width": "width" in props ? props.width : width + "vw" 
     };
 
     var FontStyle = {
-        "fontSize": "0.8vw"
+        "font-size": fontSize + "vw"
     }
 
     useEffect(() => {

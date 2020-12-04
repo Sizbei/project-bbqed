@@ -63,6 +63,15 @@ app.use('/playoff', playoffRouter)
 const playoffPredictionRouter = require('./routes/playoffPrediction');
 app.use('/prediction/playoff', playoffPredictionRouter)
 
+const predictionRouter = require('./routes/prediction');
+app.use('/prediction', predictionRouter)
+
+const regularSeasonRouter = require('./routes/regularSeason');
+app.use('/prediction/season', regularSeasonRouter)
+
+const reportRouter = require('./routes/report');
+app.use('/report', reportRouter)
+
 
 //App is now listening for calls
 app.listen(port, () => {
