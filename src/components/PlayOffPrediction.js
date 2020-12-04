@@ -76,6 +76,8 @@ export default function PlayOffPrediction(props) {
                       let result = null;
                       if (results[index] !== "") {
                         result = <TeamBox name={results[index]} height='4vw' width='12vw' image={images[results[index]]}></TeamBox>
+                      } else {
+                        result = <div> Pending </div>
                       }
                       return (
                           <div className="gamePredictionBox">

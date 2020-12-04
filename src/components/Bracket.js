@@ -246,6 +246,7 @@ export default function BracketController(props) {
     console.log(msg);
     if (msg === "close") {
       setPlayOffPrediction(null);
+      setPredictions.forEach(el => el(""));
       setResults.forEach(el => el(""));
     }
     
