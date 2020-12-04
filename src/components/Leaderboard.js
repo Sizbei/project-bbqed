@@ -139,8 +139,6 @@ export default function Leaderboard(props) {
         document.getElementById(id).innerHTML = temp;
         document.getElementById(id + "R").innerHTML = temp;
 
-
-        console.log(document.getElementById("yearButton"));
         if (mode === 'global' && season === 'regular season') {
             fetchRegGlobal();
         }
