@@ -20,6 +20,7 @@ import Queue from "./components/Queue"
 import AnalysisPost from "./components/AnalysisPostView"
 import ReportPost from "./components/ReportPosts"
 import ReportComment from "./components/ReportComments"
+import Leaderboard from "./components/Leaderboard"
 import IndvPrediction from "./components/IndvPrediction";
 import PickHistory from "./components/PickHistory";
 
@@ -48,6 +49,7 @@ function App() {
       <PrivateRoute path="/Settings" component={Settings} />
       <PrivateRoute path="/Citations" component={Citations} />
       <PrivateRoute path="/Queue" component={Queue} />
+      <PrivateRoute path="/prediction/leaderboard" component={Leaderboard} />
       </div>
     </Router>
   );
