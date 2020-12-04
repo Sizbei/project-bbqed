@@ -1,12 +1,12 @@
-## Sprint #3 Planning Meeting
+## Sprint #4 Planning Meeting
 ### Team BBQED
-### Date: 2020-11-17
+### Date: 2020-11-24
 --------------------
 ### Attendence:
 (✓ Ontime, / Late, X Missing)
 | Team Member   | Attendence |
 | ------------- | ---------- | 
-| Alex Wan      | / | 
+| Alex Wan      | ✓ | 
 | Alex Yang     | ✓ |
 | Andy Phylim   | ✓ |
 | Cherie Kong   | ✓ |
@@ -16,46 +16,47 @@
 
 ## Retro:
 
-| Team Member   | Good Practices                                                                                                          |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Alex Wan      | Good: doing tasks more efficiently, don't have to be in call with someone everytime I needed something or had a problem |
-| Alex Yang     | We are merging to development branches early, rather than last day                                                      |
-| Andy Phylim   | Everyone is respectful of the situations, but communication has still been good                                         |
-| Cherie Kong   | Still good communication, even though we had to have downtime we made sure to continuously update each other            |
-| Deon Li       | Still good communication, people went to standup, made sure that they still had time to be avaiable                     |
-| Frank Chen    | Everyone is still pretty committed despite our other courses, everyone stays update                                     |
-| Raymond Chen  | Good workable amount, avoided overcommitting in a sprint where everyone was heavily busy                                |
+| Team Member   | Good Practices                                                                                     |
+| ------------- | -------------------------------------------------------------------------------------------------- |
+| Alex Wan      | We've increased the rate that we can code, doing connections from front to back has been easier    |
+| Alex Yang     | Sprint was pretty clean, low issues, standups are still fast                                       |
+| Andy Phylim   | Sprint was done well, standups are being completed faster                                          |
+| Cherie Kong   | Communication has still been good, we've kept everyone up to date despite the increase course work |
+| Deon Li       | Communication has been good, everyone seems to be on the same page and can get help when needed    |
+| Frank Chen    | Whole sprint was done well, we're becoming more used to working as a development team              |
+| Raymond Chen  | The sprint had few problems, communication and resolving issues has become easier                  |
 
 (Positive) Key Take Aways:
 - Communication between teammates continues to be a strong point for our team, we should continue our practice of messaging on Discord
     - Have people ping each other about when to work together in one of the chat rooms
-- Everyone should continue to support each other when messages are pinged, and people are respectful of others time
-    - This was especially important this sprint, where everyone was pinned by exams
+- We seem to be resolving issues faster, this is likely due to just having more experience working as a team
+    - And working with the languages/tech
+- Standups are no longer an issue for us, they're not slowing us down and are being done efficiently
+    - A farcry away from what we had in sprint-1, so we have resolved this issue
 
-| Team Member   | Bad Practices                                                                                                 |
-| ------------- | ------------------------------------------------------------------------------------------------------------- |
-| Alex Wan      | Sometimes people weren't sure exactly what we wanted and had to modify some tasks afterwards.                 |
-| Alex Yang     | We took a bit too long to start working, lacked momentum from last sprint, slow start                         |
-| Andy Phylim   | Getting code out was difficult due to scheduling, need to have better communication about requirements        |
-| Cherie Kong   | Setting personal deadlines and being more strict about it                                                     |
-| Deon Li       | Need to keep each other more accountable for when stuff is to be done                                         |
-| Frank Chen    | We should have better communications about requirements from front to back, need to talk about what is needed |
-| Raymond Chen  | Momentum was lost going into sprint-3, need to somehow maintain it from sprint to sprint                      |
+| Team Member   | Bad Practices                                                                                                         |
+| ------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Alex Wan      | There was still a bit of miscommunication regarding picks and predictions on what was assigned, though was cleared up |
+| Alex Yang     | Lack of motivation is becoming a problem, even though we're finishing we don't have the energy we used to             |
+| Andy Phylim   | Losing motivation as we go, need someway to reignite some passion and get excited again                               |
+| Cherie Kong   | Personally had issues with time management and nearly caused delays                                                   |
+| Deon Li       | Our morale has probably been at an all-time low, likely due to exhaustion from the semester                           |
+| Frank Chen    | Struggling with motivation and willingness to write the code, even though it might not take long                      |
+| Raymond Chen  | Team feels burnt out, and less interested in the project, more willing to work on other courses over this one         |
 
 (Negative) Key Take Aways:
-- While communication about time and scheduling was done well, communication about requirements between front and back faultered
-    - We should have better acceptance criteria, to ensure that both sides have better ideas about what is needed, rather than go back and forth
-- We lacked momentum due to the barrage of exams and A2
-    - We need to keep momentum and push once a sprint ends and to keep people more accountable about their deadlines
+- Our team seems burnt out and no longer motivated
+    - This is likely a result of the semester coming to a close and being exhausted from other courses
+    - If this were a real workplace, would likely think of someway to raise morale
+    - Team would also be able to take some vacation days at the very least to avoid burnout
 
 Best/Worst Experience:
 Everyone had the same answer 
 - The best experience we had was when we finally got parts to work and when we got it all of it together.
-- When we had to do all the merge conflicts and trying to check what was out dated was definitely the worst.    
-    - Though this time was way easier...
+- The exhaustion from the end of the semester is not something we appreciated and had to deal with
 
 Things to be completed:
-- We completed everything required for Sprint-3.
+- We completed everything required for Sprint-4.
 
     
 
