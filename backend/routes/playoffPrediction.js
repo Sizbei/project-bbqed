@@ -45,7 +45,7 @@ router.route("/add").put((req, res) => {
         user: user,
         pick: team
       }
-      prediction.findOne({game: req.body.gameId})
+      prediction.findOne({game: req.body.gameId, status: "open",})
       .then(p2 => {
         p2.picks.push(newPrediction);
         p2.save()

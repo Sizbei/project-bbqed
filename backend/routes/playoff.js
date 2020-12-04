@@ -9,7 +9,6 @@ const passportConfig = require('../passport');
 
 
 const getTeam = async (teamName) => {
-
   return await team.findOne({name: teamName}).exec()
 }
 
