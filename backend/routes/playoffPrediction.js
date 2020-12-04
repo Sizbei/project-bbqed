@@ -20,9 +20,9 @@ router.route("/result/:gameId").get(passport.authenticate('jwt', {session : fals
 });
 
 router.route("/pick/:user/:gameId").get(passport.authenticate('jwt', {session : false}),(req, res) => {
-  prediction.findOne({game: req.params.gameId}).select({pick: { $elemMatch: {user: req.params.user} }})
+  prediction.findOne({game: req.params.gameId}).select({picks: { $elemMatch: {user: req.params.user} }})
   .then(p => {
-    res.json({pick: p.pick});
+    res.json({pick: p.picks[0].pick});
   })
   .catch(() => {res.json({pick: ''})});
 });

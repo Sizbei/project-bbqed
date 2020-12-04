@@ -57,6 +57,11 @@ app.use('/analysis', analysisRouter)
 const analysisPostRouter = require('./routes/analysisPost');
 app.use('/analysis/post', analysisPostRouter)
 
+const playoffRouter = require('./routes/playoff');
+app.use('/playoff', playoffRouter)
+
+const playoffPredictionRouter = require('./routes/playoffPrediction');
+app.use('/prediction/playoff', playoffPredictionRouter)
 const leaderboardRouter = require('./routes/leaderboard');
 app.use('/prediction/leaderboard', leaderboardRouter)
 
