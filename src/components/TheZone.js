@@ -191,7 +191,7 @@ export default function TheZone(props) {
                 <div className="tzone-post-number"> {path === '/zone/display/' ? 'All' : 'Focused'} Posts ({posts.length})</div>
                 <div className = "tzone-dropbtns">
                     <div class="tzone-dropdown1">
-                        <button class="tzone-dropbtn1"> Select Views</button>
+                        <button class="tzone-dropbtn1"> Views</button>
                         <div class="tzone-dropdown-content1">
                             <a className={path === '/zone/display/' ? "tzone-path-clicked" : "tzone-path-btn"
                             } onClick={() => setPath('/zone/display/')} >View All</a>
@@ -233,7 +233,7 @@ export default function TheZone(props) {
                                     <div className="tzone-likes"> <label> {data.likes} </label></div>
                                     </div>
 
-                                {data.reported ? <label className="tzone-reported"> Post Reported </label> : <button className="tzone-report-btn" onClick={() => toggleReportPopup( data._id, "post")} >{"Report Post"}</button>
+                                {data.reported ? <label className="tzone-reported"> Reported </label> : <button className="tzone-report-btn" onClick={() => toggleReportPopup( data._id, "post")} >{"Report Post"}</button>
                                    }
                                
                                     
@@ -252,7 +252,9 @@ export default function TheZone(props) {
                         </div>
                     )
                 })}
+                <div className="pagination-center">
                 <Pagination className="MuiPagination-ul" color="primary" count={Math.ceil(totalNumber/ 10)} onChange={handlePageChange} />
+                </div>
             </div>
         </div>
     )

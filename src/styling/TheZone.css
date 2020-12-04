@@ -344,6 +344,12 @@
   margin: auto;
 }
 
+.pagination-center {
+  margin-bottom: 2vh;
+  display: flex;
+  justify-content: center;
+}
+
 @font-face {
   font-family: 'CommissionerMedium';
   src: local('Commissioner'), url(../res/fonts/Commissioner/Commissioner-Medium.ttf) format('truetype');

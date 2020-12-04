@@ -70,7 +70,7 @@ export default function PredictProfile(props) {
             <div className="pp-matches-container">
               {currentSelection.map((data, index) => {
                 return (
-                  <div>
+                  <div className="pp-match">
                     <div className="pp-match-date"> 
                     <label className="pp-date-label"> {"DATE: " + data.gameDay.substring(0, 10)} </label>
                     </div>
