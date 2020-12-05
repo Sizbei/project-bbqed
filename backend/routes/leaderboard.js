@@ -31,7 +31,7 @@ async function divisonPromise(year, category, res) {
   const totalUsers = (await predictionPoints.aggregate([{$match: {year: year, category: category}}, {$project: {total: {$size: "$userPoints"}}}]))[0].total
   
 
-  const values2 = Promise.all(
+  const values = Promise.all(
     divisions.map((division, index) => {
 
       return new Promise((resolve, reject) => {
@@ -53,11 +53,6 @@ async function divisonPromise(year, category, res) {
           divisionThreshhold[index] = division.max;
           divisionCounts[index] = count[0].divisionCount;
           divisionPercentage[index] = count[0].divisionCount / totalUsers * 100;
-          /*console.log({
-            divisionThreshhold: divisionThreshhold, 
-            divisionCounts: divisionCounts, 
-            divisionPercentage: divisionPercentage
-          })*/
           resolve();
 
         })
@@ -68,9 +63,9 @@ async function divisonPromise(year, category, res) {
 
   )
   
-    const getValues = async () => {
-      return await values2;
-    }
+  const getValues = async () => {
+    return await values;
+  }
 
   
   getValues().then(() => {return( {
@@ -79,7 +74,9 @@ async function divisonPromise(year, category, res) {
     divisionPercentage: divisionPercentage
   })})
   .then(result => res.json(result))
-  .catch(err => res.status(400).json({err: err}));
+  .catch(err => res.status(400).json({divisionThreshhold: [0,0,0,0,0,0,0,0,0,0], 
+                                      divisionCounts: [0,0,0,0,0,0,0,0,0,0], 
+                                      divisionPercentage: [0,0,0,0,0,0,0,0,0,0]}));
 
 }
 
@@ -104,16 +101,8 @@ function sortRadarRanking(user1, user2){
   
 }
 
-async function getProfilePicture(user, callback){
 
-  profiles.findOne({username: user.user})
-  .then(async userProfile => {
-    await callback(userProfile.image)
-  });
-
-}
-
-async function returnRadarLeaderboard(year, user, category, res){
+async function radarPromise(user, year, category, res){
 
   profiles.findOne({username: user})
   .then(async userProfile => {
@@ -144,31 +133,55 @@ async function returnRadarLeaderboard(year, user, category, res){
       
       //radarUsers.sort(sortRadarRanking);
 
-      const addPictures = new Promise(async (resolve, reject) => {
+      const addPictures = Promise.all(
+        radarUsers.map((eachUser, index) => {
 
-        radarUsers.forEach(async function(eachUser, index){
+          return new Promise((resolve, reject) => {
+
+            getProfilePicture(eachUser, function(pic) {
+
+              try{
+                eachUser._doc.picture = pic;
+              }catch{
+                eachUser.picture = pic;
+              }
+
+              resolve(); 
   
-          getProfilePicture(eachUser, function(pic) {
+            })
 
-          try{
-            eachUser._doc.picture = pic;
-          }catch{
-            eachUser.picture = pic;
-          }
-          
-          if(index === radarUsers.length - 1){
-            console.log(radarUsers)
-            resolve();
-          }
+          })
 
         })
-          
-        });
-      })
-      .then(() => {res.json(radarUsers)})
+      )
+
+      const getPictures = async () => {
+        return await addPictures;
+      }
+
+      getPictures().then(() => {res.json(radarUsers)})
+      .catch(err => res.status(400).json({}))
 
     })
+
   })
+
+}
+
+async function getProfilePicture(user, callback){
+
+  profiles.findOne({username: user.user})
+  .then(async userProfile => {
+    await callback(userProfile.image)
+  });
+
+}
+
+async function returnRadarLeaderboard(year, user, category, res){
+
+
+  Promise.resolve()
+    .then(() => {radarPromise(user, year, category, res)})
 
 }
 
