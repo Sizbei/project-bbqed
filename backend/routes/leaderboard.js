@@ -28,7 +28,16 @@ async function divisonPromise(year, category, res) {
   var divisionPercentage = [0,0,0,0,0,0,0,0,0,0];
   
 
-  const totalUsers = (await predictionPoints.aggregate([{$match: {year: year, category: category}}, {$project: {total: {$size: "$userPoints"}}}]))[0].total
+  var totalUsers;
+
+  try{
+    totalUsers = (await predictionPoints.aggregate([{$match: {year: year, category: category}}, {$project: {total: {$size: "$userPoints"}}}]))[0].total
+  }catch(e){
+    res.json({divisionThreshhold: [], 
+      divisionCounts: [], 
+      divisionPercentage: []});
+    return;
+  }
   
 
   const values = Promise.all(
@@ -56,7 +65,9 @@ async function divisonPromise(year, category, res) {
           resolve();
 
         })
-        .catch(err => res.status(400).json({err: err}));
+        .catch(err => res.status(400).json({divisionThreshhold: [], 
+                                            divisionCounts: [], 
+                                            divisionPercentage: []}));
         
       })
     })
@@ -74,9 +85,9 @@ async function divisonPromise(year, category, res) {
     divisionPercentage: divisionPercentage
   })})
   .then(result => res.json(result))
-  .catch(err => res.status(400).json({divisionThreshhold: [0,0,0,0,0,0,0,0,0,0], 
-                                      divisionCounts: [0,0,0,0,0,0,0,0,0,0], 
-                                      divisionPercentage: [0,0,0,0,0,0,0,0,0,0]}));
+  .catch(err => res.status(400).json({divisionThreshhold: [], 
+                                      divisionCounts: [], 
+                                      divisionPercentage: []}));
 
 }
 
@@ -85,6 +96,7 @@ async function returnGlobalLeaderboard(year, category, res){
 
   Promise.resolve()
     .then(() => {divisonPromise(year, category, res)})
+    
     //.then(result => {console.log(result)})
 
 }
@@ -163,6 +175,7 @@ async function radarPromise(user, year, category, res){
       .catch(err => res.status(400).json({}))
 
     })
+    .catch(() => res.json([]))
 
   })
 
@@ -182,6 +195,7 @@ async function returnRadarLeaderboard(year, user, category, res){
 
   Promise.resolve()
     .then(() => {radarPromise(user, year, category, res)})
+    .catch(() => res.json([]))
 
 }
 
